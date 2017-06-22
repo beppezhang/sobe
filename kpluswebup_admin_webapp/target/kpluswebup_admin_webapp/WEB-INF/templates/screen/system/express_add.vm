@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增物流</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》物流管理》新增物流</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			#parse("layout/express_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/system/addExpress.htm" method="post">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">公司名称：</div>
+									<div class="formRow">
+										<input type="text" name="name" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">业务联系人：</div>
+									<div class="formRow">
+										<input type="text" name="contactPerson" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">联系电话：</div>
+									<div class="formRow">
+										<input type="text" name="mobile" class="cText cTextLen">
+									</div>
+								</dd>
+
+								<dd class="clearfix">
+									<div class="formTt">跟踪参数：</div>
+									<div class="formRow">
+										<input type="text" name="code" class="cText cTextLen">
+									</div>
+								</dd>
+
+
+								<dd class="clearfix">
+									<div class="formTt">默认：</div>
+									<div class="formRow">
+										<input type="radio" name="isDefault" value="1" class="select"
+											checked>是&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio"
+											name="isDefault" value="0" class="select">否
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">介绍：</div>
+									<div class="formRow">
+										<textarea rows="8" cols="70" name=description></textarea>
+									</div>
+								</dd>
+
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/system/addExpress.htm",$!menuAllList)
+										)<input type="submit" class="save" value="提交">
+										<input type="reset" name="cencle" class="cencle" value="重置">
+										#end
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--TAB e-->
+	<script type="text/javascript">
+		$(function() {
+			$(".express_menu_1").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+	</script>
+</body>
+</html>

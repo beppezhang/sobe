@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>促销详情</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》满送促销》促销详情</span>
+		</div>
+		<div class="userInfoBar">
+			<div class="userInfos">
+				<dl class="clearfix">
+					<dd class="fl">
+						<table class="userTable">
+							<tbody>
+								<tr>
+									<td><em class="grayF">名称：</em>$!promotion.name</td>
+									<td><em class="grayF">类型：</em>#if("$!promotion.type"=="1")满额减额
+										#elseif("$!promotion.type"=="2")满额赠品
+										#elseif("$!promotion.type"=="3")满额免邮
+										#elseif("$!promotion.type"=="4")满额打折
+										#elseif("$!promotion.type"=="5")满额赠券
+										#elseif("$!promotion.type"=="6")注册赠券
+										#elseif("$!promotion.type"=="7")满件送件
+										#elseif("$!promotion.type"=="8")满件免邮
+										#elseif("$!promotion.type"=="9")买就减额
+										#elseif("$!promotion.type"=="10")买就赠品
+										#elseif("$!promotion.type"=="11")买就免邮
+										#elseif("$!promotion.type"=="12")买就打折
+										#elseif("$!promotion.type"=="13")买就赠券 #end</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td><em class="grayF">有效期：</em>$!date.format("yyyy-MM-dd",$!promotion.fromDate)
+										至 $!date.format("yyyy-MM-dd HH:mm:ss",$!promotion.endDate)</td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</dd>
+					<dd class="fr" style="margin-top: 35px;"></dd>
+				</dl>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em><a
+						href="$!{domain}/admin/promotion/promotionInfo.htm?mainId=$!promotion.mainID"
+						class="hover">基本信息</a></li>
+					<li><a
+						href="$!{domain}/admin/promotion/promotionSetDetail.htm?promotionID=$!promotion.mainID">适用范围</a></li>
+				</ul>
+			</div>
+
+			<div class="contentRt">
+				<div class="contRt">
+					<input type="hidden" name="mainID" value="$!promotion.mainID" /> <input
+						id="gradeIDs" type="hidden" name="gradeIds"
+						value="$!promotion.customerGrade" /> <input id="groupIDs"
+						type="hidden" name="groupIds" value="$!promotion.customerGroup" />
+					<!--form  S------->
+					<div class="systemBar">
+						<dl class="formSet">
+							<dd class="clearfix">
+								<div class="formTt">名称：</div>
+								<div class="formRow">$!promotion.name</div>
+							</dd>
+							<dd class="clearfix">
+								<div class="formTt">类型：</div>
+								<div class="formRow">#if("$!promotion.type"=="1")满额减额
+									#elseif("$!promotion.type"=="2")满额赠品
+									#elseif("$!promotion.type"=="3")满额免邮
+									#elseif("$!promotion.type"=="4")满额打折
+									#elseif("$!promotion.type"=="5")满额赠券
+									#elseif("$!promotion.type"=="6")注册赠券
+									#elseif("$!promotion.type"=="7")满件送件
+									#elseif("$!promotion.type"=="8")满件免邮
+									#elseif("$!promotion.type"=="9")买就减额
+									#elseif("$!promotion.type"=="10")买就赠品
+									#elseif("$!promotion.type"=="11")买就免邮
+									#elseif("$!promotion.type"=="12")买就打折
+									#elseif("$!promotion.type"=="13")买就赠券 #end</div>
+							</dd>
+							<dd class="clearfix">
+								<div class="formTt">有效期：</div>
+								<div class="formRow">$!date.format("yyyy-MM-dd
+									HH:mm:ss",$!promotion.fromDate) 至 $!date.format("yyyy-MM-dd
+									HH:mm:ss",$!promotion.endDate)</div>
+							</dd>
+							#if("$!promotion.type"=="1")
+							<dd id="promotionCondition" class="clearfix">
+								<div class="formTt">满足金额：</div>
+								<div class="formRow">$!NumberTool.format("#0.00",$!promotion.promotionCondition)</div>
+							</dd>
+							<dd id="promotionValue" class="clearfix">
+								<div class="formTt">扣减金额：</div>
+								<div class="formRow">$!NumberTool.format("#0.00",$!promotion.promotionValue)</div>
+							</dd>
+							#elseif("$!promotion.type"=="2")
+							<dd id="promotionCondition" class="clearfix">
+								<div class="formTt">满足金额：</div>
+								<div class="formRow">$!NumberTool.format("#0.00",$!promotion.promotionCondition)</div>
+							</dd>
+							<dd id="promotionValue" class="clearfix">
+								<div class="formTt">赠送商品：</div>
+								<div class="formRow">
+									<select class="select" id="productid" disabled="disabled"
+										name="productID" onchange="changeProduct(this.value)">
+										#foreach($!product in $!productList)
+										<option #if("$!promotion.productID"==
+											"$!product.mainID")selected="selected" #end
+											value="$!product.mainID">$!product.name</option> #end
+									</select>
+								</div>
+								<div class="formRow">
+									<select class="select" disabled="disabled" id="itemid"
+										name="itemID"> #foreach($!item in $!itemList)
+										<option #if("$!promotion.itemID"==
+											"$!item.mainID")selected="selected" #end
+											value="$!item.mainID">$!item.name</option> #end
+									</select>
+								</div>
+							</dd>
+							#elseif("$!promotion.type"=="3")
+							<dd id="promotionCondition" class="clearfix">
+								<div class="formTt">满足金额：</div>
+								<div class="formRow">$!NumberTool.format("#0.00",$!promotion.promotionCondition)</div>
+							</dd>
+							#elseif("$!promotion.type"=="4")
+							<dd id="promotionCondition" class="clearfix">
+								<div class="formTt">满足金额：</div>
+								<div class="formRow">$!NumberTool.format("#0.00",$!promotion.promotionCondition)</div>
+							</dd>
+							<dd id="promotionValue" class="clearfix">
+								<div class="formTt">优惠折扣：</div>
+								<div class="formRow">$!promotion.promotionValue</div>
+							</dd>
+							#elseif("$!promotion.type"=="5")
+							<dd id="promotionCondition" class="clearfix">
+								<div class="formTt">满足金额：</div>
+								<div class="formRow">$!NumberTool.format("#0.00",$!promotion.promotionCondition)</div>
+							</dd>
+							<dd id="promotionValue" class="clearfix">
+								<div class="formTt">赠送券：</div>
+								<div class="formRow">$!promotion.couponBatchVO.name</div>
+							</dd>
+							#elseif("$!promotion.type"=="6" || "$!promotion.type"=="13")
+							<dd id="promotionValue" class="clearfix">
+								<div class="formTt">赠送券：</div>
+								<div class="formRow">$!promotion.couponBatchVO.name</div>
+							</dd>
+							#elseif("$!promotion.type"=="7")
+							<dd id="promotionCondition" class="clearfix">
+								<div class="formTt">满足件数：</div>
+								<div class="formRow">$!promotion.promotionCondition</div>
+							</dd>
+							<dd id="promotionValue" class="clearfix">
+								<div class="formTt">赠送件数：</div>
+								<div class="formRow">$!promotion.promotionValue</div>
+							</dd>
+							#elseif("$!promotion.type"=="8")
+							<dd id="promotionCondition" class="clearfix">
+								<div class="formTt">满足件数：</div>
+								<div class="formRow">$!promotion.promotionCondition</div>
+							</dd>
+							#elseif("$!promotion.type"=="9")
+							<dd id="promotionValue" class="clearfix">
+								<div class="formTt">扣减金额：</div>
+								<div class="formRow">$!promotion.promotionValue</div>
+							</dd>
+							#elseif("$!promotion.type"=="10")
+							<dd id="promotionValue" class="clearfix">
+								<div class="formTt">赠送商品：</div>
+								<div class="formRow">
+									<select class="select" id="productid" disabled="disabled"
+										name="productID" onchange="changeProduct(this.value)">
+										#foreach($!product in $!productList)
+										<option #if("$!promotion.productID"==
+											"$!product.mainID")selected="selected" #end
+											value="$!product.mainID">$!product.name</option> #end
+									</select>
+								</div>
+								<div class="formRow">
+									<select class="select" disabled="disabled" id="itemid"
+										name="itemID"> #foreach($!item in $!itemList)
+										<option #if("$!promotion.itemID"==
+											"$!item.mainID")selected="selected" #end
+											value="$!item.mainID">$!item.name</option> #end
+									</select>
+								</div>
+							</dd>
+							#elseif("$!promotion.type"=="12")
+							<dd id="promotionValue" class="clearfix">
+								<div class="formTt">优惠折扣：</div>
+								<div class="formRow">$!promotion.promotionValue</div>
+							</dd>
+							#end
+							<dd class="clearfix">
+								<div class="formTt">促销介绍：</div>
+								<div class="formRow">$!{promotion.description}</div>
+							</dd>
+							<!-- <dd class="clearfix">
+								<div class="formTt">适合客户：</div>
+								<div class="formRow">
+									<span id="gradeID">按会员等级：  #foreach($!grade in
+										$!customerGradeList) <input id="gradeId$!{grade.mainID}"
+										type="checkbox" value="$!{grade.mainID}" disabled="disabled" /><span
+										id="gradeName$!{grade.mainID}">$!{grade.name}</span> #end
+									</span> <br /> <span id="groupID">按会员分组：  #foreach($!group in
+										$!customerGroupList) <input id="groupId$!{group.mainID}"
+										type="checkbox" value="$!{group.mainID}" disabled="disabled" /><span
+										id="groupName$!{group.mainID}">$!{group.name}</span> #end
+									</span>
+								</div>
+							</dd> -->
+						</dl>
+					</div>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	jQuery(function() {
+		jQuery("#gradeID :checkbox").each(
+				function(i) {
+					if (!jQuery(this).prop("checked")) {
+						jQuery("#gradeName" + jQuery(this).val()).attr("style",
+								"display: none");
+						jQuery(this).attr("style", "display: none");
+					}
+				});
+		jQuery("#groupID :checkbox").each(
+				function(i) {
+					if (!jQuery(this).prop("checked")) {
+						jQuery("#groupName" + jQuery(this).val()).attr("style",
+								"display: none");
+						jQuery(this).attr("style", "display: none");
+					}
+				});
+	});
+</script>
+</html>

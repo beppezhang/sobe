@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/java/com/_9niuw/www/services/salesOrderTrans/SalesOrderTransSoapBindingStub.java=UTF-8
+encoding//src/main/java/com/_9niuw/www/services/salesOrderTrans/TransWS.java=UTF-8
+encoding//src/main/java/com/_9niuw/www/services/salesOrderTrans/TransWSService.java=UTF-8
+encoding//src/main/java/com/_9niuw/www/services/salesOrderTrans/TransWSServiceLocator.java=UTF-8
+encoding//src/main/java/org/tempuri/BasicHttpBinding_IService1Stub.java=UTF-8
+encoding//src/main/java/org/tempuri/IService1.java=UTF-8
+encoding//src/main/java/org/tempuri/Service1.java=UTF-8
+encoding//src/main/java/org/tempuri/Service1Locator.java=UTF-8
+encoding//src/test/java=UTF-8

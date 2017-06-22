@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>产品详情</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>产品管理 》产品列表》 产品信息</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					#if($!menuUtil.isExistMenu("/admin/product/productDetail.htm",$!menuAllList))
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="$!{domain}/admin/product/productDetail.htm?mainID=$!productID"
+						class="hover">产品信息</a></li> #end
+					<!-- #if($!menuUtil.isExistMenu("/admin/product/itemDetail.htm",$!menuAllList))
+					<li><a
+						href="$!{domain}/admin/product/itemDetail.htm?productID=$!productID&productTypeMainID=$!productTypeMainID">销售规格</a>
+					</li> #end
+					#if($!menuUtil.isExistMenu("/admin/product/productImgPicDetail.htm",$!menuAllList))
+					<li><a
+						href="$!{domain}/admin/product/productImgPicDetail.htm?productID=$!productID&productTypeMainID=$!productTypeMainID">产品相册</a>
+					</li> #end -->
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<!--form  S------->
+					<div class="systemBar">
+						<div class="p10Box">
+							<div class="gift">
+								<div class="picture">
+								#if("$!productVO.picURL"!="")
+									<img src="$!{qrurl}/$!productVO.picURL" alt="" width="98" height="98" />
+									#end
+								</div>
+								<div class="u-list">
+									<ul>
+										<li><span>产品编号：</span>$!productVO.code</li>
+										<li><span>产品名称：</span>$!productVO.name</li>
+										<li><span>产品副标题：</span>$!productVO.subTitle</li>
+										<li><span>计量单位：</span>$!productVO.unit</li>
+										<li><span>产品类型：</span>$!productVO.productTypeName</li>
+										<li><span>品牌：</span>$!productVO.brandName</li>
+										<li><span>分类：</span>#if("$!productVO.catalog"=="1")普通产品#end#if("$!productVO.catalog"=="2")预售产品#end#if("$!productVO.catalog"=="4")优品惠#end</li>
+									</ul>
+								</div>
+								<div class="u-list">
+									<p>
+										<span>产品属性：</span>
+									</p>
+									<ul>
+										#foreach($!productDetail in $!productDetails)
+										<li><span>$!productDetail.productPropName ：</span>$!productDetail.productPropValue
+										</li> #end
+									</ul>
+								</div>
+								<div class="d-list">
+									<div>
+										<strong> <span>页面标题：</span>
+										</strong> $!productVO.title
+									</div>
+									<div>
+										<strong> <span>页面关键词：</span>
+										</strong>$!productVO.metaKeywords
+									</div>
+									<div>
+										<strong> <span>页面描述：</span>
+										</strong> $!productVO.metaDescription
+									</div>
+								</div>
+								<div class="u-list detail">
+									<span>产品详情：</span>
+									<p>$!productVO.description</p>
+								</div>
+								<!-- <div class="u-list detail">
+									<span>售后服务：</span>
+									<p>$!productVO.saleService</p>
+								</div> -->
+							</div>
+						</div>
+					</div>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

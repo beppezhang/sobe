@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>产品列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<em class="icon iconMenu2"></em><a href="productList.htm">产品管理</a>
+			&gt; <span>产品列表</span>
+		</div>
+		<div class="searchBar">
+
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/product/productList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!productVO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!productVO.pageSize">
+				<table class="searchTable">
+					<tbody>
+						<tr>
+							<td><span class="grayF"> 产品编号：</span><input type="text"
+								name="searchProductCode" class="cText" value="$!productVO.code" /></td>
+							<td><span class="grayF"> 产品名称：</span><input type="text"
+								name="serchname" class="cText" value="$!productVO.name" /></td>
+							<td><span class="grayF"> OEM：</span><input type="text"
+								name="OEMCode" class="cText" value="$!OEMCode" /></td>
+							<td><span class="grayF"> 状态：</span> <select class="select"
+								name="serchstatus" id="serchstatus">
+									<option value="">全部</option>
+									<option value="0" #if("$!productVO.isDelete"==
+										"0")  selected #end>上架</option>
+									<option value="1" #if("$!productVO.isDelete"==
+										"1")  selected #end>下架</option>
+							</select></td>
+							<!--<td><span class="grayF"> 状态：</span> <select class="select"
+								name="serchstatus" id="serchstatus">
+									<option value="">全部</option>
+									<option value="1" #if("$!productVO.status"==
+										"1")  selected #end>上架</option>
+									<option value="0" #if("$!productVO.status"==
+										"0")  selected #end>下架</option>
+							</select></td>-->
+							<!-- <td><span class="grayF"> 分类：</span> <select class="select"
+								name="serchcatalog" id="serchcatalog">
+									<option value="">全部</option>
+									<option value="1" #if("$!productVO.catalog"==
+										"1")  selected #end>普通产品</option>
+									<option value="2" #if("$!productVO.catalog"==
+										"2")  selected #end>预售产品</option>
+									<option value="4" #if("$!productVO.catalog"==
+										"4")  selected #end>优品惠</option>
+							</select></td> -->
+							<td rowspan="3">
+								#if($!menuUtil.isExistMenu("/admin/product/productList.htm",$!menuAllList))
+								<input class="searchBtn" type="button" value="搜索"
+								onclick="userSearch(1)" /> #end
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a>
+				#if($!menuUtil.isExistMenu("/admin/product/updateProductStatus.do",$!menuAllList)
+				) <a href="javascript:;" id="upProduct" title="上架"><em
+					class="icon iconGrounding"></em> </a> <a href="javascript:;" title="下架"
+					id="downProduct"><em class="icon iconUndercarriage"></em></a>
+				#end
+				<!-- #if($!menuUtil.isExistMenu("/admin/product/addProductPage.htm",$!menuAllList))
+				<a href="$!{domain}/admin/product/addProductPage.htm"
+					class="TableAddBtn" title="新增产品">+新增产品</a> #end -->
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="" id="all" /></label></td>
+						<td style="width: 30px">No.</td>
+						<td style="width: 200px">产品编号</td>
+						<td>产品名称</td>
+						<td>产品描述</td>
+						<td>配件品牌</td>
+						<!--<td>产品类型</td>-->
+						<!--<td>品牌</td>-->
+						<!-- <td>分类</td> -->
+						<!-- <td>计量单位</td> -->
+						<td>状态</td>
+						<td>操作</td>
+						<td>商品</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach( $!productVO in $!productList)
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="$!productVO.mainID" id="check_box_$!productVO.mainID" /></label></td>
+						<td>$velocityCount</td>
+						<td>
+							#if($!menuUtil.isExistMenu("/admin/product/productDetail.htm",$!menuAllList))
+							<!--<a href="$!{domain}/admin/product/productDetail.htm?mainID=$!productVO.mainID" target="_blank">$!productVO.code</a>-->
+							$!productVO.code
+							#end
+						</td>
+						<td style="width: 410px">$!productVO.name</td>
+						<td>$!productVO.description</td>
+						<td>
+							<img style="width: 25px;height: 25px" src="$!{mallStatic}/img/logo/$!productVO.brandPicURL" class="bimg">
+						</td>
+						<!--<td>$!productVO.productTypeName</td>-->
+						<!--<td>$!productVO.brandName</td>-->
+						<!-- <td>#if("$!productVO.catalog"=="1") 普通产品 #end
+							#if("$!productVO.catalog"=="2") 预售产品 #end
+							#if("$!productVO.catalog"=="4") 优品惠 #end</td> -->
+						<!-- <td>$!productVO.unit</td> -->
+						<!--<td>#if("$!productVO.status"=="1") 上架 #end
+						    #if("$!productVO.status"=="2") 未审核 #end
+						    #if("$!productVO.status"=="3") 审核不通过 #end
+							#if("$!productVO.status"=="0") 下架 #end</td>-->
+						<td>#if("$!productVO.isDelete"=="0") 上架 #end
+							#if("$!productVO.isDelete"=="1") 下架 #end</td>
+						<td class="last">
+							<!--#if($!menuUtil.isExistMenu("/admin/product/editProductPage.htm",$!menuAllList)
+							) <a class="icon iconEdit"
+							href="$!{domain}/admin/product/editProductPage.htm?mainID=$!productVO.mainID"
+							title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/product/deleteProductType.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconDel"
+							onclick="deleteProduct('$!productVO.mainID')" title="删除"></a>
+							#end -->
+							<!--#if($!menuUtil.isExistMenu("/admin/product/updateProductStatus.do",$!menuAllList)
+							) #if("$!productVO.status"=="1")<a href="javascript:;"
+							onclick="updateProductStatus('$!productVO.mainID','0')"
+							title="下架" class="icon iconUndercarriage"></a> #end
+							#if("$!productVO.status"=="0" || "$!productVO.status"=="2") <a href="javascript:;"
+							class="icon iconGrounding"
+							onclick="updateProductStatus('$!productVO.mainID','1')"
+							title="上架"></a> #end #end-->
+							#if($!menuUtil.isExistMenu("/admin/product/updateProductStatus.do",$!menuAllList)
+							) #if("$!productVO.isDelete"=="0")<a href="javascript:;"
+							onclick="updateProductStatus('$!productVO.mainID','1')"
+							title="下架" class="icon iconUndercarriage"></a> #end
+							#if("$!productVO.isDelete"=="1") <a href="javascript:;"
+							class="icon iconGrounding"
+							onclick="updateProductStatus('$!productVO.mainID','0')"
+							title="上架"></a> #end #end
+						</td>
+						<td>
+							<a href="/admin/product/itemListUnderProduct.htm?searchProductId=$!productVO.mainID" target="_blank">查看商品</a>
+							<!--<a href="$!{domain}/admin/product/productDetail.htm?searchProductId=$!productVO.mainID" target="_blank">查看商品</a>-->
+						</td>
+					</tr>
+					#end #pagination($!productVO)
+				</tbody>
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

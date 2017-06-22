@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑促销</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》满送促销》编辑促销</span>
+		</div>
+		<div class="userInfoBar">
+			<div class="userInfos">
+				<dl class="clearfix">
+					<dd class="fl">
+						<table class="userTable">
+							<tbody>
+								<tr>
+									<td><em class="grayF">名称：</em>$!promotion.name</td>
+									<td><em class="grayF">类型：</em>
+										#if("$!promotion.type"=="3")满额免邮
+										#end</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td><em class="grayF">有效期：</em>$!date.format("yyyy-MM-dd
+										HH:mm:ss",$!promotion.fromDate) 至 $!date.format("yyyy-MM-dd
+										HH:mm:ss",$!promotion.endDate)</td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</dd>
+					<dd class="fr" style="margin-top: 35px;"></dd>
+				</dl>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em><a
+						href="$!{domain}/admin/promotion/editPromotionPage.htm?mainID=$!promotion.mainID"
+						class="hover">基本信息</a></li>
+					<li><a
+						href="$!{domain}/admin/promotion/promotionSetList.htm?promotionID=$!promotion.mainID">适用范围</a></li>
+				</ul>
+			</div>
+
+			<div class="contentRt">
+				<div class="contRt">
+					<form id="editPromotionForm"
+						action="$!{domain}/admin/promotion/saveEditPromotion.htm"
+						method="post" enctype="multipart/form-data">
+						<input type="hidden" name="mainID" value="$!promotion.mainID" />
+						<input id="gradeIDs" type="hidden" name="gradeIds"
+							value="$!promotion.customerGrade" /> <input id="groupIDs"
+							type="hidden" name="groupIds" value="$!promotion.customerGroup" />
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">名称：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="name"
+											value="$!promotion.name" />
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">类型：</div>
+									<div class="formRow">
+										<!--下拉 S-->
+										<select class="select" name="type"
+											onchange="changePromotionType('$!{domain}');">
+											<!-- <option value="1" #if("$!promotion.type"==
+												"1")selected="selected" #end>满额减额</option>
+											<option value="2" #if("$!promotion.type"==
+												"2")selected="selected" #end>满额赠品</option> -->
+											<option value="3" #if("$!promotion.type"==
+												"3")selected="selected" #end>满额免邮</option>
+											<!-- <option value="4" #if("$!promotion.type"==
+												"4")selected="selected" #end>满额打折</option>
+											<option value="5" #if("$!promotion.type"==
+												"5")selected="selected" #end>满额赠券</option>
+											<option value="6" #if("$!promotion.type"==
+												"6")selected="selected" #end>注册赠券</option> 
+											<option value="7" #if("$!promotion.type"==
+												"7")selected="selected" #end>满件送件</option>
+											<!-- <option value="8" #if("$!promotion.type"==
+												"8")selected="selected" #end>满件免邮</option>
+											<option value="9" #if("$!promotion.type"==
+												"9")selected="selected" #end>买就减额</option>
+											<option value="10" #if("$!promotion.type"==
+												"10")selected="selected" #end>买就赠品</option>
+											<option value="11" #if("$!promotion.type"==
+												"11")selected="selected" #end>买就免邮</option>
+											<option value="12" #if("$!promotion.type"==
+												"12")selected="selected" #end>买就打折</option>
+											<option value="13" #if("$!promotion.type"==
+												"13")selected="selected" #end>买就赠券</option> -->
+										</select>
+										<!--下拉 E-->
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">有效期：</div>
+									<div class="formRow">
+										<input type="text" name="fromDateStr"
+											value="$!date.format('yyyy-MM-dd HH:mm:ss',$!promotion.fromDate)"
+											class="cText"
+											onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+											readonly="readonly">&nbsp;至&nbsp; <input type="text"
+											name="endDateStr"
+											value="$!date.format('yyyy-MM-dd HH:mm:ss',$!promotion.endDate)"
+											class="cText"
+											onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+											readonly="readonly">
+									</div>
+								</dd>
+								#if("$!promotion.type"=="1")
+								<dd id="promotionCondition" class="clearfix">
+									<div class="formTt">满足金额：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionCondition"
+											value="$!promotion.promotionCondition" />
+									</div>
+								</dd>
+								<dd id="promotionValue" class="clearfix">
+									<div class="formTt">扣减金额：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionValue" value="$!promotion.promotionValue" />
+									</div>
+								</dd>
+								#elseif("$!promotion.type"=="2")
+								<dd id="promotionCondition" class="clearfix">
+									<div class="formTt">满足金额：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionCondition"
+											value="$!promotion.promotionCondition" />
+									</div>
+								</dd>
+								<dd id="promotionValue" class="clearfix">
+									<div class="formTt">赠送商品：</div>
+									<div class="formRow">
+										<select class="select" id="productid" name="productID"
+											onchange="changeProduct(this.value)">
+											#foreach($!product in $!productList)
+											<option #if("$!promotion.productID"==
+												"$!product.mainID")selected="selected" #end
+												value="$!product.mainID">$!product.name</option> #end
+										</select>
+									</div>
+									<div class="formRow">
+										<select class="select" id="itemid" name="itemID">
+											#foreach($!item in $!itemList)
+											<option #if("$!promotion.itemID"==
+												"$!item.mainID")selected="selected" #end
+												value="$!item.mainID">$!item.name</option> #end
+										</select>
+									</div>
+								</dd>
+								#elseif("$!promotion.type"=="3")
+								<dd id="promotionCondition" class="clearfix">
+									<div class="formTt">满足金额：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionCondition"
+											value="$!promotion.promotionCondition" />
+									</div>
+								</dd>
+								<dd id="promotionValue" class="clearfix" style="display: none;"></dd>
+								#elseif("$!promotion.type"=="4")
+								<dd id="promotionCondition" class="clearfix">
+									<div class="formTt">满足金额：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionCondition"
+											value="$!promotion.promotionCondition" />
+									</div>
+								</dd>
+								<dd id="promotionValue" class="clearfix">
+									<div class="formTt">优惠折扣：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionValue" value="$!promotion.promotionValue" />
+									</div>
+								</dd>
+								#elseif("$!promotion.type"=="5")
+								<dd id="promotionCondition" class="clearfix">
+									<div class="formTt">满足金额：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionCondition"
+											value="$!promotion.promotionCondition" />
+									</div>
+								</dd>
+								<dd id="promotionValue" class="clearfix">
+									<div class="formTt">赠送券：</div>
+									<div class="formRow">
+										<select class="select" name="promotionValue">
+											#foreach($!couponBatch in $!couponBatchList)
+											<option value="$!couponBatch.mainID"
+												#if("$!promotion.promotionValue"==
+												"$!couponBatch.mainID")selected="selected" #end>$!couponBatch.name</option>
+											#end
+										</select>
+									</div>
+								</dd>
+								#elseif("$!promotion.type"=="6" || "$!promotion.type"=="13")
+								<dd id="promotionCondition" class="clearfix"
+									style="display: none;"></dd>
+								<dd id="promotionValue" class="clearfix">
+									<div class="formTt">赠送券：</div>
+									<div class="formRow">
+										<select class="select" name="promotionValue">
+											#foreach($!couponBatch in $!couponBatchList)
+											<option value="$!couponBatch.mainID"
+												#if("$!promotion.promotionValue"==
+												"$!couponBatch.mainID")selected="selected" #end>$!couponBatch.name</option>
+											#end
+										</select>
+									</div>
+								</dd>
+								#elseif("$!promotion.type"=="7")
+								<dd id="promotionCondition" class="clearfix">
+									<div class="formTt">满足件数：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionCondition"
+											value="$!promotion.promotionCondition" />
+									</div>
+								</dd>
+								<dd id="promotionValue" class="clearfix">
+									<div class="formTt">赠送件数：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionValue" value="$!promotion.promotionValue" />
+									</div>
+								</dd>
+								#elseif("$!promotion.type"=="8")
+								<dd id="promotionCondition" class="clearfix">
+									<div class="formTt">满足件数：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionCondition"
+											value="$!promotion.promotionCondition" />
+									</div>
+								</dd>
+								<dd id="promotionValue" class="clearfix" style="display: none;"></dd>
+								#elseif("$!promotion.type"=="9")
+								<dd id="promotionCondition" class="clearfix"
+									style="display: none;"></dd>
+								<dd id="promotionValue" class="clearfix">
+									<div class="formTt">扣减金额：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionValue" value="$!promotion.promotionValue" />
+									</div>
+								</dd>
+								#elseif("$!promotion.type"=="10")
+								<dd id="promotionCondition" class="clearfix"
+									style="display: none;"></dd>
+								<dd id="promotionValue" class="clearfix">
+									<div class="formTt">赠送商品：</div>
+									<div class="formRow">
+										<select class="select" id="productid" name="productID"
+											onchange="changeProduct(this.value)">
+											#foreach($!product in $!productList)
+											<option #if("$!promotion.productID"==
+												"$!product.mainID")selected="selected" #end
+												value="$!product.mainID">$!product.name</option> #end
+										</select>
+									</div>
+									<div class="formRow">
+										<select class="select" id="itemid" name="itemID">
+											#foreach($!item in $!itemList)
+											<option #if("$!promotion.itemID"==
+												"$!item.mainID")selected="selected" #end
+												value="$!item.mainID">$!item.name</option> #end
+										</select>
+									</div>
+								</dd>
+								#elseif("$!promotion.type"=="11")
+								<dd id="promotionCondition" class="clearfix"
+									style="display: none;"></dd>
+								<dd id="promotionValue" class="clearfix" style="display: none;"></dd>
+								#elseif("$!promotion.type"=="12")
+								<dd id="promotionCondition" class="clearfix"
+									style="display: none;"></dd>
+								<dd id="promotionValue" class="clearfix">
+									<div class="formTt">优惠折扣：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionValue" value="$!promotion.promotionValue" />
+									</div>
+								</dd>
+								#end
+								<dd class="clearfix">
+									<div class="formTt">促销介绍：</div>
+									<div class="formRow">
+										<textarea rows="7" cols="75" name="description">$!{promotion.description}</textarea>
+									</div>
+								</dd>
+								<!-- <dd class="clearfix">
+									<div class="formTt">适合客户：</div>
+									<div class="formRow">
+										<span> <a href="javascript:;" title="全选"
+											id="selectGradeIDAll"><em class="icon iconAllSel"></em>全选</a>
+											<a href="javascript:;" title="反选" id="unSelectGradeID"><em
+												class="icon iconInverse"></em>反选</a>
+										</span> <br /> <span id="gradeID">按会员等级： #foreach($!grade in
+											$!customerGradeList) <input id="gradeId$!{grade.mainID}"
+											type="checkbox" value="$!{grade.mainID}" />$!{grade.name}
+											#end
+										</span> <br /> <span> <a href="javascript:;" title="全选"
+											id="selectGroupIDAll"><em class="icon iconAllSel"></em>全选</a>
+											<a href="javascript:;" title="" id="unSelectGroupID"><em
+												class="icon iconInverse"></em>反选</a>
+										</span> <br /> <span id="groupID">按会员分组： #foreach($!group in
+											$!customerGroupList) <input id="groupId$!{group.mainID}"
+											type="checkbox" value="$!{group.mainID}" />$!{group.name}
+											#end
+										</span>
+									</div>
+								</dd> -->
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										<input type="button" onclick="submitEditPromotionForm();"
+											class="save" value="提交"> <input type="button"
+											name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

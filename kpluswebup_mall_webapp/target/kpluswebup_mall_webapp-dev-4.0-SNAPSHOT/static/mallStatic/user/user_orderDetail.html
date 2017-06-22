@@ -1,0 +1,380 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>订单详情</title>
+<link rel="stylesheet" type="text/css" href="../css/global.css">
+<link rel="stylesheet" type="text/css" href="../css/user.css">
+</head>
+
+<body>
+<!--顶部信息-->
+<div id="topbar">
+	<div class="layout txt_r clearfix">
+    	<div class="lt welbox">欢迎来到中邮普泰<a href="#">请登录</a><a href="#">免费注册</a></div>
+        <div class="shortcut_bar">
+        	<span class="linkbox"><a href="#">我的主页</a></span>
+            <span class="linkbox"><a href="#">我的订单</a></span>
+            <span class="linkbox"><a href="#" class="phone"><i></i>手机版</a></span>
+            <span class="linkbox"><a href="#">我是供应商</a></span>
+            <span class="linkbox serviceLink"><a href="#">客服服务<i class="down"></i></a></span>
+            <span class="linkbox"><a href="#" class="listLink">网站导航<i class="down"></i></a></span>
+        </div>
+    </div>
+</div>
+
+<div id="header">
+	<div class="layout clearfix">
+    	<div class="logo lt">
+        	<a href="#"><img src="../images/logo.png"></a>
+            <div class="city">
+            	<h4>切换城市</h4>
+            </div>
+        </div>
+        <div class="searchBox">
+        	<div class="searchBar clearfix">
+            	<input name="" type="text" class="ipt" placeholder="输入产品名称"><input name="" type="button" class="btn" value="搜索">
+            </div>
+            <p class="hotLinks"><a href="#" class="hot">三星手机</a><a href="#">华为手机</a><a href="#">联想手机</a><a href="#">Nokia</a><a href="#">iPhone</a></p>
+        </div>
+        <div class="shopCart">
+        	<span class="icon"></span><a href="#">购物车(<em class="col03">0</em>)</a>
+        </div>
+    </div>
+</div>
+<div id="nav">
+	<div class="layout clearfix">
+    	<div id="allCategory">
+        	<h2>全部商品分类</h2>
+             <div id="category">
+                  <ul>
+                  	 <li class="firMenu">
+                     	<a href="#" class="firLink"><img src="../images/1_ico.png">智能手机</a>
+                     </li> 
+                     <li class="firMenu">
+                     	<a href="#" class="firLink"><img src="../images/2_ico.png">功能手机</a>
+                     </li>
+                     <li class="firMenu">
+                     	<a href="#" class="firLink"><img src="../images/3_ico.png">手机配件</a>
+                     </li>
+                     <li class="firMenu">
+                     	<a href="#" class="firLink"><img src="../images/4_ico.png">数码小家电</a>
+                     </li>
+                     <li class="firMenu">
+                     	<a href="#" class="firLink"><img src="../images/5_ico.png">智能设备</a>
+                     </li>
+                     <li class="firMenu">
+                     	<a href="#" class="firLink"><img src="../images/6_ico.png">电脑及周边</a>
+                     </li>
+                     <li class="firMenu">
+                     	<a href="#" class="firLink"><img src="../images/7_ico.png">礼品及物料</a>
+                     </li>
+                     <li class="firMenu">
+                     	<a href="#" class="firLink"><img src="../images/8_ico.png">空中充值</a>
+                     </li>
+                     <li class="firMenu">
+                     	<a href="#" class="firLink"><img src="../images/9_ico.png">店面增值</a>
+                     </li>
+                  </ul>
+            </div>
+        </div>
+        <ul id="navbar">
+          <li><a href="#">首页</a></li>
+          <li><a href="#">一键订货</a></li>
+          <li><a href="#">市场专区</a></li>
+          <li><a href="#">代理专区</a></li>
+          <li><a href="#">功能机</a></li>
+          <li><a href="#">配件专区</a></li>
+          <li><a href="#">赛诺资讯</a></li>
+        </ul>
+    </div>
+</div>
+<div class="crumbs">
+	<div class="layout clearfix">
+    	<a href="#" class="home">首页</a> &gt; <a href="#">我的商城</a>
+    </div>
+</div>
+<div class="layout clearfix">
+	<div id="sidernav">
+    	<h2>我的商城</h2>
+        <div class="manageBox">
+            <dl class="clearfix">
+                <dt><img src="../pic/hlw.jpg"><i></i></dt>
+                <dd>
+                    <p><a href="#" class="editPhoto">修改头像<input name="" type="file"></a></p>
+                    <p><a href="#" class="editInfo">修改资料</a></p>
+                    <p><a href="#" class="exitLink">安全退出</a></p>
+                </dd>
+            </dl>
+            <p class="ml10 mt10">大娃 <i class="lv">V0</i></p>
+        </div>
+        <ul class="menuUnit bbm">
+        	<li class="firNav">
+            	<a href="#" class="firLink">&middot; 交易管理</a>
+            </li>
+            <li class="secNav cur">
+            	<a href="user_order.html">订单列表</a>
+            </li>
+            <li class="secNav">
+            	<a href="user_collects.html">我的收藏</a>
+            </li>
+            <li class="secNav">
+            	<a href="user_trade.html">交易信息</a>
+            </li>
+            <li class="secNav">
+            	<a href="user_applys.html">申请售后</a>
+            </li>
+            <li class="secNav">
+            	<a href="user_afterSale.html">售后列表</a>
+            </li>
+        </ul>
+        <ul class="menuUnit">
+        	<li class="firNav">
+            	<a href="#" class="firLink">&middot; 资料管理</a>
+            </li>
+            <li class="secNav">
+            	<a href="user_address.html">收货地址</a>
+            </li>
+            <li class="secNav">
+            	<a href="user_info.html">账户信息</a>
+            </li>
+            <li class="secNav">
+            	<a href="user_histroy.html">我的足迹</a>
+            </li>
+            <li class="secNav">
+            	<a href="user_security.html">账户安全</a>
+            </li>
+        </ul>
+    </div>
+    <div class="mainbody">
+    	<div class="odbox clearfix">
+        	<div class="lt_box">
+            	<div class="tt">
+                	<strong>订单信息</strong>
+                </div>
+                <div class="mes">
+                	<dl class="clearfix">
+                    	<dt>收货地址：</dt>
+                        <dd>
+                        	妮娜，15012993333，浙江省 杭州市 西湖区 蒋村街道 西湖区文一西路776号
+                        </dd>
+                    </dl>
+                    <dl class="clearfix">
+                    	<dt>发票：</dt>
+                        <dd>
+                        	大苏打大苏打撒旦
+                        </dd>
+                    </dl>
+                    <dl class="clearfix">
+                    	<dt>买家留言：</dt>
+                        <dd>
+                        	大苏打大苏打撒旦大苏打大苏打撒旦大苏打大苏打撒旦大苏打大苏打撒旦大苏打大苏打撒旦
+                        </dd>
+                    </dl>
+                    <dl class="clearfix bt">
+                    	<dt>订单编号：</dt>
+                        <dd>
+                        	<em class="rt more"><a href="#logistics" class="col02">更多</a></em>
+                        	20393332222
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="rt_box">
+            	<h2 class="status close">订单状态：订单关闭</h2>
+                <p class="mt20 ml35 col02">系统 于2015-05-01 17:20:30 取消了订单(超期未支付系统自动关闭订单)</p>
+            </div>
+        </div>
+        <table class="odTable mt25">
+        		 <tbody class="odlist"> 
+                 <!---标头--->
+                 		<tr class="sp">
+                      	 	<th class="w395 ct bl">商品</th>
+                            <th class="ct">单价(元)</th>
+                            <th class="ct">数量</th>
+                            <th class="ct">优惠活动</th>
+                            <!--<th class="ct">售后维权</th>-->
+                            <th class="ct br">交易状态</th>
+                            <!--<th class="ct">交易操作</th>-->
+                        </tr>
+                <!---标头end 列表--->         
+                      <tr>
+                        <td class="bl">
+                            <a href="#" class="col01" target="_blank">
+                                <img src="../pic/p1.jpg" class="pimg">
+                                Huawei/华为 荣耀6 Plus 移动联通电信版双卡4G手机
+                            </a>
+                        </td>
+                        <td class="ct">2999.00</td>
+                        <td class="ct">1</td>
+                        <!--<td class="ct">满300返50</td>-->
+                        <td class="ct">
+							<a href="#" class="col03">申请售后</a>
+                        </td>
+                        <td rowspan="2" class="ct bl br">
+                            <p>待付款</p>
+                            <p><a href="#" class="col01" target="_blank">订单详情</a></p>
+                        </td>
+                        <!--<td class="ct bl br">
+                            <a href="#" class="col01">分享商品</a>
+                        </td>-->
+                      </tr>
+                      <tr>
+                        <td class="bl">
+                            <a href="#" class="col01" target="_blank">
+                                <img src="../pic/p1.jpg" class="pimg">
+                                Huawei/华为 荣耀6 Plus 移动联通电信版双卡4G手机
+                            </a>
+                        </td>
+                        <td class="ct">2999.00</td>
+                        <td class="ct">1</td>
+                        <!--<td class="ct">满300返50</td>-->
+                        <td class="ct">
+							<a href="#" class="col03">申请售后</a>
+                        </td>
+                        <!--<td class="ct bl br">
+                            <a href="#" class="col01">分享商品</a>
+                        </td>-->
+                      </tr>
+                 </tbody> 
+                 <!---列表end--->
+                 <tr>
+                 	<td colspan="5" class="btmTotal txt_r">
+                    	<p>免运费</p>
+                        <p><strong>订单应付金额：<em class="col03 f16">￥2000.00</em>元</strong></p>
+                    </td>
+                 </tr> 
+           </table>
+        <div class="tittab txt_r mt20 clearfix" id="logistics" name="logistics">
+       	    <span class="cur lt">物流动态</span>
+        </div>
+        <div class="logistics">
+        	<ul>
+            	<li>
+                	<span class="logtime">
+                    	2015-05-28 17:06:28
+                    </span>
+                    <span class="logmes">
+                    	卖家已发货 <em class="col02">【国通快运】 快递编号：2004999222020</em>
+                    </span>
+                </li>
+                <li>
+                	<span class="logtime">
+                    	2015-05-29 07:00:18
+                    </span>
+                    <span class="logmes">
+                    	【广东揭阳公司】的收件员【刘**】已收件
+                    </span>
+                </li>
+                <!--如没签收状态-->
+                <li class="last">
+                	<span class="logtime">
+                    	2015-05-29 12:06:32
+                    </span>
+                    <span class="logmes">
+                    	【广东揭阳公司】正在进行【装袋】扫描
+                    </span>
+                </li>
+                <!--签收状态-->
+                <li class="last ok">
+                	<span class="logtime">
+                    	2015-06-01 09:26:22
+                    </span>
+                    <span class="logmes">
+                    	已签收,签收人是本人签收 <b></b>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- 公用底部开始 -->
+<div id="footer">
+	<div class="layout clearfix">
+    	<div class="slogen clearfix">
+        	<dl>
+            	<dt><img src="../images/gw1_ico.jpg"></dt>
+                <dd><h2>正品保障</h2><p>正品保障 提供发票</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="../images/gw2_ico.jpg"></dt>
+                <dd><h2>极速物流</h2><p>极速物流 极速送达</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="../images/gw3_ico.jpg"></dt>
+                <dd><h2>无忧售后</h2><p>15天无理由退货</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="../images/gw4_ico.jpg"></dt>
+                <dd><h2>特色服务</h2><p>自助维修包养预约</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="../images/gw5_ico.jpg"></dt>
+                <dd><h2>帮助中心</h2><p>您的购物指南</p></dd>
+            </dl>
+        </div>
+   	  <div class="root_ser">
+        	<dl>
+            	<dt>购物指南</dt>
+                <dd><a href="#" target="_blank">导购显示</a></dd>
+                <dd><a href="#" target="_blank">免费注册</a></dd>
+                <dd><a href="#" target="_blank">会员等级</a></dd>
+                <dd><a href="#" target="_blank">常见问题</a></dd>
+            </dl>
+            <dl>
+           	  <dt>支付方式</dt>
+                <dd><a href="#" target="_blank">易付宝支付</a></dd>
+                <dd><a href="#" target="_blank">网银支付</a></dd>
+                <dd><a href="#" target="_blank">快捷支付</a></dd>
+                <dd><a href="#" target="_blank">分期付款</a></dd>
+                <dd><a href="#" target="_blank">货到付款</a></dd>
+                <dd><a href="#" target="_blank">门店支付</a></dd>
+            </dl>
+            <dl>
+           	  <dt>物流配送</dt>
+                <dd><a href="#" target="_blank">面运费政策</a></dd>
+                <dd><a href="#" target="_blank">配送服务承诺</a></dd>
+                <dd><a href="#" target="_blank">牵手验货</a></dd>
+                <dd><a href="#" target="_blank">物流查询</a></dd>
+            </dl>
+            <dl>
+           	  <dt>售后服务</dt>
+                <dd><a href="#" target="_blank">退换货政策</a></dd>
+                <dd><a href="#" target="_blank">退换货流程</a></dd>
+                <dd><a href="#" target="_blank">购买延保服务</a></dd>
+                <dd><a href="#" target="_blank">退款说明</a></dd>
+                <dd><a href="#" target="_blank">退换货申请</a></dd>
+                <dd><a href="#" target="_blank">维修/包养</a></dd>
+            </dl>
+            <dl>
+           	  <dt>商家服务</dt>
+                <dd><a href="#" target="_blank">商家入住</a></dd>
+                <dd><a href="#" target="_blank">信息公告</a></dd>
+                <dd><a href="#" target="_blank">培训中心</a></dd>
+                <dd><a href="#" target="_blank">信息公告</a></dd>
+                <dd><a href="#" target="_blank">广告服务</a></dd>
+                <dd><a href="#" target="_blank">商家帮助</a></dd>
+                <dd><a href="#" target="_blank">服务市场</a></dd>
+            </dl>
+            <div class="weixin ct rt">
+                <p><strong class="f14">中邮普泰微信</strong></p>
+                <p><img src="../images/weixin.jpg"></p>  
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div id="btmbar">
+    <div class="info">
+        <p><a href="#" target="_blank">关于中邮普泰</a> | <a href="#" target="_blank">我们的团队</a> | <a href="#" target="_blank">网站联盟</a> | <a href="#" target="_blank">热门搜索</a> | <a href="#" target="_blank">友情链接</a> | <a href="#" target="_blank">诚征人才</a></p>
+        <p>浙ICP备2121245号|台字B1.B2-2013004|营业执照|互联网药品信息服务资格证|互联网药品交易服务资格证</p>
+        <p>Copyright &copy;中邮普泰 2007-2015 ，All Right Reserved</p>
+        <p class="mt10">
+            <img src="../images/pic-flink.jpg"/>
+        </p>
+    </div>
+</div>
+<script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../js/public.js"></script>
+</body>
+</html>

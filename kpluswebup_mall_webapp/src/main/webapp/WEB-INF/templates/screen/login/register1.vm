@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>注册</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/style/login.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/style/register1.css">
+</head>
+<body>
+	<div id="all">
+	<!-- 头部 -->
+	<div class="header">
+		<div class="w">
+			<div class="zl">
+				<a href="$!{domain}/index.htm"><img style="width:200px;" src="$!{mallStatic}/img/logo/soubei_logo.png"></a>
+			</div>
+			<ul class="zr">
+				<li><a href="$!{domain}/mall/member/toLogin.htm">登录</a></li>
+				<li class="spacer"></li>
+				<li><a href="$!{domain}/index.htm">首页</a></li>
+				<!--
+				<li class="spacer"></li>
+				<li><a href="$!{domain}/mall/helps/helpsCenter.htm" target="_blank">帮助中心</a></li>
+				-->
+			</ul>
+			<span class="clean_up"></span>
+		</div>
+	</div>
+
+	<!-- 内容 -->
+	<div class="content matter">
+		<div class="ct">
+			<div class="step"></div>
+			<div class="detail">
+				<form id="submitform" action="$!{domain}/mall/member/register2.htm" method="post" enctype="multipart/form-data">
+					<div class="form">
+						<div class="it">
+							<span class="pt1"><b>*</b>昵称</span> <span class="pt_val"><input
+								type="text" name="name" id="name" 
+								class="name" autocomplete="off" placeholder="输入昵称"><em class="prompt_1 col05"></em></span>
+						</div>
+						<div class="it">
+						 <span class="pt1"><b>*</b>校验码：</span> <span class="pt_val"><input name="validateCode"
+							type="text" class="text minText validdateCode" maxlength="4" autocomplete="off" placeholder="输入校验码"/><a href="javascript:;"
+							class="yzm"><img src="$!{domain}/imageServlet"
+								onclick="javascript:refresh(this);" alt="" width="80"
+								height="26" /></a><em class="prompt_1 col05"></em></span>
+						</div>
+						<div class="it">
+							<span class="pt1"><b>*</b>手机号码</span> <span class="pt_val"><input
+								type="text" name="mobile" class="mobile" autocomplete="off" id="mobile"
+								placeholder="请输入您的手机号码"><em class="prompt_1 col05"></em></span>
+						</div>
+						<div class="it">
+							<span class="pt1">&nbsp;</span> <span class="pt_val">
+							<input class="getvf off" type="button" disabled="disabled" value="点此获取验证码" onclick="sendSms();">
+							<em class="prompt_1 col05"></em>
+							</span>
+						</div>
+						<div class="it">
+							<span class="pt1"><b>*</b>验证码</span> <span class="pt_val"><input
+								type="text" name="verify" class="verify" autocomplete="off"
+								placeholder="输入验证码"><em class="prompt_1 col05"></em></span>
+						</div>
+						<div class="it">
+							<span class="pt1"><b>*</b>登录密码</span> <span class="pt_val"><input
+								type="password" name="password" id="password" class="password" id="password"
+								autocomplete="off" placeholder="设置您的登录密码"><em class="prompt_1 col05"></em></span>
+						</div>
+						<div class="it">
+							<span class="pt1"><b>*</b>再次确认</span> <span class="pt_val"><input
+								type="password" name="repassword" id="repassword" class="repassword"
+								autocomplete="off" placeholder="再次输入您的登录密码"><em class="prompt_1 col05"></em></span>
+						</div>
+						<!-- <div class="it">
+							<span class="pt1"><b>*</b>公司名称</span> <span class="pt_val"><input
+								type="text" name="companyName" id="companyName" 
+								class="companyName" autocomplete="off" placeholder="输入公司名称"><em class="prompt_1 col05"></em></span>
+						</div>
+						<div class="sp">
+							<span class="pt1"><b>*</b>营业执照</span> 
+							<img id="uploadImage" src="" style="width: 100px; height: 100px;display: none;">
+							<span class="pt_val cump">
+							 <input type="hidden" value="$!customerVO.mainID" name="mainID"
+								id="mainID"> 
+							<input type="hidden" name="picURL" id="picURL" class="picURL" > 
+		
+							<input name="myfiles" type="file" accept="image/*" id="myBlogImage" class="up_file"
+								onchange="ajaxFileUpload()" />
+							<em class="prompt_1 col05"></em>  
+							</span>
+						</div>
+						
+						
+						<div class="it">
+							<span class="pt1"><b>*</b>收货地址</span> <span class="pt_val">
+							<select name="provinceID" onclick="changeProvinceID(this.value);">
+								#foreach($!province in $!provinceList)
+								   <option #if("$!member.provinceID"=="$!province.mainID") selected="selected" #end value="$!province.mainID">$!province.name</option> 
+							    #end
+							</select>
+							<select name="cityID" onclick="changeCity(this.value);"	class="cityed" id="cityid">
+							    #foreach($!city in $!cityList)
+								   <option #if("$!member.cityID" == "$!city.mainID") selected="selected" #end value="$!city.mainID">$!city.name</option>
+							    #end
+							</select> 
+							<select name="districtID" id="districtid" class="district">
+								#foreach($!district in $!districtList) 
+								    <option #if("$!member.districtID" == "$!district.mainID") selected="selected" #end	value="$!district.mainID">$!district.name</option>
+								#end
+							</select>
+							</span>
+						</div>
+						<div class="it">  <a class="col01" href="$!{domain}/mall/member/announcement.htm" target="_blank"> </a>
+							<span class="pt1"></span> <span class="pt_val"><input  
+								type="text" style="width: 333px;" name="address" class="address"
+								autocomplete="off" placeholder="输入公司的地址"></span>
+						</div> -->
+
+						<div class="it">
+							<span class="pt1"></span> <span class="pt_val"> <span>
+									<input type="checkbox" name="sel_box" class="sel_box" checked="checked"
+									style="border: none;">
+							</span> <span class="xy"> 创建网站账户的同时，我同意 : -遵守- 《网站服务协议》</span>
+							</span>
+						</div>
+						<div class="it">
+							<span class="pt1 fw"></span> <a class="pt_val psub"
+								href="javascript:;">下一步</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="loaner"></div>
+</div>
+	 #parse("layout/bottom.vm")
+	<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/register.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+    <script type="text/javascript">
+    function ajaxFileUpload() {
+    	jQuery.ajaxFileUpload({
+    		url : '/file/fileUpload.do',
+    		secureuri : false,// 是否启用安全提交,默认为false
+    		fileElementId : 'myBlogImage',// 文件选择框的id属性
+    		dataType : 'text',// 服务器返回的格式,可以是json或xml等
+    		success : function(data, status) {
+    			data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+    			data = data.replace("</PRE>", '');
+    			data = data.replace("<pre>", '');
+    			data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+    			if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+    				$("img[id='uploadImage']").attr("src", data.substring(2));
+    			    $("#uploadImage").show();
+    				$("#picURL").val(data.substring(2));
+    				$('#result').html("图片上传成功<br/>");
+    				jQuery(".picURL").parent().find(".prompt_1").removeClass("error").addClass("ok").html("图片上传成功！");	
+    			}else {
+    				$('#result').html('图片上传失败，请重试！！');
+    				jQuery(".picURL").parent().find(".prompt_1").removeClass("ok").addClass("error").html("图片上传失败，请重试！");
+    			}
+    		},
+    		error : function(data, status, e) { // 服务器响应失败时的处理函数
+    			$('#result').html('图片上传失败，请重试！！');
+    			jQuery(".picURL").parent().find(".prompt_1").removeClass("ok").addClass("error").html("'图片上传失败，请重试！");
+    		}
+    	});
+    }
+    
+    function refresh(obj) {
+		obj.src = "$!{domain}/imageServlet?" + Math.random();
+	}
+    </script>
+</body>
+</html>

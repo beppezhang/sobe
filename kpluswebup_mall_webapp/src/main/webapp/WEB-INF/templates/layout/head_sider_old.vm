@@ -1,0 +1,54 @@
+<div id="header">
+	<div class="layout clearfix">
+    	<div class="logo lt">
+        	<a href="/index.htm"><img style="  width: 200px;  height: 70px;" src="$!{domainImg}$!shopLogo"></a>
+        </div>
+        <div class="searchBox">
+         <ul>
+                <li class="cur" data="输入产品名称" data1="sear">宝贝</li>
+                <li data="输入店铺名称" data1="sear1">店铺</li>
+            </ul>
+        	<div class="searchBar clearfix">
+            	<input name="" id="ppname" type="text" class="ipt" value="$!pname" placeholder="输入产品名称"><input name="" type="button" id="sear" class="btn" value="搜索">
+            </div>
+            <p class="hotLinks"><a></a><!-- <a href="#" class="hot">三星手机</a><a href="#">华为手机</a><a href="#">联想手机</a><a href="#">Nokia</a><a href="#">iPhone</a>--></p> 
+        </div>
+        <div class="shopCart">
+        	<span class="icon"></span><a href="/shoppingCart1.htm">购物车(<em class="col03">#if("$!{user.shoppingcartCount}"=="")0#else$!{user.shoppingcartCount}#end</em>)</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script>
+//宝贝店铺切换
+$(".searchBox ul li").click(function(){
+    $(this).addClass("cur").siblings().removeClass("cur");
+    var data = $(this).attr("data");
+    $(".searchBox .searchBar .ipt").attr("placeholder",data);
+    $(".searchBox .searchBar .btn").attr("id",$(this).attr("data1"));
+})	
+  
+	$(".searchBox .searchBar .btn").click(
+		function(){
+			var idV = $(this).attr("id");
+			if(idV=="sear"){
+				var productType = $("#productType").val();
+				if(undefined==productType){
+					productType='';
+				}
+				if(typeof(productType) == "undefined"){
+					productType='';
+				}
+				location.href="${domain}/mall/product/searchProductList.htm?productType="+productType+"&name="+$("#ppname").val();
+			}else if(idV=="sear1"){
+				location.href="${domain}/mall/product/searchShopList.htm?name="+$("#ppname").val();
+			}
+		}		
+	)
+	/* jQuery("#sear1").click(
+		function(){
+			alert('店铺')
+			location.href="/mall/product/searchShopList.htm?name="+$("#ppname").val();
+		}		
+	) */
+</script>

@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.MainDAO">
+
+	<select id="findOrderVolume" resultType="orderVolumeVO">
+		SELECT
+		sum(a.amount)AS
+		amount,
+		DATE_FORMAT(a.modifyTime, '%Y-%m-%d') AS
+		dateTime
+		FROM
+		kplus_account_detail a
+		WHERE
+		a.accountType = 1
+		AND
+		a.detailType = 2
+		AND
+		a.`status` = 1
+		AND a.modifyTime &gt;=
+		DATE_FORMAT(#{startTime},
+		'%Y-%m-%d')
+		AND a.modifyTime &lt;=
+		DATE_FORMAT(#{endTime}, '%Y-%m-%d')
+		GROUP BY
+		a.modifyTime
+		ORDER BY
+		a.modifyTime asc
+	</select>
+
+	<select id="findMemberCount" resultType="memberCountVO">
+		SELECT
+		count(id) as
+		count,
+		DATE_FORMAT(a.createTime, '%Y-%m-%d') AS dateTime
+		FROM
+		kplus_customer a
+		WHERE
+		a.isDelete = 0
+		AND a.createTime &gt;=
+		DATE_FORMAT(#{startTime}, '%Y-%m-%d')
+		AND a.createTime &lt;
+		DATE_FORMAT(#{endTime}, '%Y-%m-%d')
+		GROUP BY
+		dateTime order by
+		dateTime asc
+	</select>
+
+	<select id="findProductStatistics" resultType="productStatisticsVO">
+
+		SELECT
+		a.mainID,
+		a.`name`,
+		a.picURL,
+		SUM(IFNULL(c.itemCount, 0))AS salesCount,
+		SUM(IFNULL(b.payableAmount, 0))AS orderAmount
+		FROM
+		kplus_product a
+		LEFT
+		JOIN kplus_salesorder_line c ON c.productID = a.mainID
+		LEFT JOIN
+		kplus_salesorder b ON c.orderID = b.mainID
+		AND a.createTime
+		&gt;=DATE_FORMAT(#{startTime}, '%Y-%m-%d')
+		AND a.createTime
+		&lt;=DATE_FORMAT(#{endTime}, '%Y-%m-%d')
+		AND b.orderType != 4
+		AND
+		b.paymentStatus = 1
+		AND b.isDelete = 0
+		WHERE
+	    a.isDelete = 0
+		GROUP BY
+		a.mainID,
+		a.`name`,
+		a.picURL
+		ORDER BY
+		orderAmount DESC
+		LIMIT 0,3;
+	</select>
+
+
+	<select id="findCustomerStatistics" resultType="customerVO">
+		SELECT
+		a.mainID,
+		a.username,
+		a.`name`,
+		SUM(IFNULL(b.payableAmount, 0))AS orderAmount
+		FROM
+		kplus_customer a
+		LEFT JOIN kplus_salesorder b ON a.mainID =
+		b.customerID
+		AND b.createTime &gt;=DATE_FORMAT(#{startTime},
+		'%Y-%m-%d')
+		AND b.createTime &lt;=DATE_FORMAT(#{endTime}, '%Y-%m-%d')
+		AND b.orderType != 4
+		AND b.paymentStatus = 1
+		WHERE
+		a.isDelete = 0
+		GROUP BY
+		a.mainID,
+		a.username,
+		a.`name`
+		ORDER BY
+		orderAmount DESC
+		LIMIT
+		0,5;
+	</select>
+
+
+	<select id="findStatisticsInfo" resultType="statisticsInfoVO">
+		SELECT
+		(
+		SELECT
+		count(*)
+		FROM
+		kplus_customer c
+		WHERE
+		c.isDelete = 0
+		)AS customerCount,
+		(
+		SELECT
+		count(*)
+		FROM
+		kplus_product p
+		WHERE
+		p.isDelete = 0
+		)AS productTotal,
+		(
+		SELECT
+		count(*)
+		FROM
+		kplus_product p
+		WHERE
+		p.isDelete = 0
+		AND p.`status` =
+		1
+		)productSaleTotal,
+		(
+		SELECT
+		count(*)
+		FROM
+		kplus_product p
+		WHERE
+		p.isDelete =
+		0
+		AND p.`status` = 0
+		)AS productUnSaleTotal,
+		(
+		SELECT
+		count(*)
+		FROM
+		kplus_salesorder s
+		WHERE
+		s.isDelete = 0
+		)AS orderTotal,
+		(
+		SELECT
+		SUM(s.totalAmount)
+		FROM
+		kplus_salesorder s
+		WHERE
+		s.isDelete = 0 and s.orderStatus!=0
+		)AS
+		orderTotalAmount,
+		(
+		SELECT
+		count(*)
+		FROM
+		kplus_salesorder_return rs
+		WHERE
+		rs.isDelete = 0
+		)AS orderReturnTotal,
+		(
+		SELECT
+		sum(rs.returnAmount)
+		FROM
+		kplus_salesorder_return rs
+		WHERE
+		rs.isDelete = 0
+		)AS
+		orderReturnTotalAmount
+
+	</select>
+
+	<select id="findStatisticsOrderStstus" resultType="statisticsOrderStstusVO">
+		SELECT
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c ON
+		s.customerID =
+		c.mainID
+		where s.isDelete=0 and c.isDelete=0 and
+		s.orderStatus = 1
+		)AS orderConfirmCount,
+
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c ON s.customerID =
+		c.mainID
+		where s.isDelete=0 and c.isDelete=0 and s.orderStatus = 2
+		)AS
+		orderLeavesCount,
+
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN
+		kplus_customer c ON s.customerID =
+		c.mainID
+		WHERE
+		s.isDelete=0 and c.isDelete=0 and s.orderStatus = 3
+		)AS orderConsignmentCount,
+
+		(
+		SELECT
+		COunt(r.id)
+		FROM
+		kplus_salesorder_returnapply r
+		WHERE
+		r.`status` = 0
+		) as returnapplyConfirmCount ,
+
+		(
+		SELECT
+		COUNT(sr.id)
+		FROM
+		kplus_salesorder_return sr
+		WHERE
+		sr.`status` = 3
+		) as
+		returnapplyReceivesCount,
+
+		(
+		SELECT
+		COUNT(sr.id)
+		FROM
+		kplus_salesorder_return sr
+		WHERE
+		sr.`status` = 4
+		AND sr.returnType = 1
+		)
+		as returnReceivesCount,
+
+		(
+		SELECT
+		COUNT(sr.id)
+		FROM
+		kplus_salesorder_return
+		sr
+		LEFT JOIN kplus_product p ON sr.productID = p.mainID
+		LEFT JOIN
+		kplus_item i ON sr.itemID = i.mainID
+		WHERE
+		sr.isDelete = 0
+		AND p.isDelete = 0
+		AND i.isDelete = 0
+		and
+		sr.`status` = 4
+		AND
+		sr.returnType = 2
+		) as accountReturnCount,
+
+		(
+		SELECT
+		COUNT(ad.id)
+		FROM
+		kplus_account_detail ad
+		WHERE
+		ad.detailType = 3
+		AND ad.`status` = 0
+		) as
+		accountConfirmCount,
+		
+		(
+	     SELECT
+	     COUNT(zya.id)
+	     FROM 
+	     kplus_zy_salesorder_salesapply  zya
+	     WHERE
+	     zya.isDelete=0
+	    )as 
+	     salesOrderSalesApplyCount,
+	     
+	    ( 
+	     SELECT
+	     COUNT(zya.id)
+	     FROM 
+	     kplus_zy_salesorder_salesapply  zya
+	     WHERE
+	     zya.isDelete=0 and zya.salesType=1
+	    )as 
+	     salesApplyType1Count,
+	     
+	    (
+	     SELECT
+	     COUNT(zya.id)
+	     FROM 
+	     kplus_zy_salesorder_salesapply  zya
+	     WHERE
+	     zya.isDelete=0 and zya.salesType=2
+	    )as 
+	     salesApplyType2Count
+		
+
+	</select>
+</mapper>

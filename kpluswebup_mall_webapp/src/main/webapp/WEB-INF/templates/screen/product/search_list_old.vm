@@ -1,0 +1,537 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>卡塔网络</title>
+ <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/details.css">
+</head>
+
+<!-- top bar -->
+#parse("layout/head_top.vm")
+<body>
+<!-- sider tool bar  -->
+#parse("layout/head_sider.vm")
+ 
+<!-- 头部LOGO 
+#parse("layout/logo.vm")-->
+<!-- 主导航 -->
+#parse("layout/menu.vm")
+
+
+
+<div id="crumb">
+	<div class="layout clearfix">
+    	<a href="$!{domain}/index.htm" class="home">首页</a> &gt; #if("$!productType"=="1")市场专区#end #if("$!productType"=="2")代理专区 #end
+    	 #if("$!productCategoryVO"!="")
+    	 <a href="javascript:;" onclick="deletedata('$!productCategoryVO.mainID','catID')">$!productCategoryVO.name</a> 
+    	 #end
+    	 #if("$!brandVO"!="")
+    	 <a href="javascript:;" onclick="deletedata('$!brandVO.mainID','brandID')">$!brandVO.name</a>
+    	 #end
+    </div>
+</div>
+
+<div class="layout mt15  clearfix">
+<!-- 左边信息区 -->
+    <div id="leftArea">
+        <!--商品排行-->
+        <div class="unitBox">
+            <div class="aTbar"><strong>商品排行</strong></div>
+            <div class="smallPro_list">
+                <ul>
+                #foreach($!volumeProduct in $!volumeProducts)
+                    <li>
+                        <a href="$!{domain}/mall/product/productDetail.htm?productID=$!volumeProduct.mainID&itemID=$!volumeProduct.itemID" target="_blank"><img src="$!{domainImg}$!volumeProduct.picURL" class="pimg"></a>
+                        <h4><a href="$!{domain}/mall/product/productDetail.htm?productID=$!volumeProduct.mainID&itemID=$!volumeProduct.itemID" target="_blank">$!volumeProduct.name</a></h4>
+                        <p><span class="col02">￥$!NumberTool.format("#0.00",$!volumeProduct.minSalesPrice)</span></p>
+                        <p><span class="sc">售出：$!volumeProduct.maxSalesVolume</span></p>
+                    </li>
+                 #end  
+                </ul>
+            </div>
+        </div>
+        <!--最近浏览-->
+        <div class="unitBox mt15">
+              <div class="aTbar"><strong>最近浏览</strong></div>
+              <div class="smallPro_list">
+                  <ul>
+                   #foreach($!historyProduct in $!historyProducts)
+                      <li>
+                          <a href="$!{domain}/mall/product/productDetail.htm?productID=$!historyProduct.mainID&itemID=$!historyProduct.itemID" target="_blank"><img src="$!{domainImg}$!historyProduct.picURL" class="pimg"></a>
+                          <h4><a href="$!{domain}/mall/product/productDetail.htm?productID=$!historyProduct.mainID&itemID=$!historyProduct.itemID" target="_blank">$!historyProduct.name</a></h4>
+                          <p><span class="col02">￥$!NumberTool.format("#0.00",$!historyProduct.minSalesPrice)</span></p>
+                      </li>
+                       #end    
+                  </ul>
+                  <!-- <p class="ct mt15"><a href="#">全部浏览历史</a></p> -->
+             </div>
+        </div>
+    </div>
+ <!-- 右边详细区 -->
+    <div id="rightArea">
+    	<!--热销推荐<div class="unitBox">
+       	  <div class="sptitbar">热销推荐</div>
+          <ul class="hotsells clearfix">
+	          #foreach($!pro in $!list)
+	           	  <li>
+	               	  <a href="$!{domain}/mall/product/productDetail.htm?productID=$!{pro.mainID}&itemID=$!pro.itemID"><img src="$!{domain}$!pro.picURL" class="pimg"></a>
+	                  <h4>$!pro.name</h4>
+	                  <p><strong>商城价</strong>：<strong class="price">￥$!NumberTool.format("#0.00",$!pro.minSalesPrice)</strong></p>
+	                  <p><a href="$!{domain}/mall/product/productDetail.htm?productID=$!pro.mainID&itemID=$!pro.itemID" class="buyLink" target="_blank">立即抢购</a></p>
+	              </li>
+	          #end   
+          </ul>
+        </div> -->
+        <!--商品筛选-->
+        <div class="filter">
+            <div class="unitBox mt10">
+                <div class="sptitbar"><span class="resultName">#if("$!productType"=="1")市场专区#end #if("$!productType"=="2")代理专区 #end</span> -  #if("$!productCategoryVO"!="")
+    	 <a href="javascript:;" onclick="deletedata('$!productCategoryVO.mainID','catID')">$!productCategoryVO.name</a> 
+    	 #end
+    	 #if("$!brandVO"!="")
+    	 <a href="javascript:;" onclick="deletedata('$!brandVO.mainID','brandID')">$!brandVO.name</a>
+    	 #end
+    	 #if("$!brandVO"=="")
+    	 $!bname $!pname
+    	 #end</div>
+                <div class="fbox bbm clearfix">
+                    <div class="nameKey">
+                        品牌：
+                    </div>
+                    <div class="nameVal">
+                        <ul class="clearfix" id="jBrands">
+	                        #foreach($!brandVo in $!brandList)
+		                        #if("$!brandVO"==""||"$!brandVO.mainID"!="$!brandVo.mainID")
+		                    	<li><a href="javascript:;" onclick="serach('','$!brandVo.mainID','')"><img src="$!{imgurl}$!brandVo.picURL" class="bimg"></a></li>
+		                    	#end
+		                    	#if("$!brandVO.mainID"=="$!brandVo.mainID")
+		                    	<li  style = "border:1px dashed #fd7115;"><a href="javascript:;" onclick="serach('','$!brandVo.mainID','')"><img src="$!{imgurl}$!brandVo.picURL" class="bimg"></a></li>
+		                    	#end
+	                    	#end  
+                        </ul>
+                    </div>
+                  <a class="moreLink" href="javascript:;">更多</a>
+                </div>    
+                <div class="fbox bbm clearfix">
+                	<div class="nameKey">
+                        价格：
+                    </div>
+                    <div class="nameVal">
+                    	<ul class="clearfix attrTxt">
+                    		 <li><a href="javascript:;" id="0ll" onclick="searchsale(0,10000000);" >全部</a></li>
+		                    <li><a href="javascript:;" id="299"  onclick="searchsale(0,299);" >0~299</a></li>
+		                    <li><a href="javascript:;"  id="599" onclick="searchsale(300,599);" >300~599</a></li>
+		                    <li><a href="javascript:;"  id="1199" onclick="searchsale(600,1199);" >600~1199</a></li>
+		                    <li><a href="javascript:;"  id="2099" onclick="searchsale(1200,2099);" >1200~2099</a></li>
+		                    <li><a href="javascript:;"  id="4099" onclick="searchsale(2100,4099);" >2100~4099</a></li>
+		                    <li><a href="javascript:;" id="0max"  onclick="searchsale(4100,10000000);" >4100以上</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <!-- 排序条 -->
+      <div class="sortBar clearfix mt10">
+        	<span class="rt">
+            	  #pagination($!itemDto)
+            </span>
+        	排序方式：
+        	<span class="sortLink"  id="maxSalesVolume"><a href="javascript:;">销量<i></i></a></span><span class="sortLink" id="createTime"><a href="javascript:;">人气<i></i></a></span><span class="sortLink"  id="minSalesPrice"><a href="javascript:;">价格<i></i></a></span>
+        </div> 
+        <div class="rpList">
+	         #if($!its.size()==0)
+		     <div class="tdUnit">
+		        	<table cellspacing="0" cellpadding="0">
+		              <tr>
+		             	<td style="width: 100%"> 暂无商品</td>
+		              </tr>
+		           </table>
+		       </div>
+		     #end
+        	<ul class="clearfix">
+        	#foreach($!itemVO in $!its)
+            	<li>
+                	<p class="ct"><a href="$!{domain}/mall/product/productDetail.htm?productID=$!itemVO.productID&itemID=$!itemVO.mainID" target="_blank"><img src="$!{domainImg}$!itemVO.picURL" class="pimg imgMove"></a></p>
+                    <p class="tabs clearfix">
+					        #foreach($!pictureVO in $!itemsMap.get($!itemVO.productID))
+					        #if("$!{pictureVO.picURL}"!="")
+	               	    		<span><img src="$!domainImg$!pictureVO.picURL" class="simg"></span>
+	               	    	#end
+	                       	#end
+                    </p>
+                    <h4>$!itemVO.name</h4>
+                    <p><strong>￥$!NumberTool.format("#0.00",$!itemVO.salesPrice)</strong> <a href="javascript:;" value="$!itemVO.mainID" data-stock="$!itemVO.stock" sdata="$!itemVO.supplierID" data="$!itemVO.productID" class="opLink" style="background: #41a8f7 none repeat scroll 0 0;
+					    color: #fff;
+					    display: inline-block;
+					    font-size: 12px;
+					    line-height: 23px;
+					    padding: 3px 10px;" >加入购物车</a></p>
+                </li>
+            #end   
+            </ul>
+        </div> 
+        <div class="pagerbar clearfix txt_r">
+             #pagination($!itemDto)
+       </div>
+    </div>	
+</div>
+    
+
+<form action="$!{domain}/mall/product/searchProductList.htm" id="seach" method="get">
+<input type="hidden" value="$!itemDto.brandID" name="brandID" id="brandID">
+<input type="hidden" value="$!itemDto.pageNo" name="pageNo" id="pageNo">
+<input type="hidden" value="" name="orderByClause" id="orderByClause">
+<input type="hidden" value="$!itemDto.startSalePrice" name="startSalePrice" id="startSalePrice">
+<input type="hidden" value="$!itemDto.endSalePrice" name="endSalePrice" id="endSalePrice">
+<input type="hidden" value="$!itemDto.productType" name="productType" id="productType">
+<input type="hidden" value="$!pname" name="name" id="name">
+<input type="hidden" value="$!catID" name="catID" id="catID">
+<input type="hidden" value="$!cType" name="cType" id="cType">
+<input type="hidden" id="customerID" value="$!user.mainID">
+<input type="hidden" value="dataData" name="dataData" id="dataData">
+</form>
+<!-- footer -->
+#parse("layout/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+<script>
+	jQuery(".opLink").click(function(){
+		var customerID = jQuery("#customerID").val();
+		var itemID = $(this).attr("value");
+		var supplierID = $(this).attr("sdata");
+		var stock = $(this).attr("data-stock");
+		//var supplierID = $(this).parent().parent().find(".unitNum").attr("sdata");
+		//var stock = $(this).parent().parent().find(".unitNum").attr("data");//parseInt($(this).closest(".countMan").find(".unitNum").text());
+		var productID = $(this).attr("data");
+		//var itemCount = $(this).parent().parent().find(".unitNum").find("#addNumber").val();//jQuery("#itemCount").val();
+		var itemCount = 1;
+		if (stock == "" || stock <= 0 ) {
+			alert("库存不足！");
+			return;
+		}
+		if (customerID == "") {
+			//alert("请登录！");
+			window.location.href="/mall/member/toLogin.htm";
+			return;
+		}else {
+			//alert("加入购物车成功");
+			jQuery.ajax({
+				url : "$!{domain}/mall/product/ajaxAddCat.do",
+				data : {
+					"itemCount" : itemCount,
+					"itemID" : itemID,
+					"productID" : productID,
+					"customerID" : customerID,
+					"supplierID" : supplierID
+				},
+				type : "POST",
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 0) {
+						alert("添加购物车成功");
+						location.reload();
+					} else {
+						alert("添加失败！");
+					}
+				},
+				error : function() {
+					alert("系统出错！");
+				}
+			});
+		}
+	});
+
+	function serach(catID, brandID,orderByClause) {
+		if (brandID != "") {
+			jQuery("#brandID").val(brandID);
+		}
+		if (orderByClause != "") {
+			jQuery("#orderByClause").val(orderByClause);
+		}else{
+			jQuery("#orderByClause").val("");
+		}
+		
+		jQuery("#startSalePrice").val("");
+		jQuery("#endSalePrice").val("");
+		jQuery("#pTypePPropIDs").val();
+		jQuery("#pageNo").val(1);
+		jQuery("#seach").submit();
+	}
+	/*  $(".btn").click(function(){  
+		 $("#name").val($("#ppname").val());
+		 jQuery("#seach").submit();
+	 }); */
+	
+	function searchsale(){
+		var ssale=jQuery("#ssale").val();
+		var esale=jQuery("#esale").val();
+		if(ssale!=""){
+			jQuery("#startSalePrice").val(ssale);
+		}
+		if(esale!=""){
+			jQuery("#endSalePrice").val(esale);
+		}
+		jQuery("#pageNo").val(1);
+		jQuery("#seach").submit();	
+	}
+	function searchsale(ssale,esale){
+		if(ssale==''){
+			ssale=0;
+		}
+		if(esale==''){
+			esale=10000000;
+		}
+		jQuery("#startSalePrice").val(ssale);
+		jQuery("#endSalePrice").val(esale);
+		jQuery("#pageNo").val(1);
+		jQuery("#seach").submit();	
+	}
+	
+	
+	function addseachpropID(pTypePPropIDs){
+		jQuery("#pTypePPropIDs").val(pTypePPropIDs);
+		jQuery("#pageNo").val(1);
+		jQuery("#seach").submit();	
+	}
+	function deletedata(val,type){
+		if(type=="catID"){
+			jQuery("#catID").val("");
+		}
+		if(type=="brandID"){
+			jQuery("#brandID").val("");
+		}
+		jQuery("#pTypePPropIDs").val();
+		jQuery("#pageNo").val(1);
+		jQuery("#seach").submit();	
+	}
+	function delOnclick(){
+		jQuery(this).prev("em.gt").remove();
+		jQuery(this).remove();
+	}
+	jQuery(function() {
+		jQuery(".valName").find("ul").each(function() {
+			var h = jQuery(this).height();
+			if (h <= 34) {
+				jQuery(this).closest(".valName").next("a.more").hide();
+
+			}
+		});
+		jQuery("#filter").on("click", ".term a.more", function() {
+			var getHeight = jQuery(this).prev(".valName").find("ul").height();
+			if (getHeight > 40) {
+				jQuery(this).prev(".valName").toggleClass("cur");
+				jQuery(this).toggleClass("on");
+				jQuery(this).text(jQuery(this).hasClass("on") ? "收起" : "更多");
+			}
+		})
+		jQuery(".sortbar").on("click", ".pst a", function() {
+			jQuery(this).addClass("cur").siblings().removeClass("cur");
+		})
+		jQuery("#maxSalesVolume").click(
+			function(){
+				var orderByClause =$("#orderByClause").val();
+				$("#dataData").val("dataData1");
+				if(''==orderByClause||'order by c.salesPrice desc'==orderByClause||'order by c.salesPrice asc'==orderByClause||'order by c.modifyTime desc'==orderByClause||'order by c.modifyTime asc'==orderByClause){
+					jQuery("#orderByClause").val("order by c.salesVolume desc");
+				}
+				jQuery("#seach").submit();	
+			}		
+		)
+		jQuery("#minSalesPrice").click(
+			function(){
+				var orderByClause =$("#orderByClause").val();
+				$("#dataData").val("dataData1");
+				if(''==orderByClause||'order by c.salesVolume desc'==orderByClause||'order by c.salesVolume asc'==orderByClause||'order by c.modifyTime desc'==orderByClause||'order by c.modifyTime asc'==orderByClause){
+					jQuery("#orderByClause").val("order by c.salesPrice desc");
+				}
+				jQuery("#seach").submit();	
+			}		
+		)
+		jQuery("#createTime").click(
+			function(){
+				var orderByClause =$("#orderByClause").val();
+				$("#dataData").val("dataData1");
+				if(''==orderByClause||'order by c.salesVolume desc'==orderByClause||'order by c.salesVolume asc'==orderByClause||'order by c.salesPrice desc'==orderByClause||'order by c.salesPrice asc'==orderByClause){
+					jQuery("#orderByClause").val("order by c.modifyTime desc");
+				}
+				jQuery("#seach").submit();	
+			}		
+		)
+		jQuery(".sortbar").on("click", ".pst a", function() {
+			jQuery(this).addClass("cur").siblings().removeClass("cur");
+		})
+		jQuery(".sortbar").on("click", ".pst a.cp", function() {
+			if (jQuery(this).hasClass("up")) {
+				jQuery(this).removeClass("up").addClass("down")
+			} else if (jQuery(this).hasClass("down")) {
+				jQuery(this).removeClass("down").addClass("up")
+			} else {
+				jQuery(this).addClass("down")
+			}
+		})
+		jQuery('.prolist li').hover(function() {
+			jQuery(this).attr("class", "cur");
+		}, function() {
+			jQuery(this).removeAttr("class");
+		});
+		jQuery(".sortbar .col02").click(
+				function() {
+					jQuery(this).closest("#btn").prev(".limits").find(".ipt")
+							.val(null);
+				})
+		jQuery('.limits .ipt').focus(function() {
+			jQuery(this).closest(".limits").next("#btn").show();
+		});
+		
+		$(".sortbar .ipt").change(function(){
+			var iptVal=$(this).val();
+			if(isNaN(iptVal) || iptVal<0 ||  iptVal=="" || iptVal.replace(/\s+/g,"")=="") {
+					 $(this).val("");
+			}
+		})
+
+		/*
+		jQuery("#crumb").on("click", ".remove", function() {
+			jQuery(this).prev("em.gt").remove();
+			jQuery(this).remove();
+
+		})*/
+	})
+	
+	window.onload = function(){		
+		$("#sidernav .firNav ul.secNav").find("li").each(function() {
+            if($(this).hasClass("cur")){
+				$(this).closest(".firNav").addClass("cur");	
+			}
+        });
+	}
+	jQuery(document).ready(
+				function() {
+					var orderByClause ='$!orderByClause';
+					var dataData = '$!dataData';
+					/* if(dataData==""&&orderByClause==""){
+						$("#maxSalesVolume").addClass("cur down");
+						$("#orderByClause").val("order by c.salesVolume desc");
+					} */
+					
+					if(orderByClause=='order by c.modifyTime desc'){
+						if(dataData=="dataData1"){
+							$("#createTime").addClass("cur up");
+							$("#orderByClause").val("order by c.modifyTime asc");
+						}else if(dataData=="dataData"){
+							$("#createTime").addClass("cur down");
+							$("#orderByClause").val("order by c.modifyTime desc");
+						}
+						
+					}
+					if(orderByClause=='order by c.salesPrice desc'){
+						if(dataData=="dataData1"){
+							$("#minSalesPrice").addClass("cur up");
+							$("#orderByClause").val("order by c.salesPrice asc");
+						}else if(dataData=="dataData"){
+							$("#minSalesPrice").addClass("cur down");
+							$("#orderByClause").val("order by c.salesPrice desc");
+						}
+					}
+					if(orderByClause=='order by c.salesVolume desc'){
+						if(dataData=="dataData1"){
+							$("#maxSalesVolume").addClass("cur up");
+							$("#orderByClause").val("order by c.salesVolume asc");
+						}else if(dataData=="dataData"){
+							$("#maxSalesVolume").addClass("cur down");
+							$("#orderByClause").val("order by c.salesVolume desc");
+						}
+						
+					}
+					
+					if(orderByClause=='order by c.modifyTime asc'){
+						if(dataData=="dataData1"){
+							$("#createTime").addClass("cur down");
+							$("#orderByClause").val("order by c.modifyTime desc");
+						}else if(dataData=="dataData"){
+							$("#createTime").addClass("cur up");
+							$("#orderByClause").val("order by c.modifyTime asc");
+						}
+						
+					}
+					if(orderByClause=='order by c.salesPrice asc'){
+						if(dataData=="dataData1"){
+							$("#minSalesPrice").addClass("cur down");
+							$("#orderByClause").val("order by c.salesPrice desc");
+						}else if(dataData=="dataData"){
+							$("#minSalesPrice").addClass("cur up");
+							$("#orderByClause").val("order by c.salesPrice asc");
+						}
+					}
+					if(orderByClause=='order by c.salesVolume asc'){
+						if(dataData=="dataData1"){
+							$("#maxSalesVolume").addClass("cur down");
+							$("#orderByClause").val("order by c.salesVolume desc");
+						}else if(dataData=="dataData"){
+							$("#maxSalesVolume").addClass("cur up");
+							$("#orderByClause").val("order by c.salesVolume asc");
+						}
+					}
+					
+					var ssale = '$!itemDto.startSalePrice';
+					var esale = '$!itemDto.endSalePrice';
+					if(ssale==0&&esale==299){
+						 document.getElementById("299").style.border = "1px dashed #fd7115";
+					}
+					if(ssale==300&&esale==599){
+						 document.getElementById("599").style.border = "1px dashed #fd7115";
+					}
+					if(ssale==600&&esale==1199){
+						 document.getElementById("1199").style.border = "1px dashed #fd7115";
+					}
+					if(ssale==1200&&esale==2099){
+						 document.getElementById("2099").style.border = "1px dashed #fd7115";
+					}
+					if(ssale==2100&&esale==4099){
+						 document.getElementById("4099").style.border = "1px dashed #fd7115";
+					}
+					if(ssale==4100&&esale==10000000){
+						 document.getElementById("0max").style.border = "1px dashed #fd7115";
+					}
+					if(ssale==0&&esale==10000000){
+						 document.getElementById("0ll").style.border = "1px dashed #fd7115";
+					}
+					if(ssale==''&&esale==''){
+						 document.getElementById("0ll").style.border = "1px dashed #fd7115";
+					}
+					if(orderByClause==''){
+						$("#createTime").addClass("cur down");
+					}
+				}
+			)
+</script>
+<script>
+	$(function(){
+		//品牌展开&收起
+		$(".fbox").find(".moreLink").click(function(){
+			var ck = $(this).hasClass("on");
+			if(ck){
+				$(this).removeClass("on").text("更多")	;
+			}
+			else{
+				$(this).addClass("on").text("收起")
+			}
+			$("#jBrands").toggleClass("on");
+		})
+		//产品列表小图切换
+		$(".rpList li").find(".tabs").children("span").click(function(){
+			var imgSrc = $(this).find("img").attr("src");
+			$(this).addClass("cur").siblings().removeClass("cur");
+			$(this).closest("li").find(".pimg").attr("src",imgSrc);
+		})
+	})
+</script>
+</body>
+
+
+</html>

@@ -1,0 +1,91 @@
+	<div id="sidernav">
+    	<!-- <ul>
+        	<li class="firNav cur"><a href="javascript:;" class="firLink">交易管理</a>
+            	<ul class="secNav">
+                	<li id="user_order_list_cur"><a href="$!{domain}/mall/buyer/userOrderList.htm">我的订单</a></li>
+                    <li id="user_presell_list_cur"><a href="$!{domain}/mall/buyer/userPresell.htm">我的预定</a></li>
+                    <li id="user_favorite_list_cur"><a href="$!{domain}/mall/buyer/userfavoriteList.htm">我的收藏</a></li>
+                    <li id="user_exchange_cur"><a href="$!{domain}/mall/buyer/userExchange.htm">我的退换货</a></li> 
+                    <li><a href="user_messages.html">消息管理</a></li>
+                </ul>
+            </li>
+            
+            <li class="firNav cur"><a href="javascript:;" class="firLink">资产管理</a>
+            	<ul class="secNav">
+            	     <li id="user_invitation_list_cur"><a href="$!{domain}/mall/buyer/userInvitation.htm">会员邀请</a></li>
+                	<li id="user_menber_list_cur"><a href="$!{domain}/mall/buyer/userMenber.htm">我的会员</a></li>
+                </ul>
+            </li>
+            
+            <li class="firNav cur"><a href="javascript:;" class="firLink">账户管理</a>
+            	<ul class="secNav">
+                	<li id="user_info_cur"><a href="$!{domain}/mall/buyer/userInfo.htm">个人资料</a></li>
+                    <li id="user_security_cur"><a href="$!{domain}/mall/buyer/userSecurity.htm">账户安全</a></li>
+                    <li id="user_address_list_cur"><a href="$!{domain}/mall/buyer/userAddressList.htm">收货地址</a></li>
+                </ul>
+            </li>
+        </ul> -->
+        <h2>我的商城</h2>
+        $!logTime
+        <div class="manageBox">
+            <dl class="clearfix">
+                <dt>
+                #if("$!customerVO.avatar"!="")
+                	<img id="uploadImage" src="$!{domain}$!customerVO.avatar"><i></i>#else
+					<img id="uploadImage" src="$!{mallStatic}/images/header_inco.png"><i></i>
+                #end
+				</dt>	
+                <dd>
+                	<input type="hidden" value="$!customerVO.mainID" name="mainID" id="mainID">
+                	<input type="hidden" value="" name="picURL" id="picURL">
+                    <p><a href="javascript:;" class="editPhoto">修改头像
+                    	<input name="myfiles" type="file" id="myBlogImage" class="srcHen" onchange="ajaxFileUpload()"></a></p>
+                    <p><a href="$!{domain}/mall/buyer/userInfo.htm" class="editInfo">修改资料</a></p>
+                    <p><a href="$!{domain}/mall/member/logout.do" class="exitLink">安全退出</a></p>
+                </dd>
+            </dl>
+            <p class="ml10 mt10">$!{customerVO.username} <!-- <i class="lv">$!{customerVO.gradeName}</i> --></p>
+        </div>
+        <ul class="menuUnit bbm">
+        	<li class="firNav">
+            	<a href="javascript:;" class="firLink">&middot; 交易管理</a>
+            </li>
+            <li class="secNav" id="order">
+            	<a href="$!{domain}/mall/buyer/userOrderList.htm">订单列表</a>
+            </li>
+            <li class="secNav" id="favorite">
+            	<a href="$!{domain}/mall/buyer/userfavoriteList.htm">我的收藏</a>
+            </li>
+            <li class="secNav" id="Trade">
+            	<a href="$!{domain}/mall/buyer/userTrade.htm">交易信息</a>
+            </li>
+            <!-- <li class="secNav" id="Applys">
+            	<a href="$!{domain}/mall/buyer/userApplys.htm">申请售后</a>
+            </li> -->
+            <!--
+            <li class="secNav" id="afterSales">
+            	<a href="$!{domain}/mall/buyer/afterSalesList.htm">售后列表</a>
+            </li>-->
+        </ul>
+        <ul class="menuUnit">
+        	<li class="firNav">
+            	<a href="javascript:;" class="firLink">&middot; 资料管理</a>
+            </li>
+            <li class="secNav" id="Address">
+            	<a href="$!{domain}/mall/buyer/userAddressList.htm">收货地址</a>
+            </li>
+            <li class="secNav" id="userInfo">
+            	<a href="$!{domain}/mall/buyer/userInfo.htm">账户信息</a>
+            </li>
+            <li class="secNav" id="Histroy">
+            	<a href="$!{domain}/mall/buyer/userHistroyList.htm">我的足迹</a>
+            </li>
+            <li class="secNav" id="Security">
+            	<a href="$!{domain}/mall/buyer/userSecurity.htm">账户安全</a>
+            </li>
+           <!--  #if("$!customerVO.gradeName"=="VIP会员")
+            <li class="secNav" id="invoiceInfo">
+            	<a href="$!{domain}/mall/buyer/invoiceInfo.htm">发票信息</a>
+            </li>#end -->
+        </ul>
+    </div>

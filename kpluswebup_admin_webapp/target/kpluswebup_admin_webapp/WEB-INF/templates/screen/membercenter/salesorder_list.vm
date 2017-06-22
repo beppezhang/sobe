@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订单列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>会员中心》会员列表》编辑会员》订单列表</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/member_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+						<form id="serachform" name="serachform" method="post"
+							action="$!{domain}/admin/member/salesorderList.htm?customerID=$!salesOrderDTO.customerID">
+							<input type="hidden" id="pageNo" name="pageNo"
+								value="$!salesOrderDTO.pageNo"> <input type="hidden"
+								id="pageSize" name="pageSize" value="$!salesOrderDTO.pageSize">
+						</form>
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td>收货人</td>
+									<td>支付方式</td>
+									<td>订单实收款(元)</td>
+									<td>订单状态</td>
+									<td>支付状态</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!salesorder in $!salesorderList)
+								<tr class="orderHd">
+									<td colspan="1">订单号：<em>$!salesorder.orderID</em></td>
+									<td colspan="1">下单时间:$!date.format('yyyy-MM-dd',$!salesorder.orderTime)
+									</td>
+									<td colspan="1">#if("$!salesorder.printStatus"=="0")未打印
+										#else 已打印 $!salesorder.printStatus&nbsp;次 #end</td>
+									<td colspan="2"></td>
+								</tr>
+								<tr>
+									<td>$!salesorder.consignee</td>
+									<td>#if("$!salesorder.paymentType"=="1") 支付宝
+										#elseif("$!salesorder.paymentType"=="2") 货到付款#end</td>
+									<td>$!NumberTool.format("#0.00",$!salesorder.totalAmount)</td>
+									<td>#if("$!salesorder.orderStatus"=="0") 已取消
+										#elseif("$!salesorder.orderStatus"=="1") 待确认
+										#elseif("$!salesorder.orderStatus"=="2") 待出库
+										#elseif("$!salesorder.orderStatus"=="3") 待发货
+										#elseif("$!salesorder.orderStatus"=="4") 已发货
+										#elseif("$!salesorder.orderStatus"=="5") 已收货
+										#elseif("$!salesorder.orderStatus"=="6") 已完成 #end<br> <a
+										target="_blank"
+										href="$!{domain}/admin/order/orderInfo.htm?mainId=$!{salesorder.orderID}">详情</a>
+									</td>
+									<td>#if("$!salesorder.paymentStatus"=="0") 未支付
+										#elseif("$!salesorder.paymentStatus"=="1") 已支付
+										#elseif("$!salesorder.paymentStatus"=="2") 部分支付 #end</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!salesOrderDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".member_menu_3").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+	</script>
+	#parse("layout/footer.vm")
+</body>
+</html>

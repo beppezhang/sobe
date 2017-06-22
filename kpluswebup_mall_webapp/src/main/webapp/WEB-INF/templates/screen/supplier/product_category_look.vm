@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="${mallStatic}/css/supplier.css">
+<link rel="stylesheet" href="${mallStatic}/css/base.css">
+<link rel="stylesheet" href="${mallStatic}/css/busin.css">
+<link rel="stylesheet" type="text/css" href="${mallStatic}/css/jquery.mcdropdown.min.css">
+<link rel="stylesheet" href="${mallStatic}/css/commodity_publish.css">
+<style type="text/css">
+span.error {
+height: 16px;
+  line-height: 16px;
+  padding-left: 18px;
+  margin-left: 10px;
+  display: inline-block;
+	  background: url(${mallStatic}/images/icons_9.png) no-repeat left center;
+	  color: #f67649;
+  }
+  span.ok {
+  height: 16px;
+  line-height: 16px;
+  padding-left: 18px;
+  margin-left: 10px;
+  display: inline-block;
+  background: url(${mallStatic}/images/icons_8.png) no-repeat left center;
+  color: #196c18;
+  }
+</style>
+<script src="${mallStatic}/js/jquery-1.9.1.js" type="text/javascript"></script>
+<script type="text/javascript" src="${mallStatic}/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="$!{domain}/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/jquery.scrollto.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/verify.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/public.js"></script>
+
+<script type="text/javascript" src="${mallStatic}/js/jquery.mcdropdown.min.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/ajaxfileupload.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/user.js"></script>
+
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+    editor = K.create("textarea.product_mark", {
+        allowFileManager : true
+    });
+});
+
+$(document).ready(function (){
+	$("input").attr("disabled",true);
+	$("textarea").attr("disabled",true);
+	
+	if ($("#priceType").val()=="1"){
+		$("#weightSpace").css("display","block");
+	}else if ($("#priceType").val()=="3"){
+		$("#cubageSpace").css("display","block");
+	}
+});
+
+</script>
+
+</head>
+
+<body>
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	 #parse("layout/suppliercenter/leftmenu.vm")
+	 <div id="rightMain">
+    	<div class="crumbs">
+        	商家管理中心 &gt; 商品管理 &gt; 查看商品 
+        </div>
+        <div class="p15">
+            <div class="stitbar">
+                <strong>查看商品</strong>
+            </div>
+
+            <div class="accInfo mt25 shop_setting">
+                <dl class="clearfix verify">
+                    <dt>产品编号：</dt>
+                    <dd>
+                    	<input class="text langtext verify_textlength verify_nonempty" style="height: 28px" id="productCode" value="$!productVO.code" data-length="30" data-length-follow="true" data-nonempty-istrim="true" type="text"> 
+                    </dd>
+                </dl>
+            </div>
+            
+            <div id="menu">
+            <div class="Info_add mt25 shop_setting">
+                <div id = "productName" style="text-align: center">
+					<font style="font-size: 150%;color: red">$!productVO.name</font>
+                </div>
+                <div class="msg">
+                	<img src="$!{mallStatic}/img/products/$!productVO.picURL" id = "productImg">
+                	<div class="mg">
+
+                		<p>
+                			<span class="tt"><em class="red">*</em>店铺分类</span>
+                			#if ($childSupplierCategoryVO)
+                			<input type="text" class="text" id="supplierCategoryID" name="supplierCategoryID" value="$!supplierCategoryVO.name:$!childSupplierCategoryVO.name">
+                			#else
+                			<input type="text" class="text" id="supplierCategoryID" name="supplierCategoryID" value="">
+                			#end
+                		</p>                		
+                		
+                		<p>
+                			<span class="tt"><em class="red">*</em>商品名称</span>
+                			<input type="text" class="text" id="name" name="name" value="$!itemVO.name">
+                		</p>
+                		<p>
+                			<span class="tt"><em class="red">*</em>商品价格(元)</span>
+                			<input type="text" class="text" id="standrardPrice" name="standrardPrice" value="$!itemVO.standrardPrice">
+                		</p>
+                		<p>
+                			<span class="tt"><em class="red">*</em>搜贝价格(元)</span>
+                			<input type="text" class="text" id="salesPrice" name="salesPrice" value="$!itemVO.salesPrice">
+                			<!--<input type="text" class="text" id="salesPrice" name="salesPrice" data-think-value="元" 
+                			data-think-istrim="true" data-nonempty-istrim="true" value="$!productVO.standPrice" 
+                			data-think-color="rgb(116, 116, 71)" style="color: rgb(204, 204, 204);" />-->
+                		</p>	
+                		<p style="display: none" id="weightSpace">
+                			<span class="tt"><em class="red">*</em>商品重量(kg)</span>
+                			<input type="text" class="text" id="weight" name="weight" value="$!itemVO.weight">
+                		</p>
+                		<p style="display: none" id="cubageSpace">
+                			<span class="tt"><em class="red">*</em>商品体积(m3)</span>
+                			<input type="text" class="text" id="cubage" name="cubage" value="$!itemVO.cubage">
+                		</p>
+                		
+                		<p>
+                			<span class="tt"><em class="red">*</em>物流模板</span>
+        					#if($!freightTemplateVO.priceType==1)
+                			<input type="text" class="text" id="freightTemplateID" name="freightTemplateID" value="$!freightTemplateVO.name——按重量计费">
+            				#elseif($!freightTemplateVO.priceType==2)
+                			<input type="text" class="text" id="freightTemplateID" name="freightTemplateID" value="$!freightTemplateVO.name——按件数计费">
+            				#elseif($!freightTemplateVO.priceType==3)
+                			<input type="text" class="text" id="freightTemplateID" name="freightTemplateID" value="$!freightTemplateVO.name——按体积计费">
+            				#elseif($!freightTemplateVO.priceType==4)
+                			<input type="text" class="text" id="freightTemplateID" name="freightTemplateID" value="$!freightTemplateVO.name——按单计费">
+            				#end
+                		</p>                		
+                		
+   <!--
+   	              		<p class="last">
+                			<span class="tt"><em class="red">*</em>商品描述</span>
+                			<div style="width: 200px;height: 100px;border: 1px solid #CCCCCC">$!itemVO.description</div>
+                		</p>
+  -->             
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>商品描述：</dt>
+                    <dd>
+                        <div class="cons">
+                            <textarea class="product_mark" style="width:650px;height:300px;visibility:hidden;" name="description">$!itemVO.description</textarea><span></span>
+                        </div>
+                    </dd>
+                    <dd style="padding-left:190px;">
+		                <div class="cons">
+		                   	<span class="note">(提示:文本宽度框790为最佳)</span>
+		                </div>
+           			 </dd>
+                </dl>
+
+
+                	</div>
+                </div>
+            </div>
+           
+            <!--在findProduct中获得picURL之后生成给一个用于提交url信息的隐藏域-->
+			<input type="hidden" name="picURL" id="picURL" value="$!itemVO.picURL"/>
+			<input type="hidden" name="productID" id="productID" value="$!itemVO.productID"/>
+			<input type="hidden" name="priceType" id="priceType" value="$!freightTemplateVO.priceType"/>
+
+            <p class="ct mt25">
+            	<a href="item.htm?type=sale" class="retnLink reset">返回</a>
+            </p>
+
+		</div>
+            
+      </div>
+    </div>
+	
+</div>
+
+#parse("layout/suppliercenter/footer.vm")
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!--<title>搜索结果</title>-->
+<title>汽车品牌</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/details.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/brand.css">
+
+<style>
+	
+	.car-series-list a {
+		width: 100px;
+		font-size: 12px;
+	}
+	
+</style>
+
+</head>
+
+<body>
+	<!-- top bar -->
+	#parse("layout/head_top.vm")
+    <!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+	<!-- 主导航 -->
+	#parse("layout/menu.vm")
+	
+	
+<script>
+  var currentMainID = null;
+  function searchVehicle()
+  {
+	chooseVehicleDialog(currentMainID,1); 	
+  }
+  function chooseVehicleDialog(mainID,pageclickednumber)
+  {
+  		console.debug();
+  		currentMainID = mainID;
+		$("#vehicleNameDialog").html($("#"+mainID).text())
+		jQuery.ajax({
+			url : "$!{domain}/mall/vehicle/get.do",
+			data : {
+				"productCategoryId" : mainID,
+				"pageNo" : pageclickednumber,
+				"serchName" : $("#searchVehicleName").val()
+			},
+			type : "POST",
+			dataType : "json",
+			success : function(data) {
+				console.debug(data);
+				var tempHtml,tempHtml1,tempHtml2,tempHtml3 = null;
+				$(".car-series-mod").empty();
+				for(var i=0;i< data.result.vehicleTypes.length;i++)
+				{
+					tempHtml1 = '<li><a href=${domain}/mall/product/searchProductList.htm?';
+					tempHtml2 = 'vehicleTypeId='+data.result.vehicleTypes[i].mainID;
+					tempHtml3 = '>'+ data.result.vehicleTypes[i].name +'</a></li> '
+					tempHtml = tempHtml1 + tempHtml2 + tempHtml3;
+					
+					$(".car-series-mod").append(tempHtml);					
+				}
+
+				$(".ui-widget-overlay,.ui-dialog").show();
+				
+				//dialog-c
+				
+				jQuery(function() {
+					
+				PageClick = function(pageclickednumber) {
+					jQuery(".pagerbar").pager({
+						pagenumber : pageclickednumber,
+						pagecount : data.result.vehicleTypeVO.pageCount,
+						buttonClickCallback : PageClick
+					})
+					jQuery("#pageNo").val(pageclickednumber);
+					chooseVehicleDialog(mainID,pageclickednumber);
+				}						
+					
+				jQuery(".pagerbar").pager({
+						pagenumber : data.result.vehicleTypeVO.pageNo,
+						pagecount : data.result.vehicleTypeVO.pageCount,
+						buttonClickCallback : PageClick
+					});
+				})
+			
+				
+				
+				
+			},
+			error : function() {
+				alert("系统出错！");
+			}
+		});  		
+  }
+</script>	
+	
+	
+	
+	
+
+<div id="brand_filter">
+    <ul class="channel-tab fix">
+        <li id="brand_filter_1" class="act"><a href="javascript:;"><i class="cT-ico1"></i>按首字母查找</a></li>
+        <!--<li id="brand_filter_0"><a href="javascript:;"><i class="cT-ico2"></i>按地区查找</a></li>-->
+    </ul>
+
+    <div id="tab_brand_filter_0" class="channel-fixedBar" style="display: none;">
+            <div id="float_brand_filter_0" class="channel-inner">
+                <div class="channel-bg">
+
+            <ul class="channel-areaTab fix event-act">
+                <li class="act"><a href="#c1">全部</a></li>
+                                        <li><a href="#c1" class="border">
+                                <img src="http://style.autozi.com/b2c/resources/photo/country1.gif">中国汽车
+                        </a>
+                        </li>
+                        <li><a href="#c2" class="border">
+                                    <img src="http://style.autozi.com/b2c/resources/photo/country2.gif">德国汽车
+                        </a>
+                        </li>
+                        <li><a href="#c3" class="border">
+                                        <img src="http://style.autozi.com/b2c/resources/photo/country6.gif">美国汽车
+                        </a>
+                        </li>
+                        <li><a href="#c4" class="border">
+                                            <img src="http://style.autozi.com/b2c/resources/photo/country3.gif">日本汽车
+                        </a>
+                        </li>
+                        <li><a href="#c5" class="border">
+                                                <img src="http://style.autozi.com/b2c/resources/photo/country4.gif">韩国汽车
+                        </a>
+                        </li>
+                        <li><a href="#c6" class="border">
+                                                    <img src="http://style.autozi.com/b2c/resources/photo/country5.gif">欧洲汽车
+                        </a>
+                        </li>
+            </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab_brand_filter_1" class="channel-fixedBar">
+        <div id="float_brand_filter_1" class="channel-inner">
+            <div class="channel-bg">
+      <ul class="channel-letterTab fix event-act">
+            <li class="act acr"><a href="#">全部<i></i></a></li>
+            	#foreach($!brandModel in $!brandsModel)
+            	<li><a href="#$!brandModel.code">$!brandModel.code<i></i></a></li>
+            	#end 
+                  
+          </ul>
+            </div>
+    </div>
+    </div>
+</div>
+<ul class="hot-brand2 cBrand fix" id="hotCarBrandUl">
+        
+        #foreach($!brandModel in $!brandsModel)
+	        #foreach($!productCategoryVo in $!brandModel.brands)
+	         <li>
+	            <a href="#$!{productCategoryVo.id}" title="$!{productCategoryVo.name}">
+	               <img src="$!{mallStatic}/img/logo/$!{productCategoryVo.picUrl}" alt="$!{productCategoryVo.name}">$!{productCategoryVo.name}
+	            </a>	 
+	         </li>       	
+	        #end
+        #end
+</ul>
+
+#foreach($!brandModel in $!brandsModel)
+<div class="channel-brand" >
+  <div id="carLetter" class="cont fix">
+    <div class="channel-mod">
+      <h3 name="$!brandModel.code" id="$!brandModel.code" class="channel-title">$!brandModel.code</h3>
+      <table class="car-brand">
+        <tbody>
+        	#foreach($!productCategoryVo in $!brandModel.brands)
+        	<div id="$!{productCategoryVo.id}">
+		           <tr class="event_scroll" id="$!{productCategoryVo.id}">
+		          <th><img src="$!{mallStatic}/img/logo/$!{productCategoryVo.picUrl}"><h4>$!productCategoryVo.name</h4></th>
+		          <td>
+		          <ul class="car-series-list">
+		          	
+		                <li>
+		                	#foreach($!productCategoryVoTwo in $!productCategoryVo.levelTwo)
+		                   <a class="carModel" id="$!productCategoryVoTwo.mainID" href="javascript:chooseVehicleDialog('$!productCategoryVoTwo.mainID',1);"
+		                   title="$!productCategoryVoTwo.name">$!productCategoryVoTwo.name</a>
+		                   #end   
+		                   
+		              </li>
+		           
+		                
+		            </ul>
+		        </td>                        
+		      </tr>
+		    </div>  
+		       #end
+		      
+        </tbody>
+      </table>
+     
+    </div>
+  </div>  
+</div>
+#end
+
+<!--
+<div id="carLetter" class="cont fix">
+  <div class="channel-mod">
+    <h3 name="B" id="B" class="channel-title">B</h3>
+    <table class="car-brand">
+      <tbody>
+      	
+      	#foreach($!productCategoryVo in $!brands)
+        <tr class="event_scroll" id="73">
+          <th><img src="http://image.autozi.com/carlogo/20140421140757-64.png"><h4>$!productCategoryVo.name</h4></th>
+          <td>
+          <ul class="car-series-list">
+          	
+                <li>
+                	#foreach($!productCategoryVoTwo in $!productCategoryVo.levelTwo)
+                   <a class="carModel" href="javascript:void(0);" 
+                   title="$!productCategoryVoTwo.name">$!productCategoryVoTwo.name</a>
+                   #end   
+              </li>
+           
+                
+            </ul>
+        </td>                        
+      </tr>
+      #end
+      
+      
+      
+      
+      </tbody>
+    </table>
+    
+  </div>
+</div>
+-->
+
+
+
+<div class="ui-widget-overlay"></div>
+<div class="ui-dialog">
+  <div class="ui-dialog-titlebar ui-widget-header">
+    <span id="ui-id-2" class="ui-dialog-title">车型</span>
+    <input type="text" class="ui-dialog-search" id="searchVehicleName" name="searchVehicleName">
+    
+    <input name="" type="button" id="sear" class="btn event-clearCarmodel clearCarType" value="搜索" onclick="searchVehicle();">
+    
+    <a href="javascript:;" class="ui-dialog-titlebar-close">
+      <span class="ui-icon ui-icon-closethick">close</span>
+    </a>
+  </div>
+  <div id="carinfo" class="cont ui-dialog-content">
+    <div class="dialog-c">
+      <div class="car-series-title fix">   
+      
+      <a href="javascript:;" id="vehicleNameDialog"></a>
+    </div>
+    <div id="carmodelsContainer">
+      <ul class="car-series-mod fix">
+      
+      </ul>
+    </div>
+
+</div>
+
+
+         <div class="pagerbar">
+            	<a href="#">上一页</a>
+                <a href="#" class="cur">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">...</a>
+                <a href="#">下一页</a>
+                共10页 到<input name="" type="text" class="num">页 <input name="" type="button" value="确定" class="go">
+            </div>
+
+<!-- footer -->
+
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+<script>
+$(function(){
+  /**
+  $(".channel-tab li").click(function(){
+    $(this).addClass("act").siblings().removeClass("act");
+    var i = $(this).index();
+    $(".channel-fixedBar").eq(i).show().siblings(".channel-fixedBar").hide();
+    $(".channel-brand").eq(i).show().siblings(".channel-brand").hide();
+  })**/
+  $(window).scroll(function () {
+        if ($(this).scrollTop() > 250) {
+            $(".channel-inner").addClass("float-layer");
+        } else {
+            $(".channel-inner").removeClass("float-layer");
+        }
+    })
+    
+  $(".car-series-list li a").click(function(){
+  	//$(".ui-widget-overlay,.ui-dialog").show();
+  })
+  $(".ui-dialog .ui-icon-closethick").click(function(){
+  	$(".ui-widget-overlay,.ui-dialog").hide();
+  })
+  
+})
+</script>
+</body>
+</html>

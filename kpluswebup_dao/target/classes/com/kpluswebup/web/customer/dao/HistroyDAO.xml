@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.HistroyDAO">
+
+	<select id="findHistroyByPagination" parameterType="histroyDTO"
+		resultType="histroyVO">
+		select
+		a.id,
+		b.mainID as productID,
+		b.`name` as productName,
+		c.picURL as
+		picUrl,
+		c.salesPrice as minSalesPrice ,
+		c.standrardPrice as minStandrardPrice,
+		b.`status` as status,
+		b.isDelete as isDelete,
+		a.createTime,
+		c.salesPrice as salePrice,
+		c.mainID as itemID
+		from
+		kplus_zy_histroy a
+		INNER JOIN kplus_product b on
+		a.productID=b.mainID
+		LEFT JOIN kplus_item c on
+		c.productID=b.mainID
+		LEFT JOIN kplus_zy_supplier z on
+		z.mainID=b.supplierID
+		where
+		<if test="customerID != null">
+			a.customerID=#{customerID}
+		</if>
+		and b.isDelete=0
+		and c.isDelete=0
+		and a.isDelete=0
+		and z.isDelete=0
+		group by
+		b.mainID
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findHistroyCount" parameterType="histroyDTO"
+		resultType="java.lang.Long">
+		select count(y.id)
+		from 
+		(
+		select
+		a.id,
+		b.mainID as productID,
+		b.`name` as productName,
+		c.picURL as
+		picUrl,
+		c.salesPrice as minSalesPrice ,
+		c.standrardPrice as minStandrardPrice,
+		b.`status` as status,
+		b.isDelete as isDelete,
+		a.createTime,
+		c.salesPrice as salePrice,
+		c.mainID as itemID
+		from
+		kplus_zy_histroy a
+		INNER JOIN kplus_product b on
+		a.productID=b.mainID
+		LEFT JOIN kplus_item c on
+		c.productID=b.mainID
+		LEFT JOIN kplus_zy_supplier z on
+		z.mainID=b.supplierID
+		where
+		<if test="customerID != null">
+			a.customerID=#{customerID}
+		</if>
+		and b.isDelete=0
+		and c.isDelete=0
+		and a.isDelete=0
+		and z.isDelete=0
+		group by
+		b.mainID
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		)y
+		
+		
+		<!-- select count(id) from kplus_zy_histroy where customerID=#{customerID}
+		and isDelete=0
+		<if test="itemID != null">
+			and itemID=#{itemID}
+		</if>
+		<if test="productID != null">
+			and productID=#{productID}
+		</if> -->
+	</select>
+	
+	<select id="findHistroyByCustomer" parameterType="histroyDTO"
+		resultType="histroyVO">
+		SELECT A.* FROM kplus_zy_histroy A
+		WHERE A.isDelete=0 AND
+		A.customerID=#{customerID}
+		AND A.productID=#{productID}
+		group by
+		A.productID
+	</select>
+	
+	<insert id="insertHistroy" parameterType="histroyDTO">
+		insert into
+		kplus_zy_histroy(
+		customerID,
+		productID,
+		itemID,
+		createTime,
+		creator,
+		modifier,
+		modifyTime,
+		isDelete
+		)values(
+		#{customerID},
+		#{productID},
+		#{itemID},
+		now(),
+		#{creator},
+		#{modifier},
+		#{modifyTime},
+		0
+		)
+	</insert>
+	
+	<update id="updateHistroyByID" parameterType="java.lang.Long">
+		update
+		kplus_zy_histroy set isDelete=1 where id=#{id}
+	</update>
+	
+</mapper>

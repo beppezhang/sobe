@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+<title>订单</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<script type="text/javascript" src="$!{domain}/wap/js/wxpay.js"></script>
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+<div class="succeed">
+            <p>订单提交成功，订单编号<span> <a href="$!domain/weixin/userOrderDetail.htm?orderID=$!order.mainID" class="col02">$!order.mainID</a></span></p>
+            <p>您可在记录中查看已购买的商品状态</p>
+            <p class="ct mt10">
+            </p>
+            <input type="hidden" class="domain" value="$!domain">
+</div>
+	<script type="text/javascript">
+		function getData(orderID){
+			var domain = jQuery(".domain").val();
+			jQuery.ajax({
+				url:domain+"/weixin/ajaxGetData.do",
+				data:{"orderID":orderID},
+				dataType:"json",
+				success:function(data){
+					wxpay(data.partner,data.partnerKey,data.appid,data.appKey,data.totalFee,data.orderBody,data.notifyUrl,data.salesorderId,data.spbill_create_ip);
+				},
+				error:function(){
+					alert("系统报错！");
+				}
+			});
+		}
+		
+		function wxpay(partnerId,partnerKey,appid,appkey,total_fee,orderBody,notify_url,salesorderId,spbill_create_ip){
+			var domain = jQuery(".domain").val();
+			var pv=new PayVO(partnerId,partnerKey,appid,appkey,total_fee,orderBody,notify_url,salesorderId,spbill_create_ip);
+			WeixinJSBridge.invoke('getBrandWCPayRequest',{
+	    	"appId" : pv.appid, //公众号名称，由商户传入
+	    	"timeStamp" : getTimeStamp(), //时间戳
+	   	 	"nonceStr" : getNonceStr(), //随机串
+		    "package" : getPackage(pv),//扩展包
+		    "signType" : getSignType(), //微信签名方式:1.sha1
+		    "paySign" : getSign(pv) //微信签名
+		    },function(res){
+		      if(res.err_msg=="get_brand_wcpay_request:ok"){
+		        window.location.href=domain+"/weixin/getPayCallBack.htm?orderId="+salesorderId;
+		      }
+		    })
+		}
+	</script>
+</body>
+</html>
+

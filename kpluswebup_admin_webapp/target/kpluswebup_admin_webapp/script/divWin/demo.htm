@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+
+    <script src="jquery.min.js" type="text/javascript"></script>
+    <script src="divWin.js" type="text/javascript"></script>
+</head>
+<body><h1 onclick="ico1.show()">弹出</h1>
+    <div id="div1">
+        <div class="form1">
+            11111
+        </div>
+    </div>
+     <script type="text/javascript">
+         var ico1 = $("div.form1").divWin({ width: 360, height: 300, autoSize: true });
+    </script>
+</body>
+</html>

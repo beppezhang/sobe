@@ -1,0 +1,441 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<title>购物车</title>
+<link rel="stylesheet" type="text/css" href="css/global.css">
+<link rel="stylesheet" type="text/css" href="css/shopcart.css">
+<link rel="stylesheet" type="text/css" href="css/shopaddr.css">
+<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="http://img2.ch999img.com/js/jquery.min.js?debug=828"></script>
+<script type="text/javascript" src="http://img2.ch999img.com/js/main.js?debug=828"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=A4749739227af1618f7b0d1b588c0e85"></script>
+    <!-- 加载百度地图样式信息窗口 -->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+
+</head>
+
+<body>
+<!--顶部信息-->
+<div id="topbar">
+    <div class="layout txt_r clearfix">
+        <div class="lt welbox">欢迎来到中邮普泰<a href="#">请登录</a><a href="#">免费注册</a></div>
+        <div class="shortcut_bar">
+            <span class="linkbox"><a href="#">我的主页</a></span>
+            <span class="linkbox"><a href="#">我的订单</a></span>
+            <span class="linkbox"><a href="#" class="phone"><i></i>手机版</a></span>
+            <span class="linkbox"><a href="#">我是供应商</a></span>
+            <span class="linkbox serviceLink"><a href="#">客服服务<i class="down"></i></a></span>
+            <span class="linkbox"><a href="#" class="listLink">网站导航<i class="down"></i></a></span>
+        </div>
+    </div>
+</div>
+
+<div class="layout oh_hd mt10">
+    <div class="zhoubian lt">
+        <div id="zbdian" class="zbdian shadow_box">
+            <h3>周边店铺</h3>
+            <a href="2.html">关上店</a>
+            <a href="3.html">南屏街店</a>
+            <a href="15.html">西市区店</a>
+            <a href="21.html">小西门店</a>
+            <a href="27.html">南亚店</a>
+            <a href="35.html">北市区店</a>
+            <a href="37.html">世纪城店</a>
+            <a href="42.html">环城东路店</a>
+            <a href="43.html">白云路店</a>
+            <a href="55.html">欣都龙城店</a>
+            <a href="62.html">黄土坡店</a>
+            <div class="clr"></div>
+        </div>
+        <div id="zbjt" class="zbdian shadow_box mt10">
+            <h3>周边交通</h3>
+            <p>可乘坐车次：22路至圆通北路-公交车站下车</p>
+            <p>可乘坐车次：10路;22路;55路;64路;65路;92路;96路;111路甲线环线;111路乙线环线;139路;244路至一二一大街莲花池站下车</p>
+        </div>
+        <div class="zbdian shadow_box mt10">
+            <h3>所有地区</h3>
+            <a href="/kunming/">昆明市</a>                
+            <a href="/dali/">大理市</a>        
+            <a href="/qujing/">曲靖市</a>        
+            <a href="/yuxi/">玉溪市</a>        
+            <a href="/puer/">普洱市</a>       
+            <a href="/xishuangbanna/">西双版纳市</a>        
+            <a href="/chuxiong/">楚雄市</a>        
+            <a href="/lijiang/">丽江市</a>        
+            <a href="/honghe/">红河市</a>        
+            <a href="/dehong/">德宏市</a>       
+            <a href="/wenshan/">文山市</a>        
+            <a href="/zhaotong/">昭通市</a>       
+            <a href="/baoshan/">保山市</a>        
+            <a href="/lincang/">临沧市</a>       
+            <a href="/diqing/">迪庆市</a>        
+            <a href="/guiyang/">贵阳市</a>        
+            <a href="/liupanshui/">六盘水市</a>        
+            <a href="/zunyi/">遵义市</a>        
+            <a href="/anshun/">安顺市</a>        
+            <a href="/bijie/">毕节市</a>       
+            <a href="/chengdu/">成都市</a>        
+            <a href="/xiaqu/">辖区市</a>        
+            <a href="/shenyang/">沈阳市</a>               
+            <div class="clr"></div>
+        </div>
+        <div class="shadow_box zbdian mt10">
+            <h3>所有店铺</h3>
+            <div class="zhankai">
+                
+                <a href="http://www.ch999.com/kunming/1.html">佰腾总店</a>
+            
+                <a href="http://www.ch999.com/kunming/2.html">关上店</a>
+            
+                <a href="http://www.ch999.com/kunming/3.html">南屏街店</a>
+            
+                <a href="http://www.ch999.com/kunming/15.html">西市区店</a>
+            
+                <a href="http://www.ch999.com/kunming/21.html">小西门店</a>
+            
+                <a href="http://www.ch999.com/kunming/27.html">南亚店</a>
+            
+                <a href="http://www.ch999.com/kunming/35.html">北市区店</a>
+            
+                <a href="http://www.ch999.com/kunming/37.html">世纪城店</a>
+            
+                <a href="http://www.ch999.com/kunming/42.html">环城东路店</a>
+            
+                <a href="http://www.ch999.com/kunming/43.html">白云路店</a>
+            
+                <a href="http://www.ch999.com/kunming/55.html">欣都龙城店</a>
+            
+                <a href="http://www.ch999.com/kunming/62.html">黄土坡店</a>
+            
+                <a href="http://www.ch999.com/kunming/67.html">西昌路店</a>
+            
+                <a href="http://www.ch999.com/kunming/81.html">玫瑰湾店</a>
+            
+                <a href="http://www.ch999.com/kunming/103.html">东华店</a>
+            
+                <a href="http://www.ch999.com/kunming/110.html">塘子巷店</a>
+            
+                <a href="">云纺店</a>
+            
+                <a href="http://www.ch999.com/kunming/73.html">呈贡店</a>
+            
+                <a href="http://www.ch999.com/kunming/50.html">安宁店</a>
+            
+                <a href="http://www.ch999.com/kunming/78.html">寻甸店</a>
+            
+                <a href="http://www.ch999.com/kunming/84.html">宜良店</a>
+            
+                <a href="http://www.ch999.com/kunming/80.html">东川店</a>
+            
+                <a href="http://www.ch999.com/kunming/66.html">嵩明店</a>
+            
+                <a href="http://www.ch999.com/kunming/107.html">大街店</a>
+            
+                <a href="http://www.ch999.com/kunming/108.html">晋城店</a>
+            
+                <a href="http://www.ch999.com/kunming/18.html">昆阳店</a>
+            
+                <a href="http://www.ch999.com/kunming/119.html">天宇花园电动车店</a>
+            
+                <a href="http://www.ch999.com/dali/9.html">亦乐店</a>
+            
+                <a href="http://www.ch999.com/dali/23.html">建设路店</a>
+            
+                <a href="http://www.ch999.com/dali/92.html">泰安路店</a>
+            
+                <a href="http://www.ch999.com/dali/53.html">宾川店</a>
+            
+                <a href="http://www.ch999.com/dali/45.html">祥云店</a>
+            
+                <a href="http://www.ch999.com/dali/124.html">巍山店</a>
+            
+                <a href="http://www.ch999.com/qujing/25.html">阿诗玛店</a>
+            
+                <a href="http://www.ch999.com/qujing/104.html">步行街店</a>
+            
+                <a href="http://www.ch999.com/qujing/6.html">翠峰路店</a>
+            
+                <a href="http://www.ch999.com/qujing/39.html">宣威店</a>
+            
+                <a href="http://www.ch999.com/qujing/51.html">陆良店</a>
+            
+                <a href="http://www.ch999.com/qujing/85.html">罗平店</a>
+            
+                <a href="http://www.ch999.com/qujing/125.html">会泽店</a>
+            
+                <a href="http://www.ch999.com/yuxi/7.html">永佳大厦店</a>
+            
+                <a href="http://www.ch999.com/yuxi/102.html">美佳华店</a>
+            
+                <a href="http://www.ch999.com/yuxi/70.html">通海店</a>
+            
+                <a href="http://www.ch999.com/puer/10.html">中心商务区店</a>
+            
+                <a href="http://www.ch999.com/puer/58.html">春之和园店</a>
+            
+                <a href="http://www.ch999.com/puer/90.html">景谷店</a>
+            
+                <a href="http://www.ch999.com/puer/86.html">澜沧店</a>
+            
+                <a href="http://www.ch999.com/puer/128.html">墨江店</a>
+            
+                <a href="http://www.ch999.com/xishuangbanna/11.html">莎湾店</a>
+            
+                <a href="http://www.ch999.com/xishuangbanna/105.html">大润发店</a>
+            
+                <a href="http://www.ch999.com/xishuangbanna/77.html">勐腊店</a>
+            
+                <a href="http://www.ch999.com/chuxiong/8.html">楚雄店</a>
+            
+                <a href="http://www.ch999.com/chuxiong/82.html">禄丰店</a>
+            
+                <a href="http://www.ch999.com/lijiang/17.html">香格里店</a>
+            
+                <a href="http://www.ch999.com/lijiang/118.html">民主路店</a>
+            
+                <a href="http://www.ch999.com/honghe/26.html">中央大街店</a>
+            
+                <a href="http://www.ch999.com/honghe/72.html">月牙塘店</a>
+            
+                <a href="http://www.ch999.com/honghe/38.html">开远店</a>
+            
+                <a href="http://www.ch999.com/honghe/56.html">弥勒店</a>
+            
+                <a href="http://www.ch999.com/honghe/57.html">个旧店</a>
+            
+                <a href="http://www.ch999.com/honghe/83.html">建水店</a>
+            
+                <a href="http://www.ch999.com/honghe/111.html">泸西店</a>
+            
+                <a href="http://www.ch999.com/dehong/24.html">德宏芒市店</a>
+            
+                <a href="http://www.ch999.com/dehong/46.html">瑞丽店</a>
+            
+                <a href="http://www.ch999.com/wenshan/44.html">蓝天大厦店</a>
+            
+                <a href="http://www.ch999.com/wenshan/106.html">龙成国际店</a>
+            
+                <a href="http://www.ch999.com/zhaotong/32.html">青年路店</a>
+            
+                <a href="http://www.ch999.com/zhaotong/74.html">罗炳辉广场店</a>
+            
+                <a href="http://www.ch999.com/baoshan/47.html">腾冲店</a>
+            
+                <a href="http://www.ch999.com/baoshan/20.html">马里商业中心店</a>
+            
+                <a href="http://www.ch999.com/baoshan/114.html">易乐上苑店</a>
+            
+                <a href="http://www.ch999.com/lincang/52.html">临沧店</a>
+            
+                <a href="http://www.ch999.com/diqing/69.html">香格里拉店</a>
+            
+                <a href="http://www.ch999.com/guiyang/4.html">省府路店</a>
+            
+                <a href="http://www.ch999.com/guiyang/33.html">星天地店</a>
+            
+                <a href="http://www.ch999.com/guiyang/71.html">世纪城店</a>
+            
+                <a href="http://www.ch999.com/guiyang/109.html">城市方舟店</a>
+            
+                <a href="http://www.ch999.com/guiyang/116.html">延安西路店</a>
+            
+                <a href="http://www.ch999.com/guiyang/117.html">花果园金融街店</a>
+            
+                <a href="http://www.ch999.com/guiyang/122.html">大营坡中大国际店</a>
+            
+                <a href="http://www.ch999.com/guiyang/127.html">六广门店</a>
+            
+                <a href="http://www.ch999.com/liupanshui/40.html">雨田广场店</a>
+            
+                <a href="http://www.ch999.com/news/8503.html">海鑫广场旗舰店</a>
+            
+                <a href="http://www.ch999.com/guiyang/59.html">广州路店</a>
+            
+                <a href="http://www.ch999.com/guiyang/60.html">大十字店</a>
+            
+                <a href="http://www.ch999.com/guiyang/61.html">毕节店</a>
+            
+                <a href="http://www.ch999.com/chengdu/5.html">郁金香广场店</a>
+            
+                <a href="http://www.ch999.com/chengdu/65.html">春熙路店</a>
+            
+                <a href="http://www.ch999.com/chongqing/63.html">万达店</a>
+            
+                <a href="http://www.ch999.com/chongqing/120.html">星天广场店</a>
+            
+                <a href="http://www.ch999.com/shenyang/123.html">中街店</a>
+            
+                <a href="http://www.ch999.com/shenyang/112.html">东中街店</a>     
+            </div>
+            <button id="showall">展开全部</button>
+            <div class="clr"></div>
+        </div>
+    </div>    
+    <div class="shop_detail rt">
+        <div class="dianpu_main shadow_box">
+            <div class="dp_img">
+                <img src="http://img2.ch999img.com/pic/shop/mainpic/201504080912340.jpg" id="mainpic" width="350" height="300">
+             </div>
+            <div id="dp_con" class="dp_con"><h3>佰腾总店</h3><div class="dpjieshao">三九手机网佰腾总店位于圆通北路127号云大晟苑5楼，佰腾店是三九手机网第一家O2O门店，也是我们发展之路的起点。店面所在的佰腾数码广场是昆明乃至云南最大的3C产品销售圈。居住在小菜园立交桥附近、莲花池公园附近、云南大学附近的居民可以步行到店。</div><p>店铺地址：昆明市圆通北路127号云大晟苑5楼</p><p>销售热线：0871-68393939</p><p>售后专线：0871-68393939</p><p>咨询 QQ：800093939</p><p>工作时间：周一至周日:9:00-21:30</p><a class="btn2" href="javascript:sendToPhone('佰腾总店地址：昆明市圆通北路127号云大晟苑5楼\n销售热线：0871-68393939\n工作时间：周一至周日:9:00-21:30',1,1);">发送到手机</a></div>
+            <div class="clr"></div>
+        </div>
+        <div class="dianpu_xx shadow_box">
+            <div class="dianpu_detail">
+                <a id="sc1"  href="javascript:setColor(1)">入店指引</a>                 
+                <a id="sc2" href="javascript:setColor(0)">附近停车指南</a>
+            </div>                 
+            <div id="dp_detail_box" class="dp_detail_box">
+                <img src="http://www.ch999.com/pic/edt/shop/20151104/20151104144714_7737.jpg" alt="">
+                <p class="ct"><strong>▽位置示意</strong></p>
+                <img src="http://www.ch999.com/pic/edt/shop/20151104/20151104144714_7737.jpg" alt="">
+            </div>
+            <div class="dp_detail_box" id="dp_parkingTrack">
+                <p>
+                    <b>小九推荐停车位置：</b><span>佰腾数码广场地下停车场</span>
+                </p>
+                <img src="http://www.ch999.com/pic/edt/tingche/20151106/20151106151339_2057.jpg" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="markdiv"></div>
+<div id="cend_phone">
+    <h3>
+        <b>免费短信发送</b>
+        <a href="javascript:;" id="closesend">关闭</a>
+        <div class="clr"></div>
+    </h3>
+    <p>
+        <b>手机号码：</b>
+        <input name="sendPhoto" type="text">
+        <span>请输入您要发送的手机号码</span>
+    </p>
+    <p>
+        <b>短信内容：</b>
+    </p>
+    <div class="content" name="content" disabled="disabled">佰腾总店地址：昆明市圆通北路127号云大晟苑5楼<br>销售热线：0871-68393939<br>工作时间：周一至周日:9:00-21:30</div>
+    <p></p>
+    <p><b>验证码：</b><input name="inpYZM" type="text"><img id="vCodeImg" src="/ImgCode.aspx" width="80" height="30" style="margin-right:5px;" onclick="this.src='/ImgCode.aspx?t='+Math.random()*100"><a href="javascript:void(0)" onclick="document.getElementById('vCodeImg').src='/ImgCode.aspx?t='+Math.random()*100">看不清楚？换一张</a></p><button name="sendMSMS">发送</button></div>
+
+
+<!-- 公用底部开始 -->
+<div id="footer">
+    <div class="layout clearfix">
+        <div class="slogen clearfix">
+            <dl>
+                <dt><img src="images/gw1_ico.jpg"></dt>
+                <dd><h2>正品保障</h2><p>正品保障 提供发票</p></dd>
+            </dl>
+            <dl>
+                <dt><img src="images/gw2_ico.jpg"></dt>
+                <dd><h2>极速物流</h2><p>极速物流 极速送达</p></dd>
+            </dl>
+            <dl>
+                <dt><img src="images/gw3_ico.jpg"></dt>
+                <dd><h2>无忧售后</h2><p>15天无理由退货</p></dd>
+            </dl>
+            <dl>
+                <dt><img src="images/gw4_ico.jpg"></dt>
+                <dd><h2>特色服务</h2><p>自助维修包养预约</p></dd>
+            </dl>
+            <dl>
+                <dt><img src="images/gw5_ico.jpg"></dt>
+                <dd><h2>帮助中心</h2><p>您的购物指南</p></dd>
+            </dl>
+        </div>
+      <div class="root_ser">
+            <dl>
+                <dt>购物指南</dt>
+                <dd><a href="#" target="_blank">导购显示</a></dd>
+                <dd><a href="#" target="_blank">免费注册</a></dd>
+                <dd><a href="#" target="_blank">会员等级</a></dd>
+                <dd><a href="#" target="_blank">常见问题</a></dd>
+            </dl>
+            <dl>
+              <dt>支付方式</dt>
+                <dd><a href="#" target="_blank">易付宝支付</a></dd>
+                <dd><a href="#" target="_blank">网银支付</a></dd>
+                <dd><a href="#" target="_blank">快捷支付</a></dd>
+                <dd><a href="#" target="_blank">分期付款</a></dd>
+                <dd><a href="#" target="_blank">货到付款</a></dd>
+                <dd><a href="#" target="_blank">门店支付</a></dd>
+            </dl>
+            <dl>
+              <dt>物流配送</dt>
+                <dd><a href="#" target="_blank">面运费政策</a></dd>
+                <dd><a href="#" target="_blank">配送服务承诺</a></dd>
+                <dd><a href="#" target="_blank">牵手验货</a></dd>
+                <dd><a href="#" target="_blank">物流查询</a></dd>
+            </dl>
+            <dl>
+              <dt>售后服务</dt>
+                <dd><a href="#" target="_blank">退换货政策</a></dd>
+                <dd><a href="#" target="_blank">退换货流程</a></dd>
+                <dd><a href="#" target="_blank">购买延保服务</a></dd>
+                <dd><a href="#" target="_blank">退款说明</a></dd>
+                <dd><a href="#" target="_blank">退换货申请</a></dd>
+                <dd><a href="#" target="_blank">维修/包养</a></dd>
+            </dl>
+            <dl>
+              <dt>商家服务</dt>
+                <dd><a href="#" target="_blank">商家入住</a></dd>
+                <dd><a href="#" target="_blank">信息公告</a></dd>
+                <dd><a href="#" target="_blank">培训中心</a></dd>
+                <dd><a href="#" target="_blank">信息公告</a></dd>
+                <dd><a href="#" target="_blank">广告服务</a></dd>
+                <dd><a href="#" target="_blank">商家帮助</a></dd>
+                <dd><a href="#" target="_blank">服务市场</a></dd>
+            </dl>
+            <div class="weixin ct rt">
+                <p><strong class="f14">中邮普泰微信</strong></p>
+                <p><img src="images/weixin.jpg"></p>  
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div id="btmbar">
+    <div class="info">
+        <p><a href="#" target="_blank">关于中邮普泰</a> | <a href="#" target="_blank">我们的团队</a> | <a href="#" target="_blank">网站联盟</a> | <a href="#" target="_blank">热门搜索</a> | <a href="#" target="_blank">友情链接</a> | <a href="#" target="_blank">诚征人才</a></p>
+        <p>浙ICP备2121245号|台字B1.B2-2013004|营业执照|互联网药品信息服务资格证|互联网药品交易服务资格证</p>
+        <p>Copyright &copy;中邮普泰 2007-2015 ，All Right Reserved</p>
+        <p class="mt10">
+            <img src="images/pic-flink.jpg"/>
+        </p>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+<script>
+    $("#showall").click(function () {
+        var type=$(this).html();
+        if (type == "展开全部") {
+            $(".zhankai").css("height", "auto");
+            $(this).html("收起");
+        } else if (type == "收起") {
+            $(".zhankai").css("height", "140px");
+            $(this).html("展开全部");
+        }
+    });
+    function setColor(obj) {
+        if (obj == 1) {
+            $("#sc1").addClass("cur").siblings().removeClass("cur");
+            $("#dp_detail_box").show();
+            $("#dp_parkingTrack").hide();
+        } else {
+            $("#sc2").addClass("cur").siblings().removeClass("cur");
+            $("#dp_detail_box").hide();
+            $("#dp_parkingTrack").show();
+        }
+    }
+    setColor(1);
+
+    $("#closesend").click(function(){
+        $("#cend_phone").hide();
+        $("#markdiv").hide();
+    })
+</script>
+</body>
+</html>

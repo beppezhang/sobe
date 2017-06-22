@@ -1,0 +1,335 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>卡塔网络-店铺搜索</title>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/details.css">
+</head>
+<body>
+<!--顶部信息-->
+<!-- top bar -->
+#parse("layout/head_top.vm")
+<body>
+<!-- sider tool bar  -->
+#parse("layout/head_sider1.vm")
+ 
+<!-- 头部LOGO 
+#parse("layout/logo.vm")-->
+<!-- 主导航 -->
+#parse("layout/menu.vm")
+<div class="crumbs">
+	<div class="layout clearfix">
+    	<a href="/index.htm" class="home">首页</a> &gt; 店铺</a>
+    </div>
+</div>
+<div class="layout mt15 clearfix">
+	<!-- 左边信息区 -->
+    <div id="leftArea">
+        <!--商品排行-->
+        <div class="unitBox">
+           <div class="aTbar"><strong>商品排行</strong></div>
+            <div class="smallPro_list">
+                <ul>
+                #foreach($!volumeProduct in $!volumeProducts)
+                    <li>
+                        <a href="$!{domain}/mall/product/productDetail.htm?productID=$!volumeProduct.mainID&itemID=$!volumeProduct.itemID" target="_blank"><img src="$!{domainImg}$!volumeProduct.picURL" class="pimg"></a>
+                        <h4><a href="$!{domain}/mall/product/productDetail.htm?productID=$!volumeProduct.mainID&itemID=$!volumeProduct.itemID" target="_blank">$!volumeProduct.name</a></h4>
+                        <p><span class="col02">￥$!NumberTool.format("#0.00",$!volumeProduct.minSalesPrice)</span></p>
+                        <p><span class="sc">售出：$!volumeProduct.maxSalesVolume</span></p>
+                    </li>
+                 #end  
+                </ul>
+            </div>
+        </div>
+        <!--最近浏览-->
+        <div class="unitBox mt15">
+              <div class="aTbar"><strong>最近浏览</strong></div>
+              <div class="smallPro_list">
+                  <ul>
+                   #foreach($!historyProduct in $!historyProducts)
+                      <li>
+                          <a href="$!{domain}/mall/product/productDetail.htm?productID=$!historyProduct.mainID&itemID=$!historyProduct.itemID" target="_blank"><img src="$!{domainImg}$!historyProduct.picURL" class="pimg"></a>
+                          <h4><a href="$!{domain}/mall/product/productDetail.htm?productID=$!historyProduct.mainID&itemID=$!historyProduct.itemID" target="_blank">$!historyProduct.name</a></h4>
+                          <p><span class="col02">￥$!NumberTool.format("#0.00",$!historyProduct.minSalesPrice)</span></p>
+                      </li>
+                       #end    
+                  </ul>
+             </div>
+        </div>
+    </div>
+    <!-- 右边详细区 -->
+    <div id="rightArea">
+       <div class="find">
+        <!-- 	找到相关店铺 <span class="find_num">$!{searchShopList.size()}</span> 家 -->
+      </div>
+      <div class="sortBar clearfix mt10">
+        	<span class="rt">
+            	  #pagination($!supplierDTO)
+            </span>
+        	排序方式：
+        	<span class="sortLink"  id="maxSalesVolume"><a href="javascript:;">销量<i></i></a></span><span class="sortLink" id="createTime"><a href="javascript:;">人气<i></i></a></span><span class="sortLink"  id="minSalesPrice"><a href="javascript:;">价格<i></i></a></span>
+        	<!-- <span class="sortLink"><a href="javascript:;">销量<i></i></a></span><span class="sortLink"><a href="javascript:;">人气<i></i></a></span> -->
+        </div> 
+        <div class="rpList">
+          <dl> #foreach($member in $membersMap.entrySet())
+       <li>$member.key - $member.value.firstname $member.value.lastname</li>
+     #end 
+          #foreach($!supplierVO in $!searchShopList)
+            <dd>
+              <div class="dp_img"><a href="/mall/seller/showSupplier.htm?mainID=$!{supplierVO.mainID}">
+              #if("$!{supplierVO.picURL}"!="")
+              <img src="${domainImg}$!{supplierVO.picURL}" width="70" height="70">
+              #else
+              <img src="${mallStatic}/img/shop.jpg" width="70" height="70">
+              #end
+              </a> </div>
+              <div class="dp_tt">
+                <a href="/mall/seller/showSupplier.htm?mainID=$!{supplierVO.mainID}"><h3>$!{supplierVO.companyName}</h3></a>
+                <p>卖家:<a href="#">$!{supplierVO.companyName}</a><a target="_blank" href="http://amos.im.alisoft.com/msg.aw?v=2&amp;uid=$!supplierVO.linkWangWang&amp;site=cntaobao&amp;s=1&amp;charset=UTF-8"><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&amp;uid=$!supplierVO.linkWangWang&amp;site=cntaobao&amp;s=1&amp;charset=UTF-8" alt="点击这里给我发消息"></a><span class="dp_adrss">$!{supplierVO.address}</span></p>
+                <p>店铺简介：$!{supplierVO.ShopProfile}</p>
+              </div>
+              <div class="dp_sp">
+                <ul>
+                	#foreach($!productVO in $!shopListMap.get($!{supplierVO.mainID}))
+	                  <li num="$!{velocityCount}">
+	                    <a href="/mall/product/productDetail.htm?productID=$!productVO.mainID&itemID=$!productVO.itemID">
+	                      <img src="$!{domainImg}$!{productVO.picURL}">
+	                      <p>￥$!{productVO.salesPrice}</p>
+	                    </a>                   
+	                  </li>
+                  #end
+                </ul>
+                <p class="dp_prev hide"><</p>
+                <p class="dp_next hide">></p>
+              </div>
+              <p class="item-bottom">
+              <!-- #foreach($!productVO in $!shopListMap.get($!{supplierVO.mainID}))
+	                 <span>共<strong>$!{productVO.countSupplier}</strong>件宝贝</span>
+                  #end -->
+              </p>
+            </dd>
+            #end
+          </dl>
+        </div> 
+        <div class="pagerbar clearfix txt_r">
+              #pagination($!supplierDTO)
+       </div>
+    </div>	
+</div>
+
+<form action="$!{domain}/mall/product/searchShopList.htm" id="seach" method="get">
+    <input type="hidden" value="$!supplierDTO.pageNo" name="pageNo" id="pageNo">
+    <input type="hidden" value="" name="orderByClause" id="orderByClause">
+    <input type="hidden" value="dataData" name="dataData" id="dataData">
+</form>
+<!-- 公用底部开始 -->
+#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+<script>
+	$(function(){
+		//品牌展开&收起
+		$(".fbox").find(".moreLink").click(function(){
+			var ck = $(this).hasClass("on");
+			if(ck){
+				$(this).removeClass("on").text("更多")	;
+			}
+			else{
+				$(this).addClass("on").text("收起")
+			}
+			$("#jBrands").toggleClass("on");
+		})
+		//产品列表小图切换
+		$(".rpList li").find(".tabs").children("span").click(function(){
+			var imgSrc = $(this).find("img").attr("src");
+			$(this).addClass("cur").siblings().removeClass("cur");
+			$(this).closest("li").find(".pimg").attr("src",imgSrc);
+		})
+
+    //宝贝店铺切换
+    $(".searchBar .search").mouseenter(function(){
+      $(".searchBar .search p").removeClass("hide").show();            
+    })
+    $(".searchBar .search p").click(function(){
+        $(".searchBar .search p").hide();
+        $(this).prependTo(".searchBar .search");
+        $(".searchBar .search p:first").show().addClass("hover");
+      }) 
+    $(".searchBar .search p").mouseenter(function(){
+        $(this).addClass("hover").siblings().removeClass("hover");
+      })
+
+    //商品切换
+    $(".rpList .dp_sp").mouseenter(function(){
+      $(this).find(".dp_prev,.dp_next").stop(true,true).fadeIn();
+    }).mouseleave(function(){
+      $(this).find(".dp_prev,.dp_next").stop(true,true).fadeOut();
+    })
+    $(".rpList .dp_prev").click(function(){
+      var ul = $(this).parent().find("ul");
+      var li = $(this).parent().find("li");
+      var li_width = li.width();
+      var i = li.length;
+      li.slice(i-4,i).prependTo(ul);
+      ul.css({"marginLeft":-li_width*4});
+      ul.animate({"marginLeft":"0"},300);
+    })
+    $(".rpList .dp_next").click(function(){
+      var ul = $(this).parent().find("ul");
+      var li = $(this).parent().find("li");
+      var li_width = li.width();
+      var i = li.length;
+      ul.animate({"marginLeft":-li_width*4},300,function(){
+        li.slice(0,4).appendTo(ul);
+        ul.css({"marginLeft":0});
+      });
+    })
+	})
+	
+</script>		
+<script type="text/javascript">
+jQuery(".sortbar").on("click", ".pst a", function() {
+	jQuery(this).addClass("cur").siblings().removeClass("cur");
+})
+jQuery("#default").click(function(){
+	jQuery("#seach").submit();
+})
+jQuery("#maxSalesVolume").click(
+	function(){
+		var orderByClause =$("#orderByClause").val();
+		$("#dataData").val("dataData1");
+		if(''==orderByClause||'order by item.salesPrice desc'==orderByClause||'order by item.salesPrice asc'==orderByClause||'order by item.modifyTime desc'==orderByClause||'order by item.modifyTime asc'==orderByClause){
+			jQuery("#orderByClause").val("order by item.salesVolume desc");
+		}
+		jQuery("#seach").submit();	
+	}		
+)
+jQuery("#minSalesPrice").click(
+	function(){
+		var orderByClause =$("#orderByClause").val();
+		$("#dataData").val("dataData1");
+		if(''==orderByClause||'order by item.salesVolume desc'==orderByClause||'order by item.salesVolume asc'==orderByClause||'order by item.modifyTime desc'==orderByClause||'order by item.modifyTime asc'==orderByClause){
+			jQuery("#orderByClause").val("order by item.salesPrice desc");
+		}
+		jQuery("#seach").submit();	
+	}		
+)
+jQuery("#createTime").click(
+	function(){
+		var orderByClause =  $("#orderByClause").val();
+		$("#dataData").val("dataData1");
+		if(''==orderByClause||'order by item.salesVolume desc'==orderByClause||'order by item.salesVolume asc'==orderByClause||'order by item.salesPrice desc'==orderByClause||'order by item.salesPrice asc'==orderByClause){
+			jQuery("#orderByClause").val("order by item.modifyTime desc");
+		}
+		jQuery("#seach").submit();	
+	}		
+)
+
+jQuery(".sortbar").on("click", ".pst a", function() {
+			jQuery(this).addClass("cur").siblings().removeClass("cur");
+		})
+		jQuery(".sortbar").on("click", ".pst a.cp", function() {
+			if (jQuery(this).hasClass("up")) {
+				jQuery(this).removeClass("up").addClass("down")
+			} else if (jQuery(this).hasClass("down")) {
+				jQuery(this).removeClass("down").addClass("up")
+			} else {
+				jQuery(this).addClass("down")
+			}
+		})
+		jQuery('.prolist li').hover(function() {
+			jQuery(this).attr("class", "cur");
+		}, function() {
+			jQuery(this).removeAttr("class");
+		});
+		jQuery(".sortbar .col02").click(
+				function() {
+					jQuery(this).closest("#btn").prev(".limits").find(".ipt")
+							.val(null);
+				})
+		jQuery('.limits .ipt').focus(function() {
+			jQuery(this).closest(".limits").next("#btn").show();
+		});
+		
+		$(".sortbar .ipt").change(function(){
+			var iptVal=$(this).val();
+			if(isNaN(iptVal) || iptVal<0 ||  iptVal=="" || iptVal.replace(/\s+/g,"")=="") {
+					 $(this).val("");
+			}
+		})
+		
+jQuery(document).ready(
+				function() {
+					var orderByClause ='$!orderByClause';
+					var dataData = '$!dataData';
+					//alert(dataData + "   "+orderByClause);
+					if(orderByClause=='order by item.modifyTime desc'){
+						if(dataData=="dataData1"){
+							$("#createTime").addClass("cur up");
+							$("#orderByClause").val("order by item.modifyTime asc");
+						}else if(dataData=="dataData"||dataData==""){
+							$("#createTime").addClass("cur down");
+							$("#orderByClause").val("order by item.modifyTime desc");
+						}
+					}
+					if(orderByClause=='order by item.salesPrice desc'){
+						if(dataData=="dataData1"){
+							$("#minSalesPrice").addClass("cur up");
+							$("#orderByClause").val("order by item.salesPrice asc");
+						}else{
+							$("#minSalesPrice").addClass("cur down");
+							$("#orderByClause").val("order by item.salesPrice desc");
+						}
+					}
+					if(orderByClause=='order by item.salesVolume desc'){
+						if(dataData=="dataData1"){
+							$("#maxSalesVolume").addClass("cur up");
+							$("#orderByClause").val("order by item.salesVolume asc");
+						}else if(dataData=="dataData"){
+							$("#maxSalesVolume").addClass("cur down");
+							$("#orderByClause").val("order by item.salesVolume desc");
+						}
+					}
+					if(dataData==""&&orderByClause==""){
+						$("#maxSalesVolume").addClass("cur down");
+						$("#orderByClause").val("order by item.salesVolume desc");
+					}
+					
+					if(orderByClause=='order by item.modifyTime asc'){
+						if(dataData=="dataData1"){
+							$("#createTime").addClass("cur down");
+							$("#orderByClause").val("order by item.modifyTime desc");
+						}else{
+							$("#createTime").addClass("cur up");
+							$("#orderByClause").val("order by item.modifyTime asc");
+						}
+					}
+					if(orderByClause=='order by item.salesPrice asc'){
+						if(dataData=="dataData1"){
+							$("#minSalesPrice").addClass("cur down");
+							$("#orderByClause").val("order by item.salesPrice desc");
+						}else{
+							$("#minSalesPrice").addClass("cur up");
+							$("#orderByClause").val("order by item.salesPrice asc");
+						}
+					}
+					if(orderByClause=='order by item.salesVolume asc'){
+						
+						if(dataData=="dataData1"){
+							$("#maxSalesVolume").addClass("cur down");
+							$("#orderByClause").val("order by item.salesVolume desc");
+						}else if(dataData=="dataData"){
+							$("#maxSalesVolume").addClass("cur up");
+							$("#orderByClause").val("order by item.salesVolume asc");
+						}
+					}
+					
+				}
+			)
+</script>
+</body>
+</html>

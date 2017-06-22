@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>发货地址</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》 物流管理 》 发货地址</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			#parse("layout/express_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+						<div class="tableTool">
+							#if($!menuUtil.isExistMenu("/admin/system/addShippingAddressPage.htm",$!menuAllList)
+							) <a href="$!{domain}/admin/system/addShippingAddressPage.htm"
+								title="新增发货地址" class="TableAddBtn">+新增发货地址</a>#end
+						</div>
+						<form id="serachform" name="serachform" method="post"
+							action="$!{domain}/admin/system/shippingAddressList.htm">
+							<input type="hidden" id="pageNo" name="pageNo"
+								value="$!shippingAddressDTO.pageNo"> <input
+								type="hidden" id="pageSize" name="pageSize"
+								value="$!shippingAddressDTO.pageSize">
+						</form>
+						<div class="tableListBar">
+							<table class="tableList grid">
+								<thead>
+									<tr>
+										<td>联系人</td>
+										<td>电话</td>
+										<td>手机</td>
+										<td>地区</td>
+										<td>地址</td>
+										<td>邮编</td>
+										<td>是否默认</td>
+										<td>是否退货地址</td>
+										<td>操作</td>
+									</tr>
+								</thead>
+								<tbody id="list">
+									#foreach($!shippingaddress in $!shippingaddressList)
+									<tr>
+										<td>$!shippingaddress.name</td>
+										<td>$!shippingaddress.telephone</td>
+										<td>$!shippingaddress.mobile</td>
+										<td>$!shippingaddress.provinceName$!shippingaddress.cityName$!shippingaddress.districtName</td>
+										<td>$!shippingaddress.address</td>
+										<td>$!shippingaddress.zip</td>
+										<td>#if("$!shippingaddress.isDefault"=="0")是#else<a
+											href="javascript:;"
+											onclick="setDefaultShippingAddress('$!{shippingaddress.id}')">设为默认</a>#end
+										</td>
+										<td>#if("$!shippingaddress.forReturn"=="0")是#else<a
+											href="javascript:;"
+											onclick="setForReturnShippingAddress('$!{shippingaddress.id}')">设为默认</a>#end
+										</td>
+										<td class="last">
+											#if($!menuUtil.isExistMenu("/admin/system/editShippingAddressPage.htm",$!menuAllList)
+											) <a class="icon iconEdit"
+											href="$!{domain}/admin/system/editShippingAddressPage.htm?id=$!shippingaddress.id"
+											title="编辑"></a> #end &nbsp;
+											#if($!menuUtil.isExistMenu("/admin/system/deleteShippingAddress.do",$!menuAllList)
+											) <a href="javascript:;" class="icon iconDel"
+											onclick="deleteShippingAddress('$!{shippingaddress.id}')"
+											title="删除"></a>#end
+										</td>
+									</tr>
+									#end
+								</tbody>
+								#pagination($!shippingAddressDTO)
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".express_menu_3").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+	</script>
+</body>
+</html>

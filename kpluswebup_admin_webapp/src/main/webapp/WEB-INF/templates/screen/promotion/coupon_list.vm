@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>优惠券明细</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》优惠券》优惠券明细</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/promotion/couponList.htm?batchID=$!couponBatchVO.mainID">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!couponDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!couponDTO.pageSize">
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<h2 style="margin-top: 15px; margin-left: 50px;">
+					批次名称：$!couponBatchVO.name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					类型：#if("$!couponBatchVO.type"=="1")自动发放
+					#elseif("$!couponBatchVO.type"=="2")手动发放
+					#elseif("$!couponBatchVO.type"=="3")导出打印#end</h2>
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td>劵号</td>
+						<td>金额(元)</td>
+						<td>会员</td>
+						<td>使用有效期</td>
+						<td>状态</td>
+						<td>使用时间</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!coupon in $!couponList)
+					<tr>
+						<td>$!coupon.mainID</td>
+						<td>$!NumberTool.format("#0.00",$!coupon.amount)</td>
+						<td>$!coupon.customerName</td>
+						<td>$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!coupon.fromDate)~$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!coupon.endDate)</td>
+						<td>#if("$!coupon.status"=="0")未发放
+							#elseif("$!coupon.status"=="1")已发放
+							#elseif("$!coupon.status"=="2")已使用#elseif("$!coupon.status"=="3")中止
+							#elseif("$!coupon.status"=="4")过期#end</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!coupon.useTime)</td>
+						<td>#if("$!coupon.status"=="0") <a href="javascript:;"
+							onclick="changeCouponStatus('$!coupon.mainID',1)" title="发放"
+							class="icon iconExtend"></a>&nbsp; <a href="javascript:;"
+							onclick="changeCouponStatus('$!coupon.mainID',3)" title="中止"
+							class="icon iconEnd"></a> #elseif("$!coupon.status"=="1")<a
+							href="javascript:;" title="中止"
+							onclick="changeCouponStatus('$!coupon.mainID',3)"
+							class="icon iconEnd"></a> #elseif("$!coupon.status"=="3") <a
+							href="javascript:;" title="启用"
+							onclick="changeCouponStatus('$!coupon.mainID',0)"
+							class="icon iconEnabled"></a> #end
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!couponDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.CustomerGroupDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID, name, description,
+		isDelete, creator,
+		modifier,
+		modifyTime,createTime
+	</sql>
+
+	<select id="findCustomerGroupByMainID" parameterType="java.lang.String"
+		resultType="customerGroupVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_customer_group
+		where isDelete=0 and mainID = #{mainID}
+	</select>
+
+	<select id="findAllCustomerGroup" resultType="customerGroupVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_customer_group
+		where isDelete=0
+	</select>
+
+	<select id="findCustomerGroupByPagination" parameterType="customerGroupDTO"
+		resultType="customerGroupVO">
+		select * from kplus_customer_group where isDelete=0 limit
+		#{startRow} ,#{pageSize}
+	</select>
+	<select id="findCustomerGroupCount" parameterType="customerGroupDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_customer_group where
+		isDelete=0
+	</select>
+
+	<insert id="insertCustomerGroup" parameterType="customerGroupDTO">
+		insert into
+		kplus_customer_group(
+		mainID,
+		name,
+		description,
+		isDelete,
+		creator,
+		createTime
+		)
+		values(
+		#{mainID},
+		#{name},
+		#{description},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updateCustomerGroupByMainID" parameterType="customerGroupDTO">
+		update kplus_customer_group
+		<set>
+			modifyTime=now()
+			<if test="name!=null">
+				,name=#{name}
+			</if>
+			<if test="description!=null">
+				,description=#{description}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="deleteCustomerGroupByMainID" parameterType="customerGroupDTO">
+		update
+		kplus_customer_group set isDelete=1 where mainID=#{mainID}
+	</update>
+
+	<select id="findCustomerGroupSetByGroupId" parameterType="java.lang.String"
+		resultType="customerGroupSetVO">
+		select * from kplus_customer_groupSet where isDelete=0 and
+		groupID=#{groupID}
+	</select>
+
+	<update id="deleteGroupSetByID" parameterType="customerGroupSetDTO">
+		update
+		kplus_customer_groupSet set isDelete=1 where id=#{id}
+	</update>
+
+	<insert id="insertGroupSet" parameterType="customerGroupSetDTO">
+		insert into
+		kplus_customer_groupSet(
+		groupID,
+		setType,
+		minimum,
+		maxmum,
+		isDelete,
+		creator,
+		createTime
+		)
+		values(
+		#{groupID},
+		#{setType},
+		#{minimum},
+		#{maxmum},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updateGroupSetByID" parameterType="customerGroupSetDTO">
+		update kplus_customer_groupSet
+		<set>
+			modifyTime=now()
+			<if test="minimum!=null">
+				,minimum=#{minimum}
+			</if>
+			<if test="maxmum!=null">
+				,maxmum=#{maxmum}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="findCustomerByGroupSet" parameterType="customerVO"
+		resultType="customerVO">
+		select * from kplus_customer where isDelete=0
+		<if test="minscore!=null">
+			and score&gt;=#{minscore}
+		</if>
+		<if test="maxscore!=null">
+			and score&lt;=#{maxscore}
+		</if>
+		<if test="mincreateTime!=null">
+			and createTime&gt;=#{mincreateTime}
+		</if>
+		<if test="maxcreateTime!=null">
+			and createTime&lt;=#{maxcreateTime}
+		</if>
+		<if test="minscoreIntotal!=null">
+			and scoreIntotal&gt;=#{minscoreIntotal}
+		</if>
+		<if test="maxscoreIntotal!=null">
+			and scoreIntotal&lt;=#{maxscoreIntotal}
+		</if>
+		<if test="minage!=null">
+			and age&gt;=#{minage}
+		</if>
+		<if test="maxage!=null">
+			and age&lt;=#{maxage}
+		</if>
+		<if test="sex!=null">
+			and sex=#{sex}
+		</if>
+		<if test="username!=null">
+			and username like '%${username}%'
+		</if>
+	</select>
+
+	<insert id="insertCustomerGroupMember" parameterType="customerGroupMemberDTO">
+		insert into
+		kplus_customer_groupmember(
+		groupID,
+		customerID,
+		createTime,
+		creator
+		)
+		values(
+		#{groupID},
+		#{customerID},
+		now(),
+		#{creator}
+		)
+	</insert>
+
+	<select id="findCustomerGroupMemberByGroupID" parameterType="java.lang.String"
+		resultType="customerGroupMemberVO">
+		select * from kplus_customer_groupmember where
+		groupID=#{groupID}
+	</select>
+
+	<select id="findCustomerGroupMemberByPagination" parameterType="customerGroupMemberDTO"
+		resultType="customerGroupMemberVO">
+		select g.*,c.username,c.name,c.lastloginTime,c.lastloginIP
+		from kplus_customer_groupmember g
+		left join kplus_customer c on
+		g.customerID=c.mainID where
+		g.groupID=#{groupID} limit #{startRow}
+		,#{pageSize}
+	</select>
+
+	<select id="findCustomerGroupMemberCount" parameterType="customerGroupMemberDTO"
+		resultType="java.lang.Long">
+		select count(id) from kplus_customer_groupmember where
+		groupID=#{groupID}
+	</select>
+
+	<delete id="deleteCustomerGroupMemberByGroupID" parameterType="java.lang.String">
+		delete
+		from kplus_customer_groupmember where groupID=#{groupID}
+	</delete>
+
+	<select id="findCustomerGroupByName" parameterType="customerGroupDTO"
+		resultType="customerGroupVO">
+		select mainID,name as username from kplus_customer_group where
+		isDelete=0
+		<if test="name!=null">
+			and name like '%${name}%'
+		</if>
+		limit
+		#{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findCustomerGroupByNameCount" parameterType="customerGroupDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_customer_group where
+		isDelete=0
+		<if test="name!=null">
+			and name like '%${name}%'
+		</if>
+		limit
+		#{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findCustomerGroupMember" resultType="customerGroupMemberVO">
+		select * from kplus_customer_groupmember
+	</select>
+	
+	<select id="findGroupMemberByGroupIDCustomerID" parameterType="customerGroupMemberDTO" resultType="customerVO">
+		select kc.*,grade.`name` as  gradeName
+		 from kplus_customer kc 
+	     LEFT JOIN kplus_customer_groupmember kcg  on kc.mainID=kcg.customerID 
+	     LEFT JOIN kplus_customer_grade grade on grade.mainID=kc.gradeID
+			where kcg.groupID=#{groupID} and kc.mainID=#{customerID}
+	</select>
+</mapper>

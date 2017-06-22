@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>优惠券</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》优惠券</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/promotion/couponbatchList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!couponBatchDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!couponBatchDTO.pageSize">
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a>
+				#if($!menuUtil.isExistMenu("/admin/promotion/deleteCouponBatch.do",$!menuAllList)
+				) <a href="javascript:;" title="删除" id="deleteCouponBatchAll"><em
+					class="icon iconDel"></em></a> #end
+				#if($!menuUtil.isExistMenu("/admin/promotion/addCouponBatchPage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/promotion/addCouponBatchPage.htm"
+					title="新增优惠券" class="TableAddBtn">+新增优惠券</a> #end
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="" id="all" /></label></td>
+						<td>批次名称</td>
+						<td>发放类型</td>
+						<td>抵扣金额</td>
+						<td>数量</td>
+						<td>发送日期</td>
+						<td>使用有效期</td>
+						<td>状态</td>
+						<td>创建时间</td>
+						<td>创建人</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!couponbatch in $!couponbatchList)
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="$!couponbatch.mainID" id="check_box_$!couponbatch.mainID" /></label></td>
+						<td>$!couponbatch.name</td>
+						<td>#if("$!couponbatch.type"=="1")自动发放
+							#elseif("$!couponbatch.type"=="2")手动发放
+							#elseif("$!couponbatch.type"=="3")导出打印 #end</td>
+						<td>$!NumberTool.format("#0.00",$!couponbatch.amount)</td>
+						<td>$!couponbatch.couponCount</td>
+						<td>$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!couponbatch.fromDate)~$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!couponbatch.endDate)</td>
+						<td>$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!couponbatch.useFromDate)~$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!couponbatch.useEndDate)</td>
+						<td>#if("$!couponbatch.status"=="1")正常
+							#elseif("$!couponbatch.status"=="2")中止#end</td>
+						<td>$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!couponbatch.createTime)</td>
+						<td>$!couponbatch.createName</td>
+						<td>
+							<!-- <a class="icon iconEdit"
+							href="$!{domain}/admin/promotion/editCouponBatchPage.htm?mainID=$!couponbatch.mainID"
+							title="编辑"></a>&nbsp;  -->
+							#if($!menuUtil.isExistMenu("/admin/promotion/exportCoupon.htm",$!menuAllList)
+							) #if("$!couponbatch.type"=="3") <a class="icon iconExport"
+							href="$!{domain}/admin/promotion/exportCoupon.htm?batchID=$!couponbatch.mainID"
+							title="导出"></a> #end #end
+							#if($!menuUtil.isExistMenu("/admin/promotion/changeCouponBatchStatus.do",$!menuAllList)
+							) #if("$!couponbatch.type"=="2") <a href="javascript:;"
+							class="icon iconExtend"
+							onclick="changeCouponBatchStatus('$!couponbatch.mainID',1)"
+							title="发放"></a> #end #if("$!couponbatch.status"=="1") <a
+							href="javascript:;"
+							onclick="changeCouponBatchStatus('$!couponbatch.mainID',3)"
+							class="icon iconEnd" title="中止"></a>
+							#elseif("$!couponbatch.status"=="2") <a href="javascript:;"
+							class="icon iconEnabled"
+							onclick="changeCouponBatchStatus('$!couponbatch.mainID',0)"
+							title="启用"></a> #end #end
+							#if($!menuUtil.isExistMenu("/admin/promotion/deleteCouponBatch.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconDel"
+							onclick="deleteCouponBatch('$!couponbatch.mainID');" title="删除"></a>
+							#end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/promotion/couponList.htm",$!menuAllList)
+							) <a class="icon iconDetailed"
+							href="$!{domain}/admin/promotion/couponList.htm?batchID=$!couponbatch.mainID"
+							title="明细"></a> #end
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!couponBatchDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>

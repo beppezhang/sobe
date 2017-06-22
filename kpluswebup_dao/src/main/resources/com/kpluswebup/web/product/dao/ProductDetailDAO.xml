@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.ProductDetailDAO">
+
+	<sql id="Base_Column_List">
+		id, productID, productPropID, pTypePPropID,
+		productPropValue, creator,
+		createTime,
+		modifier, modifyTime
+	</sql>
+
+
+	<delete id="deleteProductDetailByMainID" parameterType="java.lang.Long">
+		delete
+		from kplus_product_detail
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deteleProductDetailByProductMainId" parameterType="java.lang.String">
+		delete
+		from kplus_product_detail
+		where productID = #{productMainId,jdbcType=BIGINT}
+	</delete>
+
+	<insert id="insertProductDetail" parameterType="productDetailDTO">
+		INSERT INTO
+		kplus_product_detail(
+		productID,
+		productPropID,
+		pTypePPropID,
+		productPropValue,
+		creator,
+		createTime
+		)
+		VALUES
+		(
+		#{productID},
+		#{productPropID},
+		#{pTypePPropID},
+		#{productPropValue},
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<select id="findProductDetailByID" parameterType="java.lang.Long"
+		resultType="productDetailVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_product_detail
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+<select id="findProductDetailsByProductMainID" parameterType="java.lang.String" resultType="productDetailVO">
+	select 
+	<include refid="Base_Column_List" />
+		from kplus_product_detail
+		where productID = #{productMainID}
+</select>
+	<select id="findProductDetail" parameterType="productDetailDTO"
+		resultType="productDetailVO">
+		SELECT
+		pd.id,
+		pd.productID,
+		pd.productPropID,
+		pp.`name` as productPropName,
+		pd.pTypePPropID,
+		pd.productPropValue,
+		pd.creator,
+		pd.createTime,
+		pd.modifier,
+		pd.modifyTime
+		FROM
+		kplus_product_detail pd left join
+		kplus_producttype_productprop pp ON
+		pp.mainID=pd.productPropID
+		where 1=1
+		<if test="productID != null">
+			and pd.productID = #{productID}
+		</if>
+		<if test="productPropID != null">
+			and pd.productPropID = #{productPropID}
+		</if>
+	</select>
+
+
+
+	<update id="updateProductDetailByID" parameterType="productDetailDTO">
+		update kplus_product_detail
+		<set>
+			modifyTime = now()
+			<if test="productID != null">
+				,productID = #{productID}
+			</if>
+			<if test="productPropID != null">
+				,productPropID = #{productPropID}
+			</if>
+			<if test="pTypePPropID != null">
+				,pTypePPropID = #{pTypePPropID}
+			</if>
+			<if test="productPropValue != null">
+				,productPropValue = #{productPropValue}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where id = #{id}
+
+	</update>
+</mapper>

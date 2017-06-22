@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.SupplierItemDAO">
+
+	<select id="findSupplierItemByItemIDAndSupplierID"
+		parameterType="supplierItemDTO" resultType="supplierItemVO">
+		SELECT
+		p.standPrice,
+		p.supplierID,
+		item.salesPrice,
+		item.mainID,
+		item.stock,
+		item.salesVolume as saleCount
+		FROM
+		kplus_item item,kplus_product p
+		WHERE
+		item.productID=p.mainID and
+		item.mainID = #{itemID}
+		AND p.supplierID = #{supplierID}
+		AND item.isDelete = 0
+		group by item.mainID
+	</select>
+
+	<insert id="insertSupplierItem" parameterType="supplierItemDTO">
+		INSERT INTO kplus_zy_supplier_item (
+			mainID,
+			supplierID,
+			supplierName,
+			productID,
+			itemID,
+			salesPrice,
+			stock,
+			STATUS,
+			isDelete,
+			createTime,
+			modifyTime
+		)
+		VALUES
+			(
+				#{mainID},
+				#{supplierID},
+				#{supplierName},
+				#{productID},
+				#{itemID},
+				#{salesPrice},
+				#{stock},
+				0,
+				0,
+				NOW(),
+				NOW()
+			)
+	</insert>
+	<update id="updateSupplierItem" parameterType="supplierItemDTO">
+		UPDATE kplus_item
+		SET
+		<if test="salesPrice != null">
+			salesPrice = #{salesPrice},
+		</if>
+		<if test="stock != null">
+			stock = #{stock},
+		</if>
+		
+		<if test="isDelete != null">
+			isDelete = #{isDelete},
+		</if>
+		modifyTime = NOW()
+		WHERE
+		<if test="itemID != null">
+			mainID = #{itemID}
+		</if>
+
+	</update>
+	<update id="updateSupplierItemStatusWhichStockLess20"
+		parameterType="java.lang.String">
+		UPDATE kplus_zy_supplier_item
+		SET `status` = 0
+		WHERE
+		supplierID = #{supplierID}
+		AND stock &lt; 2
+	</update>
+	<update id="updateSupplierItemStockAndSaleCount" parameterType="supplierItemDTO">
+		UPDATE kplus_item
+		SET
+		stock = #{stock},
+		salesVolume = #{saleCount}
+		<if test="status != null">
+			,`status` = #{status}
+		</if>
+		WHERE 1=1
+		<if test="itemID != null">
+		and	mainID = #{mainID}
+		</if>
+	</update>
+	<select id="findItemBySupplierAdnType" resultType="java.lang.Integer">
+		SELECT
+		count(item.mainID)
+		FROM
+		kplus_item item,
+		kplus_product p
+		WHERE
+		p.supplierID = #{supplierID}
+		<if test="type == 0">
+			AND p.`status` = 1
+		</if>
+		<if test="type == 1">
+			AND p.`status` = 1
+		</if>
+		<if test="type == 2">
+			AND p.`status` = 0
+		</if>
+		AND p.isDelete = 0
+		AND p.mainID=item.productID
+		AND item.isDelete = 0
+
+	</select>
+
+	<select id="findSupplierItemPagination" parameterType="supplierItemDTO"
+		resultType="supplierItemVO">
+		select item.salesPrice,item.name as itemName,item.mainID as itemID,item.stock,item.status,s.companyName as supplierName from kplus_item item left join  kplus_product p on item.productID=p.mainID and p.isDelete=0
+		,kplus_zy_supplier s
+		 where item.isDelete= 0  
+		and s.mainID  =p.supplierID  and s.isDelete=0 and s.cashDep>0  
+		<if test="itemName != null">
+			and item.name like '%${itemName}%'
+		</if>
+		<if test="itemID != null">
+			and item.mainID=#{itemID}
+		</if>
+		<if test="status != null">
+			and item.status=#{status}
+		</if>
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+	
+	<select id="findSupplierItem" parameterType="supplierItemDTO"
+		resultType="supplierItemVO">
+		SELECT
+		supitem.*,(
+		select b.salesPrice from kplus_zy_supplier_item b where
+		status=1
+		and isDelete=0
+		and stock>=2 and b.itemID=item.mainID
+		order by
+		productID,itemID, salesPrice,modifyTime LIMIT 1) as onlinePrice,
+		p.name as productName,
+		item.name as itemName
+		FROM
+		kplus_zy_supplier_item supitem
+		LEFT JOIN
+		kplus_product p ON
+		supitem.productID = p.mainID AND p.isDelete=0
+		LEFT JOIN
+		kplus_item item
+		ON
+		supitem.itemID = item.mainID AND
+		item.isDelete= 0
+		WHERE
+		supitem.isDelete = 0
+
+		<if test="supplierName != null">
+			and supitem.supplierName like '%${supplierName}%'
+		</if>
+		<if test="productID != null">
+			and supitem.productID=#{productID}
+		</if>
+		<if test="productName != null">
+			and p.name like '%${productName}%'
+		</if>
+		<if test="itemName != null">
+			and item.name like '%${itemName}%'
+		</if>
+		<if test="itemID != null">
+			and supitem.itemID=#{itemID}
+		</if>
+		<if test="status != null">
+			and supitem.status=#{status}
+		</if>
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+	</select>
+
+	<update id="updateSupplierItemStatus" parameterType="supplierItemDTO">
+		update kplus_zy_supplier_item
+		set modifyTime=now()
+		<if test="status != null">
+			, status=#{status}
+		</if>
+		where mainID =#{mainID}
+		AND
+		isDelete=0
+	</update>
+
+
+	<select id="findSupplierItemCount" parameterType="supplierItemDTO"
+		resultType="java.lang.Long">
+			select count(item.name) from kplus_item item left join  kplus_product p on item.productID=p.mainID and p.isDelete=0
+			,kplus_zy_supplier s
+		 where item.isDelete= 0  
+		and s.mainID  =p.supplierID  and s.isDelete=0 and s.cashDep>0  
+		<if test="itemName != null">
+			and item.name like '%${itemName}%'
+		</if>
+		<if test="itemID != null">
+			and item.mainID=#{itemID}
+		</if>
+		<if test="status != null">
+			and item.status=#{status}
+		</if>
+
+	</select>
+	<select id="findTopThreeSaleItem" parameterType="java.lang.String"
+		resultType="itemVO">
+		SELECT
+		i.mainID,
+		i.productID,
+		i.`name`,
+		i.picURL,
+		i.salesPrice,
+		i.createTime,
+		i.salesVolume AS salesVolume
+		FROM
+		kplus_item i,
+		kplus_product p
+		WHERE
+		i.isDelete = 0
+		and
+		p.supplierID
+		= #{supplierID}
+		and p.mainID=i.productID
+		ORDER BY
+		salesVolume DESC
+		LIMIT 3
+
+	</select>
+	<update id="batchConfirmSupplierItem">
+		UPDATE kplus_zy_supplier_item
+		SET `status` = 1
+		WHERE
+		mainID IN
+		<foreach item="item" index="index" collection="itemIds" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="deleteSupplierItemBymainID" parameterType="java.lang.String">
+		update kplus_zy_supplier_item set isDelete=1 where mainID=#{mainID}
+	</update>
+	
+	<!-- ****************************** -->
+	<select id="findSupplierItemByItemIDAndSupplierIDTparts"
+		parameterType="supplierItemDTO" resultType="supplierItemVO">
+		
+		select 
+		    item.supplierID,
+		    item.supplierName,
+			item.salesPrice,
+			item.mainID,
+			item.stock,
+			item.salesVolume as saleCount
+		from kplus_item item
+		where item.mainID = #{itemID}
+		AND item.supplierID = #{supplierID}
+		AND item.isDelete = 0		
+		
+	</select>
+	
+	<select id="findSupplierItemCountTparts" parameterType="supplierItemDTO"
+		resultType="java.lang.Long">
+		select count(item.name) 
+		from kplus_item item ,kplus_product p 
+		where item.productID=p.mainID
+		and item.isDelete=0  
+		and p.isDelete=0  
+		<if test="itemName != null">
+			and item.name like '%${itemName}%'
+		</if>
+		<if test="supplierName != null">
+			and item.supplierName like '%${supplierName}%'
+		</if>
+		<if test="itemCode != null">
+			and item.skuCode=#{itemCode}
+		</if>
+		<if test="productID != null">
+			and p.mainID=#{productID}
+		</if>
+	</select>
+	
+	<select id="findSupplierItemPaginationTparts" parameterType="supplierItemDTO"
+		resultType="supplierItemVO">
+		select item.salesPrice,item.name as itemName,item.mainID as itemID,item.supplierName,item.skuCode as itemCode
+		from kplus_item item ,kplus_product p 
+		where item.productID=p.mainID
+		and item.isDelete=0  
+		and p.isDelete=0  
+		<if test="itemName != null">
+			and item.name like '%${itemName}%'
+		</if>
+		<if test="supplierName != null">
+			and item.supplierName like '%${supplierName}%'
+		</if>
+		<if test="itemCode != null">
+			and item.skuCode=#{itemCode}
+		</if>
+		<if test="productID != null">
+			and p.mainID=#{productID}
+		</if>
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+</mapper>

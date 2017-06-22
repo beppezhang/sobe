@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<title>首页</title>
+<meta http-equiv="Content-Type"
+	content="application/vnd.wap.xhtml+xml; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/index.css">
+</head>
+<body>
+	<div class="layout">
+		<div id="banner_box" class="box_swipe">
+			<ul>
+				#foreach($!advert in $!indexAdvert)
+				<li><a href="$!advert.advertLink"> <img
+						src="$!{imgurl}$!advert.picURL" alt="$!advert.name" />
+				</a></li> #end
+			</ul>
+			<ol>
+				#foreach($!advert in $!indexAdvert)
+				<li #if($!velocityCount==1)class= "cur"#end></li> #end
+			</ol>
+		</div>
+	</div>
+	<nav>
+		<div class="clearfix">
+			<a href="$!{domain}/weixin/productBuy.htm"><i
+				style="background: url($!{domain}/wap/img/c1.png) center center no-repeat; background-size: 100%;"></i><br>一键订货</a>
+			<a href="$!{domain}/weixin/productSearch.htm?productType=1"><i
+				style="background: url($!{domain}/wap/img/c2.png) center center no-repeat; background-size: 100%;"></i><br>市场专区</a>
+			<a href="$!{domain}/weixin/productSearch.htm?productType=2"><i
+				style="background: url($!{domain}/wap/img/c3.png) center center no-repeat; background-size: 100%;"></i><br>代理专区</a>
+			#foreach($!category in $!productCategoryRecommendList) <a
+				href="$!{domain}/weixin/productSearch.htm?categoryID=$!category.mainID&cType=1"><i
+				style="background: url($!{domain}/wap/img/c4.png) center center no-repeat; background-size: 100%;"></i><br>$!category.name</a>#end
+		</div>
+	</nav>
+	<div class="blist clearfix">
+		<ul>
+			#foreach($!cat in $!indexCategoryAdvert)
+			<li><a
+				href="$!{domain}/weixin/productSearch.htm?categoryID=$!cat.productCategoryID&cType=1"><img
+					src="$!{imgurl}$!cat.picURL" class="pimg"></a></li> #end
+		</ul>
+	</div>
+	#parse("wap/layout/head_sider.vm")
+	<a href="javascript:;" id="totop"><img
+		src="$!{domain}/wap/img/totop.png"></a>
+	<script type="text/javascript"
+		src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="$!{domain}/wap/js/swipe.js"></script>
+	<script>
+		$(function() {
+			new Swipe(document.getElementById('banner_box'), {
+				speed : 500,
+				auto : 3000,
+				callback : function() {
+					var lis = $(this.element).next("ol").children();
+					lis.removeClass("cur").eq(this.index).addClass("cur");
+				}
+			});
+			var ScrolltoTop = $("#totop");
+			$(ScrolltoTop).click(function() {
+				$("html,body").animate({
+					scrollTop : 0
+				}, 200);
+				return false
+			});
+
+		});
+		$(window).scroll(function() {
+			if ($(window).scrollTop() == "0") {
+				$("#totop").fadeOut(200);
+			} else {
+				$("#totop").fadeIn(300);
+			}
+		});
+		var olWidth = $("#banner_box").find("ol").outerWidth();
+		$("#banner_box").find("ol").css("margin-left", -olWidth / 2);
+	</script>
+</body>
+</html>

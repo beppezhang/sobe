@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.supplier.dao.SupplierDAO">
+    <select id="supplierList" parameterType="supplierDTO" resultType="supplierVO">
+        select li.* 
+        from kplus_zy_supplier li 
+		left join kplus_product pro on li.mainID=pro.supplierID
+		left join kplus_item item on pro.mainID=item.productID
+		and pro.isDelete=0
+		and pro.`status`=1
+		and item.isDelete=0
+		where 1=1
+		and li.isDelete=0
+    	<if test="mobile != null">
+			AND li.mobile like '%${mobile}%'
+		</if>
+		<if test="companyName != null">
+			AND li.companyName like '%${companyName}%'
+		</if>
+		<if test="linkMan != null ">
+			AND li.linkMan like '%${linkMan}'
+		</if>
+		<if test="openingBank != null">
+			AND li.openingBank like '%${openingBank}%'
+		</if>
+		<if test="bankAccount != null">
+			AND li.bankAccount like '%${bankAccount}%'
+		</if>
+		<if test="address != null">
+			AND li.address like '%${address}%'
+		</if>
+		<if test="userName != null">
+			AND li.userName like '%${userName}%'
+		</if>
+		group by li.mainID
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+		
+	</select>
+	
+	<select id="findSupplierCount" parameterType="supplierDTO"
+		resultType="java.lang.Long">
+		select
+		count(mainID)
+		from kplus_zy_supplier
+		where isDelete=0
+		<if test="mobile != null">
+			AND mobile like '%${mobile}%'
+		</if>
+		<if test="companyName != null">
+			AND companyName like '%${companyName}%'
+		</if>
+		<if test="linkMan != null ">
+			AND linkMan like '%${linkMan}'
+		</if>
+		<if test="mainID != null">
+			AND mainID=#{mainID}
+		</if>
+		<if test="openingBank != null">
+			AND openingBank like '%${openingBank}%'
+		</if>
+		<if test="bankAccount != null">
+			AND bankAccount like '%${bankAccount}%'
+		</if>
+		<if test="address != null">
+			AND address like '%${address}%'
+		</if>
+		<if test="userName != null">
+			AND userName like '%${userName}%'
+		</if>
+		<if test="name != null">
+			AND userName like '%${name}%'
+		</if>
+	</select>
+		<select id="findSupplierMap" resultType="productVO" parameterType="supplierDTO">
+		select p.supplierID, 
+		p.mainID,
+		p.`name`,
+		i.picURL,
+		i.mainID itemID,
+		i.salesPrice,
+		count(p.supplierID) as countSupplier,
+		kzs.companyName,
+		kzs.linkWangWang,
+		kzs.address,
+		kzs.ShopProfile
+		from kplus_product p ,kplus_item  i ,kplus_zy_supplier kzs
+		where i.productID = p.mainID 
+		 and p.isDelete = 0
+		 and i.isDelete = 0 
+		and p.`status` = 1 
+		and kzs.mainID = p.supplierID
+		<if test="companyName != null">
+			and kzs.companyName like '%${companyName}%' 
+		</if>
+		GROUP BY p.mainID 
+	</select>
+	
+	<select id="findSupplierByID" resultType="supplierVO">
+       select * from kplus_zy_supplier where mainID=#{mainID}
+	</select>
+	
+	<select id="findSupplierByUserName" resultType="supplierVO" 
+			parameterType="java.lang.String">
+       select * from kplus_zy_supplier where userName collate utf8_bin = #{username} AND isDelete = 0
+	</select>
+
+	<select id="findSupplierByCompanyName" resultType="supplierVO" 
+			parameterType="java.lang.String">
+       select * from kplus_zy_supplier where companyName collate utf8_bin = #{companyname} AND isDelete = 0
+	</select>
+	
+	<select id="findSupplierCategory" resultType="supplierCategoryVO">
+       select * from kplus_jlds_supplier_categroy where isDeleted=0 and isParent='Y' and supplierID=#{supplierID}
+	</select>
+	
+	<select id="findChildSupplierCategory" resultType="supplierCategoryVO" parameterType="java.lang.String">
+       select * from kplus_jlds_supplier_categroy where isDeleted=0 and parentID=#{mainID}
+	</select>
+	
+	<select id="findSupplierCategoryByMainID" resultType="supplierCategoryVO" parameterType="supplierCategoryDTO">
+       select * from kplus_jlds_supplier_categroy where isDeleted=0 and mainID=#{mainID}
+	</select>
+	
+	<update id="deleteBusinClass" parameterType="java.lang.String">
+		update
+		kplus_jlds_supplier_categroy set isDeleted=1 where mainID=#{mainID}
+	</update>
+	
+	<insert id="saveBusinClass" parameterType="supplierCategoryDTO">
+		insert into
+		kplus_jlds_supplier_categroy(
+		mainID,
+		name,
+		supplierID, 
+    	listOrder, 
+    	isParent, 
+    	parentID, 
+    	isDeleted
+		)
+		values(
+		#{mainID},
+		#{name},
+		#{supplierID},
+		#{listOrder},
+		#{isParent},
+		#{parentID},
+		0
+		)
+	</insert>
+
+	<update id="editSupplierCategory" parameterType="supplierCategoryDTO">
+		update kplus_jlds_supplier_categroy
+		<set>
+		      listOrder=0
+			<if test="name!=null">
+				,name=#{name}
+			</if>
+			<if test="supplierID!=null">
+				,supplierID=#{supplierID}
+			</if>
+			<if test="isParent!=null">
+				,isParent=#{isParent}
+			</if>
+			<if test="parentID!=null">
+				,parentID=#{parentID}
+			</if>
+			<if test="isDeleted!=null">
+				,isDeleted=#{isDeleted}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+	
+	<update id="updateSupplierLastLogTime" >
+		UPDATE kplus_zy_supplier
+		SET lastloginTime = NOW(),
+		 lastLoginIP = #{ip}
+		WHERE
+			userName = #{supplierName}
+	</update>
+	<insert id="addSupplier" parameterType="supplierDTO">
+		insert into
+		kplus_zy_supplier(
+		mainID,
+		mobile,
+		companyName, 
+    	linkMan, 
+    	openingBank, 
+    	bankAccount, 
+    	address, 
+    	userName,
+    	passWord,
+    	isDelete,
+    	name,
+    	lastLoginIP,
+    	createTime,
+    	creator,
+    	cashDep,
+    	picURL,
+    	shopPicURL,
+    	linkQQ,
+    	linkWangWang,
+    	ShopProfile,
+    	postalCode
+		)
+		values(
+		#{mainID},
+		#{mobile},
+		#{companyName},
+		#{linkMan},
+		#{openingBank},
+		#{bankAccount},
+		#{address},
+		#{userName},
+		#{passWord},
+		0,
+		#{name}, 
+		#{lastLoginIP},
+		now(),
+    	#{creator},
+    	#{cashDep},
+    	#{picURL},
+    	#{shopPicURL},
+    	#{linkQQ},
+    	#{linkWangWang},
+    	#{ShopProfile},
+    	#{postalCode}
+		)
+	</insert>
+	
+	<update id="editSupplier" parameterType="supplierDTO">
+		update kplus_zy_supplier
+		<set>
+		    modifyTime=now()
+			<if test="mobile!=null">
+				,mobile=#{mobile}
+			</if>
+			<if test="companyName!=null">
+				,companyName=#{companyName}
+			</if>
+			<if test="linkMan!=null">
+				,linkMan=#{linkMan}
+			</if>
+			<if test="openingBank!=null">
+				,openingBank=#{openingBank}
+			</if>
+			<if test="bankAccount!=null">
+				,bankAccount=#{bankAccount}
+			</if>
+			<if test="address!=null">
+				,address=#{address}
+			</if>
+			<if test="userName!=null">
+				,userName=#{userName}
+			</if>
+			<if test="passWord!=null">
+				,passWord=#{passWord}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+			<if test="cashDep!=null">
+				,cashDep=#{cashDep}
+			</if>
+			<if test="picURL!=null">
+				,picURL=#{picURL}
+			</if>
+			<if test="shopPicURL!=null">
+				,shopPicURL=#{shopPicURL}
+			</if>
+			<if test="linkQQ!=null">
+				,linkQQ=#{linkQQ}
+			</if>
+			<if test="linkWangWang!=null">
+				,linkWangWang=#{linkWangWang}
+			</if>
+			<if test="ShopProfile!=null">
+				,ShopProfile=#{ShopProfile}
+			</if>
+			<if test="postalCode!=null">
+			   ,postalCode=#{postalCode}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+	
+	<update id="deleteSupplierById" parameterType="java.lang.String">
+		update
+		kplus_zy_supplier set isDelete=1 where mainID=#{mainID}
+	</update>
+	
+	<update id="updateSupplierInfo" parameterType="supplierDTO">
+		UPDATE kplus_zy_supplier
+		SET mobile = #{mobile},
+		 companyName = #{companyName},
+		 linkMan = #{linkMan},
+		 openingBank = #{openingBank},
+		 bankAccount = #{bankAccount},
+		 address = #{address},
+		 picURL = #{picURL},
+		 shopPicURL = #{shopPicURL},
+		 linkQQ = #{linkQQ},
+		 linkWangWang = #{linkWangWang},
+		 ShopProfile = #{ShopProfile},
+		 postalCode = #{postalCode}
+		WHERE
+			mainID = #{mainID}
+		
+	</update>
+	<update id="updateSupplierPwd" parameterType="supplierDTO">
+		UPDATE kplus_zy_supplier
+		SET `passWord` = #{passWord}
+		WHERE
+			mainID = #{mainID}
+		
+	</update>
+</mapper>

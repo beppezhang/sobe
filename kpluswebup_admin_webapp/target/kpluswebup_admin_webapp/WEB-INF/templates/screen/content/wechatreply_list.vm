@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>关注回复</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>内容管理 》微信内容 》微信内容》关注回复</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/wechat_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="searchBar">
+						<form id="serachform" name="serachform" method="post"
+							action="$!{domain}/admin/content/wechatReplyList.htm">
+							<input type="hidden" id="pageNo" name="pageNo"
+								value="$!cmsWechatReplySetDTO.pageNo"> <input
+								type="hidden" id="pageSize" name="pageSize"
+								value="$!cmsWechatReplySetDTO.pageSize">
+							<table class="searchTable">
+								<tbody>
+									<tr>
+										<td><span class="grayF">微信名称：</span> <select
+											class="select" name="interfaceConfigID">
+												<option value="">全部</option> #foreach($!interfaceconfig in
+												$!interfaceConfigList)
+												<option #if("$!cmsWechatReplySetDTO.interfaceConfigID"==
+													"$!interfaceconfig.mainID")selected="selected" #end
+													value="$!interfaceconfig.mainID">$!interfaceconfig.name</option>
+												#end
+										</select></td>
+										<td><input class="searchBtn" type="submit" value="搜索" />
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+					<div class="tableListBar">
+						<div class="tableTool">
+							<a href="javascript:;" title="全选" id="selectAll"><em
+								class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+								id="unSelect"><em class="icon iconInverse"></em></a>
+							#if($!menuUtil.isExistMenu("/admin/content/deleteWechatReply.do",$!menuAllList)
+							) <a href="javascript:;" title="删除" id="deleteWechatReplyAll"><em
+								class="icon iconDel"></em></a> #end
+							#if($!menuUtil.isExistMenu("/admin/content/addWechatReplyPage.htm",$!menuAllList))
+							<a href="$!{domain}/admin/content/addWechatReplyPage.htm"
+								title="新增关注回复" class="TableAddBtn">+新增关注回复</a> #end
+						</div>
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td><label class="label"><input type="checkbox"
+											value="" id="all" /></label></td>
+									<td>微信名称</td>
+									<td>回复类型</td>
+									<td>创建时间</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!wechatreply in $!wechatReplyList)
+								<tr>
+									<td><label class="label"><input type="checkbox"
+											value="$!wechatreply.mainID" id="check_box_$!wechatreply.mainID" /></label></td>
+									<td>$!wechatreply.wechatName</td>
+									<td>#if("$!wechatreply.replyType"=="1")文字模式#end
+										#if("$!wechatreply.replyType"=="2")图文模式#end
+										#if("$!wechatreply.replyType"=="3")应用模式#end</td>
+									<td><span
+										title="$!date.format('yyyy-MM-dd HH:mm:ss',$!wechatreply.createTime)"
+										class="dealtime">$!date.format('yyyy-MM-dd
+											HH:mm:ss',$!wechatreply.createTime)</span></td>
+									<td class="last">
+										#if($!menuUtil.isExistMenu("/admin/content/editWechatReplyPage.htm",$!menuAllList)
+										) <a class="icon iconEdit"
+										href="$!{domain}/admin/content/editWechatReplyPage.htm?mainID=$!wechatreply.mainID"
+										title="编辑"></a> #end &nbsp;
+										#if($!menuUtil.isExistMenu("/admin/content/deleteWechatReply.do",$!menuAllList)
+										) <a href="javascript:;" class="icon iconDel"
+										onclick="deleteWechatReply($!wechatreply.mainID)" title="删除"></a>#end
+									</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!cmsWechatReplySetDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+	<script type="text/javascript">
+	$(function() {
+		$(".wechat_menu_2").append("<em class='icon arrowLfWeight'></em>")
+				.find("a").addClass("hover");
+	})
+    </script>
+</body>
+</html>

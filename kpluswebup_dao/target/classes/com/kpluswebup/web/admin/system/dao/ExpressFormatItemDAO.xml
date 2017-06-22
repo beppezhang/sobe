@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.ExpressFormatItemDAO">
+
+	<select id="findExpressFormatItemByFormatID" parameterType="java.lang.String"
+		resultType="expressFormatItemVO">
+		select * from kplus_expressformat_item where isDelete=0 and
+		formatID=#{formatID}
+	</select>
+
+	<insert id="insertExpressFormatItem" parameterType="expressFormatItemDTO">
+		insert into
+		kplus_expressformat_item(
+		formatID,
+		item,
+		value,
+		xray,
+		yray,
+		width,
+		height,
+		wordsize,
+		font,
+		intervals,
+		linewidth,
+		bold,
+		italic,
+		position,
+		isDelete,
+		creator,
+		createTime
+		)values(
+		#{formatID},
+		#{item},
+		#{value},
+		#{xray},
+		#{yray},
+		#{width},
+		#{height},
+		#{wordsize},
+		#{font},
+		#{intervals},
+		#{linewidth},
+		#{bold},
+		#{italic},
+		#{position},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updateExpressFormatItem" parameterType="expressFormatItemDTO">
+		update kplus_expressformat_item
+		<set>
+			modifyTime=now()
+			<if test="value!=null">
+				,value=#{value}
+			</if>
+			<if test="xray!=null">
+				,xray=#{xray}
+			</if>
+			<if test="yray!=null">
+				,yray=#{yray}
+			</if>
+			<if test="width!=null">
+				,width=#{width}
+			</if>
+			<if test="height!=null">
+				,height=#{height}
+			</if>
+			<if test="wordsize!=null">
+				,wordsize=#{wordsize}
+			</if>
+			<if test="font!=null">
+				,font=#{font}
+			</if>
+			<if test="interval!=null">
+				,interval=#{interval}
+			</if>
+			<if test="linewidth!=null">
+				,linewidth=#{linewidth}
+			</if>
+			<if test="bold!=null">
+				,bold=#{bold}
+			</if>
+			<if test="italic!=null">
+				,italic=#{italic}
+			</if>
+			<if test="position!=null">
+				,position=#{position}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="findExpressFormatItemByID" parameterType="java.lang.Long"
+		resultType="expressFormatItemVO">
+		select * from kplus_expressformat_item where isDelete=0 and
+		id=#{id}
+	</select>
+
+	<update id="deleteExpressFormatItemByformatID" parameterType="java.lang.String">
+		update kplus_expressformat_item set isDelete=1 where
+		formatID=#{formatID}
+	</update>
+
+</mapper>

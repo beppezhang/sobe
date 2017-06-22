@@ -1,0 +1,10 @@
+<div id="mainnav">
+	<div class="tb">
+    	<a class="cell n1" href="$!{domain}/weixin/index.htm">首页</a>
+        <a class="cell n2" href="$!{domain}/weixin/allClass.htm">搜索</a>
+        <a class="cell n3" href="$!{domain}/weixin/news.htm">资讯</a>
+        <a class="cell n4" href="$!{domain}/weixin/userCenter.htm">我的</a>
+        <span class="cell n5"><a href="$!{domain}/weixin/usershopcart1.htm"></a><i>
+        #if("$!{user.shoppingcartCount}"=="")0#else$!{user.shoppingcartCount}#end</i></span>
+    </div>
+</div>

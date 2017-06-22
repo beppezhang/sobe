@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.InterfaceConfigDAO">
+
+	<select id="findInterfaceConfigByPagination" parameterType="interfaceConfigDTO"
+		resultType="interfaceConfigVO">
+		select c.*,s.name as systemName from
+		kplus_interfaceconfig c
+		left join kplus_systeminterface s on c.interfaceID=s.mainID
+		where
+		c.isDelete=0 and c.interfaceType=#{interfaceType} and
+		s.interfaceType=#{interfaceType}
+		order
+		by c.id
+		desc
+		limit
+		#{startRow}
+		,#{pageSize}
+	</select>
+
+	<select id="findInterfaceConfigCount" parameterType="interfaceConfigDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_interfaceconfig where
+		isDelete=0 and interfaceType=#{interfaceType}
+	</select>
+
+	<select id="findSystemInterface" parameterType="java.lang.Integer"
+		resultType="systemInterfaceVO">
+		select * from kplus_systeminterface where
+		interfaceType=#{interfaceType}
+	</select>
+
+	<select id="findSystemInterfaceParameterByInterfaceID"
+		parameterType="java.lang.String" resultType="systemInterfaceParameterVO">
+		select * from
+		kplus_systeminterface_parameter where
+		interfaceID=#{interfaceID}
+	</select>
+
+	<insert id="insertInterfaceConfig" parameterType="interfaceConfigDTO">
+		insert into
+		kplus_interfaceconfig(
+		mainID,
+		name,
+		picURL,
+		interfaceID,
+		pushURL,
+		acceptURL,
+		parameterType,
+		interfaceType,
+		active,
+		sortOrder,
+		isDelete,
+		creator,
+		createTime
+		)values(
+		#{mainID},
+		#{name},
+		#{picURL},
+		#{interfaceID},
+		#{pushURL},
+		#{acceptURL},
+		#{parameterType},
+		#{interfaceType},
+		0,
+		#{sortOrder},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+	<insert id="insertInterfaceConfigParameter" parameterType="interfaceConfigParameterDTO">
+		insert
+		into kplus_interfaceconfig_parameter(
+		configID,
+		interfaceID,
+		parameterID,
+		parameter,
+		paramValue,
+		sortOrder,
+		creator,
+		createTime
+		)values(
+		#{configID},
+		#{interfaceID},
+		#{parameterID},
+		#{parameter},
+		#{paramValue},
+		#{sortOrder},
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updateInterfaceConfig" parameterType="interfaceConfigDTO">
+		update kplus_interfaceconfig
+		<set>
+			modifyTime=now()
+			<if test="name!=null">
+				,name=#{name}
+			</if>
+			<if test="picURL!=null">
+				,picURL=#{picURL}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="updateInterfaceConfigParameter" parameterType="interfaceConfigParameterDTO">
+		update kplus_interfaceconfig_parameter
+		<set>
+			modifyTime=now()
+			<if test="parameter!=null">
+				,parameter=#{parameter}
+			</if>
+			<if test="paramValue!=null">
+				,paramValue=#{paramValue}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="findInterfaceConfigByMainID" parameterType="java.lang.String"
+		resultType="interfaceConfigVO">
+		select * from kplus_interfaceconfig where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<select id="findInterfaceConfigParameterByConfigID"
+		parameterType="java.lang.String" resultType="interfaceConfigParameterVO">
+		select * from
+		kplus_interfaceconfig_parameter where configID=#{configID}
+	</select>
+
+	<update id="deleteInterfaceConfig" parameterType="java.lang.String">
+		update
+		kplus_interfaceconfig set isDelete=1 where mainID=#{mainID}
+	</update>
+
+	<update id="updateInterfaceConfigActive" parameterType="interfaceConfigDTO">
+		update
+		kplus_interfaceconfig set active=#{active} where mainID=#{mainID}
+	</update>
+
+	<select id="findInterfaceConfigByType" parameterType="java.lang.Integer"
+		resultType="interfaceConfigDTO">
+		select * from kplus_interfaceconfig where isDelete=0 and
+		active=1 and
+		interfaceType=#{interfaceType}
+	</select>
+
+	<select id="findInterfaceConfigParameterValue" parameterType="interfaceConfigParameterDTO"
+		resultType="java.lang.String">
+		select p.paramValue from
+		kplus_interfaceconfig_parameter p
+		left join kplus_interfaceconfig i on p.interfaceID=i.interfaceID
+		where i.active=1 and
+		p.configID=#{configID} and
+		p.parameterID=#{parameterID}
+	</select>
+	
+	<select id="findInterfaceParameterValue" parameterType="interfaceConfigParameterDTO"
+		resultType="java.lang.String">
+		select p.paramValue from
+		kplus_interfaceconfig_parameter p
+		left join kplus_interfaceconfig i on p.configID=i.mainID
+		where i.active=1 and
+		p.interfaceID=#{interfaceID} and
+		p.parameterID=#{parameterID}
+	</select>
+
+</mapper>

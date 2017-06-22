@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>申请售后</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user.css">
+</head>
+
+<body>
+<!-- top bar -->
+	#parse("layout/head_top.vm")
+<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+<!-- 主导航 -->
+	#parse("layout/menu.vm")
+<!-- body头部 -->
+	#parse("layout/customercenter/header.vm")
+
+<div class="layout clearfix">
+<!-- 左边菜单 -->
+	#parse("layout/customercenter/leftmenu.vm")
+	
+    <div class="mainbody">
+    	<div class="tittab">
+       	  <span class="cur">申请售后</span>
+        </div>
+        
+        <form action="$!{domain}/mall/buyer/saveAfterSaleApply.htm" method="post" id="userApplyForm">
+	        <input type="hidden" value="$!salesOrder.mainID" name="orderID" class="orderID">
+	        #foreach($itemList in $itemList)<input type="hidden" value="$!itemList.itemID" name="itemID" class="itemID">#end
+        <div class="accInfo mt25">
+              <dl class="clearfix">
+                  <dt>售后类型：</dt>
+                  <dd>
+					<label><input name="salesType" type="radio" value="1" checked="checked">退货</label>
+					<label class="ml35"><input name="salesType" type="radio" value="2">换货</label></dd>
+              </dl>
+              <dl class="clearfix" style="display: none;">
+                  <dt>输入串号：</dt>
+                  <dd><input name="numberIMEI" type="text" class="ipt numberIMEI" value="$!orderLineID" readonly="readonly"><em class="prompt_1 col05">
+                  		#if("$!error"=="1")串号不存在#end
+                  		#if("$!error"=="2")该串号已申请#end
+                  		#if("$!error"=="3")您未购买过此手机#end</em></dd>
+              </dl>
+			  <dl class="clearfix">
+                  <dt>备注：<font color="red">*</font></dt>
+                  <dd><textarea name="description" class="txta description" placeholder="请填写售后原因，此项必填！！"></textarea>
+                  </dd>
+              </dl>
+        </div> 
+        <p class="ct mt20"><a href="javascript:;" class="saveLink">保存</a></p>
+        </form>
+    </div>	
+</div>
+<!-- footer -->
+	#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+<script type="text/javascript"> 
+jQuery(document).ready(function(){
+	jQuery("#Applys").addClass("cur").siblings(".leve10").removeClass("cur");
+})
+jQuery(".numberIMEI").blur(function(){
+	var numberIMEI = jQuery(this).val();
+	if(numberIMEI == null || numberIMEI == ""){
+		jQuery(this).parent().find(".prompt_1").removeClass("ok").addClass("error").html("串号不能为空");
+	}else{
+		jQuery(".numberIMEI").parent().find(".prompt_1").removeClass("error").addClass("ok").html("");
+	}
+})
+
+jQuery(".saveLink").click(function(){
+   	jQuery(".numberIMEI").blur();
+   	var numberIMEI = jQuery(".error")
+    var description = jQuery(".description").val();
+   	if(description=="" || description == undefined){
+   		alert("请填写售后原因！！");
+   		return;
+   	}
+   	if(numberIMEI.length>0){
+   		return;
+   	}else{
+    	jQuery("#userApplyForm").submit();
+   	}
+})
+/** 上传头像 * */
+function ajaxFileUpload() {
+	jQuery.ajaxFileUpload({
+		url : '/file/fileUpload.do',
+		secureuri : false,// 是否启用安全提交,默认为false
+		fileElementId : 'myBlogImage',// 文件选择框的id属性
+		dataType : 'text',// 服务器返回的格式,可以是json或xml等
+		success : function(data, status) {
+			data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+			data = data.replace("</PRE>", '');
+			data = data.replace("<pre>", '');
+			data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+			if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+				jQuery("img[id='uploadImage']").attr("src",
+						data.substring(2));
+				jQuery("#picURL").val(data.substring(2));
+				var mainID = jQuery("#mainID").val();
+				var picURL = jQuery("#picURL").val();
+				jQuery.ajax({
+					url : '/mall/buyer/saveAvatar.do',
+					data : {
+						'mainID' : mainID,
+						'picURL' : picURL
+					},
+					secureuri : false,// 是否启用安全提交,默认为false
+					fileElementId : 'myBlogImage',// 文件选择框的id属性
+					dataType : 'text',// 服务器返回的格式,可以是json或xml等
+					success : function() {
+					}
+				});
+			} else {
+				jQuery('#result').html('图片上传失败，请重试！！');
+			}
+		},
+		error : function(data, status, e) { // 服务器响应失败时的处理函数
+			jQuery('#result').html('图片上传失败，请重试！！');
+		}
+	});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<title>首页</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="css/global.css">
+<link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+
+<body>
+<div class="layout">
+	<div id="banner_box" class="box_swipe">
+          <ul>
+            <li> <a href="#"> <img src="img/p1.jpg" alt="广告1"/> </a> </li>
+            <li> <a href="#"> <img src="img/p2.jpg" alt="广告2"/> </a> </li>
+            <li> <a href="#"> <img src="img/p3.jpg" alt="广告3"/> </a> </li>
+          </ul>
+      	  <ol>
+            <li class="cur"></li>
+            <li></li>
+            <li></li>
+          </ol>
+    </div>
+</div>
+<nav>
+  <div class="clearfix"> 
+    <a href="#"><i style="background:url(img/c1.png) center center no-repeat;background-size:100%;"></i><br>一键订货</a> 
+    <a href="#"><i style="background:url(img/c2.png) center center no-repeat;background-size:100%;"></i><br>市场专区</a>
+    <a href="#"><i style="background:url(img/c3.png) center center no-repeat;background-size:100%;"></i><br>代理专区</a>
+    <a href="#"><i style="background:url(img/c4.png) center center no-repeat;background-size:100%;"></i><br>功能机</a>
+  </div>
+</nav>
+<div class="blist clearfix">
+	<ul>
+    	<li><a href="#"><img src="img/ca1.jpg" class="pimg"></a></li>
+        <li><a href="#"><img src="img/ca2.jpg" class="pimg"></a></li>
+        <li><a href="#"><img src="img/ca3.jpg" class="pimg"></a></li>
+        <li><a href="#"><img src="img/ca4.jpg" class="pimg"></a></li>
+        <li><a href="#"><img src="img/ca5.jpg" class="pimg"></a></li>
+        <li><a href="#"><img src="img/ca6.jpg" class="pimg"></a></li>
+    </ul>
+</div>
+<div id="mainnav">
+	<div class="tb">
+    	<a class="cell n1 on" href="index.html">首页</a>
+        <a class="cell n2" href="category.html">搜索</a>
+        <a class="cell n3" href="news.html">资讯</a>
+        <a class="cell n4" href="user_center.html">我的</a>
+        <span class="cell n5"><a href="shopcart.html"></a><i>2</i></span>
+    </div>
+</div>
+<a href="javascript:;" id="totop"><img src="img/totop.png"></a>
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script> 
+<script type="text/javascript" src="js/swipe.js"></script> 
+<script>
+		$(function(){
+			new Swipe(document.getElementById('banner_box'), {
+				speed:500,
+				auto:3000,
+				callback: function(){
+					var lis = $(this.element).next("ol").children();
+					lis.removeClass("cur").eq(this.index).addClass("cur");
+				}
+			});
+			var ScrolltoTop=$("#totop");
+			$(ScrolltoTop).click(function(){
+					$("html,body").animate({scrollTop:0},200);return false
+			});
+			
+		});
+		$(window).scroll(function () {
+			if($(window).scrollTop()=="0") {
+				$("#totop").fadeOut(200);
+			}else {
+				$("#totop").fadeIn(300);
+			}
+		});
+		var olWidth = $("#banner_box").find("ol").outerWidth();
+		$("#banner_box").find("ol").css("margin-left",-olWidth/2);
+</script>
+</body>
+</html>

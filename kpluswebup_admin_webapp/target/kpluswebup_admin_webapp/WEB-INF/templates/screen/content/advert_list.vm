@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>广告列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>内容管理 》广告管理</span>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+			#if($!menuUtil.isExistMenu("/admin/content/addAdvertLocationPage",$!menuAllList)) 
+				<a href="$!{domain}/admin/content/addAdvertLocationPage.htm" class="TableAddBtn" title="新增广告分类">+新增广告位置</a>
+			#end
+				  
+				#if($!menuUtil.isExistMenu("/admin/content/addAdvertPage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/content/addAdvertPage.htm" class="TableAddBtn" title="新增广告">+新增广告</a>
+				#end
+			</div>
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/content/advertList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!cmsAdvertDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!cmsAdvertDTO.pageSize">
+			</form>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><label class="label"><input type="checkbox"
+								value="" id="all" /></label></td>
+						<td>标题</td>
+						<td>分类</td>
+						<td>位置</td>
+						<td>排序</td>
+						<td>启用时间</td>
+						<td>结束时间</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!advert in $!advertList)
+					<tr>
+						<td><label class="label"><input type="checkbox"
+								value="$!advert.mainID" id="check_box_$!advert.mainID" /></label></td>
+						<td>$!advert.name</td>
+						<td>$!advert.categoryName</td>
+						<td>$!advert.posionName</td>
+						<td>$!advert.sortOrder</td>
+						<td><span
+							title="$!date.format('yyyy-MM-dd HH:mm:ss',$!advert.activeTime)"
+							class="dealtime">$!date.format("yyyy-MM-dd
+								HH:mm:ss",$!advert.activeTime)</span></td>
+						<td><span
+							title="$!date.format('yyyy-MM-dd HH:mm:ss',$!advert.endTime)"
+							class="dealtime">$!date.format("yyyy-MM-dd
+								HH:mm:ss",$!advert.endTime)</span></td>
+						<td class="last">
+							#if($!menuUtil.isExistMenu("/admin/content/editAdvertPage.htm",$!menuAllList)
+							) <a class="icon iconEdit"
+							href="$!{domain}/admin/content/editAdvertPage.htm?mainID=$!advert.mainID"
+							title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/content/deleteAdvert.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconDel"
+							onclick="deleteAdvert('$!{advert.mainID}')" title="删除"></a>#end
+							&nbsp;
+							#if($!menuUtil.isExistMenu("/admin/content/advertclickList.htm",$!menuAllList)
+							) <a
+							href="$!{domain}/admin/content/advertclickList.htm?advertID=$!advert.mainID"
+							title="点击量" class="icon iconDetailed"></a>
+						</td>#end
+					</tr>
+					#end
+				</tbody>
+				#pagination($!cmsAdvertDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>

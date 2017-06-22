@@ -1,0 +1,15 @@
+<div id="toolbar">
+  	<div class="side_service goLeft">
+    	<a href="#" class="fLink">在线客服</a> 
+        <ul class="child">
+            <li><a href="#"><img src="$!{mallStatic}/img/icon/ico-qq.png"> 售前客服</a></li>
+            <li><a href="#"><img src="$!{mallStatic}/img/icon/ico-qq.png"> 售后客服</a></li>
+        </ul>
+    </div>
+  	<div class="sidecart">
+    	<a href="$!{domain}/shoppingCart1.htm" class="fLink">购物车<i>#if("$!{user.shoppingcartCount}"=="")0#else$!{user.shoppingcartCount}#end</i> 
+    	</a> 
+    </div>
+    <span class="unit"><a href="$!{domain}/mall/buyer/userfavoriteList.htm"><img src="$!{mallStatic}/img/icon/ico-book.gif" alt="我的收藏" title="我的收藏"></a></span>
+	<img src="$!{mallStatic}/img/icon/ico-top.gif" class="toTop" alt="返回顶部"  title="返回顶部">
+ </div>

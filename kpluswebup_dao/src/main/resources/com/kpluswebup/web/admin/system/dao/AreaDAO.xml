@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.AreaDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID , name, parentID, depth,
+		creator, createTime,
+		modifier, modifyTime
+	</sql>
+
+	<select id="getAllProvince" resultType="areaVO">
+		SELECT
+		mainID,name,parentID,depth FROM kplus_area
+		WHERE depth=5
+		AND
+		parentID=6
+	</select>
+
+	<select id="getAreaByParentID" resultType="areaVO">
+		SELECT
+		mainID,name,parentID,depth FROM kplus_area
+		WHERE parentID=#{parentID}
+	</select>
+	
+	<select id="getCityByParentID" resultType="cityVO">
+		SELECT * FROM kplus_area
+		WHERE parentID=#{parentID}
+	</select>
+
+	<select id="getAreaByMainID" parameterType="java.lang.String"
+		resultType="areaVO">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM kplus_area
+		WHERE mainID=#{mainID}
+	</select>
+
+	<select id="getAreaCascadeByMainID" parameterType="java.lang.String"
+		resultType="areaVO">
+		SELECT
+		t3.`name` as disctrictName,t3.mainID as disctrictID,
+		t.`name` as cityName,t.mainID as cityID,
+		t2.`name` as provinceName,t2.mainID as provinceID
+		FROM
+		`kplus_area` t
+		RIGHT JOIN kplus_area t2 ON t.parentID = t2.mainID
+		RIGHT JOIN kplus_area t3 on t3.parentID = t.mainID
+		where t3.depth='7' and t3.mainID=#{mainID}
+	</select>
+
+	<select id="getCityByMainIDAndDepth" parameterType="java.util.List"
+		resultType="areaVO">
+		select * from kplus_area where mainID in 
+		<foreach collection="list" item="item" index="index" open="("
+			close=")" separator=",">
+			#{item}
+		</foreach>	
+		 <!-- and depth=6 -->
+	</select>
+</mapper>

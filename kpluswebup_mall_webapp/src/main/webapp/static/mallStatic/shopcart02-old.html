@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>购物车</title>
+<link rel="stylesheet" type="text/css" href="css/global.css">
+<link rel="stylesheet" type="text/css" href="css/shopcart.css">
+</head>
+
+<body>
+<!--顶部信息-->
+<div id="topbar">
+	<div class="layout txt_r clearfix">
+    	<div class="lt welbox">欢迎来到中邮普泰<a href="#">请登录</a><a href="#">免费注册</a></div>
+        <div class="shortcut_bar">
+        	<span class="linkbox"><a href="#">我的主页</a></span>
+            <span class="linkbox"><a href="#">我的订单</a></span>
+            <span class="linkbox"><a href="#" class="phone"><i></i>手机版</a></span>
+            <span class="linkbox"><a href="#">我是供应商</a></span>
+            <span class="linkbox serviceLink"><a href="#">客服服务<i class="down"></i></a></span>
+            <span class="linkbox"><a href="#" class="listLink">网站导航<i class="down"></i></a></span>
+        </div>
+    </div>
+</div>
+<div id="processBar">
+	<div class="layout clearfix">
+    	<div class="logo lt">
+        	<a href="#"><img src="images/logo.png"></a>
+        </div>
+        <div class="probar">
+        	<span id="p1"></span>
+            <span id="p2" class="on"></span>
+            <span id="p3"></span>
+            <span id="p4"></span>
+        </div>
+    </div>
+</div>
+
+<div class="layout">
+	<h1 class="cp mt15">填写核对购物信息</h1>
+    <p class="col02">请仔细核对填写地址、发票等信息、以确保物流快递及时准确投递。</p>
+ 	<div class="ordbox mt15">
+    	<h2 class="f16">收货人信息 <a href="#" class="col01 ml10 f12">[修改]</a></h2>
+        <p class="mt10"><strong>丹尼奥</strong> 浙江 杭州 西湖区 文一西路776号 <span class="ml10 phone">18819283333</span> <span class="ml10 tel">400-1254-5555</span></p>
+    </div>
+    <!-- 无地址时显示 -->
+    <div class="noAddr">
+    	<h2 class="f16">收货人信息</h2>
+        <p class="mt10"><input name="" type="radio" value=""> 使用新地址 <a href="#" class="col03 ml35">使用自提服务站</a></p>
+        <dl class="clearfix">
+        	<dt><em class="col03">*</em>收货人姓名：</dt>
+            <dd><input name="" type="text" class="ipt"></dd>
+        </dl>
+        <dl class="clearfix">
+        	<dt><em class="col03">*</em>所在地区：</dt>
+            <dd><select name="" class="ipt"><option>请选择</option></select> <select name="" class="ipt"><option>请选择</option></select> <select name="" class="ipt"><option>请选择</option></select></dd>
+        </dl>
+        <dl class="clearfix">
+        	<dt><em class="col03">*</em>详细地址：</dt>
+            <dd>
+            	<input name="" type="text" class="ipt3">
+            	<p class="col02">请填写详细地址，不需要重复填写所在地址</p>
+            </dd>
+        </dl>
+        <dl class="clearfix">
+        	<dt><em class="col03">*</em>手机号码：</dt>
+            <dd><input name="" type="text" class="ipt2"> (或)固定电话 <input name="" type="text" class="ipt2"> </dd>
+        </dl>
+        <p class="mt15"><a href="#" class="saveLink">保存收货人信息</a></p>
+    </div>
+    <!-- 无地址时显示end -->
+    <div class="ordbox notop">
+    	<h2 class="f16">支付方式 <a href="#" class="col01 ml10 f12">[修改]</a></h2>
+        <ul class="paywayList">
+        	<li>
+            	<label><input name="payway" type="radio" value=""> 款到发货</label>
+                <span>
+                	<img src="pic/pic-nh.png"> 
+                    <em>银行卡号：<b>6228 4803 2844 9525 273</b></em>　
+                    <em>开户行：<b>农行浙江省分行</b></em>
+                    <em>户名：<b>殷宏国</b></em>
+                </span>
+            </li>
+            <li>
+            	<label><input name="payway" type="radio" value=""> 货到付款</label>
+            </li>
+        </ul>
+    </div>
+     <div class="ordbox notop">
+     		<h2 class="f16">商品清单 <a href="#" class="col01 ml10 f12">返回购物车</a></h2>
+        	<div class="shopcartList mt10" id="productList">
+                <table cellspacing="0" cellpadding="0">
+                  <tr>
+                    <th>商品</th>
+                    <th>单价（元）</th>
+                    <th>数量</th>
+                    <th>小计（元）</th>
+                    <th>操作</th>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="origin">
+                        店铺：平台自营
+                    </td>
+                  </tr>
+                  <tr class="tdUnit">
+                    <td class="pInfo">
+                        <a href="#" target="_blank">
+                            <img src="pic/p1.jpg" class="pimg">
+                            TCL m2u么么哒3N联通版 移动联通4G 5.5寸大屏双卡双待安卓智能手机
+                        </a>
+                    </td>
+                    <td align="center"><span class="unitPrice">3888.00</span></td>
+                    <td align="center">1</td>
+                    <td align="center"><span class="subTotal">3888.00</span></td>
+                    <td align="center">
+                        <p><a href="javascript:;">收藏</a></p>
+                        <p><a href="javascript:;">删除</a></p>
+                    </td>
+                  </tr>
+                  <tr class="tdUnit">
+                    <td class="pInfo">
+                        <a href="#" target="_blank">
+                            <img src="pic/p1.jpg" class="pimg">
+                            TCL m2u么么哒3N联通版 移动联通4G 5.5寸大屏双卡双待安卓智能手机
+                        </a>
+                    </td>
+                    <td align="center"><span class="unitPrice">3888.00</span></td>
+                    <td align="center">3</td>
+                    <td align="center"><span class="subTotal">3888.00</span></td>
+                    <td align="center">
+                        <p><a href="javascript:;">收藏</a></p>
+                        <p><a href="javascript:;">删除</a></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="advices">
+                    	买家留言: <input name="" type="text" class="ipt" placeholder="选填:对本次交易的说明(建议在与商家达成一致后的说明)">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="advices txt_r">
+                        <p class="col02">运费：10.00元</p>
+                        <p class="f14">商品金额：3200.00元</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="settleBar">
+                        订单总金额：<span id="totalPrices">3210.00</span>元
+                    </td>
+                  </tr>
+                </table>
+            </div>
+            <p class="txt_r mt15">
+            	<a href="shopcart03.html" class="goLink">去支付</a>
+            </p>
+     </div>
+</div>
+<!-- 公用底部开始 -->
+<div id="footer">
+	<div class="layout clearfix">
+    	<div class="slogen clearfix">
+        	<dl>
+            	<dt><img src="images/gw1_ico.jpg"></dt>
+                <dd><h2>正品保障</h2><p>正品保障 提供发票</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="images/gw2_ico.jpg"></dt>
+                <dd><h2>极速物流</h2><p>极速物流 极速送达</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="images/gw3_ico.jpg"></dt>
+                <dd><h2>无忧售后</h2><p>15天无理由退货</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="images/gw4_ico.jpg"></dt>
+                <dd><h2>特色服务</h2><p>自助维修包养预约</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="images/gw5_ico.jpg"></dt>
+                <dd><h2>帮助中心</h2><p>您的购物指南</p></dd>
+            </dl>
+        </div>
+   	  <div class="root_ser">
+        	<dl>
+            	<dt>购物指南</dt>
+                <dd><a href="#" target="_blank">导购显示</a></dd>
+                <dd><a href="#" target="_blank">免费注册</a></dd>
+                <dd><a href="#" target="_blank">会员等级</a></dd>
+                <dd><a href="#" target="_blank">常见问题</a></dd>
+            </dl>
+            <dl>
+           	  <dt>支付方式</dt>
+                <dd><a href="#" target="_blank">易付宝支付</a></dd>
+                <dd><a href="#" target="_blank">网银支付</a></dd>
+                <dd><a href="#" target="_blank">快捷支付</a></dd>
+                <dd><a href="#" target="_blank">分期付款</a></dd>
+                <dd><a href="#" target="_blank">货到付款</a></dd>
+                <dd><a href="#" target="_blank">门店支付</a></dd>
+            </dl>
+            <dl>
+           	  <dt>物流配送</dt>
+                <dd><a href="#" target="_blank">面运费政策</a></dd>
+                <dd><a href="#" target="_blank">配送服务承诺</a></dd>
+                <dd><a href="#" target="_blank">牵手验货</a></dd>
+                <dd><a href="#" target="_blank">物流查询</a></dd>
+            </dl>
+            <dl>
+           	  <dt>售后服务</dt>
+                <dd><a href="#" target="_blank">退换货政策</a></dd>
+                <dd><a href="#" target="_blank">退换货流程</a></dd>
+                <dd><a href="#" target="_blank">购买延保服务</a></dd>
+                <dd><a href="#" target="_blank">退款说明</a></dd>
+                <dd><a href="#" target="_blank">退换货申请</a></dd>
+                <dd><a href="#" target="_blank">维修/包养</a></dd>
+            </dl>
+            <dl>
+           	  <dt>商家服务</dt>
+                <dd><a href="#" target="_blank">商家入住</a></dd>
+                <dd><a href="#" target="_blank">信息公告</a></dd>
+                <dd><a href="#" target="_blank">培训中心</a></dd>
+                <dd><a href="#" target="_blank">信息公告</a></dd>
+                <dd><a href="#" target="_blank">广告服务</a></dd>
+                <dd><a href="#" target="_blank">商家帮助</a></dd>
+                <dd><a href="#" target="_blank">服务市场</a></dd>
+            </dl>
+            <div class="weixin ct rt">
+                <p><strong class="f14">中邮普泰微信</strong></p>
+                <p><img src="images/weixin.jpg"></p>  
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div id="btmbar">
+    <div class="info">
+        <p><a href="#" target="_blank">关于中邮普泰</a> | <a href="#" target="_blank">我们的团队</a> | <a href="#" target="_blank">网站联盟</a> | <a href="#" target="_blank">热门搜索</a> | <a href="#" target="_blank">友情链接</a> | <a href="#" target="_blank">诚征人才</a></p>
+        <p>浙ICP备2121245号|台字B1.B2-2013004|营业执照|互联网药品信息服务资格证|互联网药品交易服务资格证</p>
+        <p>Copyright &copy;中邮普泰 2007-2015 ，All Right Reserved</p>
+        <p class="mt10">
+            <img src="images/pic-flink.jpg"/>
+        </p>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="js/public.js"></script>
+<script>
+	$(function(){
+		$(".paywayList li").find("input").click(function(){
+			$(this).closest("li").addClass("cur").siblings().removeClass("cur");
+		})	
+	})
+</script>
+</body>
+</html>

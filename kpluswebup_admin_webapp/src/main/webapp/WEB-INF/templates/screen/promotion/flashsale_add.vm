@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增限时抢购</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》限时抢购》新增限时抢购</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="javascript:;" class="hover">新增限时抢购</a></li>
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<form id="flashSaleForm"
+						action="$!{domain}/admin/promotion/addFlashSale.htm" method="post"
+						enctype="multipart/form-data">
+						<input id="gradeIDs" type="hidden" name="customerGrade" /> <input
+							id="groupIDs" type="hidden" name="customerGroup" />
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								#parse("layout/searchitem.vm")
+								<dd class="clearfix">
+									<div class="formTt">图片：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen" name="picUrl"
+											id="picURL"> <img id="uploadImage" src="">   <input
+											type="file" id="myBlogImage" name="myfiles"
+											onchange="ajaxFileUpload()" />
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">抢购价格：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="salesPrice" />
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">抢购库存：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="totality" />
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">限购数量：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="limitCount" />
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">开始时间：</div>
+									<div class="formRow">
+										<input type="text" name="fromDate" class="cText"
+											onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+											readonly="readonly">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">结束时间：</div>
+									<div class="formRow">
+										<input type="text" name="endDate" class="cText"
+											onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+											readonly="readonly">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">适用客户：</div>
+									<div class="formRow">
+										<span> <a href="javascript:;" title="全选"
+											id="selectGradeIDAll"><em class="icon iconAllSel"></em>全选</a>
+											<a href="javascript:;" title="反选" id="unSelectGradeID"><em
+												class="icon iconInverse"></em>反选</a>
+										</span> <br /> <span id="gradeID"> #foreach($!grade in
+											$!customerGradeList) <input id="gradeId$!{grade.mainID}"
+											type="checkbox" value="$!{grade.mainID}" />$!{grade.name}
+											#end
+										</span> <br /> <span> <a href="javascript:;" title="全选"
+											id="selectGroupIDAll"><em class="icon iconAllSel"></em>全选</a>
+											<a href="javascript:;" title="" id="unSelectGroupID"><em
+												class="icon iconInverse"></em>反选</a>
+										</span> <br /> <span id="groupID"> #foreach($!group in
+											$!customerGroupList) <input id="groupId$!{group.mainID}"
+											type="checkbox" value="$!{group.mainID}" />$!{group.name}
+											#end
+										</span>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">说明：</div>
+									<div class="formRow">
+										<textarea rows="7" cols="75" name="description"></textarea>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/promotion/addFlashSale.htm",$!menuAllList)
+										) <input type="button" onclick="submitFlashSale();"
+											class="save" value="提交"> <input type="reset"
+											name="cencle" class="cencle" value="重置"> #end
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

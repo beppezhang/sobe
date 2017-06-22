@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>金币转出</title>
+</head>
+
+<body>
+<!-- top bar -->
+#parse("layout/head_top.vm")
+#parse("layout/customercenter/header.vm")
+<!-- crumb -->
+<div id="crumb">
+	<div class="layout clearfix">
+    	<a href="${domain}/index.htm">首页</a> &gt; <a href="${domain}/mall/buyer/userCenter.htm">用户中心</a>
+    </div>
+</div>
+<div class="layout mt10 clearfix">
+  #parse("layout/customercenter/leftmenu.vm")
+    <div class="mainbody bg">
+    	<div class="titbar_m mt10">
+        	<strong>金币转出</strong>
+        </div>
+        <div class="pro_unit">
+         <div class="serbar">
+            	<span class="lt">
+                	<input name="" type="text" placeholder="商品名称、商品编号、订单编号" class="ipt"> <input name="" type="button" value="查询" class="stn">
+                </span>
+            	交易时间：<select name=""><option>过去6个月内的订单</option></select>
+            </div>
+            <table cellspacing="0" cellpadding="0" class="table01">
+                  <tr>
+                    <th width="100">门店编号</th>
+                    <th width="250">门店</th>
+                    <th width="160">金币</th>
+                    <th width="160">转赠与</th>
+                    <th>转赠时间</th>
+                  </tr>
+                  <tr>
+                    <td><em class="col02">39348548</em></td>
+                    <td>杭州蓝色天使直营店</td>
+                    <td><em class="coin col01">5000</em></td>
+                    <td>卡塔网络</td>
+                    <td>2015-07-01 00:00</td>
+                  </tr>
+             
+            </table>
+        </div>
+    </div>	
+</div>
+<!-- footer -->
+#parse("layout/footer.vm")
+<script type="text/javascript">
+jQuery(document).ready(function(){
+  jQuery("#user_follout_list_cur").addClass("active cur").siblings(".level0").removeClass("cur");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>运费模板</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<!--menu E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》 物流管理 》 运费模板</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			#parse("layout/express_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+						<div class="tableTool">
+							#if($!menuUtil.isExistMenu("/admin/system/addFreightTemplatePage.htm",$!menuAllList)
+							) <a href="$!{domain}/admin/system/addFreightTemplatePage.htm"
+								title="新增模板" class="TableAddBtn">+新增模板</a> #end
+						</div>
+						<!--form  S------->
+						<div class="systemBar">
+							<div class="templates">
+								#foreach($!freighttemplate in $!freighttemplateList)
+								<div class="box">
+									<div class="template">
+										<ul>
+											<li><strong>模板名称：$!freighttemplate.name</strong></li>
+											<li><strong>物流公司：$!freighttemplate.expressName</strong></li>
+											<li><strong>计费方式：#if("$!freighttemplate.priceType"=="1")按重量
+													#elseif("$!freighttemplate.priceType"=="2")按件数
+													#elseif("$!freighttemplate.priceType"=="3")按体积
+													#elseif("$!freighttemplate.priceType"=="4")按单 #end </strong></li>
+										</ul>
+										<ul>
+											<li><span>起步：</span>$!freighttemplate.firstCondition克</li>
+											<li><span>起步价：</span>$!NumberTool.format("#0.00",$!freighttemplate.firstPrice)元</li>
+											<li><span>加价单位：</span>$!freighttemplate.addUnit克</li>
+											<li><span>加价：</span>$!NumberTool.format("#0.00",$!freighttemplate.addPrice)元</li>
+										</ul>
+										#foreach($!ftPrice in $!freighttemplate.priceList)
+										<p>
+											<span>地区：</span>#foreach($!areaSet in
+											$!ftPrice.priceareasetList)$!areaSet.areaName #end
+										</p>
+										<ul>
+											<li><span>起步：</span>$!ftPrice.firstCondition克</li>
+											<li><span>起步价：</span>$!NumberTool.format("#0.00",$!ftPrice.firstPrice)元</li>
+											<li><span>加价单位：</span>$!ftPrice.addUnit克</li>
+											<li><span>加价：</span>$!NumberTool.format("#0.00",$!ftPrice.addPrice)元</li>
+										</ul>
+										#end
+									</div>
+									<div class="btn">
+										#if($!menuUtil.isExistMenu("/admin/system/editFreightTemplatePage.htm",$!menuAllList)
+										) <a class="red"
+											href="$!{domain}/admin/system/editFreightTemplatePage.htm?mainID=$!freighttemplate.mainID">编辑</a>
+										#end
+										#if($!menuUtil.isExistMenu("/admin/system/setDefaultFreightTemplate.do",$!menuAllList)
+										) #if("$!freighttemplate.isDefault"=="0") <a
+											href="javascript:;"
+											onclick="setDefaultFreightTemplate('$!freighttemplate.mainID');">默认</a>#end
+										#end
+										#if($!menuUtil.isExistMenu("/admin/system/deleteFreightTemplate.do",$!menuAllList)
+										) <a hidden="javascript:;"
+											onclick="deleteFreightTemplate('$!freighttemplate.mainID');">删除</a>#end
+									</div>
+								</div>
+								#end
+							</div>
+						</div>
+						<!--form  E------->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".express_menu_2").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+	</script>
+</body>
+</html>

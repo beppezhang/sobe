@@ -1,0 +1,246 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="../css/supplier.css">
+</head>
+
+<body>
+<div id="header">
+	<div class="layout clearfix">
+    	<h1 class="lt">中邮普泰</h1>
+        <span class="mintt lt">商家中心</span>
+        <span class="sipt lt">
+        	<input name="" type="text" class="ipt" placeholder="商城商品搜索"><input name="" type="button" class="sbtn">
+        </span>
+        <div class="iBox">
+            <img src="../pic/fz.jpg" class="pimg">
+            <div class="lt">
+                <p class="name">当前用户</p>
+                <p>跳大神</p>
+            </div>
+            <p class="tools"><a href="#"><img src="../images/ico-home2.gif"></a> <a href="#"><img src="../images/ico-tool.gif"></a> <a href="#"><img src="../images/ico-exit2.gif"></a></p>
+        </div>
+    </div>
+</div>
+<div class="layout clearfix">
+	<div id="leftNav">
+    	<div class="atp"><img src="../images/a2.png"></div>
+        <dl>
+        	<dt class="s1">商品管理</dt>
+            <dd><a href="#">商品选择</a></dd>
+            <dd class="on"><a href="#">出售中的商品</a></dd>
+            <dd><a href="#">等待中的商品</a></dd>
+            <dd><a href="#">下架的商品</a></dd>
+        </dl>
+        <dl>
+        	<dt class="s2">交易管理</dt>
+            <dd><a href="#">订单列表</a></dd>
+            <dd><a href="#">取货单列表</a></dd>
+        </dl>
+        <dl>
+        	<dt class="s3"><a href="#">财务管理</a></dt>
+        </dl>
+        <dl>
+        	<dt class="s4"><a href="#">销售统计</a></dt>
+        </dl>
+        <dl>
+        	<dt class="s5"><a href="#">店铺信息</a></dt>
+        </dl>    
+    </div>
+    <div id="rightMain">
+    	<div class="crumbs">
+        	商家管理中心 &gt; <a href="business_center.html">首页</a> &gt; 出售中的商品
+        </div>
+        <div class="p15">
+            <div class="stitbar">
+                <strong>出售中的商品</strong>
+            </div>
+            <div class="selbar txt_r">
+            	<span>供应商 <select name="" class="sel"><option>请选择..</option></select></span>
+                <span class="ml10">本店分类 <select name="" class="sel"><option>请选择..</option></select>
+                <select name="" class="sel"><option>商品名称</option></select>
+                <input name="" type="text" class="ipt"> <input name="" type="button" class="sbtn" value="搜索"></span>
+            </div>
+            <table class="sellist">
+              <tr>
+                <th width="500">商品信息</th>
+                <th>价格</th>
+                <th>库存</th>
+                <th>发布时间</th>
+                <th>操作</th>
+              </tr>
+              <tr>
+               <td class="txt_r" colspan="5">
+               	   <label for="sel_all" class="lt"><input name="allCk" id="sel_all" class="allCk" type="checkbox" value=""> 全选</label>
+               		<a href="#" class="apLink">申请售后</a>
+               </td>
+              </tr>
+              <!-- 列表循环 -->
+              <tbody class="proUnit">
+                  <tr>
+                     <td colspan="5" class="bg">
+                     <input class="ck" name="ck" type="checkbox" value=""> 平台货号：2099330
+                     </td>
+                  </tr>
+                  <tr>
+                  	  <td>
+                        <a href="#" class="col01" target="_blank"><img src="../pic/p2.jpg" class="pimg lt"></a>
+                        <p><a href="#" class="col01" target="_blank">Huawei/华为 荣耀6 Plus 移动联通电信版双卡4G手机</a></p>
+                      	<p>商家货号： mp020930</p>
+                  	  </td>
+                      <td class="ct">
+                      	  <span class="bd">￥<em class="unitPrice">1500.30</em></span>
+                      </td>
+                      <td class="ct">
+                          <span class="countMan">
+                            <a href="javascript:;" class="subbtn" title="减少"></a><input name="num" type="text" class="unitNum" value="1" data="2"><!--data表示是库存或是最大购买数量--><a href="javascript:;" class="addbtn" title="增加"></a>
+                          </span>
+                      </td>
+                      <td class="ct">2014-03-17</td>
+                      <td class="ct"><a href="#" class="editBtn">编辑</a><a href="#" class="delBtn">删除</a></td>
+                  </tr>
+              </tbody>
+              <!-- 列表循环end -->
+               <!-- 列表循环 -->
+              <tbody class="proUnit">
+                  <tr>
+                     <td colspan="5" class="bg">
+                     <input class="ck" name="ck" type="checkbox" value=""> 平台货号：2099330
+                     </td>
+                  </tr>
+                  <tr>
+                  	  <td>
+                        <a href="#" class="col01" target="_blank"><img src="../pic/p1.jpg" class="pimg lt"></a>
+                        <p><a href="#" class="col01" target="_blank">Huawei/华为 荣耀6 Plus 移动联通电信版双卡4G手机</a></p>
+                      	<p>商家货号： mp020930</p>
+                  	  </td>
+                      <td class="ct">
+                      	  <span class="bd">￥<em class="unitPrice">1500.30</em></span>
+                      </td>
+                      <td class="ct">
+                          <span class="countMan">
+                            <a href="javascript:;" class="subbtn" title="减少"></a><input name="num" type="text" class="unitNum" value="1" data="10"><!--data表示是库存或是最大购买数量--><a href="javascript:;" class="addbtn" title="增加"></a>
+                          </span>
+                      </td>
+                      <td class="ct">2014-03-17</td>
+                      <td class="ct"><a href="#" class="editBtn">编辑</a><a href="#" class="delBtn">删除</a></td>
+                  </tr>
+              </tbody>
+              <!-- 列表循环end -->
+               <!-- 列表循环 -->
+              <tbody class="proUnit">
+                  <tr>
+                     <td colspan="5" class="bg">
+                     <input class="ck" name="ck" type="checkbox" value=""> 平台货号：2099330
+                     </td>
+                  </tr>
+                  <tr>
+                  	  <td>
+                        <a href="#" class="col01" target="_blank"><img src="../pic/p3.jpg" class="pimg lt"></a>
+                        <p><a href="#" class="col01" target="_blank">Huawei/华为 荣耀6 Plus 移动联通电信版双卡4G手机</a></p>
+                      	<p>商家货号： mp020930</p>
+                  	  </td>
+                      <td class="ct">
+                      	  <span class="bd">￥<em class="unitPrice">1500.30</em></span>
+                      </td>
+                      <td class="ct">
+                          <span class="countMan">
+                            <a href="javascript:;" class="subbtn" title="减少"></a><input name="num" type="text" class="unitNum" value="1" data="5"><!--data表示是库存或是最大购买数量--><a href="javascript:;" class="addbtn" title="增加"></a>
+                          </span>
+                      </td>
+                      <td class="ct">2014-03-17</td>
+                      <td class="ct"><a href="#" class="editBtn">编辑</a><a href="#" class="delBtn">删除</a></td>
+                  </tr>
+              </tbody>
+              <!-- 列表循环end -->
+              <tr>
+               <td class="txt_r" colspan="5">
+               	   <label for="sel_all_btm" class="lt"><input name="allCk" id="sel_all_btm" class="allCk" type="checkbox" value=""> 全选</label>
+               		<a href="#" class="apLink">申请售后</a>
+               </td>
+              </tr>
+            </table>
+        </div>
+        <div class="pagerbar ct">
+        	<span class="clearfix">
+                <a href="#">首页</a>
+                <a href="#">上一页</a>
+                <a href="#" class="cur">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">...</a>
+                <a href="#">下一页</a>
+                <a href="#">末页</a>
+            </span>
+       </div>
+    </div>
+</div>
+<div id="footer">
+	<div class="layout">
+    	<p><a href="#">关于中邮普泰</a> | <a href="#">我们的团队</a> | <a href="#">网站联盟</a> | <a href="#">热门搜索</a> | <a href="#">友情链接</a> | <a href="#">诚征英才</a></p>
+        <p>浙ICP备2121245号 | 合字B1.B2-20130004 | 营业执照 | 互联网药品交易服务资格证</p>
+        <p>Copyright© 中邮普泰 2007-2015，All Rights Reserved</p>
+    </div>
+</div>
+<script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../js/unify.js"></script>
+<script>
+$(function(){
+		$(".allCk").click(function(){
+			$(".sellist").find(':checkbox').attr("checked",this.checked);
+			getAmount();
+		})
+		$('input[name="ck"]').click(function(){
+			$("input[name='ck']").each(function(){
+				  var ck = $(this).prop("checked");
+				  if(ck==true){
+					  $(".allCk").attr("checked",true);
+				  }else{
+					  $(".allCk").removeAttr("checked");
+					  return false;
+				  }
+			})
+		})
+		//选择数量
+		$(".countMan").find(".addbtn").click(function(){
+			var imtNum = $(this).prev(".unitNum").attr("data");//最大购买数量(库存)
+			var getNum = $(this).closest(".countMan").find(".unitNum").val(); //获取本商品数量
+			var addNum = parseInt(getNum) + 1;//数量增加
+			if(imtNum>=addNum){
+				$(this).closest(".countMan").find(".unitNum").val(addNum);
+			}
+			
+		})
+		$(".countMan").find(".subbtn").click(function(){
+			var getNum = $(this).closest(".countMan").find(".unitNum").val(); //获取本商品数量
+			var subNum = parseInt(getNum) - 1;//数量减少
+			if(subNum>0){
+				$(this).closest(".countMan").find(".unitNum").val(subNum);
+			}
+		})
+		$("input[name='num']").change(function(){
+			var iptVal=$(this).val();
+			var nStock = $(this).attr("data");//最大购买数量(库存)
+			var inVAL = $(this).val();
+			if(parseInt(iptVal)<=1){
+			   $(this).val(1);
+			}
+			if(parseInt(iptVal)>nStock){
+				$(this).val(nStock);
+			}
+			if(parseInt(iptVal)> 1){
+			   n = $(this).val();
+			   var intNum = parseInt(n);
+			   $(this).val(intNum);
+			}
+			if(isNaN(iptVal) || iptVal=="" || iptVal.replace(/\s+/g,"")=="") {
+			   $(this).val(1);			 
+			}			
+		})
+	})
+	
+</script>
+</body>
+</html>

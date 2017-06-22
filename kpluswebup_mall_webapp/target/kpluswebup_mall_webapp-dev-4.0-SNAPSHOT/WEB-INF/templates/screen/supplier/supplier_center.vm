@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	#parse("layout/suppliercenter/leftmenu.vm")
+	
+    <div id="rightMain">
+    	<div class="crumbs">
+        	商家管理中心 &gt; 首页
+        </div>
+        <div class="setInfo clearfix">
+        	<div class="picbox">
+            	<p>
+            	   #if("$!supplier.picURL" == "")
+            	 	  <img src="http://www.jsann.com/images/gravatar/jsann.jpg" id="uploadImage" class="pimg">
+            	   #else
+            	 	  <img src="${domainImg}$!supplier.picURL" id="uploadImage" class="pimg">
+            	   #end
+					<!-- <span class="pt_val cump">
+						 <input type="hidden" value="$!supplierVO.mainID" name="mainID"	id="mainID"> 
+						 <input type="hidden" name="picURL" id="picURL" class="picURL" > 
+						 <input name="myfiles" type="file" accept="image/*" id="myBlogImage" class="up_file" onchange="ajaxFileUpload()" value="编辑图片" />
+					 </span> -->
+            	
+            	   <!--  <img src="http://www.jsann.com/images/gravatar/jsann.jpg" id="uploadImage" class="pimg" onchange="ajaxFileUpload()">
+	            	<input type="hidden" value="$!supplierVO.mainID" name="mainID"	id="mainID"> 
+					<input type="hidden" name="picURL" id="picURL" class="picURL" >  -->
+            	</p>
+            </div>
+            <div class="infoBox clearfix">
+            	<p><em class="f16">$!{supplier.companyName}</em></p>
+                <p class="time"><span>上一次登录时间：$!date.format('yyyy-MM-dd HH:mm:ss', $!supplier.lastloginTime)</span></p>
+                <!-- <p class="phem"><a href="#" class="phone_actived">手机已验证</a><a href="#" class="email_active">邮箱未验证</a></p> -->
+                <!-- <p class="safe"><span class="name">账户安全：</span><span class="p"><b></b></span>中级</p> -->
+            </div>
+            <div class="order_info">
+                <p><strong>订单提醒：</strong><a href="order.htm?orderStatus=1">待处理订单($!wartForDealOrderCount)</a><!-- <a href="#">待评价订单(1)</a> --></p>
+                <p><strong>商品提醒：</strong><a href="item.htm?type=sale">出售中的商品($!waitItemCount)</a><!-- <a href="#">待评价商品 (1)</a> --></p>
+               <!--  <p class="last"><strong>站内消息：</strong><a href="#">提醒/通知(1)</a><a href="#">待回复的咨询(1)</a></p> -->
+            </div>
+        </div>
+
+        <div class="units">
+        	<h2>近期订单</h2>
+            <!-- <h3>掌握30日内最热销的商品及时补充货源</h3> -->
+            <table class="prolist mt25">
+              <tr>
+                <th style="width:108px;">订单编号</th>
+                <th style="width:270px;">订单商品</th>
+                <th style="width:78px;">买家</th>
+                <th style="width:128px;">订单总金额</th>
+                <th style="width:128px;">下单日期</th>
+                <th style="width:138px;">订单状态</th>
+                <!-- <th style="width:108px;">操作</th> -->
+              </tr>
+              <tr>
+              	<td colspan="5" class="hr"></td>
+              </tr>
+                #foreach($!salesOrder in $!salesOrderList)
+              <tr>
+	                <td class="ct"><a href="orderDetail.htm?orderMainID=$!{salesOrder.mainID}" class="number">$!salesOrder.mainID</a></td>
+	                <td class="product ct">
+	                  #foreach($!salesOrderLine in $!salesOrder.salesOrderLineList)
+	                    <a href="javaScript:seeItem('$!{salesOrderLine.productID}','$!{salesOrderLine.itemID}');"><img src="$!{domainImg}$!salesOrderLine.itemPicUrl" alt="$!salesOrderLine.itemName" width="52" height="52" class="pimg"></a>
+	                  #end
+	                </td>
+	                <td class="ct">$!salesOrder.customerUserName</td>
+	                <td class="price ct"><span class="rmbsymbol">￥</span><em>$!NumberTool.format("#0.00",$!salesOrder.totalAmount)</em></td>
+	                <td class="time ct"><p>$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrder.createTime)</p></td>
+	                <td class="status ct">
+	                   #if("$!salesOrder.orderStatus"=="0")
+	                   <p>交易结束</p>
+	                   #elseif("$!salesOrder.orderStatus"=="2")
+	                   <p class="ok">交易成功</p>
+	                   #elseif("$!salesOrder.orderStatus"=="3")
+	                    <p>待发货</p>
+	                   #elseif("$!salesOrder.orderStatus"=="4")
+	                    <p>已发货</p>
+	                   #elseif("$!salesOrder.orderStatus"=="5")
+	                    <p>已收货</p>
+	                   #elseif("$!salesOrder.orderStatus"=="6")
+	                    <p>已完成</p>
+	                   #end
+	                   <p><a href="orderDetail.htm?orderMainID=$!{salesOrder.mainID}">订单详情</a></p>
+	                   </td>
+	                <!-- <td class="ct"><a class="areabut" href="#">再次购买</a></td> -->
+              </tr>
+                #end
+            </table>
+        </div>
+    </div>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+    function ajaxFileUpload() {
+    	jQuery.ajaxFileUpload({
+    		url : '$!{domain}/file/fileUpload.do',
+    		secureuri : false,// 是否启用安全提交,默认为false
+    		fileElementId : 'myBlogImage',// 文件选择框的id属性
+    		dataType : 'text',// 服务器返回的格式,可以是json或xml等
+    		success : function(data, status) {
+    			data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+    			data = data.replace("</PRE>", '');
+    			data = data.replace("<pre>", '');
+    			data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+    			if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+    				$("img[id='uploadImage']").attr("src", data.substring(2));
+    			    $("#uploadImage").show();
+    				$("#picURL").val(data.substring(2));
+    				$('#result').html("图片上传成功<br/>");
+    				jQuery(".picURL").parent().find(".prompt_1").removeClass("error").addClass("ok").html("图片上传成功！");	
+    			}else {
+    				$('#result').html('图片上传失败，请重试！！');
+    				jQuery(".picURL").parent().find(".prompt_1").removeClass("ok").addClass("error").html("图片上传失败，请重试！");
+    			}
+    		},
+    		error : function(data, status, e) { // 服务器响应失败时的处理函数
+    			$('#result').html('图片上传失败，请重试！！');
+    			jQuery(".picURL").parent().find(".prompt_1").removeClass("ok").addClass("error").html("'图片上传失败，请重试！");
+    		}
+    	});
+    }
+    
+    
+    function seeItem(productID,itemID){
+        if(productID != null && itemID != null){
+    	    var data = {
+    				productID : productID,
+    			itemID : itemID
+    		}
+    	   jQuery.ajax({
+    				url : "$!{domain}/mall/seller/seeItem.do",
+    				type : "POST",
+    				data : data,
+    				dataType : "json",
+    				success : function(data) {
+    					if (data.code == 0) {
+    						var tempwindow=window.open('_blank');
+    						//tempwindow.location='$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID;
+    						tempwindow.location='$!{domain}/mall/item/list.htm?productId='+productID+'&itemID='+itemID;
+    						//window.open('$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID);
+    					} else {
+    						alert("该商品已下架！");
+    					}
+    				},
+    				error : function() {
+    					alert("操作失败");
+    				}
+    		});
+        }else{
+           alert("商品已下架！");
+        }
+    	
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<div class="contentLf tabList">
+	<ul class="operator_menu">
+		#if($!menuUtil.isExistMenu("/admin/system/operatorList.htm",$!menuAllList)
+		)
+		<li class="operator_menu_1"><a
+			href="$!{domain}/admin/system/operatorList.htm">后台用户</a></li>#end
+		#if($!menuUtil.isExistMenu("/admin/system/departmentList.htm",$!menuAllList)
+		)
+		<li class="operator_menu_2"><a
+			href="$!{domain}/admin/system/departmentList.htm">部门管理</a></li>#end
+		#if($!menuUtil.isExistMenu("/admin/system/roleList.htm",$!menuAllList)
+		)
+		<li class="operator_menu_3"><a
+			href="$!{domain}/admin/system/roleList.htm">角色管理</a></li>#end
+		<!-- #if($!menuUtil.isExistMenu("/admin/system/whiteList.htm",$!menuAllList)
+		)
+		<li class="operator_menu_4"><a
+			href="$!{domain}/admin/system/whiteList.htm">IP白名单</a></li>#end -->
+		#if($!menuUtil.isExistMenu("/admin/system/systemLogList.htm",$!menuAllList)
+		)
+		<li class="operator_menu_5"><a
+			href="$!{domain}/admin/system/systemLogList.htm">操作日志</a></li>#end
+	</ul>
+</div>

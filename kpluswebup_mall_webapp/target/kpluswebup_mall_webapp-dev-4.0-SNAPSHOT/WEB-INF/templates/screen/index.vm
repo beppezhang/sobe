@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>搜贝</title>
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/global.css">
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/brand.css">
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/search.css">
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/searchBox.css">
+	<link rel="stylesheet" type="text/css" href="$!{mallStatic}/style/login.css">
+	<script type="text/javascript" src="${mallStatic}/js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$(".link_wrap .myFocus .model_seach li i:gt(2)").removeClass("cur");
+			$(".link_wrap .myFocus .VIN_seach li i:gt(2)").removeClass("cur");
+			$(".link_wrap .myFocus .OEM_seach li i:gt(2)").removeClass("cur");
+		});
+	</script>
+</head>
+
+<body>
+	<div id="all">
+	<!-- top bar -->
+	#parse("layout/head_top_new.vm")
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider_new.vm")
+	
+	<div class="link_wrap">
+		<ul class="tab_head">
+			#if("$!{user.username}"!="")
+			<li class="current">我的关注</li>
+			<li>汽车品牌</li>
+			#else
+			<li style="display: none">我的关注</li>
+			<li class="current">汽车品牌</li>
+			#end
+			<li>全车件</li>
+			<li>保养件</li>
+			<li>配件品牌</li>
+		</ul>
+
+		#if("$!{user.username}"!="")
+		<div class="tab_link myFocus current clearfix">
+		#else
+		<div class="tab_link myFocus">
+		#end
+			<div class="model_seach">
+				<h4>车型搜索</h4>
+				<ul>
+					#foreach($focusEntity in ${vehicleTypeSearchList})
+					<li>
+						<i class="cur">$velocityCount</i>
+						<span><a href="$!{domain}/mall/product/searchProductListByForFocus.htm?type=vehicleType&referenceID=${focusEntity.referenceID}" title="${focusEntity.myFocusInfo}">${focusEntity.myFocusInfo}</a></span>
+					</li>
+					#end
+				</ul>
+			</div>
+			<div class="VIN_seach">
+				<h4>VIN搜索</h4>
+				<ul>
+					#foreach($focusEntity in ${VINSearchList})
+					<li>
+						<i class="cur">$velocityCount</i>
+						<span><a href="${domain}/mall/product/searchProductListByForFocus.htm?type=vin&referenceID=${focusEntity.referenceID}" title="${focusEntity.myFocusInfo}">${focusEntity.myFocusInfo}</a></span>
+					</li>
+					#end
+				</ul>
+			</div>
+			<div class="OEM_seach">
+				<h4>OEM搜索</h4>
+				<ul>
+					#foreach($focusEntity in ${OEMSearchList})
+					<li>
+						<i class="cur">$velocityCount</i>
+						<span><a href="${domain}/mall/product/searchProductListByForFocus.htm?type=oem&referenceID=${focusEntity.referenceID}" title="${focusEntity.myFocusInfo} ${focusEntity.referenceID}">${focusEntity.myFocusInfo} ${focusEntity.referenceID}</a></span>
+					</li>
+					#end
+				</ul>
+			</div>
+		</div>
+		
+		#if("$!{user.username}"!="")
+		<div class="tab_link brand clearfix">
+		#else
+		<div class="tab_link brand clearfix current">
+		#end
+			#foreach($!brandModel in $!brandsModel)
+		        #foreach($!productCategoryVo in $!brandModel.brands)
+				<a href="$!{domain}/mall/product/searchProductList.htm?type=car&&carMainID=$!{productCategoryVo.mainID}">
+					<img src="${mallStatic}/img/logo/$!{productCategoryVo.picUrl}" alt="$!{productCategoryVo.name}" width="50" />
+					$!{productCategoryVo.name}
+				</a>
+		        #end
+	        #end
+			<a class="more" href="$!{domain}/mall/brand/wall.htm">查看更多&gt;&gt;</a>
+		</div>
+		
+		<div class="tab_link full_vehicle clearfix">
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">正时皮带</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">正时皮带</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">正时皮带</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">正时皮带</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">正时皮带</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">机滤</a>
+			<a href="#">正时皮带</a>
+		</div>
+		<div class="tab_link maintenance clearfix">
+			<ul>
+				<li class="li1">
+					<i></i>
+					<a href="#">点火系</a>
+				</li>
+				<li class="li1">
+					<i></i>
+					<a href="#">点火系</a>
+				</li>
+				<li class="li1">
+					<i></i>
+					<a href="#">点火系</a>
+				</li>
+				<li class="li1">
+					<i></i>
+					<a href="#">点火系</a>
+				</li>
+				<li class="li1">
+					<i></i>
+					<a href="#">点火系</a>
+				</li>
+				<li class="li1">
+					<i></i>
+					<a href="#">点火系</a>
+				</li>
+				<li class="li1">
+					<i></i>
+					<a href="#">点火系</a>
+				</li>
+				<li class="li1">
+					<i></i>
+					<a href="#">皮带以及涨紧轮</a>
+				</li>
+				<li class="li1">
+					<i></i>
+					<a href="#">点火系</a>
+				</li>
+				<li class="li1">
+					<i></i>
+					<a href="#">点火系</a>
+				</li>
+			</ul>
+		</div>
+		<div class="tab_link parts">
+			<a href="#"><img src="${mallStatic}/images/part1.png" alt="" /></a>
+			<a href="#"><img src="${mallStatic}/images/part2.png" alt="" /></a>
+			<a href="#"><img src="${mallStatic}/images/part3.png" alt="" /></a>
+			<a href="#"><img src="${mallStatic}/images/part4.png" alt="" /></a>
+			<a href="#"><img src="${mallStatic}/images/part5.png" alt="" /></a>
+			<a href="#"><img src="${mallStatic}/images/part6.png" alt="" /></a>
+			<a href="#"><img src="${mallStatic}/images/part7.png" alt="" /></a>
+			<a href="#"><img src="${mallStatic}/images/part8.png" alt="" /></a>
+			<a class="more" href="#">查看更多&gt;&gt;</a>
+		</div>
+	</div>	
+	<div class="loaner"></div>
+	</div>
+	#parse("layout/bottom.vm")
+	<script type="text/javascript">
+	var asLi=$('.link_wrap .tab_head li');
+	var aLink=$('.link_wrap .tab_link');
+	asLi.click(function(event) {
+		$(this).addClass('current').siblings().removeClass('current');
+		aLink.eq($(this).index()).addClass('current').siblings().removeClass('current');
+	});
+	</script>	
+
+</body>
+</html>

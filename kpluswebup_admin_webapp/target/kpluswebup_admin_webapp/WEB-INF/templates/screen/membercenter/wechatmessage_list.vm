@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>微信记录</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<em class="icon iconMenu1 "></em><a href="memberList.htm">会员中心</a> &gt; <span>微信记录</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/member/wechatMessageList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!wechatMessageDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!wechatMessageDTO.pageSize">
+				<div class="tableTool">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">用户名：</span><input type="text"
+									name="searchCustomerName" class="cText"
+									value="$!wechatMessageDTO.customerName" /></td>
+								<td><span class="grayF">微信昵称：</span><input type="text"
+									name="searchWechatNick" class="cText"
+									value="$!wechatMessageDTO.wechatNick" /></td>
+								<td><span class="grayF">消息类型：</span> <select class="select"
+									name="searchSendType">
+										<option value="">全部</option>
+										<option #if("$!wechatMessageDTO.sendType"==
+											"1")selected="selected" #end value="1">接收</option>
+										<option #if("$!wechatMessageDTO.sendType"==
+											"2")selected="selected" #end value="2">回复</option>
+								</select></td>
+								<td><span class="grayF">状态：</span> <select class="select"
+									name="searchStatus">
+										<option value="">全部</option>
+										<option #if("$!wechatMessageDTO.status"==
+											"1")selected="selected" #end value="1">未回复</option>
+										<option #if("$!wechatMessageDTO.status"==
+											"2")selected="selected" #end value="2">成功</option>
+										<option #if("$!wechatMessageDTO.status"==
+											"3")selected="selected" #end value="3">失败</option>
+										<option #if("$!wechatMessageDTO.status"==
+											"4")selected="selected" #end value="4">已回复</option>
+								</select></td>
+								<td rowspan="3">
+									#if($!menuUtil.isExistMenu("/admin/member/wechatMessageList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				#if($!menuUtil.isExistMenu("/admin/member/addWechatMessagePage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/member/addWechatMessagePage.htm" class="TableAddBtn" title="发送微信">发送微信</a>
+				#end
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td>微信昵称</td>
+						<td>用户名</td>
+						<td>微信名称</td>
+						<td>消息类型</td>
+						<td>内容</td>
+						<td>消息时间</td>
+						<td>状态</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!wechatmessage in $!wechatMessageList)
+					<tr>
+						<td>$!wechatmessage.wechatNick</td>
+						<td>$!wechatmessage.customerName</td>
+						<td>$!wechatmessage.wechatName</td>
+						<td>#if("$!wechatmessage.sendType"=="1") 接收#end
+							#if("$!wechatmessage.sendType"=="2") 回复 #end</td>
+						<td>$!wechatmessage.content</td>
+						<td><span
+							title="$!date.format('yyyy-MM-dd HH:mm:ss',$!wechatmessage.createTime)"
+							class="dealtime">$!date.format('yyyy-MM-dd
+								HH:mm:ss',$!wechatmessage.createTime)</span></td>
+						<td>#if("$!wechatmessage.sendType"=="1")
+							#if("$!wechatmessage.status"=="0") 未回复#end
+							#if("$!wechatmessage.status"=="3") 已回复#end #end
+							#if("$!wechatmessage.sendType"=="2")
+							#if("$!wechatmessage.status"=="1") 成功#end
+							#if("$!wechatmessage.status"=="2") 失败 #end#end</td>
+						<td class="last">#if("$!wechatmessage.sendType"=="2")
+							#if("$!wechatmessage.status"=="2")
+							#if($!menuUtil.isExistMenu("/admin/member/sendWechatMessage.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconSendAg"
+							onclick="sendWechatMessage('$!wechatmessage.mainID')" title="再次发送"></a>
+							#end #end #end #if("$!wechatmessage.sendType"=="1")
+							#if("$!wechatmessage.status"=="0"||"$!wechatmessage.status"=="3")
+							<a href="$!{domain}/admin/member/replyWechatMessage.htm?mainID=$!wechatmessage.mainID" class="icon iconReply" title="回复"></a>
+							#end #end
+					</tr>
+					#end
+				</tbody>
+				#pagination($!wechatMessageDTO)
+			</table>
+
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

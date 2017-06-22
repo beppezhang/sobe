@@ -1,0 +1,408 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>购物车</title>
+<link rel="stylesheet" type="text/css"
+	href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css"
+	href="$!{mallStatic}/css/shopcart.css">
+</head>
+<style type="text/css">
+.invoice {
+	display: none;
+}
+</style>
+<body>
+	<!-- top bar -->
+	#parse("layout/head_top.vm")
+	<div id="processBar">
+		<div class="layout clearfix">
+			<div class="logo lt">
+        	<a href="index.htm">
+                    	#if("$!shopLogo"!="")
+	            <img style="  width: 200px;  height: 60px;" src="$!{mallStatic}$!shopLogo">
+                    	 #else
+				<img style="  width: 200px;  height: 60px;" src="$!{mallStatic}/img/logo/soubei.png">
+                     	#end        		
+        	</a>
+			</div>
+			<div class="probar">
+				<span id="p1"></span> <span id="p2" class="on"></span> <span id="p3"></span>
+				<span id="p4"></span>
+			</div>
+		</div>
+	</div>
+
+	<div class="layout">
+		<h1 class="cp mt15">填写核对购物信息</h1>
+		<p class="col02">请仔细核对填写地址、发票等信息、以确保物流快递及时准确投递。</p>
+		<div class="ordbox mt15">
+			<h2 class="f16">
+				收货人信息
+				 <a href="javascript:void(0);" class="col01 ml10 f12 add-new">[添加新地址]</a>
+
+			</h2>
+			#foreach($!address in $!addressList)
+			<p class="mt10">
+				<input type="hidden" value="$!address.isDefault" /> <input
+					type="hidden" value="$!address.address" /> <input type="hidden"
+					value="$!address.mobile" /> <input type="hidden"
+					value="$!address.telephone" /> #if("$!address.isDefault"=="1") <input
+					type="radio" name="address-selected" checked value="$!address.id"
+					style="display: inline-block; margin-right: 10px;"> #else <input
+					type="radio" name="address-selected" value="$!address.id"
+					style="display: inline-block; margin-right: 10px;"> #end <strong>$!address.name</strong>
+				$!address.provinceName $!address.cityName $!address.districtName
+				$!address.address #if("$!{address.mobile}" != "") <span
+					class="ml10 phone">$!address.mobile</span> #end
+				#if("$!{address.telephone}" != "") <span class="ml10 tel">$!address.telephone</span>
+				#end
+				<a class="col01 ml10 f12" href="javascript:void(0);" 
+        		onClick="editAddress(this, '$!address.id', '$!address.provinceID', '$!address.cityID', '$!address.disctrictID');">[修改]</a>
+			</p>
+			#end
+		</div>
+		<!-- 无地址时显示 -->
+		<div class="noAddr">
+			<h2 class="f16">收货人信息</h2>
+			<p class="mt10"><input name="" type="radio" value=""> 使用新地址 </p>
+			<form id="addressForm" action="saveAddress.htm" method="post">
+				<input type="hidden" name="type" value="0"> 
+				<input type="hidden" name="freight" value=""> 
+				<input type="hidden" name="addressID" value=""> 
+				<input type="hidden" class="cartID" name="cartID" value="$!cartID">
+				<input type="hidden" class="orderType" name="orderType"
+					value="$!orderType"> #if("$!tempCartID"!="") <input
+					type="hidden" id="itemID" name="itemID" value="$!tempCartID">
+				<input id="itemCount" type="hidden" name="itemCount"
+					value="$!itemCount"> <input id="itemType" type="hidden"
+					name="itemType" value="$!itemType"> <input id=""
+					type="hidden" name="productID" value="$!productID"> <input
+					id="objID" type="hidden" name="objID" value="$!objID"> <input
+					id="supplierID" type="hidden" name="supplierID"
+					value="$!supplierID"> #end #if("$!itemsJson"!="") #end
+				<textarea style="display: none" id="itemsJson" type="hidden"
+					name="itemsJson">$!itemsJson</textarea>
+				<dl class="clearfix">
+					<dt>
+						<em class="col03">*</em>收货人姓名：
+					</dt>
+					<dd>
+						<input name="name" type="text" class="ipt">
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em class="col03">*</em>所在地区：
+					</dt>
+					<dd>
+						<select name="provinceId" class="ipt"
+							onchange="changeProvinceID(this.value)">
+							#foreach($!province in $!provinceList)
+							<option value="$!province.mainID">$!province.name</option> #end
+						</select> &nbsp; <select name="cityId" id="cityid" class="ipt"
+							onchange="changeCity(this.value)"> #foreach($!city in
+							$!cityList)
+							<option value="$!city.mainID">$!city.name</option> #end
+						</select> &nbsp; <select name="districtId" id="districtid" class="ipt">
+							#foreach($!district in $!districtList)
+							<option value="$!district.mainID">$!district.name</option> #end
+						</select>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em class="col03">*</em>详细地址：
+					</dt>
+					<dd>
+						<input name="address" type="text" class="ipt3">
+						<p class="col02">请填写详细地址，不需要重复填写所在地址</p>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>
+						<em class="col03">*</em>手机号码：
+					</dt>
+					<dd>
+						<input name="mobile" type="text" class="ipt2" maxlength="11"> (或)固定电话 <input
+							name="telephone" type="text" class="ipt2" id="phone-last"  maxlength="13">
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>设为默认：</dt>
+					<dd>
+						<input type="checkbox" class="isdefault" name="isDefault"
+							value="0">
+					</dd>
+				</dl>
+				<p class="mt15">
+					<a href="javascript:void(0);" onclick="saveAddress()"
+						class="saveLink">保存收货人信息</a> <a href="javascript:void(0);"
+						class="saveLink add-cancel">取消</a>
+				</p>
+			</form>
+		</div>
+		<!-- 无地址时显示end -->
+		<div class="ordbox notop">
+			<h2 class="f16">
+				支付方式
+				<!-- <a href="#" class="col01 ml10 f12">[修改]</a> -->
+			</h2>
+			<p class="mt10">
+			<ul class="paywayList">
+			   <li><label><input name="paymentType" checked="checked"
+						type="radio" value="1"> 款到发货</label> 
+				<!--
+				<span> <img
+						src="$!{mallStatic}/img/pic-nh.png"> <em>银行帐号：<b>33001613535053022902</b></em> <em>开户行：<b>中国建设银行浙江省分行</b></em> <em>户名：<b>杭州卡塔科技有限公司</b></em>
+				</span></li>
+				
+				<li><label><input name="paymentType"
+						type="radio" value="3">自提模式</label></li>
+				#if("$!{customerVO.gradeID}"=="a301942bfbad479a8d4da0b6df2cd086")
+				<li><label><input name="paymentType" type="radio"
+						value="2"> 货到付款</label></li>
+               #end
+               -->
+               <!--
+               <div><p class="mt20 ml35">1、转账付款时请仔细核对订单金额准确无误后确认；</p>
+					  <p class="ml35">2、请在转账时备注定单号；</p>
+					  <p class="ml35">3、转账后请及时将付款凭证截图上传；</p>
+					  <p class="ml35">4、如遇付款问题请及时联系客服：400-757-1888</p></div>-->
+			</ul>
+			</p>
+		</div>
+		<div class="ordbox notop">
+			<h2 class="f16">
+				商品清单 <a href="shoppingCart1.htm" class="col01 ml10 f12">返回购物车</a>
+			</h2>
+			<div class="shopcartList mt10" id="productList">
+				<table cellspacing="0" cellpadding="0">
+					<tr>
+						<th>商品</th>
+						<th>单价（元）</th>
+						<th>数量</th>
+						<th>小计（元）</th>
+
+					</tr>
+						#foreach($data in $shoppingCartList.entrySet())
+						<tr>
+							<td colspan="5" class="origin">
+							#foreach($a in $!{data.key.split("_")})
+				            	#if($!{velocityCount}==1)
+									#set ($sid = $a)
+								#end								
+				            	#if($!{velocityCount}==2)
+									<a href="$!domain/mall/seller/showSupplier.htm?mainID=$sid" target="_blank">店铺：$!a
+																</a>	
+								#elseif($!{velocityCount}==3)
+									QQ:<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$!a&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:252415038:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+							    #elseif($!{velocityCount}==4)
+									旺旺：<a target="_blank" href="http://amos.im.alisoft.com/msg.aw?v=2&amp;uid=$!a&amp;site=cntaobao&amp;s=1&amp;charset=UTF-8"><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&amp;uid=$!{a}&amp;site=cntaobao&amp;s=1&amp;charset=UTF-8" alt="点击这里给我发消息"></a>
+								#end
+							#end
+						</td>
+						</tr>
+					<input id="generateType" type="hidden" name="generateType"
+						value="$!generateType" />
+					<input id="orderID" type="hidden" name="orderID" value="$!orderID" />
+					#foreach($shoppingcart in ${data.value})
+					<tr class="tdUnit cartID" data-cartId="$!shoppingcart.id">
+						<td class="pInfo"><a
+							href="$!{domain}/mall/product/productDetail.htm?productID=$!shoppingcart.productID&itemID=$!shoppingcart.itemID"
+							target="_blank"> <img
+								src="$!{domainImg}$!shoppingcart.itemPicUrl" class="pimg">
+								$!shoppingcart.itemName
+						</a></td>
+						<td align="center"><span class="unitPrice">#if("$!shoppingcart.salesPrice"=="")0.00
+								#else $!NumberTool.format("#0.00",$!shoppingcart.salesPrice)
+								#end</span></td>
+						<td align="center"><span class="countMan">
+								$!shoppingcart.itemCount </span></td>
+						<td align="center"><span class="subTotal">$!NumberTool.format("#0.00",$!shoppingcart.allamount)</span></td>
+
+					</tr>
+						#end
+						
+						
+					<tr>
+						<td colspan="5" class="advices">买家留言:
+							#foreach($a in $!{data.key.split("_")})
+				            	#if($!{velocityCount}==1)
+									<input name="memo"
+									type="text" class="ipt memoText" id="memo" data-supplierId="$!a"
+									placeholder="选填:对本次交易的说明(建议在与商家达成一致后的说明)">				            	
+									
+								#end
+							#end	 
+
+						</td>
+					</tr>		
+					
+					<tr>
+						<td colspan="5" class="advices">
+							如需发票请与卖家联系-联系方式-
+							<span class="col01">
+							#foreach($a in $!{data.key.split("_")})
+				            	#if($!{velocityCount}==5)
+									$!a
+								#end
+							#end		
+							</span>					
+						</td>
+					</tr>									
+				#end
+
+					
+					<!-- 暂时关闭此发票信息
+					<tr>
+						<td colspan="5" class="advices">是否需要发票: <label><input
+								type="radio" checked name="needInvoice" value="false" />&nbsp;&nbsp;否</label>
+							<label><input type="radio" name="needInvoice"
+								value="true" />&nbsp;&nbsp;是</label>
+						</td>
+					<tr>
+					<tr class="invoice">
+						<td colspan="5" class="advices">发票类型: <label><input
+								type="radio" checked name="invoiceType" value="1" />&nbsp;&nbsp;个人</label>
+							<label><input type="radio" name="invoiceType" value="2" />&nbsp;&nbsp;公司</label>
+						</td>
+					<tr class="invoice">
+						<td colspan="5" class="advices">发票抬头: <input type="text"
+							name="invoiceTitle" class="ipt" id="invoice">
+						</td>
+					</tr>
+					-->
+					<tr>
+						<td colspan="5" class="advices txt_r"><input id="orderType"
+							type="hidden" name="orderType" value="$!orderType"> <input
+							type="hidden" id="orderAmount" value="$!amountAll" /> <input
+							type="hidden" id="supplierID" value="$!supplierID" /> <input
+							type="hidden" id="scoreAll" value="$!score" />
+							<input type="hidden" id="allFreight" name="allFreight" value="$!NumberTool.format("#0.00",$!freight)">
+							<input type="hidden" id="supplierFreightStr" name="supplierFreightStr" value="$!supplierFreightStr">							
+							<p class="col02">运费：<span id="freight">$!NumberTool.format("#0.00",$!freight)</span>元</p>
+							<p class="f14">商品金额：<span id="amount">$!NumberTool.format("#0.00",$!amount)</span>元</p></td>
+					</tr>
+					<tr>
+						<td colspan="5" class="settleBar">订单总金额：<span
+							id="totalPrices">$!NumberTool.format("#0.00",$!amountAll)</span>元
+						</td>
+					</tr>
+				</table>
+			</div>
+			<p class="txt_r mt15">
+				<a href="javascript:void(0);" onclick="shoppingCart3();"
+					class="goLink">提交订单</a>
+			</p>
+		</div>
+	</div>
+
+
+
+	#parse("layout/footer.vm")
+	<script type="text/javascript"
+		src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/jquery.validate.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/shoppingcart.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/slide.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("input[name='needInvoice']").click(function() {
+				if (this.value == 'true') {
+					$(".invoice").show();
+				} else {
+					$(".invoice").hide();
+				}
+			});
+			
+			
+			$("input[name='address-selected']").bind("change",function(){ 
+				var productAmount = $("#amount").text();
+				var valArr = new Array;
+				$("table .cartID").each(function(i) {
+					valArr[i] = $(this).attr("data-cartId");
+				});
+				var vals = valArr.join(',');		
+				var customerDeliveryAddressId = $(this).val();
+				jQuery.ajax({
+					url:'$!domain/freightCanculateAgain.htm',
+					data:{'customerDeliveryAddressId':customerDeliveryAddressId, productAmount:productAmount, cartID:vals},
+					type:"get",
+					dataType:"json",
+					success:function(data){  
+						$("#freight").text(data.freight);
+						$("#totalPrices").text(data.amountAll);
+						$("#supplierFreightStr").val(data.supplierFreightStr);
+					},    
+    				error:function(){
+						alert("异常！"); 
+					}
+				})
+			});			
+			
+		})
+		
+		function shoppingCartNew(shopCartMap) {
+	var addressID = $(".mt15 :radio:checked").val();
+	var paymentType = $("input[name='paymentType']:checked").val();
+	var memo = $("#memo").val();
+	var orderAmount = $("#orderAmount").val();
+	var scoreAll = $("#scoreAll").val();
+	var itemCount = $("#itemCount").val();
+	var itemID = $("#itemID").val();
+	var itemType = $("#itemType").val();
+	var orderType = $("#orderType").val();
+	var objID = $("#objID").val();
+	var supplierID = $("#supplierID").val();
+	var generateType = $("#generateType").val();
+	var orderID = $("#orderID").val();
+	var invoiceType = 0;
+	var invoiceTitle = "";
+	if($("input[name='needInvoice']:checked").val() == "true"){
+		invoiceType = $("input[name='invoiceType']:checked").val();
+	}
+	if(invoiceType != 0 && $("#invoice").val() == ''){
+		alert('请填写发票抬头');
+		return
+	}else if(invoiceType != 0){
+		invoiceTitle = $("#invoice").val();
+	}
+		var paymentTypeva = $(".paywayList input[name='paymentType']:checked").val();
+		if(paymentTypeva != 3){
+			if (typeof addressID === 'undefined') {
+					if($(".mt15 :radio").length == 0){
+						alert("请先添加收货地址再来购物");
+					}else{
+						alert("请选择收货地址");
+						
+					}
+					return false;
+			}
+		}
+
+	var valArr = new Array;
+	$("table .cartID").each(function(i) {
+		valArr[i] = $(this).attr("data-cartId");
+	});
+	var vals = valArr.join(',');
+	var url = "saveOrder.do?addressID=" + addressID + "&paymentType="
+			+ paymentType + "&memo=" + memo
+			+ "&orderAmount=" + orderAmount + "" + "&scoreAll=" + scoreAll
+			+ "&itemCount=" + itemCount + "&orderType=" + orderType
+			+"&invoiceType="+invoiceType+"&invoiceTitle="+invoiceTitle
+			+"&generateType="+generateType+"&tempOrderID="+orderID;
+	if (vals != "") {
+		window.location.href = url + "&cartIDs=" + vals;
+	}else if (itemID != "" && itemID != undefined) {
+		window.location.href = url + "&itemID=" + itemID + "&itemType="
+				+ itemType+"&supplierID="+supplierID;
+	}else{
+		location.href = url;
+	}
+}
+	</script>
+</body>
+</html>

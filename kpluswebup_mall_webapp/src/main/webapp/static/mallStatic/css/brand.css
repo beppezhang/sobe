@@ -1,0 +1,467 @@
+table {
+  border-collapse: collapse;
+}
+th {
+  font-weight: normal;
+}
+i {
+  display: inline-block;
+  vertical-align: middle;
+  background-image: url(../../images/icon.png);
+  background-repeat: no-repeat;
+}
+i.cT-ico1, i.cT-ico2, i.cT-ico3 {
+  margin-right: 8px;
+  background-image: url(../images/channel-ico.png);
+}
+i.cT-ico1 {
+  width: 13px;
+  height: 15px;
+  background-position: 0 0;
+}
+i.cT-ico2 {
+  width: 14px;
+  height: 17px;
+  background-position: 0 -16px;
+}
+#brand_filter {
+  background: #fff;
+  z-index: 99;
+  margin-top:-2px; 
+}
+.channel-tab {
+  margin: 0 auto;
+  padding-left: 15px;
+  width: 1185px;
+  border-bottom: 1px solid #d7d7d7;
+  overflow: hidden;
+}
+.channel-tab li {
+  position: relative;
+  float: left;
+  margin-right: 30px;
+  padding: 12px 20px;
+}
+.channel-tab a {
+  font-size: 16px;
+  color: #666;
+}
+.channel-tab .act {
+  border-bottom: 2px solid #ff4200;
+}
+.channel-tab .act a {
+  color: #e54e2d;
+}
+.channel-tab .act .cT-ico1 {
+  background-position: -17px 0;
+}
+.channel-tab .act .cT-ico2 {
+  background-position: -17px -16px;
+}
+
+.channel-fixedBar {
+  width: 100%;
+}
+.channel-fixedBar .channel-inner {
+  width: 100%;
+  top: 0px;
+}
+.channel-letterTab {
+  margin: 30px auto;
+  width: 1200px;
+  text-align: center;
+}
+.channel-letterTab li {
+  display: inline-block;
+  margin-left: 3px;
+  text-align: center;
+}
+.channel-letterTab a {
+  display: block;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  font-size: 16px;
+  color: #717171;
+  border: 1px solid #f0f0f0;
+  background: #fff;
+}
+
+.channel-areaTab {
+  margin: 30px auto 18px;
+  width: 1200px;
+  text-align: center;
+}
+.channel-areaTab li {
+  display: inline-block;
+  text-align: center;
+  line-height: 22px;
+}
+.channel-areaTab a {
+  display: block;
+  padding: 0 18px 15px 11px;
+  height: 19px;
+  font-size: 14px;
+}
+.channel-areaTab .act a {
+  color: #e54e2d;
+}
+.channel-areaTab img {
+  margin-right: 11px;
+  width: 28px;
+  height: 19px;
+  vertical-align: middle;
+}
+
+
+.channel-letterTab .act a, .channel-letterTab a:hover {
+  color: #fff;
+  border: 1px solid #ff4200;
+  background: #ff4200;
+  position: relative;
+}
+.float-layer .channel-letterTab li {
+  margin-bottom: 18px;
+}
+.channel-letterTab .acr a {
+  width: 50px;
+}
+.channel-letterTab .act a i, .channel-letterTab a:hover i {
+  position: absolute;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #ff4200;
+  bottom: -6px;
+  left: 50%;
+  margin-left: -5px;
+}
+
+.float-layer .channel-areaTab li a {
+  height: 29px;
+}
+.float-layer .channel-areaTab .act a {
+  background: url(../images/channel-actBg.png) no-repeat center 38px;
+}
+.float-layer .channel-letterTab, .float-layer .channel-areaTab {
+  margin: 15px auto 0;
+}
+.float-layer .channel-bg {
+  left: 0px;
+  right: 0px;
+  margin: 0 auto;
+  width: 100%;
+  background: url(../images/c-bg.gif) repeat-x left bottom;
+}
+.float-layer {
+  background: #fff;
+  position: fixed;
+  z-index: 999;
+}
+
+.hot-brand2 {
+  margin: 15px auto;
+  width: 1124px;
+  padding: 20px 38px;
+  border: 1px solid #e5e5e5;
+  text-align: center;
+}
+.hot-brand2 li {
+  display: inline-block;
+  margin: 0 2px 0 5px;
+  width: 100px;
+  text-align: center;
+}
+.hot-brand2 a {
+  display: block;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hot-brand2 a:hover{color:#fd7115;}
+.hot-brand2 img {
+  display: block;
+  margin: 0 auto 12px;
+  max-width: 100px;
+  height: 40px;
+}
+.hot-brand2.cBrand img {
+  width: 60px;
+  height: 60px;
+}
+
+.page-w, .cont {
+  width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  padding-left:20px;
+}
+.channel-mod {
+  margin-bottom: 15px;
+  border: 1px solid #eee;
+}
+.channel-title, .channel-title3, .channel-title4 span {
+  position: relative;
+  z-index: 5;
+  margin-left: -1px;
+  margin-bottom: -44px;
+  height: 44px;
+  text-align: center;
+  color: #fff;
+}
+.channel-title, .channel-title4 span {
+  width: 47px;
+  font-size: 29px;
+  line-height: 38px;
+  background: url(../images/channel-letterBg1.png) no-repeat;
+}
+.car-brand {
+  margin-bottom: -1px;
+  width: 100%;
+}
+.car-brand th {
+  padding: 15px 0;
+  width: 180px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  color: #004499;
+  vertical-align: top;
+}
+.car-brand th img {
+  display: block;
+  margin: 0 auto 12px;
+  width: 80px;
+  height: 80px;
+  padding: 10px;
+  border: 1px solid #eee;
+  background: #fff;
+}
+.car-brand td {
+  padding: 10px 10px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+.car-series-list li {
+  padding: 10px 15px 20px;
+}
+.car-series-list h4 {
+  margin-bottom: 2px;
+  font-size: 16px;
+  color: #000;
+}
+.car-series-list a {
+  display: inline-block;
+  margin-right: 10px;
+  margin-top: 10px;
+  width: 82px;
+  padding: 0 5px;
+  height: 32px;
+  font-size: 14px;
+  line-height: 32px;
+  color: #313131;
+  border: 1px solid #ccc;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ui-widget-overlay{
+	filter:progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#4CAAAAAA', endColorstr='#4CAAAAAA');
+	background:rgba(170,170,170,0.3);
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+.ui-dialog{
+	color: #333333;
+	display: block;
+	z-index: 1002;
+	height: 500px;
+	width: 850px;
+	position: fixed;
+	top:50%;
+	left: 50%;
+	margin-top: -250px;
+	margin-left: -425px;
+	border: 6px solid rgba(138,138,138,0.3);
+	border-radius: 4px;
+	background-color: #fff;
+  	text-align: left;
+  	display: none;
+}
+.ui-widget-header {
+  background: #F3F3F3;
+  border-bottom: 1px solid #DDDDDD;
+  color: #000000;
+  font-size: 14px;
+  margin-top: 0;
+  height: 32px;
+  line-height: 32px;
+}
+.ui-dialog .ui-dialog-titlebar {
+	height: 37px;
+	line-height: 37px;
+	background: #f4f4f4;
+	border-bottom: none;
+	position: relative;
+  	padding: 0 8px 0 10px;
+}
+.ui-dialog .ui-dialog-title {
+  font: 16px/37px "microsoft yahei",tahoma,"\5FAE\8F6F\96C5\9ED1";
+  color: #555;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+  margin: 0;
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 38px;
+  height: 38px;
+}
+.ui-widget-header a {
+  color: #ffffff;
+}
+.ui-widget-header .ui-icon {
+  background: #ff4200 url(../images/t-close2.png) no-repeat 0 0;
+}
+.ui-icon {
+  width: 38px;
+  height: 38px;
+  text-indent: -99999px;
+  overflow: hidden;
+  background-repeat: no-repeat;
+}
+.ui-icon-closethick {
+  background-position: 0px 0px;
+  cursor: pointer;
+}
+.ui-dialog .ui-dialog-titlebar-close span {
+  display: block;
+}
+.ui-dialog .ui-dialog-content {
+  width: auto;
+  height: auto;
+  border: 0;
+  padding: 10px;
+  background-color: #fff;
+  zoom: 1;
+  line-height: 1.5em;
+  min-height: inherit !important;
+  border-radius: 4px;
+  color: #333333;
+  text-align: left;
+}
+.dialog-c {
+  padding: 14px 11px;
+}
+.car-series-title {
+  margin-bottom: 5px;
+  padding: 0 20px;
+  height: 30px;
+  font-size: 14px;
+  line-height: 30px;
+  color: #333;
+  background: #edeef0;
+}
+.car-series-title a {
+  color: #333;
+}
+.car-series-title span {
+  float: right;
+}
+.car-series-title select {
+  margin-left: 4px;
+  vertical-align: 0;
+}
+.car-series-mod{
+	overflow: auto;
+	height: 330px;
+}
+.car-series-mod li {
+  float: left;
+  width: 50%;
+  line-height: 32px;
+  border-bottom: 1px dotted #eaeaea;
+  overflow: hidden;
+}
+.ui-widget-content .car-series-mod a {
+  font-size: 13px;
+  color: #3c5d96;
+}
+.car-series-mod a {
+  display: block;
+  margin: 0 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ui-dialog .pagination {
+  margin-top: 0;
+  text-align: right;
+}
+.pagination {
+  height: 33px;
+  font-size: 0;
+  padding-top: 16px;
+}
+.pagination a, .pagination span {
+  display: inline-block;
+  margin: 0 3px;
+  padding: 7px 12px;
+  font: 12px Microsoft YaHei,Arial,simsun;
+  border: 1px solid #d9d9d9;
+  color: #333;
+}
+.pagination .current, .pagination a:hover {
+  border: 1px solid #ff4716;
+  background: #ffece7;
+  color: #ff4716;
+}
+.pagination .prev {
+  display: inline-block;
+  background-image: url(../images/icon.gif);
+  background-repeat: no-repeat;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  color: #333;
+}
+.ui-dialog-search{
+	margin-left: 30px;
+	height: 20px;
+	line-height: 20px;
+	border:1px solid #ccc;
+	width: 160px;
+}
+/*新加css样式*/
+.brand-list-item {
+float: left;
+padding: 15px 0;
+/* width: 180px; */
+padding-left: 35px;
+text-align: center;
+font-size: 16px;
+color: #004499;
+}
+.brand-list-item .brand-logo {
+display: block;
+margin: 0 auto 12px;
+width: 80px;
+height: 80px;
+padding: 10px;
+border: 1px solid #eee;
+background: #fff;
+}
+/*汽车品牌引导页*/
+#mainContainer .local{
+  padding:10px 0;
+  font-size: 12px;
+}
+#mainContainer .local a{
+  margin-left: 10px;
+  margin-right: 10px;
+}

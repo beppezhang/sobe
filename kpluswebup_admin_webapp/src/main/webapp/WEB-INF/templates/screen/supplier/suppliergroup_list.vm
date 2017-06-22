@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>供应商分组列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+
+	<div class="main clearfix">
+		<div class="conTit">
+		        <em class="icon iconMenu1 "></em><a href="suppliergroupList.htm">供应商管理</a> &gt;  <span>供应商分组</span>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a>
+				#if($!menuUtil.isExistMenu("/admin/supplier/deleteSupplierGroup.do",$!menuAllList)
+				) <a href="javascript:;" title="删除" id="deleteSupplierGroupAll"><em
+					class="icon iconDel"></em></a> #end
+				#if($!menuUtil.isExistMenu("/admin/supplier/addSupplierGroupPage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/supplier/addSupplierGroupPage.htm" class="TableAddBtn"
+					title="新增供应商分组">+新增供应商分组</a> #end
+			</div>
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/supplier/suppliergroupList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!supplierGroupDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!supplierGroupDTO.pageSize">
+			</form>
+		</div>
+		<table class="tableList grid">
+			<thead>
+				<tr>
+					<td style="width: 10%;"><label class="label"> <input
+							type="checkbox" value="" id="all" /></label></td>
+					<td>分组名称</td>
+					<td>备注</td>
+					<td>操作</td>
+				</tr>
+			</thead>
+			<tbody id="list">
+				#foreach($!suppliergroup in $!suppliergroupList)
+				<tr>
+					<td style="width: 10%;"><label class="label"> <input
+							type="checkbox" value="$!suppliergroup.mainID"
+							id="check_box_$!suppliergroup.mainID" /></label></td>
+					<td>$!suppliergroup.name</td>
+					<td>$!suppliergroup.description</td>
+					<td>
+						#if($!menuUtil.isExistMenu("/admin/supplier/editSupplierGroupPage.htm",$!menuAllList)
+						) <a class="icon iconEdit"
+						href="$!{domain}/admin/supplier/editSupplierGroupPage.htm?mainID=$!{suppliergroup.mainID}"
+						title="编辑"></a> #end
+						#if($!menuUtil.isExistMenu("/admin/supplier/deleteSupplierGroup.do",$!menuAllList)
+						) &nbsp; <a href="javascript:;" class="icon iconDel" title="删除"
+						onclick="deleteSupplierGroup('$!suppliergroup.mainID')"></a> #end
+					</td>
+				</tr>
+				#end
+			</tbody>
+			#pagination($!supplierGroupDTO)
+		</table>
+	</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

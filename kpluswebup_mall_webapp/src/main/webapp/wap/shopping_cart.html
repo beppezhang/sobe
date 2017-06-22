@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+<title>购物车</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="css/global.css">
+<link rel="stylesheet" type="text/css" href="css/product.css">
+</head>
+
+<body>
+    <div class="tclist">
+	<ul>
+    	<li>
+        	<div class="tb">
+        		<span class="cell delbox"></span>
+                <span class="pimg cell"><a href="#"><img src="img/pic08.jpg"></a></span>
+                <span class="ptxt cell">
+                	<strong>全棉印花被套全棉印花被套全棉印花被套全棉印花被套全棉印...</strong>
+                	<em class="col01">￥</em>
+                	<em class="pirce col01" data-pirce="1555.0">1555.0</em>
+                </span>
+                <span class="ckbox cell"></span>
+            </div>
+            <div class="dt_hidden">
+                <p class="txt_r countbox">
+                   <span class="lt">购买<em class="bNum" data="3">1</em>份</span>
+                   <span class="sub"></span>
+                   <span class="add"></span>
+                </p>
+            </div>
+        </li>
+        <li>
+        	<div class="tb">
+        		<span class="cell delbox"></span>
+                <span class="pimg cell"><a href="#"><img src="img/pic08.jpg"></a></span>
+                <span class="ptxt cell">
+                 	<strong>全棉印花被套全棉印花被套全棉印花被套全棉印花被套全棉印...</strong>
+                	<em class="col01">￥</em>
+                	<em class="pirce col01" data-pirce="1555.0">1555.0</em>
+                </span>
+                <span class="ckbox cell"></span>
+            </div>
+            <div class="dt_hidden">
+                <p class="txt_r countbox">
+                   <span class="lt">购买<em class="bNum" data="3">1</em>份</span>
+                   <span class="sub"></span>
+                   <span class="add"></span>
+                </p>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="operation">
+	<span class="lt count">
+    	<em class="f14 amount">总金额</em>
+        ￥<em class="f18 col05 ttPirce">0.0</em><br/>
+        （共<em class="ttNum">0</em>件，不含邮费）
+    </span>
+    <a href="#" class="gobuy rt">立即结算</a>
+    
+</div>
+
+<div class="prompt">
+	<span class="close">X</span>
+	<p>请选择商品</p>
+	<input type="button" value=" 确定 " class="pro_bt"></input>
+</div>
+
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script> 
+<script>
+$(function(){
+	$(".prompt .close,.prompt .pro_bt").click(function(){
+		$(".prompt").hide();
+	})
+})
+
+function gobuy() {
+			var ids = [];
+			jQuery(".tb").find(".ckbox.cur").each(function() {
+				var id = jQuery(this).find(".cartID").val();
+				ids.push(id);
+			});
+			var cartids = ids.join();
+			if (cartids!=null&&cartids!=""&&cartids!=undefined) {
+			     window.location = '/weixin/usershopcart2.htm?ids=' + cartids;
+			}else{
+				$(".prompt").fadeIn();
+			}
+		}
+
+
+
+$(function(){
+		//选择商品
+	$("#dl_pm").find("dd").click(function(){
+		if($(this).hasClass("countman")){
+			return;	
+		}
+		$(this).addClass("on").siblings().removeClass("on");	
+	})
+	//选择更多商品
+	$(".tclist li").find(".ckbox").click(function(){
+		$(this).toggleClass("cur");
+		if($(this).hasClass("cur")){
+		  $(this).closest(".tb").next(".dt_hidden").slideDown(200);	
+		}
+		else{
+		  $(this).closest(".tb").next(".dt_hidden").slideUp(200);
+		}
+		getAmount();
+	})
+	$(".tclist li").find(".delbox").click(function(){
+		$(this).closest("li").find(".ckbox").removeClass("cur");
+		getAmount();
+		$(this).closest("li").remove();		
+	})
+	$(".tclist li dl dd").find("span").click(function(){
+		$(this).addClass("on").siblings().removeClass("on");
+	})
+	//选择数量
+	$(".tclist li .countbox").find(".add").click(function(){
+		var imtNum = $(this).closest("p").find(".lt").find(".bNum").attr("data");//最大购买数量(库存)
+		var getNum = $(this).closest("p").find(".lt").find(".bNum").html(); //获取本商品数量
+		var addNum = parseInt(getNum) + 1;//数量增加
+		var getPrice = $(this).closest("li").find("em.pirce").text();//获取单价
+		var subTotal = getPrice*addNum; //计算单品小计价格
+		if(imtNum>=addNum){
+			$(this).closest("li").find("em.pirce").attr("data-pirce",parseFloat(subTotal).toFixed(2))
+			$(this).closest("p").find(".bNum").html(addNum);
+			getAmount()
+		}
+	})
+	$(".tclist li .countbox").find(".sub").click(function(){
+		var getNum = $(this).closest("p").find(".lt").find(".bNum").html(); //获取本商品数量
+		var subNum = parseInt(getNum) - 1;//数量减少
+		var getPrice = $(this).closest("li").find("em.pirce").text();//获取单价
+		var subTotal = getPrice*subNum; //计算单品小计价格
+		if(subNum>0){
+			$(this).closest("li").find("em.pirce").attr("data-pirce",parseFloat(subTotal).toFixed(2))
+			$(this).closest("p").find(".bNum").html(subNum);
+			getAmount()
+		}
+	})
+})
+
+//计算总价
+function getAmount(){
+		var mainTotal = 0;
+		$(".tclist li").find(".ckbox").each(function(){
+			var subTotal = parseFloat($(this).closest("li").find(".pirce").attr("data-pirce")); //单价小计
+			var n = $(".tclist").find(".ckbox.cur").length;
+			$(".ttNum").text(n);
+			if($(this).hasClass("cur")){
+				mainTotal = mainTotal + subTotal;//总价
+			}else{
+				subTotal ==0;
+			}
+			$(".ttPirce").html(mainTotal.toFixed(2))
+		})
+}
+</script>
+
+
+</body>
+</html>

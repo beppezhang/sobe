@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>打印</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/carriernote.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/products.css">
+<style type="text/css">
+  .orderInfo p{
+    font-size: 16px;padding: 10px 0;
+  }
+  ul.orderCode li{
+    padding: 0 10px;
+    float: left;
+  }
+</style>
+</head>
+
+<body>
+<div class="pbody clearfix">
+  <div class="printMes " >
+    <h1 style="font-size:26px;">$!{supplier.companyName}取货单</h1>
+    <div class="orderInfo">
+      <p style="font-size:26px;">订单编号</P>
+    <ul class="orderCode" style="font-size:26px;">
+      #if("$!groupList"!="" && $groupList.size()>0) 
+      #foreach($!group in $!groupList)
+      #foreach($!carrierNoteLine in $!group.carrierNoteLineList)
+      <li>$!carrierNoteLine.salesOrderID</li>
+      #end
+      #end
+      #end
+    </ul>
+    <div style="clear:both;"></div>
+    </div>
+        #if("$!groupList"!="" && $groupList.size()>0) 
+        #foreach($!group in $!groupList)
+        <table style="margin-top: 34px;" border="1">
+          <tr>
+            <th width="40">序号</th>
+            <th align="left" width="490">商品名称</th>
+            <th>单价（元）</th>
+            <th width="60">数量</th>
+            <th>小计</th>
+          </tr>
+          #set($index = 1)
+          #foreach($!line in $!group.groupLineList)
+          <tr>
+            <td align="center">$!index</td>
+            <td>$!{line.itemName}</td>
+            <td align="center">￥$!NumberTool.format("#0.00",$!{line.salesPrice})</td>
+            <td align="center"><strong>$!{line.itemTotalCount}</strong></td>
+            <td align="center">￥$!NumberTool.format("#0.00",$!{line.itemTotalAmount})</td>
+          </tr>
+          #set($index = $index + 1)
+          #end
+          <tr>
+            <td></td>
+            <td colspan="2"><strong>合计</strong></td>
+            <td align="center"><strong>$!{group.count}</strong></td>
+            <td align="center"><strong>￥$!NumberTool.format("#0.00",$!{group.totalAmount})</strong></td>
+          </tr>
+        </table>
+        #end
+        #end
+    </div>
+    <a href="javascript:void(0);" id="print" class="rt mt25"><img src="$!mallStatic/mall/images/pic-print.png"></a>
+</div>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery.PrintArea.js"></script>
+<script type="text/javascript">
+  $(function(){
+    $("#print").click(function(){
+      $(".printMes ").printArea();
+      var carriesNoteIDs = "$!carriesNoteIDs";
+      jQuery.ajax({
+        url: "updateCarriernote.do",
+        type: "POST",
+        dataType: "text",
+        data: {
+          carriesNoteIDs: carriesNoteIDs,
+          pickupMan: ''
+        },
+        success: function(data){
+          if (data == 0) {};
+        }
+      })
+    })
+  })
+</script>
+</body>
+</html>

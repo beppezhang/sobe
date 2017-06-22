@@ -1,0 +1,54 @@
+<div id="header">
+	<div class="layout clearfix">
+    	<div class="logo lt">
+        	<a href="${domain}/index.htm"><img style="  width: 200px;  height: 70px;" src="$!{imgurl}$!shopLogo"></a>
+        </div>
+        <div class="searchBox">
+        	<div class="searchBar clearfix" style="padding-left:0;background:none;margin-bottom:30px;">
+	        	 <div class="lt search">
+	              <p #if("$!type"!="") class="hover" #else class="hide" #end >店铺</p>
+	              <p #if("$!type"=="") class="hover" #else class="hide" #end >宝贝</p>
+	            </div>
+            	<input name="" id="ppname" type="text" class="ipt" value="$!pname" placeholder="输入关键字"><input name="" type="button" id="sear" class="btn" value="搜索">
+            </div>
+            <p class="hotLinks"><a></a><!-- <a href="#" class="hot">三星手机</a><a href="#">华为手机</a><a href="#">联想手机</a><a href="#">Nokia</a><a href="#">iPhone</a>--></p> 
+        </div>
+        <div class="shopCart">
+        	<span class="icon"></span><a href="${domain}/shoppingCart1.htm">购物车(<em class="col03">#if("$!{user.shoppingcartCount}"=="")0#else$!{user.shoppingcartCount}#end</em>)</a>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="type" class="type">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script>
+//宝贝店铺切换
+$(".searchBar .search").mouseenter(function(){
+  $(".searchBar .search p").removeClass("hide").show();            
+})
+$(".searchBar .search p").click(function(){
+    $(".searchBar .search p").hide();
+    $(this).prependTo(".searchBar .search");
+    $(".searchBar .search p:first").show().addClass("hover");
+  }) 
+$(".searchBar .search p").mouseenter(function(){
+    $(this).addClass("hover").siblings().removeClass("hover");
+  })
+  
+	jQuery("#sear").click(
+		function(){
+			var searName = $(".hover").html();
+			var productType = $("#productType").val();
+			if(undefined==productType){
+				productType='';
+			}
+			if(typeof(productType) == "undefined"){
+				productType='';
+			}
+			 if(searName=='宝贝'){
+				location.href="${domain}/mall/product/searchProductList.htm?productType="+productType+"&name="+$("#ppname").val();
+			}else if(searName=='店铺'){
+				location.href="${domain}/mall/product/searchShopList.htm?name="+$("#ppname").val();
+			} 
+		}		
+	)
+</script>

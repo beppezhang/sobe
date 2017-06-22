@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>消息配置</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》消息配置</span>
+		</div>
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<div class="contentLf tabList">
+					<ul class="member_menu">
+						<!-- #if($!menuUtil.isExistMenu("/admin/system/transconfigList.htm",$!menuAllList)
+						)
+						<li><a href="$!{domain}/admin/system/transconfigList.htm">业务参数</a></li>
+						#end -->
+						#if($!menuUtil.isExistMenu("/admin/system/systemcodeList.htm",$!menuAllList)
+						)
+						<li><a href="$!{domain}/admin/system/systemcodeList.htm">编码设置</a></li>
+						#end
+						#if($!menuUtil.isExistMenu("/admin/system/systemMessageFunctionList.htm",$!menuAllList)
+						)
+						<li><em class="icon arrowLfWeight"></em><a
+							href="$!{domain}/admin/system/systemMessageFunctionList.htm"
+							class="hover">消息配置</a></li> #end
+					</ul>
+				</div>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td>消息内容</td>
+									<td>站内信通知</td>
+									<td>邮件通知</td>
+									<td>短信通知</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!systemmessagefunction in $!systemmessagefunctionList)
+								<tr>
+									<td>$!systemmessagefunction.name</td>
+									<td><input type="checkbox"
+										id="activeCheck1$!systemmessagefunction.mainID"
+										onclick="setCheckMessageActive('$!systemmessagefunction.mainID',1);"
+										#if("$!systemmessagefunction.messageActive"==
+										"1")checked="checked" #end>&nbsp;&nbsp;<a
+										style="color: #333;"
+										href="$!{domain}/admin/system/editMessageTemplatePage.htm?functionID=$!systemmessagefunction.mainID&type=1">站内信模板</a></td>
+									<td><input type="checkbox"
+										id="activeCheck2$!systemmessagefunction.mainID"
+										onclick="setCheckMessageActive('$!systemmessagefunction.mainID',2);"
+										#if("$!systemmessagefunction.emailActive"==
+										"1")checked="checked" #end>&nbsp;&nbsp;<a
+										style="color: #333;"
+										href="$!{domain}/admin/system/editMessageTemplatePage.htm?functionID=$!systemmessagefunction.mainID&type=2">邮件信模板</a></td>
+									<td><input type="checkbox"
+										id="activeCheck3$!systemmessagefunction.mainID"
+										onclick="setCheckMessageActive('$!systemmessagefunction.mainID',3);"
+										#if("$!systemmessagefunction.smsActive"==
+										"1")checked="checked" #end>&nbsp;&nbsp;<a
+										style="color: #333;"
+										href="$!{domain}/admin/system/editMessageTemplatePage.htm?functionID=$!systemmessagefunction.mainID&type=3">短信模板</a></td>
+								</tr>
+								#end
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

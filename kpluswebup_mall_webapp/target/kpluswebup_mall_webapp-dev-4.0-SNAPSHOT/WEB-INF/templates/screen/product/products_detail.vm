@@ -1,0 +1,857 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>$!product.name</title>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/details.css">
+<style type="text/css">
+#leftArea {
+  width: 210px;
+  float: left;
+}
+.unitBox {
+  border: 1px solid #ddd;
+}
+.aTbar {
+  height: 36px;
+  line-height: 36px;
+  padding-left: 10px;
+  font-size: 14px;
+  background: #f7f7f7;
+  border-bottom: 1px solid #ddd;
+}
+strong, b {
+  font-weight: bold;
+}
+.smallPro_list {
+  padding-bottom: 15px;
+}
+.shop_side .info {
+  padding: 15px;
+}
+.shop_side .info .proof {
+  width: 170px;
+  display: block;
+}
+.shop_side .info h2 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  padding: 5px 0;
+}
+
+</style>
+</head>
+
+<body>
+	<!-- top bar -->
+	#parse("layout/head_top.vm")
+    <!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+	<!-- 主导航 -->
+	#parse("layout/menu.vm")
+
+<div class="crumbs">
+	<div class="layout clearfix">
+    	<!--<a href="$!{domain}/index.htm" class="home">首页</a> &gt; <a href="javascript:;">$!product.name</a> -->
+    </div>
+</div>
+<div class="layout clearfix">
+	<div class="pd_detail clearfix">
+      <div class="preview">
+          <div id="vertical" class="bigImg">
+ <!--增加右上角产品logo<img style="position:absolute;right:0px;top:0;" src="../../../img/logo/bmw-parts.png">-->
+ 		<img style="position:absolute;right:0;top:0;width: 46px;height: 46px" src="$!{mallStatic}/img/logo/$!productVO.brandPicURL" class="bimg">
+           	<!--
+           	#if("$!item.picURL"=="")
+                  	<img src="$!{mallStatic}/img/no-found.png" id="midimg"/>
+                 #else
+              <img src="$!domainImg$!item.picURL" alt="$!item.name" id="midimg" />
+               #end
+               -->
+               	<img src=" $!{mallStatic}/img/products/$!productVO.picURL" alt="$!item.name" id="midimg" />
+               	
+              <div style="display:none;" id="winSelector"></div>
+          </div><!--bigImg end-->
+          <div class="smallImg">
+              <div class="scrollbutton smallImgUp disabled"></div>
+              <div id="imageMenu">
+                  <ul>
+                 	  <!--  <li id="onlickImg"><img src="$!domain$!item.picURL"/></li> -->
+					  #foreach($!picture in $!pictures)
+					       #if("$!picture.picURL"!="")  
+					        <li #if($!{velocityCount}==1) id="onlickImg" #end><img src="$!domainImg$!picture.picURL"/></li>
+					      #end 
+					   #end
+                  </ul>
+              </div>
+              <div class="scrollbutton smallImgDown"></div>
+          </div><!--smallImg end-->
+          <div id="bigView" style="display:none;"><img alt="" src="" /></div>
+          <div class="fxbox">
+         	<!-- #if($!fCount !=""&&$!fCount !=0)
+             <a href="javascript:;" class="book on">收藏商品(<label class="fcount">$!fCount</label>)</a>
+             #else
+             <a href="javascript:;" class="book">收藏商品(<label class="fcount">$!fCount</label>)</a>
+             #end-->
+          </div>
+      </div>
+      <!-- product information -->
+      <div id="parameter">
+            <div class="wbg">
+            	<h1>$!item.name
+                $!item.itemPropValue</h1>
+                <p class="sNum"><em class="w85">商品编码</em>#if("$!item.skuCode"=="")暂无该商品#else$!item.skuCode#end</p>
+                <!--插入三个小图-->
+                <div class="grade"><img src="../../img/u68.png"/><img src="../../img/u70.png"/><img src="../../img/u72.png"/></div>
+                <h4>$!product.subTitle</h4>
+                <div class="priceBox">
+                    <p><em class="w85">市场价:</em><del>￥#if("$!item.standrardPrice"=="")0.00
+							#else $!NumberTool.format("#0.00",$!item.standrardPrice) #end</del></p>
+                   <!--  <p><em class="w85">市场价:</em><del>￥#if("$!item.standrardPrice"=="")0.00
+							#else$!NumberTool.format("#0.00",$!item.standrardPrice) #end</del></p> -->
+                    <p><em class="w85">搜贝价:</em><strong>￥#if("$!item.salesPrice"=="")0.00
+							#else $!NumberTool.format("#0.00",$!item.salesPrice) #end</strong></p>
+                </div>
+                <!-- <div class="yf">
+                    <p><em class="w85">至全国</em>卖家承担运费</p>
+                </div> -->
+                <!--
+                #foreach($!prop in $!props)
+	                <dl class="clearfix">
+	                    <dt>$!prop.itemPropName：</dt>
+	                    <dd class="sel">
+	               		    #foreach($!value in $!prop.values) 
+	               		    	#foreach($!itemProp in $!itemProps)
+									 #if("$!itemProp.itemPropValue"=="$!value")
+										#set($var=$!value) 
+										<span class="cur"> 
+											<input type="hidden" class="value" value="$!value"> <a href="javascript:;">$!value</a><i></i>
+										</span> 
+										#end
+									 #end
+								 	 #if("$!var"=="$!value") 
+									 #else 
+									 	<span><input type="hidden" class="value" value="$!value"><a href="javascript:;">$!value</a><i></i></span> 
+								 #end
+							 #end
+	                    </dd>
+	                </dl>
+                #end
+                -->
+                <!--增加当月销售量，累计销售量，商品评价-->
+                <div class="salesVolume">
+                	<p>当月销售量： $!monthSaleCount 件</p>
+                	<p>累计销售量： $!totalSaleCount 件 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;商品评价：<span style="cursor: pointer;">6</span>&nbsp;条</p>
+                </div>
+                 <dl class="clearfix">
+                      <dt>购买数量：</dt>
+                      <dd class="number_control">
+                          <span><input type="text" id="itemCount" name="num" value="1"><em class="cbtn"><a class="next" href="javascript:;">+</a><a class="prev" href="javascript:;">-</a></em></span>
+                          <!--<em class="col04 ml10">(当前库存：<span id="stock">#if("$!item.stock"=="")0#else$!item.stock#end</span>件)</em>-->
+                      </dd>
+                 </dl>
+               </div>
+               <dl class="mt25">
+                    <dd>
+                    <!--	<a href="javascript:gobuy();" class="gobuy">立即购买</a> -->
+                    	<a href="javascript:addCat('$!item.mainID','$!item.productID','$!item.stock','$!supplierVO.mainID');"  class="addcart ml10">加入购物车</a>
+                    </dd>
+                    <dd class="collect">
+                    	<span>收藏商品</span>
+                    </dd>
+               </dl>
+     </div>
+     <!-- view more-->
+     
+     
+     <div class="viewmore lt">
+     	<!-- <div class="tt"><strong class="ml10">看了又看</strong></div>
+	        <ul class="clearfix">
+	         	 #foreach($!pro in $!list)
+		           	  <li>
+		           	  <a href="$!{domain}/mall/product/productDetail.htm?productID=$!{pro.mainID}&itemID=$!pro.itemID" target="_blank">
+		           	  	<img src="$!{domain}$!pro.picURL" class="pimg imgMove" title="$!pro.name" style="width: 80px;height: 80px;"><br>
+		           	  	<strong class="col03">￥$!NumberTool.format("#0.00",$!pro.minSalesPrice)</strong>
+		           	  	</a>
+		           	   </li>
+		          #end   
+	        </ul>
+	    </div> -->
+	    <div id="leftArea" class="shop_side">
+		    <div class="unitBox">
+	            <div class="aTbar"><strong>店铺信息</strong></div>
+	            <div class="smallPro_list">	
+	                <div class="info">
+	               		 #if("$!supplierVO.picURL"!="") 
+	            		<img class="proof" src="$!{domainImg}$!supplierVO.picURL" alt="" style="width: 150px;height: 100px;">
+	            		#else
+	            		<img class="proof" src="$!{mallStatic}/img/shop.jpg" alt="" style="width: 150px;height: 150px;">
+	            		#end
+	            		<h2>$!supplierVO.companyName  &nbsp;&nbsp;<a href="$!domain/mall/seller/showSupplier.htm?mainID=$!supplierVO.mainID" target="_blank" style="color:#0072c8">进入店铺</a></h2>
+	            		<p>$!supplierVO.address</p>
+	            	</div>
+	            	<!--店铺是否认证-->
+	            	<div style="margin-left:15px;">店铺认证：<span style="background: url(../../img/approve.png) no-repeat;display: inline-block;width:16px;height:16px;"></span></div>
+	            	<!--点铺等级-->
+	            	<div style="margin-left:15px;">店铺等级：
+	            		<div class="rating_box" style="display:inline-block;width: 60px; height: 20px; background: url(../../img/gray_star.png) no-repeat 0 0;">
+							<div class="rating" style="width: 60px; height: 20px;background: url(../../img/yellow_star.png) no-repeat;"></div>
+						</div>
+					</div>
+	                <ul class="contact">
+							<li>
+								  #foreach($!a in $!supplierVO.linkQQ.split(","))
+								<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$!{a}&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:252415038:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+								#end
+							</li>
+							<li>
+								<a target="_blank" href="http://amos.im.alisoft.com/msg.aw?v=2&amp;uid=$!supplierVO.linkWangWang&amp;site=cntaobao&amp;s=1&amp;charset=UTF-8"><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&amp;uid=$!supplierVO.linkWangWang&amp;site=cntaobao&amp;s=1&amp;charset=UTF-8" alt="点击这里给我发消息"></a>
+							</li>
+						</ul>
+	            </div>
+	        </div>
+	    </div>
+  </div>               
+</div>
+<!-- 详细区域 -->
+<div class="layout mt15 clearfix">
+	<!-- 左边信息区 -->
+    <div id="leftArea">
+    	<!--商品二维码
+    	<div class="unitBox">
+        	<div class="aTbar"><strong>商品二维码</strong></div>
+            <div class="viewWeixin"><img src="$!{mallStatic}/images/weixin.jpg"></div>
+        </div>-->
+        <!--商品排行-->
+        <!--<div class="unitBox mt15">
+            <div class="aTbar"><strong>商品排行</strong></div>
+            <div class="smallPro_list">
+                <ul>
+                 #foreach($!volumeProduct in $!volumeProducts)
+                    <li>
+                        <a href="$!{domain}/mall/product/productDetail.htm?productID=$!volumeProduct.mainID&itemID=$!volumeProduct.itemID" target="_blank"><img src="$!{domainImg}$!volumeProduct.picURL" class="pimg"></a>
+                        <h4><a href="$!{domain}/mall/product/productDetail.htm?productID=$!volumeProduct.mainID&itemID=$!volumeProduct.itemID" target="_blank">$!volumeProduct.name</a></h4>
+                        <p><span class="col02">￥$!NumberTool.format("#0.00",$!volumeProduct.minSalesPrice)</span></p>
+                        <p><span class="sc">售出：$!volumeProduct.maxSalesVolume</span></p>
+                    </li>
+                 #end  
+                </ul>
+            </div>
+        </div> -->
+        <!--最近浏览-->
+        <div class="unitBox">
+              <div class="aTbar"><strong>最近浏览</strong></div>
+              <div class="smallPro_list">
+                  <ul>
+                        #foreach($!historyProduct in $!historyProducts)
+	                      <li>
+	                          <a href="$!{domain}/mall/product/productDetail.htm?productID=$!historyProduct.mainID&itemID=$!historyProduct.itemID" target="_blank"><img src="$!{mallStatic}/img/products/$!historyProduct.picURL" class="pimg"></a>
+	                          <h4><a href="$!{domain}/mall/product/productDetail.htm?productID=$!historyProduct.mainID&itemID=$!historyProduct.itemID" target="_blank">$!historyProduct.name</a></h4>
+	                          <p><span class="col02">￥$!NumberTool.format("#0.00",$!historyProduct.minSalesPrice)</span></p>
+	                      </li>
+                       #end  
+                  </ul>
+                  <!-- <p class="ct mt15"><a href="#">全部浏览历史</a></p> -->
+            </div>
+        </div>
+    </div>
+    <!-- 右边详细区 -->
+    <div id="rightArea">
+    	<!-- 商品详情 -->
+   	    <div id="infoTab">
+        	<div class="wp">
+                  <div class="tabbar">
+                    <span class="cur">商品详情</span>
+                    <!--增加商品评价和适用车型-->
+                    <span>商品评价</span>
+                    <span>适用车型</span>
+                    <b></b>
+                  </div>
+            </div>
+        </div>
+        <div id="infoCon">
+            <div class="mesdb cur">
+            	<ul class="clearfix desc">
+            	#foreach($!productPropType in $!productPropTypes)
+            	<li>$!productPropType.productPropName：$!productPropType.productPropValue</li>
+            	#end
+                </ul>
+                <img src="../../img/boschProductIN.png">
+            </div>
+            <div class="mesdb">
+            	<div> 
+        
+         <!-- 商品评价 -->
+      <div id="commentTop" class="mesdb2 clearfix">
+        	  <div class="aTbar">商品评价</div>
+              <div class="rate">
+                <p class="col03"><strong>$!goodDegree</strong><sub>%</sub> 好评</p>
+                <p class="col02 mt10">共有$!all人参与评分</p>
+              </div>
+              <div class="percent">
+                    <dl>
+                      <dt>好评<em class="col02">($!NumberTool.format("#0",$!goodDegree)%)</em></dt>
+                      <dd><i style="width: $!NumberTool.format("#0",$!goodDegree)%"></i></dd>
+                    </dl>
+                    <dl>
+                      <dt>中评<em class="col02">($!NumberTool.format("#0",$!middleDegree)%)</em></dt>
+                      <dd><i style="width: $!NumberTool.format("#0",$!middleDegree)%"></i></dd>
+                    </dl>
+                    <dl>
+                      <dt>差评<em class="col02">($!NumberTool.format("#0",$!badDegree)%)</em></dt>
+                      <dd><i style="width: $!NumberTool.format("#0",$!badDegree)%"></i></dd>
+                    </dl>
+              </div>
+              <!--
+              <div class="descCom"><span>您可对已购商品进行评价</span>
+                  <p><a href="javascript:;" class="giveCom" onClick="openprot(1)">评价商品</a></p>
+              </div>
+              -->
+        </div>
+        <div class="discuss mt20">
+             <div class="tabbar distab">
+                <i class="cur">商品评价($!all)</i><i>好评($!good)</i><i>中评($!middle)</i><i>差评($!bad)</i>
+             </div>
+             <div class="discon">
+                 <div class="dis_list cur">
+                  <dl class="clearfix">
+                 	 #foreach($!review in $!reviews)
+	                 	 <dl class="clearfix">
+	                        <dt>
+	                             <a href="$!domain/mall/buyer/userInfo.htm"><img src="$!domainImg/$!review.customerPicurl"></a>
+	                            <p><a href="$!domain/mall/buyer/userInfo.htm" class="col01">$!review.customerName</a></p>
+	                            <p>$!review.gradeName</p>
+	                        </dt>
+	                        <dd>
+	                            <p><span class="stars #if($!review.score==3) three #elseif($!review.score==1) one #elseif($!review.score==2) two #elseif($!review.score==4) four #elseif($!review.score==5) five #end"></span></p>
+	                            <p class="content">
+	                             		 $!review.content
+	                            </p>
+	                            <p> $!date.format('yyyy-MM-dd HH:mm:ss ',$!review.createTime)</p>
+	                        </dd>
+	                    </dl>
+                 	 #end
+                 </div>
+                 <div class="dis_list">
+	                 #foreach($!review in $!reviews)
+	                 #if($!review.score>3)
+	                    <dl class="clearfix">
+	                        <dt>
+	                            <a href="$!domain/mall/buyer/userInfo.htm"><img src="$!domainImg/review.customerPicurl"></a>
+	                            <p><a href="$!domain/mall/buyer/userInfo.htm" class="col01">$!review.customerName</a></p>
+	                            <p>$!review.gradeName</p>
+	                        </dt>
+	                        <dd>
+	                            <!--<p><span class="stars five"></span></p>-->
+	                            <p><span class="stars #if($!review.score==3) three #elseif($!review.score==1) one #elseif($!review.score==2) two #elseif($!review.score==4) four #elseif($!review.score==5) five #end"></span></p>
+	                            <p class="content">
+	                                $!review.content
+	                            </p>
+	                            <p>$!date.format('yyyy-MM-dd HH:mm:ss ',$!review.createTime)</p>
+	                        </dd>
+	                    </dl>
+	                  #end
+	                  #end
+                 </div>
+                 <div class="dis_list">
+                  #foreach($!review in $!reviews)
+	                 #if($!review.score==2||$!review.score==3)
+                    <dl class="clearfix">
+                        <dt>
+                            <a href="$!domain/mall/buyer/userInfo.htm"><img src="$!domainImg/review.customerPicurl"></a>
+                            <p><a href="$!domain/mall/buyer/userInfo.htm" class="col01">$!review.customerName</a></p>
+                            <p>$!review.gradeName</p>
+                        </dt>
+                        <dd>
+                            <!-- <p><span class="stars five"></span></p> -->
+	                        <p><span class="stars #if($!review.score==3) three #elseif($!review.score==1) one #elseif($!review.score==2) two #elseif($!review.score==4) four #elseif($!review.score==5) five #end"></span></p>
+                            <p class="content">
+                                $!review.content
+                            </p>
+                            <p>$!date.format('yyyy-MM-dd HH:mm:ss ',$!review.createTime)</p>
+	                     </dd>
+                    </dl>
+                     #end
+	                  #end
+                 </div>
+                 <div class="dis_list">
+                  #foreach($!review in $!reviews)
+	                 #if($!review.score==0||$!review.score==1)
+                    <dl class="clearfix">
+                        <dt>
+                            <a href="$!domain/mall/buyer/userInfo.htm"><img src="$!domainImg/review.customerPicurl"></a>
+                            <p><a href="$!domain/mall/buyer/userInfo.htm" class="col01">$!review.customerName</a></p>
+                            <p>$!review.gradeName</p>
+                        </dt>
+                        <dd>
+                            <!-- <p><span class="stars five"></span></p> -->
+	                        <p><span class="stars #if($!review.score==3) three #elseif($!review.score==1) one #elseif($!review.score==2) two #elseif($!review.score==4) four #elseif($!review.score==5) five #end"></span></p>
+                            <p class="content">
+                                $!review.content
+                            </p>
+                            <p>$!date.format('yyyy-MM-dd HH:mm:ss ',$!review.createTime)</p>
+	                     </dd>
+                    </dl>
+                     #end
+	                  #end
+                 </div>
+             </div>
+        </div>        
+        
+        </div>
+            	
+            	
+            	
+            	
+            </div>
+            <div class="mesdb commonpage">
+     		<dl class="plate">
+     			<dt class="platenumber"><img src="../../../img/logo/bmw.fw.png"/></dt>
+     			<dd class="platetype">
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     			
+     			</dd>
+     		</dl>
+     		<dl class="plate">
+     			<dt class="platenumber"><img src="../../../img/logo/Mini.fw.png"/></dt>
+     			<dd class="platetype">
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     			
+     			</dd>
+     		</dl>
+     		<dl class="plate">
+     			<dt class="platenumber"><img src="../../../img/logo/Rolls-Royce.fw.png"/></dt>
+     			<dd class="platetype">
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     				<a href="#">1' E81 3 门车 116d ECE</a>
+     			
+     			</dd>
+     		</dl>
+     		<dl class="plate">
+     			<dt class="platenumber"><a href="#">更多</a></dt>
+     			<dd class="platetype">
+     			</dd>
+     		</dl>
+     	 </div>
+       </div>
+        <div id="illustrate">
+        	<p class="ct">$!product.description</p>
+        </div>
+        
+        
+       
+        
+        
+</div>
+</div>
+<!-- 弹窗 -->
+<div id="agebox0" class="popbox">
+	<div class="get_result">
+    	<h2 class="add_ok ct">已成功添加至购物车！</h2>
+        <!-- p>购物车内已有<em class="col03">$!list.size()</em>种商品，总价格为<strong class="f14 col03">￥10.19</strong></p -->
+        <p class="ct"><a href="$!domain/shoppingCart1.htm" class="okLinks">查看购物车</a> <a href="javascript:;" class="offLinks" onClick="closeprot()">继续购物</a></p>
+        <a href="javascript:;" class="closeLink" onClick="closeprot()">x</a>
+    </div>	
+</div>
+<div id="agebox1" class="popbox">
+	<div class="give_comment">
+    	<dl class="clearfix">
+        	<dt>我的评价：</dt>
+            <dd><p class="starsbar"><span><a href="javascript:;" title="差"></a></span><span><a href="javascript:;"  title="一般"></a></span><span><a href="javascript:;" title="中等"></a></span><span><a href="javascript:;" title="良"></a></span><span><a href="javascript:;" title="优"></a></span></p><em class="s_result"></em></dd>
+        </dl>
+        <dl class="clearfix">
+        	<dt>我的评论：</dt>
+            <dd>
+            	<textarea class="cbox"></textarea>
+            </dd>
+        </dl>
+        <dl class="clearfix">
+        	<dd><input name="" onclick="submitReviews();" class="submit" type="button" value="发 布"> <input name="" class="cancel ml10" type="button" value="取 消" onClick="closeprot()"></dd>
+        </dl>
+    </div>
+</div>
+<div id="agebox2" class="popbox">
+	<div class="give_comment">
+        <dl class="clearfix">
+        	<dt>我的问题：</dt>
+            <dd>
+            	<textarea class="cbox"></textarea>
+            </dd>
+        </dl>
+        <dl class="clearfix">
+        	<dd><input name="" class="submit" type="button" value="发 布"> <input name="" class="cancel ml10" type="button" value="取 消" onClick="closeprot()"></dd>
+        </dl>
+    </div>
+</div>
+
+<!-- footer -->
+#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script>
+	var getTop=$("#infoTab").offset().top;
+	//var getInfoCon = $("#infoCon").offset().top;
+	//var getCommentTop = $("#commentTop").offset().top;
+	//var getRecord = $("#records").offset().top;
+	//var getConSult = $("#conSult").offset().top;
+$(function(){
+	
+	/*$(window).scroll(function(){  
+		var t = document.body.scrollTop||document.documentElement.scrollTop;
+		 if(isIE6){}
+		 else{
+			 if(t>getTop){  
+				$("#infoTab").addClass("pos_f");
+				$("#infoTab").find("b").show();
+				if(t>=getInfoCon){
+					$("#infoTab").find("span").eq(0).addClass("cur").siblings().removeClass("cur");
+				}
+				if((t>getInfoCon)&&(t>=getCommentTop-35)){
+					$("#infoTab").find("span").eq(1).addClass("cur").siblings().removeClass("cur");
+				}
+				if((t>getCommentTop)&&(t>=getRecord-35)){
+					$("#infoTab").find("span").eq(2).addClass("cur").siblings().removeClass("cur");
+				}
+				if((t>getRecord)&&(t>=getConSult-35)){
+					$("#infoTab").find("span").eq(3).addClass("cur").siblings().removeClass("cur");
+				}
+			 }
+			 
+			 else{  
+				$("#infoTab").removeClass("pos_f");
+				$("#infoTab").find("b").hide();  
+				$("#infoTab").find("span").eq(0).addClass("cur").siblings().removeClass("cur");
+			 } 
+		 }
+	});
+	$("#infoTab span").eq(0).click(function(){
+		$("html,body").animate({scrollTop:getInfoCon-45},500);	
+	})
+	$("#infoTab span").eq(1).click(function(){
+		$("html,body").animate({scrollTop:getCommentTop-35},500);	
+	})
+	$("#infoTab span").eq(2).click(function(){
+		$("html,body").animate({scrollTop:getRecord-35},500);	
+	})
+	$("#infoTab span").eq(3).click(function(){
+		$("html,body").animate({scrollTop:getConSult-35},500);	
+	})
+	$("#infoTab").find("b").click(function(){
+		$(this).toggleClass("on");
+		$("#infoTab").toggleClass("unfold");
+		if($(this).hasClass("on")){
+			$("#leftArea").hide(0);	
+			$("#rightArea").css("width",100+"%");
+		}else{
+			$("#leftArea").show(0);	
+			$("#rightArea").css("width",980+"px");	
+		}
+	})
+*/
+	//评分		
+		var oStar = $(".starsbar");
+		var aLi = $(".starsbar span");
+//		var oUl = oStar.getElementsByTagName("ul")[0];
+		var oSpan = $(".s_result");
+		//var oP = oStar.getElementsByTagName("p")[0];
+		var i = iScore = iStar = 0;
+		var aMsg = [
+					"非常不满",
+					"不满意",
+					"一般",
+					"满意",
+					"非常满意"
+					]
+		
+			for (i = 1; i <= aLi.length; i++){
+			aLi[i - 1].index = i;
+			
+			//鼠标移过显示分数
+			aLi[i - 1].onmouseover = function (){
+				fnPoint(this.index);
+				/*//浮动层显示
+				oP.style.display = "block";
+				//计算浮动层位置
+				oP.style.left = oUl.offsetLeft + this.index * this.offsetWidth - 104 + "px";
+				//匹配浮动层文字内容
+				oP.innerHTML = "<em><b>" + this.index + "</b> 分 " + aMsg[this.index - 1].match(/(.+)\|/)[1] + "</em>" + aMsg[this.index - 1].match(/\|(.+)/)[1]*/
+			};
+			
+			//鼠标离开后恢复上次评分
+			aLi[i - 1].onmouseout = function (){
+				fnPoint();
+				//关闭浮动层
+				//oP.style.display = "none"
+			};
+			
+			//点击后进行评分处理
+			aLi[i - 1].onclick = function (){
+				iStar = this.index;
+				//oP.style.display = "none";
+				oSpan.innerHTML = (this.index) + " 分 "
+			}
+		}
+		
+		//评分处理
+		function fnPoint(iArg){
+			//分数赋值
+			iScore = iArg || iStar;
+			for (i = 0; i < aLi.length; i++) aLi[i].className = i < iScore ? "on" : "";	
+		}
+	
+	$(".sel span a").click(function(e){
+		 e.preventDefault();
+		 $(this).closest("span").toggleClass('cur').siblings().removeClass();
+	 })
+	 $(".distab span").click(function(){
+		 $(this).addClass('cur').siblings().removeClass();
+		 $(".discon div.dis_list").eq($(".distab span").index(this)).addClass("cur").siblings().removeClass("cur");
+	 })
+	  $(".consult span").click(function(){
+		 $(this).addClass('cur').siblings().removeClass();
+		 
+		 $(this).closest(".consult").next().find("div.consultbox").eq($(".consult span").index(this)).addClass("cur").siblings().removeClass("cur");
+	 })
+	 //counter
+	var nStock = $("#stock").text();
+	$(".number_control").on("click", "a", function(){
+			var _t = $(this);
+			
+			var _v = _t.closest("span").find("input");
+			var _r = _t.hasClass("prev") ? $(this) : $(this).next();
+			if(_t.hasClass("prev") && _v.val() <= 1){
+				return;
+			}
+			if(_t.hasClass("next") && _v.val() == nStock){
+				return;
+			}
+			_v.val(_t.hasClass("prev") ? parseInt(_v.val()) - 1 : parseInt(_v.val()) + 1);
+	});
+	$("input[name='num']").change(function(){
+		var iptVal=$(this).val();
+		var reg =/\s/;
+		if(parseInt(iptVal)<1){
+			$(this).val(1);
+		}
+		if(parseInt(iptVal)>1){
+		   var intNum = parseInt($(this).val());
+		   $(this).val(intNum);
+		}
+		if(parseInt(iptVal)>nStock){
+		   $(this).val(nStock);
+		}
+		if(isNaN(iptVal) || iptVal=="" || iptVal.replace(/\s+/g,"")=="") {
+			 $(this).val(1);
+		}
+	})
+	/*关于点击评价，好评，差评*/
+	$(".tabbar.distab i").click(function(){
+		$(this).addClass("cur").siblings().removeClass("cur");
+		 $(".discon div.dis_list").eq($(this).index()).addClass("cur").siblings().removeClass("cur");
+	});
+    /*关于商品详情，商品评价，以及适用车型的tab效果*/
+    $(".tabbar span").click(function(){
+    	$(this).addClass("cur").siblings().removeClass("cur");
+    	$("#infoCon .mesdb").eq($(this).index()).addClass("cur").siblings().removeClass("cur");
+    });
+    /*点击收藏商品*/
+    /*$("#parameter .mt25 dd.collect").click(function(){
+    	$(this).css("background-image","url(../../img/u64.png)")
+    });*/
+    $("#parameter .mt25 dd.collect").toggle(function(){
+    	$("#parameter .mt25 dd.collect").css("background-image","url(../../img/u64.png)")
+    },function(){$("#parameter .mt25 dd.collect").css("background-image","url(../../img/1_u62.png")});
+})
+	// 图片滚动
+	var count = $("#imageMenu li").length; /* 显示 6 个 li标签内容 */
+	var interval = $("#imageMenu li:first").width();
+	var curIndex = 0;
+	if(count<=4){
+		  $('.scrollbutton').hide();  
+	}
+	$('.scrollbutton').click(function(){
+		if( $(this).hasClass('disabled') ) return false;
+		
+		if ($(this).hasClass('smallImgUp')) --curIndex;
+		else ++curIndex;
+		
+		$('.scrollbutton').removeClass('disabled');
+		if (curIndex == 0) $('.smallImgUp').addClass('disabled');
+		if (curIndex == count-4) $('.smallImgDown').addClass('disabled');
+		
+		$("#imageMenu ul").stop(false, true).animate({"marginLeft" : -curIndex*interval + "px"}, 300);
+	});
+	
+	//放大镜视窗$("#bigView").decorateIframe();
+  
+	//点击到中图
+	var midChangeHandler = null;
+	
+	$("#imageMenu li img").bind("click", function(){
+		if ($(this).attr("id") != "onlickImg") {
+			midChange($(this).attr("src").replace("small", "mid"));
+			$("#imageMenu li").removeAttr("id");
+			$(this).parent().attr("id", "onlickImg");
+		}
+	}).bind("mouseover", function(){
+		if ($(this).attr("id") != "onlickImg") {
+			window.clearTimeout(midChangeHandler);
+			midChange($(this).attr("src").replace("small", "mid"));
+		}
+	}).bind("mouseout", function(){
+		if($(this).attr("id") != "onlickImg"){
+			$(this).removeAttr("style");
+			midChangeHandler = window.setTimeout(function(){
+				midChange($("#onlickImg img").attr("src").replace("small", "mid"));
+			}, 1000);
+		}
+	});
+  
+	function midChange(src) {
+		$("#midimg").attr("src", src).load(function() {
+			changeViewImg();
+		});
+	}
+  
+	//大视窗看图
+	function mouseover(e) {
+		if ($("#winSelector").css("display") == "none") {
+			$("#winSelector,#bigView").show();
+		}
+  
+		$("#winSelector").css(fixedPosition(e));
+		e.stopPropagation();
+	}
+  
+  
+	function mouseOut(e) {
+		if ($("#winSelector").css("display") != "none") {
+			$("#winSelector,#bigView").hide();
+		}
+		e.stopPropagation();
+	}
+  
+  
+	$("#midimg").mouseover(mouseover); //中图事件
+	$("#midimg,#winSelector").mousemove(mouseover).mouseout(mouseOut); //选择器事件
+  
+	var $divWidth = $("#winSelector").width(); //选择器宽度
+	var $divHeight = $("#winSelector").height(); //选择器高度
+	var $imgWidth = $("#midimg").width(); //中图宽度
+	var $imgHeight = $("#midimg").height(); //中图高度
+	var $viewImgWidth = $viewImgHeight = $height = null; //IE加载后才能得到 大图宽度 大图高度 大图视窗高度
+  
+	function changeViewImg() {
+		$("#bigView img").attr("src", $("#midimg").attr("src").replace("mid", "big"));
+	}
+  
+	changeViewImg();
+  
+	$("#bigView").scrollLeft(0).scrollTop(0);
+	function fixedPosition(e) {
+		if (e == null) {
+			return;
+		}
+		var $imgLeft = $("#midimg").offset().left; //中图左边距
+		var $imgTop = $("#midimg").offset().top; //中图上边距
+		X = e.pageX - $imgLeft - $divWidth / 2; //selector顶点坐标 X
+		Y = e.pageY - $imgTop - $divHeight / 2; //selector顶点坐标 Y
+		X = X < 0 ? 0 : X;
+		Y = Y < 0 ? 0 : Y;
+		X = X + $divWidth > $imgWidth ? $imgWidth - $divWidth : X;
+		Y = Y + $divHeight > $imgHeight ? $imgHeight - $divHeight : Y;
+  
+		if ($viewImgWidth == null) {
+			$viewImgWidth = $("#bigView img").outerWidth();
+			$viewImgHeight = $("#bigView img").height();
+			if ($viewImgWidth < 200 || $viewImgHeight < 200) {
+				$viewImgWidth = $viewImgHeight = 800;
+			}
+			$height = $divHeight * $viewImgHeight / $imgHeight;
+			$("#bigView").width($divWidth * $viewImgWidth / $imgWidth);
+			$("#bigView").height($height);
+		}
+  
+		var scrollX = X * $viewImgWidth / $imgWidth;
+		var scrollY = Y * $viewImgHeight / $imgHeight;
+		$("#bigView img").css({ "left": scrollX * -1, "top": scrollY * -1 });
+		$("#bigView").css({ "top": 325, "left": $(".preview").offset().left + $(".preview").width() + 15 });
+  
+		return { left: X, top: Y };
+	}
+	//弹出对话框
+	var isIE = (document.all) ? true : false;
+	var isIE6 = isIE && ([/MSIE (\d)\.0/i.exec(navigator.userAgent)][0][1] == 6);
+	var cwidth =  $(window).width();
+	var cheight =  $(window).height();
+	var dheight =  $(document).height();
+	var i;
+	function openprot(i) {
+		var idname = document.getElementById("agebox"+i);
+		$("body").append("<div id='wrapbg' onClick='closeprot()'></div>");
+		$("#wrapbg").width(cwidth);
+		$("#wrapbg").height(dheight);
+		
+		$(idname).fadeIn(300);
+		idname.style.left = (cwidth - idname.offsetWidth) / 2  + "px";
+		idname.style.top =  (cheight - idname.offsetHeight) / 2 + "px";
+	}
+	function closeprot() {
+		location.reload();
+		$("div[id='wrapbg']").remove();
+		$(".popbox").fadeOut(200);
+		
+	}  
+	//提交评价详情
+	function submitReviews(){
+		var score = $(".on").length;
+		var content = $(".cbox").val();
+		location.href="/mall/product/submitReview.htm?productID=$!productID&itemID=$!item.mainID&&score="+score+"&content="+content;
+	}	
+	
+</script>
+<script type="text/javascript" src="$!{mallStatic}/js/product_detail.js"></script>
+	<input type="hidden" id="itemID" value="$!item.mainID">
+	<input type="hidden" id="productID" value="$!item.productID">
+	<input type="hidden" id="supplierID" value="$!item.supplierID">
+	<input type="hidden" id="supplierName" value="$!item.supplierName">
+	<input type="hidden" id="customerID" value="$!user.mainID">
+	<input type="hidden" id="domain" value="$!domain">
+	<input type="hidden" id="orderType" value="0">
+
+	<input type="hidden" id="stock" value="$!itemDTO.stock">
+
+
+
+	<form
+		action="$!{domain}/mall/product/productDetail.htm?productID=$!product.mainID"
+		method="post" class="detailForm">
+		<input type="hidden" id="value1" name="value1" value=""> <input
+			type="hidden" id="value2" name="value2" value="">
+	</form>
+</body>
+</html>

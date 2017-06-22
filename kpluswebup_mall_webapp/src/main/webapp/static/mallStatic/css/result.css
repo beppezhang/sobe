@@ -1,0 +1,28 @@
+.result_wrap{width: 1200px; margin: 0 auto; overflow: hidden;}
+.result_wrap .col_left{width: 360px; float: left;}
+.result_wrap .col_left h2{font-size: 20px; line-height: 40px; margin-bottom: 5px; margin-top: 40px;font-weight: bold;}
+/*.result_wrap .col_left .imgBig{width: 150px;}*/
+.result_wrap .col_left .pro_info{border-top: 1px dotted #ccc; padding: 10px 0;}
+.result_wrap .col_left .pro_info li{line-height: 26px; font-size: 14px;}
+.result_wrap .col_left .pro_info li img{width: 30px;}
+.buy_in{margin-top: 10px;}
+.buy_in .shopping{font-size: 14px; color: #3366FF;}
+.result_wrap .col_right{width: 784px; float: right;}
+.result_wrap .col_right .tab_title{font-size: 14px; float: left;}
+.result_wrap .col_right .tab_title li{width: 26px; padding: 6px 2px; line-height: 18px; text-align: center; border:1px solid #d7d7d7; border-radius: 5px 0 0 5px; background: #e4e4e4; cursor: pointer;}
+.result_wrap .col_right .tab_title li.current{border-right: 2px solid #fd7115; background: #fff; color: #fd7115;}
+.result_wrap .col_right .tab_con{border:1px solid #ccc; float: left; width: 748px;margin-left: -1px;max-height: 500px;overflow-y: auto;}
+.result_wrap .col_right .con{height: 100%; display: none;}
+.result_wrap .col_right .con.current{display: block;}
+.result_wrap .col_right .type dl{margin: 20px; overflow: hidden;border-bottom:1px solid #ccc;}
+.result_wrap .col_right .type dt{float: left; width: 100px; color: #0066c0;}
+.result_wrap .col_right .type dd{line-height: 40px;float: left; width: 85%; color: #0066c0;max-height:150px;overflow-y:auto;}
+.result_wrap .col_right .type dd a{width:30%;}
+.result_wrap .col_right .type dd span{display:inline-block;width: 25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;margin-right: 45px;}
+.result_wrap .col_right .accessory{padding-top: 20px;}
+.result_wrap .col_right .accessory ul{display: inline-block;}
+.result_wrap .col_right .accessory li{float: left; width: 187px; text-align: center;}
+.result_wrap .col_right .accessory .pro_head{font-size: 14px; height: 30px; overflow: hidden; border-bottom: 1px solid #ccc;}
+.result_wrap .col_right .accessory .pro_body{overflow: hidden; margin-top: 2px;min-height: 20px;}
+.result_wrap .col_right .accessory .pro_body li{line-height:26px;}
+.result_wrap .col_right .accessory .pro_body li a{color: #3366FF; text-decoration: underline;}

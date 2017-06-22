@@ -1,0 +1,81 @@
+/* CSS Document */
+#banner{width:100%;height:455px;position:relative; z-index:0}
+#category{ display:block}
+.timg_img{width:100%;height:455px; margin:0 auto;overflow: hidden;  background:#aaa}
+.timg_img li{height:455px; background-position:center center; background-repeat:no-repeat; display:none; }
+.timg_img li a.bglink,.timg_img li.cur{ display: block;}
+.timg_img li a.bglink{ float:left; width:100%;height:382px; position:absolute; z-index:1; content:"";}
+.timg_img li dl{ width:260px;height:357px; position:absolute; z-index:2; right:0; top:10px;}
+.timg_img li dd img{ width:240px; height:212px; margin-bottom:10px; vertical-align:middle;}
+
+.timg_num{position:absolute; bottom:10px;z-index:2; left:50%; margin-left:-50px;}
+.timg_num li{ display:inline; float:left; text-align:center;width:20px; height:20px;overflow:hidden; color:#fff; border-radius:50%; margin-left:4px; cursor:pointer; background:#3e3e3e;}
+.timg_num li.cur{ background:#b61b1f;}
+
+
+.fullList{ width:100%;overflow:hidden;}
+.fullList ul{ width:105%;}
+.fullList ul li{ float:left; width:198px;  padding:10px; display:inline; margin:15px 25px 0 0; border:1px solid #d3d3d3; overflow:hidden;}
+.fullList ul li h4{ height:40px; overflow:hidden;}
+.fullList ul li .pimg{ width:190px; vertical-align:middle;}
+
+.shopping_guide li{ float:left; background:#000; margin-right:2px;}
+.shopping_guide li,.shopping_guide li img{width:298px; height:170px; vertical-align:top}
+.shopping_guide li.sp,.shopping_guide li.sp img{ width:300px; height:170px; margin:0;}
+.shopping_guide li.shadow img{opacity:.50;-moz-opacity:.50;filter:alpha(opacity = 50);}
+
+.rProbox .tt{ line-height:38px; font-size:20px; color:#292828; border-bottom:1px solid #41a8f7}
+.poster,.poster .pimg{ width:203px;} 
+.poster .pimg{height:339px;}
+.short_type{ height:143px; padding:10px; border-left:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; background:#e5f3ff; overflow:hidden;}
+.short_type h4{ font-size:14px; color:#282828; margin-bottom:15px}
+.short_type a{ display:inline-block; white-space:nowrap; padding:0 5px; line-height:24px; margin-top:5px; color:#282828}
+.short_type a:hover{ background:#fd6c0c; color:#fff}
+
+.hotlist .tt{ height:38px; line-height:38px; border-bottom:1px solid #41a8f7; background:#41a8f7; font-size:14px; color:#fff; padding-left:20px;}
+.hotlist ul{  border-right:1px solid #e2e2e2; padding-top:3px;}
+.hotlist li{ height:69px; border-bottom:1px solid #e2e2e2; padding:15px 20px 15px 30px; position:relative; font-size:14px; line-height:20px;}
+.hotlist li h4,.hotlist li p{ height:20px;text-overflow: ellipsis;white-space: nowrap; overflow:hidden;}
+.hotlist li .num{ background:url(../images/ico-num.jpg); text-align:center; width:18px; line-height:18px; color:#e4393c; display:inline-block; position:absolute; left:10px; top:20px;}
+.hotlist li .num.lower{ background:url(../images/ico-num2.jpg); color:#ddd}
+.hotlist li .pimg{ width:60px; height:60px; float:left; display:inline; margin-right:5px;}
+.hotlist li a strong{ color:#3f3f3f}
+
+.recommends{ width:747px; height:503px; overflow:hidden;}
+.recommends li{ text-align:center;}
+.recommends li,.offer li{ float:left; display:inline; width:248px; height:338px;border-right:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;}
+.recommends li .pimg{height:338px;width:245px;}
+.recommends li.sp .pimg,.recommends li.sp{height:163px; overflow:hidden}
+.offer li .pimg{ width:210px; height:210px; margin-top:10px; margin-bottom:10px;}
+.offer li h4,.offer li p.txt{ padding:0 30px;}
+.offer li h4{ height:42px; overflow:hidden;}
+.offer li p a.linksBtn{ color:#fff;}
+
+
+.changeLink{ font-size:14px; padding-right:25px; background:url(../images/ico-change.gif) right center no-repeat;}
+
+.sp_offer ul{border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2;}
+.sp_offer li{border-right:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;}
+.sp_offer li.firLi{ width:241px; height:281px;}
+.sp_offer li.firLi h4,.sp_offer li.firLi p{ padding:0 20px}
+.sp_offer li.firLi h4,.sp_offer li.secLi h4{ height:42px; overflow:hidden;}
+.sp_offer li.firLi .pimg{ width:190px; height:190px; vertical-align:middle; margin:10px 0;}
+.sp_offer li.secLi{ width:280px; height:120px; padding:20px 10px 0 10px;}
+.sp_offer li.secLi .imgbox{ float:left; width:100px;}
+.sp_offer li.secLi .pimg{ width:100px; height:100px;}
+
+.usershow{ width:320px;}
+.usershow ul,.newslist ul{ border:1px solid #e2e2e2; height:281px; margin-top:10px;}
+.usershow li{ margin:20px 0;}
+.usershow .imgbox{ float:left; width:110px; display:inline; margin-left:10px;}
+.usershow .imgbox .pimg{ width:100px; height:100px;}
+.usershow .combox  .photo{  width:30px; height:30px; vertical-align:middle; margin-right:10px; display:inline-block;}
+.usershow .combox  .photo img{ width:30px;border-radius:50%;}
+.usershow .combox  .com_words{ background:#f8f8f8 url(../images/ico-c1.png) 5px 10px no-repeat; display:inline-block; width:130px; padding:10px 10px 10px 20px; margin:5px 0 0 20px; position:relative;}
+.usershow .combox  .com_words i{ display:inline-block; width:10px; height:9px; overflow:hidden; background:url(../images/ico-c2.png); vertical-align:bottom}
+.usershow .combox  .com_words b{ position:absolute; left:-7px; margin-top:-7px; top:50%; width:7px; height:14px; background:url(../images/ico-left.gif); overflow:hidden; float:left}
+
+.newslist{ width:345px;}
+.newslist ul{ margin-top:10px; padding:0 10px;}
+.newslist ul li{ padding-left:20px;  height:20px; line-height:20px; margin-top:10px; overflow:hidden; background:url(../images/ico-list.gif) left 5px no-repeat; display:block;}
+.newslist ul li a{ display:block; text-align:right;height:20px; cursor:pointer}

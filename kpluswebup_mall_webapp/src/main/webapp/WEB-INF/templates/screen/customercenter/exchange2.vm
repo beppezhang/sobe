@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>申请退换货</title>
+<link rel="stylesheet" href="$!{mallStatic}/css/shopcart.css">
+</head>
+<body>
+	<!-- top bar -->
+	#parse("layout/head_top.vm") #parse("layout/customercenter/header.vm")
+	<!-- crumb -->
+	<div id="crumb" class="mt10">
+		<div class="layout clearfix">
+			<a href="$!{domain}/index.htm">首页</a> &gt; <a href="#">我的保税店</a> &gt;
+			申请退换货
+		</div>
+	</div>
+	<div class="layout mt10 clearfix">
+		<ul class="exchange_bar clearfix">
+			<li class="active"><div class="step1">
+					<span>STEP.1</span>买家 申请退换货
+				</div></li>
+			<li class="active"><div class="step2">
+					<span>STEP.2</span>商家 处理退换申请
+				</div></li>
+			<li class="last active"><div class="step3">
+					<span>STEP.3</span>完成退换货
+				</div></li>
+		</ul>
+		<div class="shopcart">
+			<div class="agreement_ok">
+				<h1>退换货完成！</h1>
+				<p>感谢您的惠顾，期待您的下次光临！</p>
+			</div>
+		</div>
+	</div>
+	<div class="pro_unit mt10">
+		<div class="titbar_m">
+			<strong>订单信息</strong>
+		</div>
+		<table cellspacing="0" cellpadding="0" class="dd">
+			<tr>
+				<th>订单编号：</th>
+				<td width="450"><input type="hidden"
+					value="$!{salesOrder.mainID}" class="orderID">$!{salesOrder.mainID}</td>
+				<th>订单状态：</th>
+				<td><em class="col03">
+						#if("$!salesOrder.orderStatus"=="0") 已取消
+						#elseif("$!salesOrder.orderStatus"=="1") 待确认
+						#elseif("$!salesOrder.orderStatus"=="2") 待出库
+						#elseif("$!salesOrder.orderStatus"=="3") 待发货
+						#elseif("$!salesOrder.orderStatus"=="4") 已发货
+						#elseif("$!salesOrder.orderStatus"=="5") 已收货
+						#elseif("$!salesOrder.orderStatus"=="6") 已完成
+						#elseif("$!salesOrder.orderStatus"=="7") 退货申请中 #end </em></td>
+			</tr>
+			<tr>
+				<th>支付方式：</th>
+				<!-- 1：余额支付2：货到付款3：在线支付4：积分礼品5：线下汇款 -->
+				<td>#if("$!salesOrder.paymentType"=="1") 支付宝
+					#elseif("$!salesOrder.paymentType"=="2")货到付款 #end</td>
+				<th>成交金额：</th>
+				<td>#if("$!salesOrder.paymentType"=="3") <em class="coin">$!NumberTool.format("#0",$!salesOrder.scoreTotal)</em>
+					#else
+					#if("$!salesOrder.totalAmount"!=""&&$!salesOrder.totalAmount!=0.0)
+					<em class="col01">￥
+						$!NumberTool.format("#0.00",$!salesOrder.totalAmount)</em> #end
+					#if("$!salesOrder.totalAmount"!=""&&$!salesOrder.totalAmount!=0.0&&"$!salesOrder.scoreTotal"!=""&&$!salesOrder.scoreTotal!=0)
+					+#end
+					#if("$!salesOrder.scoreTotal"!=""&&$!salesOrder.scoreTotal!=0) <em
+					class="coin">$!NumberTool.format("#0",$!salesOrder.scoreTotal)</em>
+					#end #end
+				</td>
+			</tr>
+			<tr>
+				<th>成交时间：</th>
+				<td>$!date.format('yyyy-MM-dd
+					HH:mm:ss',$!{salesOrder.modifyTime})</td>
+				<th>配送方式：</th>
+				<td></td>
+			</tr>
+			<tr>
+				<th>发货物流公司：</th>
+				<td width="450">$!{expressVO.name}</td>
+				<th>运单号：</th>
+				<td>$!{salesOrder.expressNumber}</td>
+			</tr>
+			<tr>
+				<th>收货信息：</th>
+				<td colspan="3">$!{orderAddress.provinceName}$!{orderAddress.cityName}$!{orderAddress.districtName}$!{orderAddress.address}
+					$!{orderAddress.name} $!{orderAddress.mobile}</td>
+			</tr>
+			<!-- <tr>
+				<th>收件人身份证：</th>
+				<td colspan="3"></td>
+			</tr> -->
+		</table>
+	</div>
+	<!-- footer -->
+	#parse("layout/footer.vm")
+	<script type="text/javascript">
+		jQuery(".submitExpress")
+				.click(
+						function() {
+							var expressID = jQuery(".expressID").val();
+							var expressNumber = jQuery(".expressNumber").val();
+							var orderReturnID = jQuery(".orderReturnID").val();
+							var description = jQuery(".description").val();
+							if (expressID != null && expressNumber != null) {
+								window.location.href = "$!{domain}/mall/buyer/upSalesOrderReturn.htm?expressID="
+										+ expressID
+										+ "&expressNumber="
+										+ expressNumber
+										+ "&retrunApplyID="
+										+ orderReturnID
+										+ "&description="
+										+ description;
+							} else {
+								alert("请选择物流公司，填写运单号！");
+							}
+						})
+	</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<title>领取积分</title>
+<meta http-equiv="Cache-Control" content="max-age=0" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type"
+	content="application/vnd.wap.xhtml+xml; charset=utf-8" />
+<meta id="viewport" name="viewport"
+	content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="$!{domain}/wap/css/base.css">
+<link rel="stylesheet" href="$!{domain}/wap/css/reset.css">
+</head>
+<body>
+	#parse("wap/layout/head_sider.vm")
+	<div id="gp_box">
+		<div class="jfbox">
+			<h1 class="jf">$!itemScoreDetailVO.score优惠积分</h1>
+			<h3>$!itemScoreDetailVO.itemName</h3>
+			<p>有效时间：$!date.format("yyyy.MM.dd",$!itemScoreDetailVO.createTime)-$!date.format("yyyy.MM.dd",$!itemScoreDetailVO.endTime)</p>
+		</div>
+		<div class="lqbtn ct">
+			#if("$!itemScoreDetailVO.isQrcode"=="0") <a href="javascript:;"
+				onclick="getItemScore('$!itemScoreDetailVO.mainID');"><img
+				src="$!{domain}/wap/img/lq-btn.png"></a> #end
+			#if("$!itemScoreDetailVO.isQrcode"=="1") <a href="javascript:;"><img
+				src="$!{domain}/wap/img/lq-btn-off.png"></a> #end
+		</div>
+	</div>
+	<script type="text/javascript"
+		src="$!{domain}/wap/js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript">
+		function getItemScore(mainID) {
+			jQuery.ajax({
+				url : "getItemScore.do",
+				data : {
+					"mainID" : mainID
+				},
+				type : "POST",
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 0) {
+						window.location.href = "/weixin/userCenter.htm";
+					} else if (data.code == 2) {
+						window.location.href = "/weixin/bangding.htm";
+					} else {
+						alert("已领取！");
+					}
+				},
+				error : function() {
+					alert("系统出错！");
+				}
+			});
+		}
+	</script>
+</body>
+</html>

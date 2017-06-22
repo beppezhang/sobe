@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--<title>搜索结果</title>-->
+<title>$!pname</title>
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/global.css">
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/brand.css">
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/search.css">
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/header_fixed.css">
+	<link rel="stylesheet" type="text/css" href="$!{mallStatic}/style/login.css">
+	<script type="text/javascript" src="${mallStatic}/js/jquery-1.11.0.min.js"></script>
+</head>
+
+<body>
+	<!-- top bar -->
+	#parse("layout/head_top_new.vm")
+	<div id="box">
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider_new.vm")
+	<!--nav导航条-->
+	#parse("layout/menu_new.vm")
+	</div>
+	
+	<span class="searchR" style="position: fixed;right: 100px;top: 153px;z-index: 200;color:#fff;">搜贝为您找到相关配件信息约$!productDTO.totalCount条</span>
+
+    #if($!productsParts.size()==0)
+
+		#parse("errors/nothingFound.vm")
+
+	#else
+	<div style="float: right;color: red">搜索用时: $!queryTime 秒</div>
+    #end
+
+	<div class="search_main">
+    	
+	   #foreach($!productVo in $!productsParts)
+		<div class="search_infoR">
+			<div class="title">
+				<h2><a href="${domain}/mall/product/searchProductListByOEM.htm?oem=$!productVo.code">$!productVo.name</a></h2>
+				<!--<span class="typeR"><strong>OEM&nbsp;:</strong>&nbsp;$!productVo.code</span>-->
+			</div>
+			<div class="search_info clearfix">
+				<a class="sear_img" href="${domain}/mall/product/searchProductListByOEM.htm?oem=$!productVo.code"><img src="$!{mallStatic}/img/logo/$!productVo.brandPicURL" alt="$!productVo.name"/></a>
+				<div class="infoR">
+					<p><strong>OEM：</strong>$!productVo.code</p>
+					<p class="clearfix applytype"><strong>适用车型：</strong><span>$!productVo.vehicleTypeInfo</span></p>
+					<p><strong>配件分类：</strong>$!productVo.partsCategoryLevel #if($!productVo.partsCategoryLevel2)&gt; $!productVo.partsCategoryLevel2#end</p>
+					<p><strong>副厂件品牌：</strong>$!productVo.brandTitleInfoOfOtherOEM</p>
+				</div>
+			</div>
+			
+		</div>
+		#end
+		
+		#if($!productsParts.size()>0)
+             <!-- 配件产品分页信息 -->
+             #pagination($!productDTO)
+	 	#end
+		<form action="$!{domain}/mall/product/productForKeySearch.htm" id="seach" method="get">
+			<input type="hidden" value="$!productDTO.pageNo" name="pageNo" id="pageNo">
+			<input type="hidden" value="$!pname" name="keyword" id="keyword">
+		</form>
+	</div>
+	#parse("layout/bottom.vm")
+
+</body>
+</html>

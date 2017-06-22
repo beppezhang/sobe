@@ -1,0 +1,11 @@
+<div class="contentLf tabList">
+	<ul class="member_menu">
+		<li class="member_menu_1"><a href="$!{domain}/admin/member/editMemberPage.htm?mainId=$!{customerVO.mainID}">基本信息</a></li>
+		<li class="member_menu_2"><a href="$!{domain}/admin/member/addressList.htm?customerID=$!{customerVO.mainID}">地址</a></li>
+		<li class="member_menu_3"><a href="$!{domain}/admin/member/salesorderList.htm?customerID=$!{customerVO.mainID}">订单</a></li>
+		<li class="member_menu_5"><a href="$!{domain}/admin/member/memberconsultingList.htm?customerID=$!{customerVO.mainID}">咨询</a></li>
+		<li class="member_menu_6"><a href="$!{domain}/admin/member/memberreviewList.htm?customerID=$!{customerVO.mainID}">评价</a></li>
+		<li class="member_menu_7"><a href="$!{domain}/admin/member/membersmsList.htm?customerID=$!{customerVO.mainID}">短信</a></li>
+		<li class="member_menu_8"><a href="$!{domain}/admin/member/memberemailList.htm?customerID=$!{customerVO.mainID}">邮件</a></li>
+	</ul>
+</div>

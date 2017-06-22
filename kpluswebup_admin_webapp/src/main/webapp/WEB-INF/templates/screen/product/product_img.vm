@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>产品相册</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>产品管理 》产品列表》产品相册</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li>
+						#if($!menuUtil.isExistMenu("/admin/product/editProductPage.htm",$!menuAllList)
+						) <a
+						href="$!{domain}/admin/product/editProductPage.htm?mainID=$!productID&productTypeMainID=$!productTypeMainID">产品信息</a>
+						#end
+					</li>
+					<li>
+						#if($!menuUtil.isExistMenu("/admin/product/addItemPage.htm",$!menuAllList)
+						) <a
+						href="$!{domain}/admin/product/addItemPage.htm?productID=$!productID&productTypeMainID=$!productTypeMainID">销售规格</a>
+						#end
+					</li>
+					<li><em class="icon arrowLfWeight"></em>
+						#if($!menuUtil.isExistMenu("/admin/product/productImgPic.htm",$!menuAllList)
+						) <a
+						href="$!{domain}/admin/product/productImgPic.htm?productID=$!productID&productTypeMainID=$!productTypeMainID"
+						class="hover">产品相册</a> #end</li>
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<!--form  S------->
+					<form action="addProductImgPic.htm" method="post">
+						<input type="hidden" value="$!productID" class="cText cTextLen"
+							name="productID"> <input type="hidden"
+							value="$!productTypeMainID" class="cText cTextLen"
+							name="productTypeMainID">
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">图片名称：</div>
+									<div class="formRow">
+										<input type="text" name="name" value="" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">商品：</div>
+									<div class="formRow">
+										<select name="itemID">
+											<option value="0">请选择</option> #foreach($!itemVO in
+											$!itemList)
+											<option value="$!itemVO.mainID">$!itemVO.name</option> #end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">图片：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen" value=""
+											name="picURL" id="picURL"> <img id="uploadImage"
+											src="" width="70px" height="70px">   <input type="file"
+											id="myBlogImage" name="myfiles" onchange="ajaxFileUpload()" />
+
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/product/deleteProductPicture.do",$!menuAllList))
+										<input type="submit" name="save" class="save" value="提交">
+										#end <input type="reset" name="cencle" class="cencle"
+											value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<div class="imgArrBox">
+						<ul>
+							#foreach($!pic in $!picList)
+							<li><span class="imgBox"> <img
+									src="$!domain$!pic.picURL" alt="" width="70px" height="70px" />
+									#if($!menuUtil.isExistMenu("/admin/product/addProductImgPic.htm",$!menuAllList)
+									) <a href="javascript:;" class="delImg"
+									onclick="deleteProductPicture('$!pic.id')"></a> #end
+							</span>
+								<p>名称：$!pic.productName</p>
+								<p>商品：$!pic.itemName</p></li> #end
+						</ul>
+					</div>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	function deleteProductPicture(id) {
+		var data = {
+			id : id
+		}
+		if (confirm("确定要删除数据吗？")) {
+			var url = "deleteProductPicture.do";
+			jQuery.ajax({
+				url : url,
+				type : "POST",
+				data : data,
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 0) {
+						alert("删除成功");
+						location.reload();
+					} else {
+						alert("删除失败");
+					}
+				},
+				error : function() {
+					alert("删除失败");
+				}
+			});
+		} else {
+			return false;
+		}
+	}
+</script>
+</html>

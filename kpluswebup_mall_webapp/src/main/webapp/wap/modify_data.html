@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+<title>修改资料</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="css/global.css">
+<link rel="stylesheet" type="text/css" href="css/indi.css">
+</head>
+<body>
+	<div class="modify_data">
+    	<ul>
+        	<li>
+            	<a href="#" class="clearfix">
+                	<span class="lt">我的头像</span>
+                   	<b style="background:url(img/m12.jpg); background-size:cover"></b>
+                </a>
+            </li>
+            <li>
+            	<a href="#" class="clearfix">
+                	<span class="lt">账号</span>
+                   	<p class="rt">15453454515</p>
+                </a>
+            </li>
+            <li>
+            	<a href="#" class="clearfix">
+                	<span class="lt">邮箱</span>
+                   	<p class="rt">请输入您的邮箱地址</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="modify_data">
+    	<ul>
+        	<li>
+            	<a href="#" class="clearfix">
+                	<span class="lt">姓名</span>
+                    <p class="rt">请输入您的姓名</p>
+                </a>
+            </li>
+            <li>
+            	<a href="#" class="clearfix">
+                	<span class="lt">性别</span>
+                   	<p class="rt">女</p>
+                </a>
+            </li>
+            <!--<li>
+            	<a href="#" class="clearfix">
+                	<span class="lt">生日</span>
+                   	<p class="rt">2011-05-20</p>
+                </a>
+            </li>-->
+            <li>
+            	<a href="#" class="clearfix">
+                	<span class="lt">手机号</span>
+                   	<p class="rt">15453454515</p>
+                </a>
+            </li>
+            <li>
+            	<a href="#" class="clearfix">
+                	<span class="lt">收货地址</span>
+                   	<p class="rt ads">浙江省杭州市西湖区</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="modify_data">
+    	<ul>
+        	<li>
+            	<a href="javascript:;" class="txt_r clearfix">
+                	<span class="lt">税务登记证</span>
+                    <!--<img src="img/tm-bg.png" class="pic">-->
+                    <span class="pic"><img src="img/tm-bg.png"></span>
+					<input name="" type="file" accept="image/*" class="picFile">
+                </a>
+            </li>
+            <li>
+            	<a href="javascript:;" class="txt_r clearfix">
+                	<span class="lt">组织机构代码</span>
+                    <span class="pic"><img src="img/tm-bg.png"></span>
+                    <input name="" type="file" accept="image/*" class="picFile">
+                </a>
+            </li>
+       </ul>
+    </div>        
+    <a href="#" class="refer">提交</a>
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="js/upload.js"></script>
+    <script>
+		$(function(){
+			$(".modify_data li").find("em").click(function(){
+				$(this).addClass("on").siblings().removeClass("on");	
+			})	
+			$(".modify_data li").find(".picFile").change(function(){
+				var a = $(this).val();
+				$(this).prev(".pic").find("img").attr("src",a);
+			})
+		})
+	
+    </script>	
+    
+</body>
+</html>
+

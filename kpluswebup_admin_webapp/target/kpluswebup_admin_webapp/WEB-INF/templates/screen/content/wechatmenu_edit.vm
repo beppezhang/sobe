@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑菜单</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>内容管理 》微信内容》菜单配置》编辑菜单</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			#parse("layout/wechat_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/content/editWechatMenu.htm"
+						method="post">
+						<input type="hidden" name="mainID"
+							value="$!cmsWechatMenuVO.mainID">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">微信名称：</div>
+									<div class="formRow">
+										<select name="interfaceConfigID" class="select">
+											#foreach($!interfaceConfig in $!interfaceConfigList)
+											<option #if("$!cmsWechatMenuVO.interfaceConfigID"==
+												"$!interfaceConfig.mainID")selected="selected" #end
+												value="$!interfaceConfig.mainID">$!interfaceConfig.name</option>
+											#end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">菜单名称：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											value="$!cmsWechatMenuVO.name" name="name">
+									</div>
+								</dd>
+								#if($!wechatMenuList.size()>0)
+								<dd class="clearfix">
+									<div class="formTt">上级菜单：</div>
+									<div class="formRow">
+										<select name="parentID" class="select">
+											#foreach($!wechatMenu in $!wechatMenuList)
+											<option #if("$!cmsWechatMenuVO.parentID"==
+												"$!wechatMenu.mainID")selected="selected" #end
+												value="$!wechatMenu.mainID">$!wechatMenu.name</option> #end
+										</select>
+									</div>
+								</dd>
+								#end
+								<dd class="clearfix">
+									<div class="formTt">菜单类型：</div>
+									<div class="formRow">
+										<input type="radio" name="menuType"
+											onclick="changeMenuType(1);"
+											#if("$!cmsWechatMenuVO.menuType"== "1")checked="checked" #end
+											value="1">链接模式，用户点击菜单时会直接打开链接内容！ <br> <input
+											type="radio" name="menuType" onclick="changeMenuType(2);"
+											#if("$!cmsWechatMenuVO.menuType"== "2")checked="checked" #end
+											value="2">图文模式，用户点击菜单时会以图文模式向用户发送一条信息！
+									</div>
+								</dd>
+								<div id="menuType" style="display: none;">
+									<dd class="clearfix">
+										<div class="formTt">标题：</div>
+										<div class="formRow">
+											<input type="text" class="cText cTextLen" name="title"
+												value="$!cmsWechatMenuVO.title">
+										</div>
+									</dd>
+									<dd class="clearfix">
+										<div class="formTt">简介：</div>
+										<div class="formRow">
+											<textarea rows="5" cols="80" name="content">$!cmsWechatMenuVO.content </textarea>
+										</div>
+									</dd>
+									<dd class="clearfix">
+										<div class="formTt">图文封面：</div>
+										<div class="formRow">
+											<input type="hidden" class="cText cTextLen" name="picURL"
+												id="picURL"> <img id="uploadImage"
+												#if("$!cmsWechatMenuVO.picURL"!=""
+												)src="$!cmsWechatMenuVO.picURL" #else src="" #end>   <input
+												type="file" id="myBlogImage" name="myfiles"
+												onchange="ajaxFileUpload()" />
+										</div>
+									</dd>
+								</div>
+								<dd class="clearfix">
+									<div class="formTt">链接类型：</div>
+									<div class="formRow">
+										<select name="linkType" id="linkType"
+											onchange="changeWechatLinkType(this.value);" class="select">
+											<option #if("$!cmsWechatMenuVO.linkType"==
+												"1")selected="selected" #end value="1">链接</option>
+											<option #if("$!cmsWechatMenuVO.linkType"==
+												"2")selected="selected" #end value="2">商品</option>
+											<!-- <option #if("$!cmsWechatMenuVO.linkType"==
+												"3")checked="checked" #end value="3">品牌</option>
+											<option #if("$!cmsWechatMenuVO.linkType"==
+												"4")checked="checked" #end value="4">产品类型</option> -->
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix" id="menuLink">
+									<div class="formTt">链接：</div>
+									<div class="formRow" id="linkRow">
+										<input type="text" class="cText cTextLen" id="menuLinkID"
+											name="menuLink" value="$!cmsWechatMenuVO.menuLink">
+									</div>
+								</dd>
+								#parse("layout/searchitem.vm")
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/content/editWechatMenu.htm",$!menuAllList)
+										) <input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+										#end
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+	<script type="text/javascript">
+		$(function() {
+			$(".wechat_menu_1").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+
+			var type = "$!cmsWechatMenuVO.menuType";
+			if (type == "1") {
+				$("#menuType").hide();
+			} else {
+				$("#menuType").show();
+			}
+
+			var linkType = "$!cmsWechatMenuVO.linkType";
+			if (linkType == "1") {
+				$("#menuLink").show();
+				$("#itemID").hide();
+			} else {
+				$("#menuLink").hide();
+				$("#itemID").show();
+			}
+		})
+
+		function changeWechatLinkType(value) {
+			if (value == "1") {
+				$("#menuLink").show();
+				$("#itemID").hide();
+				$("#menuLinkID").val("");
+			} else {
+				$("#menuLink").hide();
+				$("#itemID").show();
+			}
+		}
+	</script>
+</body>
+</html>

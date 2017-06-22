@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑发货地址</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》发货地址》编辑发货地址</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			#parse("layout/express_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/system/editShippingAddress.htm"
+						method="post">
+						<input type="hidden" name="id" value="$!shippingAddressVO.id">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">联系人：</div>
+									<div class="formRow">
+										<input type="text" name="name"
+											value="$!shippingAddressVO.name" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">电话：</div>
+									<div class="formRow">
+										<input type="text" name="telephone"
+											value="$!shippingAddressVO.telephone" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">手机：</div>
+									<div class="formRow">
+										<input type="text" name="mobile"
+											value="$!shippingAddressVO.mobile" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">地区：</div>
+									<div class="formRow">
+										<select name="provinceId" class="select"
+											onchange="changeProvinceID(this.value)">
+											#foreach($!province in $!provinceList)
+											<option #if("$!shippingAddressVO.provinceID"==
+												"$!province.mainID")selected="selected" #end
+												value="$!province.mainID">$!province.name</option> #end
+										</select> &nbsp; <select name="cityId" id="cityid" class="select"
+											onchange="changeCity(this.value)"> #foreach($!city
+											in $!cityList)
+											<option #if("$!shippingAddressVO.cityID"==
+												"$!city.mainID")selected="selected" #end
+												value="$!city.mainID">$!city.name</option> #end
+										</select> &nbsp; <select name="districtId" id="districtid"
+											class="select"> #foreach($!district in
+											$!districtList)
+											<option #if("$!shippingAddressVO.districtID"==
+												"$!district.mainID")selected="selected" #end
+												value="$!district.mainID">$!district.name</option> #end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">地址：</div>
+									<div class="formRow">
+										<input type="text" name="address"
+											value="$!shippingAddressVO.address" class="cText cTextLen"
+											style="width: 420%">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">邮编：</div>
+									<div class="formRow">
+										<input type="text" name="zip" value="$!shippingAddressVO.zip"
+											class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">默认：</div>
+									<div class="formRow">
+										<input type="radio" name="isDefault"
+											#if("$!shippingAddressVO.isDefault"== "0")checked="checked"
+											#end value="0" class="select">是&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="radio" name="isDefault"
+											#if("$!shippingAddressVO.isDefault"== "1")checked="checked"
+											#end value="1" class="select">否
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">退货地址：</div>
+									<div class="formRow">
+										<input type="radio" name="forReturn" value="0"
+											#if("$!shippingAddressVO.forReturn"== "0")checked="checked"
+											#end class="select">是&nbsp;&nbsp;&nbsp;&nbsp; <input
+											type="radio" name="forReturn" value="1"
+											#if("$!shippingAddressVO.forReturn"== "1")checked="checked"
+											#end class="select">否
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										<input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".express_menu_3").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+	</script>
+</body>
+</html>

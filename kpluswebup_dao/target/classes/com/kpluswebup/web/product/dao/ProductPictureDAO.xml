@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.ProductPictureDAO">
+
+	<sql id="Base_Column_List">
+		id, name, productID, itemID, picURL, isDelete,
+		creator,
+		createTime,
+		modifier, modifyTime
+	</sql>
+
+	<select id="findProductPicture" resultType="productPictureVO"
+		parameterType="productPictureDTO">
+		SELECT
+		pic.id,
+		pic.`name`,
+		pic.productID,
+		p.`name` AS productName,
+		pic.itemID,
+		i.`name` AS itemName,
+		pic.picURL,
+		pic.isDelete,
+		pic.creator,
+		pic.createTime,
+		pic.modifier,
+		pic.modifyTime
+		FROM
+		kplus_product_picture pic
+		LEFT JOIN kplus_product p ON p.mainID = pic.productID
+		LEFT JOIN kplus_item i ON i.mainID = pic.itemID
+
+		where pic.isDelete=0
+		<if test="productID !=null">
+			and pic.productID=#{productID}
+		</if>
+		<if test="itemID !=null">
+			and pic.itemID=#{itemID}
+		</if>
+		
+	</select>
+
+
+	<update id="deleteProductPictureById" parameterType="java.lang.Long">
+		update
+		kplus_product_picture
+		set isDelete=1
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	
+	<update id="deleteProductPictureByProductID" >
+		update
+		kplus_product_picture
+		set isDelete=1
+		where productID = #{productID,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteProductPictureByItemID" >
+		update
+		kplus_product_picture
+		set isDelete=1
+		where itemID = #{itemID,jdbcType=VARCHAR}
+	</update>
+
+
+	<insert id="insertProductPicture" parameterType="productPictureDTO">
+		INSERT INTO
+		kplus_product_picture(
+		`name`,
+		productID,
+		itemID,
+		picURL,
+		isDelete,
+		creator,
+		createTime
+		)
+		VALUES
+		(
+		#{name},
+		#{productID},
+		#{itemID},
+		#{picURL},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+</mapper>

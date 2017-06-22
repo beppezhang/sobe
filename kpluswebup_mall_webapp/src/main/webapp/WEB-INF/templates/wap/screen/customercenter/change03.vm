@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+<title>我的售后</title>
+<meta http-equiv="Cache-Control" content="max-age=0" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type"
+	content="application/vnd.wap.xhtml+xml; charset=utf-8" />
+<meta id="viewport" name="viewport"
+	content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+	#parse("wap/layout/head_sider.vm")
+	<div class="my_shopcart">
+		<div class="shopcart">
+			<ul>
+				<li class="sc"><img src="img/ico-check_ok.png" class="right">
+					<h3>商家同意了您的售后申请！</h3>
+					<p>请您填写售后信息详情，我们将尽快为您完成售后</p></li>
+
+			</ul>
+		</div>
+	</div>
+	<form action="$!domain/weixin/userSaveSalesOrderReturn.htm"
+		method="post" class="returnForm">
+		<div id="ex_form">
+			<ul>
+
+				<li><input id="orderReturnID" name="orderReturnID"
+					type="hidden" class="ipt orderReturnID" value="$!applyID">
+					<p>
+						<em class="col01">*</em> 退货物流公司名称
+					</p>
+					<p>
+						<select name="expressID" id="expressID">
+							<option value="">请选择退货物流公司</option> #foreach($!express in
+							$!expressList)
+							<option value="$!{express.mainID}">$!{express.name}</option> #end
+						</select>
+					</p></li>
+				<li>
+					<p>
+						<em class="col01">*</em> 退货物流单号
+					</p>
+					<p>
+						<input name="expressNumber" id="expressNumber" type="text"
+							class="ipt">
+					</p>
+				</li>
+				<li>
+					<p>
+						<em class="col01">&nbsp;</em> 备注
+					</p>
+					<p>
+						<textarea id="description" name="description" class="ipt tx"
+							placeholder="请填写您换货的详细说明"></textarea>
+					</p>
+				</li>
+				<li class="mt10"><p class="ct">
+						<a href="javascript:submitForm();" class="submit_btn">提交</a>
+					</p></li>
+			</ul>
+		</div>
+		</form>
+		<script type="text/javascript">
+		function submitForm(){
+			var expressID = jQuery("#expressID").val();
+			var expressNumber = jQuery("#expressNumber").val();
+			var orderReturnID = jQuery("#orderReturnID").val();
+			var description = jQuery("#description").val();
+			if (expressID == ""){
+				return;
+			}
+			if (expressNumber == ""){
+				alert("请填写物流单号！");
+				return;
+			}
+			if (description == ""){
+				alert("请填写详细说明！");
+				return;
+			}
+			jQuery(".returnForm").submit();
+		}
+			
+		</script>
+	
+</body>
+</html>

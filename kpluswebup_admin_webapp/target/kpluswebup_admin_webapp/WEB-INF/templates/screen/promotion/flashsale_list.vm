@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>限时抢购</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》限时抢购</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/promotion/flashSaleList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!flashSaleDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!flashSaleDTO.pageSize">
+					<div class="tableTool">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">商品编号：</span><input type="text"
+									name="searchItemID" class="cText" value="$!flashSaleDTO.itemID" /></td>
+								<td><span class="grayF">商品名称：</span><input type="text"
+									name="searchItemName" class="cText"
+									value="$!flashSaleDTO.itemName" /></td>
+								<td><span class="grayF">抢购时间：</span> <input type="text"
+									name="searchFromDate" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!flashSaleDTO.fromDate)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+									<input type="text" name="searchEndDate" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!flashSaleDTO.endDate)" /></td>
+								<td rowspan="3">
+									#if($!menuUtil.isExistMenu("/admin/promotion/flashSaleList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a>
+				#if($!menuUtil.isExistMenu("/admin/promotion/deleteFlashSale.do",$!menuAllList)
+				) <a href="javascript:;" title="删除" id="deleteFlashSaleAll"><em
+					class="icon iconDel"></em></a> #end
+				#if($!menuUtil.isExistMenu("/admin/promotion/addFlashSalePage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/promotion/addFlashSalePage.htm"
+					title="新增限时抢购" class="TableAddBtn">+新增限时抢购</a> #end
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="" id="all" /></label></td>
+						<td>商品编号</td>
+						<td>商品名称</td>
+						<td>抢购价格(元)</td>
+						<td>限购数量</td>
+						<td>开始时间</td>
+						<td>结束时间</td>
+						<td>创建时间</td>
+						<td>创建人</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!flashSale in $!flashSaleList)
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="$!flashSale.mainID" id="check_box_$!flashSale.mainID" /></label></td>
+						<td>$!flashSale.itemID</td>
+						<td>$!flashSale.itemName</td>
+						<td>$!NumberTool.format("#0.00",$!flashSale.salesPrice)</td>
+						<td>$!flashSale.limitCount</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!flashSale.fromDate)</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!flashSale.endDate)</td>
+						<td>$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!flashSale.createTime)</td>
+						<td>$!flashSale.createName</td>
+						<td>
+							#if($!menuUtil.isExistMenu("/admin/promotion/editFlashSalePage.htm",$!menuAllList)
+							) <a
+							href="$!{domain}/admin/promotion/editFlashSalePage.htm?mainId=$!flashSale.mainID"
+							class="icon iconEdit" title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/promotion/deleteFlashSale.do",$!menuAllList)
+							) <a href="javascript:;"
+							onclick="deleteFlashSale('$!flashSale.mainID');"
+							class="icon iconDel" title="删除"></a> #end
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!flashSaleDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>售后申请</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+<link rel="stylesheet" href="$!{adminStatic}/theme/default/jquery.rollbar.css" />
+<script src="$!{adminStatic}/script/jquery.mousewheel.js" language="javascript"></script>
+<script src="$!{adminStatic}/script/jquery.rollbar.min.js" language="javascript"></script>
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+<!--header S-->
+	#parse("layout/head.vm") 
+
+<div class="main clearfix">
+	<div class="conTit">
+		<span>订单管理》售后申请</span>
+	</div>
+	<div class="searchBar">
+		<form id="serachform" name="serachform" method="post"action="$!{domain}/admin/order/salesApplyList.htm">
+			<input type="hidden" id="pageNo" name="pageNo" value="$!salesOrderSalesApply.pageNo">
+			<input type="hidden" id="pageSize" name="pageSize" value="$!salesOrderSalesApply.pageSize">
+			<table class="searchTable">
+				<tbody>
+					<tr>
+						<td><span class="grayF">售后单号：</span><input type="text" name="searchSalesApplyID" class="cText" value="$!salesOrderSalesApply.mainID" /></td>
+						<td><span class="grayF">会员：</span><input type="text" name="searchCustomerName" class="cText" value="$!salesOrderSalesApply.customerUserName" /></td>
+						<td><span class="grayF">商家：</span><input type="text" name="searchSupplierName" class="cText" value="$!salesOrderSalesApply.supplierName" /></td>
+					</tr>
+					<tr>
+						<!-- <td><span class="grayF">串号：</span><input type="text" name="searchNumberIMEI" class="cText" value="$!salesOrderSalesApply.numberIMEI" /></td> -->
+						<td><span class="grayF">售后需求：</span><select class="select" name="searchSalesType">
+														<option value="">全部</option>
+														<option #if("$!salesOrderSalesApply.salesType"=="1")selected="selected" #end value="1">退货</option>
+														<option #if("$!salesOrderSalesApply.salesType"=="2")selected="selected" #end value="2">换货</option>
+														</select></td>
+						<td><span class="grayF">售后状态：</span><select class="select" name="searchSaleApplyStatus">
+														<option value="">全部</option>
+														<option #if("$!salesOrderSalesApply.sales"=="0")selected="selected" #end value="0">申请</option>
+														<option #if("$!salesOrderSalesApply.sales"=="1")selected="selected" #end value="1">拒绝</option>
+														<option #if("$!salesOrderSalesApply.sales"=="2")selected="selected" #end value="2">处理中</option>
+														<option #if("$!salesOrderSalesApply.sales"=="3")selected="selected" #end value="3">完成</option>
+														<option #if("$!salesOrderSalesApply.sales"=="4")selected="selected" #end value="4">取消售后</option>
+														</select></td>
+						<td rowspan="3">
+							#if($!menuUtil.isExistMenu("/admin/order/salesApplyList.htm",$!menuAllList))
+							<input class="searchBtn" type="button" value="搜索"onclick="userSearch(1)" /> #end
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<table class="tableList grid">
+		<thead>
+			<tr>
+				<td>售后单号</td>
+				<td>会员</td>
+				<td>商家</td>
+				<td>订单</td>
+				<td>售后需求</td>
+				<td>产品</td>
+				<!-- <td>串号</td> -->
+				<td>状态</td>
+				<td>发起时间</td>
+				<!-- <td>操作</td> -->
+			</tr>
+		</thead>
+		<tbody id="list">
+			#foreach($!salesOrderSalesApply in $!salesOrderSalesApplyList)
+			<tr>
+				<td><a target="_blank"
+					href="$!{domain}/admin/order/salesApplyInfo.htm?mainId=$!salesOrderSalesApply.mainID">$!salesOrderSalesApply.mainID</a></td>
+				<td>$!salesOrderSalesApply.customerName</td>
+				<td>$!salesOrderSalesApply.supplierName</td>
+				<td>$!salesOrderSalesApply.salesOrderID</td>
+				<td>#if("$!salesOrderSalesApply.salesType"=="1") 退货
+					#elseif("$!salesOrderSalesApply.salesType"=="2") 换货 #end</td>
+				<td>$!salesOrderSalesApply.itemName</td>
+				<!-- <td>$!salesOrderSalesApply.numberIMEI</td> -->
+				<td>#if("$!salesOrderSalesApply.status"=="0") 申请
+					#elseif("$!salesOrderSalesApply.status"=="1") 拒绝
+					#elseif("$!salesOrderSalesApply.status"=="2") 处理中
+					#elseif("$!salesOrderSalesApply.status"=="3") 完成 
+					#elseif("$!salesOrderSalesApply.status"=="4") 已取消 #end</td>
+				<td><span
+						title="$!date.format("yyyy-MM-dd HH:mm:ss",$!salesOrderSalesApply.createTime)"
+						class="dealtime">$!date.format('yyyy-MM-dd
+							HH:mm:ss',$!salesOrderSalesApply.createTime)</span></td>
+				<!-- <td>#if("$!salesOrderSalesApply.status"=="0")
+					#if($!menuUtil.isExistMenu("/admin/order/editSalesApply.htm",$!menuAllList)
+					) <a target="_blank" class="icon iconEdit"
+					href="$!{domain}/admin/order/editSalesApply.htm?mainId=$!{salesOrderSalesApply.mainID}"
+					title="编辑"></a> #end &nbsp;
+					#if($!menuUtil.isExistMenu("/admin/order/salesmentOperation.do",$!menuAllList)
+					) <a href="javascript:;" class="icon iconRefund"
+					onclick="salesmentOperation('$!salesOrderSalesApply.mainID','2')"
+					title="确认售后"></a> #end #end
+				</td> -->
+			</tr>
+			#end
+		</tbody>
+			#pagination($!salesOrderSalesApply)
+	</table>
+</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>

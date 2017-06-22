@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>物流管理</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置》物流管理》物流公司</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/express_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+						<div class="tableTool">
+							#if($!menuUtil.isExistMenu("/admin/system/addExpressPage.htm",$!menuAllList)
+							) <a href="$!{domain}/admin/system/addExpressPage.htm"
+								title="新增物流管理" class="TableAddBtn">+新增物流公司</a> #end
+						</div>
+						<div class="tableListBar">
+							<table class="tableList grid">
+								<thead>
+									<tr>
+										<td>名称</td>
+										<td>业务联系人</td>
+										<td>联系电话</td>
+										<td>默认</td>
+										<td>操作</td>
+									</tr>
+								</thead>
+								<tbody id="list">
+									#foreach($!expressVO in $!list)
+									<tr>
+										<td>$!expressVO.name</td>
+										<td>$!expressVO.contactPerson</td>
+										<td>$!expressVO.mobile</td>
+										<td>#if("$!expressVO.def"=="0") 否 #else 是 #end</td>
+										<td class="last">
+											#if($!menuUtil.isExistMenu("/admin/system/editExpressPage.htm",$!menuAllList)
+											) <a class="icon iconEdit"
+											href="$!{domain}/admin/system/editExpressPage.htm?mainID=$!expressVO.mainID"
+											title="编辑"></a> #end &nbsp;
+											#if($!menuUtil.isExistMenu("/admin/system/deleteExpress.do",$!menuAllList)
+											) <a href="javascript:;" class="icon iconDel"
+											onclick="deleteExpress('$!{expressVO.mainID}')" title="删除"></a>#end
+										</td>
+									</tr>
+									#end
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".express_menu_1").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+	</script>
+</body>
+</html>

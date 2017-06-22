@@ -1,0 +1,718 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>产品列表</title>
+ <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/details.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/brand.css">
+<link rel="stylesheet" type="text/css" href="${mallStatic}/css/header_fixed.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/automobileBrand.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/style/login.css">
+
+</head>
+<body onload="load();">
+	<div id="all">
+	<!-- top bar -->
+	#parse("layout/head_top_new.vm")
+	<div id="box">
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider_new.vm")
+	<!--nav导航条-->
+	#parse("layout/menu_new.vm")
+	</div>
+
+
+<script>
+
+var parts = [];
+ function chooseBrand()
+ {
+	$("#idText").val(parts);
+ }
+ 
+ function deleteCondition(val,type)
+ {
+ 	$("#currentName").val($("#keyName").val());	// 返回上一层，提交上去的关键字信息也要更新
+	
+	if(type=="car"){
+		$("#carMainID").val("");
+		window.location = "$!{domain}/mall/brand/wall.htm";
+
+	} 	
+	if(type=="carMainID"){
+		$("#productCategoryId").val("");
+		$("#vehicleTypeId").val("");
+		$("#partsCategoryId").val("");
+		$("#partsCategoryId_parts").val("");
+		$("#partsCategoryIdThird").val("");
+		$("#typeParts").val("");		
+		searchSubmit();
+	} 		
+	if(type=="vehicleType"){
+//		$("#productCategoryId").val("");
+		$("#vehicleTypeId").val("");
+		$("#partsCategoryId").val("");
+		$("#partsCategoryId_parts").val("");
+		$("#partsCategoryIdThird").val("");			
+		$("#type").val("car");
+		$("#typeParts").val("");
+		searchSubmit();
+	} 		
+	if(type=="partsCategory_root"){
+//		$("#vehicleTypeId").val("");
+		$("#partsCategoryId").val("");
+		$("#partsCategoryId_parts").val("");	
+		$("#partsCategoryIdThird").val("");			
+		$("#type").val("vehicleType");
+		$("#typeParts").val("");
+		searchSubmit();
+	} 	
+	if(type=="partsCategory_second"){
+		$("#type").val("partsCategory_root");
+	//	$("#partsCategoryId").val("");
+		$("#partsCategoryId_parts").val("");
+		$("#partsCategoryIdThird").val("");		
+		$("#typeParts").val("");
+		searchSubmit();
+	}
+	if(type=="partsCategory_third"){
+		
+		if($("#typePartsOne").val()=="typePartsOne")
+		{
+			$("#type").val("partsCategory_root");
+			$("#partsCategoryId_parts").val("");
+			$("#partsCategoryIdThird").val("");		
+			$("#typeParts").val("");			
+		}else
+		{
+			$("#type").val("partsCategory_second");
+			$("#partsCategoryIdThird").val("");		
+			$("#typeParts").val("");			
+		}
+
+		searchSubmit();
+	} 		
+	if(type=="parts_true"){
+
+		$("#type").val("partsCategory_second");
+		$("#typeParts").val("isTrue");
+		$("#partsCategoryId_parts").val("");
+		$("#typeParts").val("");
+		
+		searchSubmit();
+	} 			
+	
+ }
+ 
+function addFucus(mainID)
+{
+	//新增关注记录
+	jQuery.ajax({
+		url:"/mall/product/addFocusByvehicleType.do",
+		type : "POST",
+		data:{
+			vehicleTypeId: mainID
+		},
+		dataType : "json",
+		success : function(data) {
+			console.debug('add focus for vehicleType success');
+		},
+		error : function() {
+			console.debug('add focus for vehicleType fail');
+		}
+	});			
+};
+ 
+ function getChild(mainID,type)
+ {
+ 	$("#currentName").val($("#keyName").val());	//获取下一层，提交上去的关键字信息也要更新
+	
+	if(type=="car"){
+		$("#type").val("vehicleType");
+		$("#productCategoryId").val(mainID);
+	} 	 
+	if(type=="vehicleType"){
+		$("#type").val("partsCategory_root");
+		$("#vehicleTypeId").val(mainID);
+		addFucus(mainID);
+	}
+	if(type=="partsCategory_root"){
+		$("#type").val("partsCategory_second");
+		$("#partsCategoryId").val(mainID);
+	} 		 	
+	if(type=="partsCategory_second"){
+		
+		if($("#brandType").val() == 'BMW' || $("#partsCategoryType").val() == 'normalCategory')
+		{
+			$("#type").val("partsCategory_third");
+			$("#partsCategoryId_parts").val(mainID);
+		}else
+		{
+			//查询配件
+			$("#type").val("parts_true");
+			$("#typeParts").val("isTrue");
+			$("#partsCategoryId_parts").val(mainID);			
+		}
+	}	
+	if(type=="partsCategory_third"){
+		//查询配件
+		$("#type").val("parts_true");
+		$("#typeParts").val("isTrue");
+		$("#partsCategoryIdThird").val(mainID);			
+	}		
+	searchSubmit();
+ }
+ function search()
+ {
+ 	$("#currentName").val($("#keyName").val());
+ 	$("#typeParts").val("isTrue");
+ 	searchSubmit();
+ }
+ function getSearchModel()
+ {
+ 	var _searchModel = null;
+	var _searchModelObj = $("#searchBox").find(".cur").each(function(){
+	    var _this = $(this);
+	    //判断data
+	    if(_this.attr("searchModel")){
+	   		console.debug(_this.attr("searchModel")); 
+	   		_searchModel = _this.attr("searchModel");  
+	    }
+	}); 	
+	return _searchModel;
+ }
+ 
+ function searchSubmit()
+ {
+	if($("#mainContainer .right .center").hasClass("cur")){
+		$("#vehicleModelPanel").val('close');
+	}else{
+		$("#vehicleModelPanel").val('open');
+	} 	
+	$("#seach").submit();
+ }
+</script>	
+	
+
+<div id="mainContainer">
+		<p class="local">
+			<a href="/index.htm">首页</a> > <a href="$!{domain}/mall/brand/wall.htm">汽车品牌</a>
+	    </p>
+	    <div class="box clearfix">
+
+	    	<!--汽车品牌引导页右侧-->
+
+	    	<div class="left">
+	    		<div class="auto_logo">
+	    			<img src="${mallStatic}/img/logo/$!{productCategoryVO.picUrl}" alt="" />
+	    		</div>
+	    		
+	    		<!--热搜-->
+	    		<div class="common hot_search">
+	    			<h4>热搜</h4>
+	    			<ul>
+	    				<li>
+	    					<i class="cur_bg">1</i>
+	    					<span><a href="javascript:void(0);">螺栓</a></span>	
+	    				</li>
+	    				<li>
+	    					<i class="cur_bg">2</i>
+	    					<span><a href="javascript:void(0);">车前灯</a></span>	
+	    				</li>
+	    				<li>
+	    					<i class="cur_bg">3</i>
+	    					<span><a href="javascript:void(0);">大灯</a></span>	
+	    				</li>
+	    				<li>
+	    					<i>4</i>
+	    					<span><a href="javascript:void(0);">车膜</a></span>	
+	    				</li>
+	    				<li>
+	    					<i>5</i>
+	    					<span><a href="javascript:void(0);">空气滤清器</a></span>	
+	    				</li>
+	    			</ul>
+	    		</div>
+
+			#if("$!{user.username}"!="")
+	    		<!--车型-->
+	    		<div class="common  Car_history">
+	    			<h4>车型</h4>
+	    			<ul>
+	    				#foreach($focusEntity in ${vehicleTypeSearchList})
+						<li>
+							<i class="cur_bg">$velocityCount</i>
+							<span><a href="$!{domain}/mall/product/searchProductListByForFocus.htm?type=vehicleType&referenceID=${focusEntity.referenceID}" title="${focusEntity.myFocusInfo}">${focusEntity.myFocusInfo}</a></span>
+						</li>
+						#end
+	    			</ul>
+	    		</div>
+	    		<!--VIN-->
+	    		<div class="common Vin_history">
+	    			<h4>VIN</h4>
+	    			<ul>
+	    				#foreach($focusEntity in ${VINSearchList})
+						<li>
+							<i class="cur_bg">$velocityCount</i>
+							<span><a href="${domain}/mall/product/searchProductListByForFocus.htm?type=vin&referenceID=${focusEntity.referenceID}" title="${focusEntity.myFocusInfo}">${focusEntity.myFocusInfo}</a></span>
+						</li>
+						#end
+	    			</ul>
+	    		</div>
+	    		<!--OEM-->
+	    		<div class="common Oem_history">
+	    			<h4>OEM</h4>
+	    			<ul>
+	    				#foreach($focusEntity in ${OEMSearchList})
+						<li>
+							<i class="cur_bg">$velocityCount</i>
+							<span><a href="${domain}/mall/product/searchProductListByForFocus.htm?type=oem&referenceID=${focusEntity.referenceID}" title="${focusEntity.myFocusInfo} ${focusEntity.referenceID}">${focusEntity.myFocusInfo} ${focusEntity.referenceID}</a></span>
+						</li>
+						#end
+	    			</ul>
+	    		</div>
+	    		
+	    	#end
+	    	
+				<!--热搜、车型、OEM、VIN中li最后一个去掉下划线-->
+	    		<script type="text/javascript">
+	    			$("#mainContainer .left .common ul").each(function(){
+	    				var number=$(this).children("li").length-1;
+	    				$(this).children("li").eq(number).css("border","none");
+	    			});
+	    		</script>	    	
+	    		
+	    	</div>
+
+			<!--汽车品牌引导页右侧-->
+
+	    	<div class="right">
+	    		<div class="top">
+	    			<!--关键字查询-->
+	    			<div class="search">
+	    				<span>关键字</span>
+	    				<input id="keyName" class="wid" name="keyName" type="text" placeholder="在当前条件下查询" value="$!keyName"/>
+	    				<input onclick="search()" type="image" src="${mallStatic}/images/ico-zoomer.png" />
+	    				<!--<button onclick="search()"><img src="${mallStatic}/images/ico-zoomer.png" /></button>-->
+	    			</div>
+	    			
+	    			
+	    			<!--车型信息-->
+	    			<div class="auto_infor type clearfix">
+	    				<h4>车型信息</h4>
+	    				<ul class="autoPartList">
+	    					#if("$!productCategoryVO"!="")
+	    					<li class="lianjie nobg" onclick="deleteCondition('$!{productCategoryVO.mainID}','car')">
+	    						<span style="margin-left:0;" title="$!{productCategoryVO.name}">$!{productCategoryVO.name}</span><i class="icon-close"></i>
+	    					</li>
+	    					
+	    					#end
+	    					
+	    					#if("$!productCategoryVO_vehicle"!="")
+	    					<span class="right_arrow">-></span>
+	    					<li class="lianjie nobg" onclick="deleteCondition('$!{productCategoryVO_vehicle.mainID}','carMainID')">
+	    						<span style="margin-left:0;" title="$!{productCategoryVO_vehicle.name}">$!{productCategoryVO_vehicle.name}</span><i class="icon-close"></i>
+	    					</li>
+	    					
+	    					#end	
+	    					
+	    					#if("$!vehicleTypeVO"!="")
+	    					<span class="right_arrow">-></span>
+	    					<li class="lianjie nobg" onclick="deleteCondition('$!{vehicleTypeVO.mainID}','vehicleType')">
+	    						<span style="margin-left:0;" title="$!{vehicleTypeVO.name}">$!{vehicleTypeVO.name}</span><i class="icon-close"></i>
+	    					</li>
+	    					
+	    					<a class="review_type" href="javascript:;">查看车型信息</a>
+	    					#end	    			
+	    							  
+	    				</ul>
+	    				
+	    			</div>
+	  
+	    			<!--配件信息-->
+	    			#if("$!partsCategoryVo"!="")
+	    			<div class="parts clearfix">
+	    				<h4>配件信息</h4>
+	    				<ul>
+	    					
+	    					<li class="lianjie nobg" onclick="deleteCondition('$!{partsCategoryVo.mainID}','partsCategory_root')">
+	    						<span style="margin-left:0;" title="$!{partsCategoryVo.name}">$!{partsCategoryVo.name}</span><i class="icon-close"></i>
+	    					</li>
+							#if("$!partsCategoryVoParts"!="")
+							<span class="right_arrow">-></span>
+		    					<li class="lianjie nobg" onclick="deleteCondition('$!{partsCategoryVoParts.mainID}','partsCategory_second')">
+		    						<span style="margin-left:0;" title="$!{partsCategoryVoParts.name}">$!{partsCategoryVoParts.name}</span><i class="icon-close"></i>
+		    					</li>
+		    				#end		
+							#if("$!partsCategoryVoPartsThird"!="")
+							<span class="right_arrow">-></span>
+		    					<li class="lianjie nobg" onclick="deleteCondition('$!{partsCategoryVoPartsThird.mainID}','partsCategory_third')">
+		    						<span style="margin-left:0;" title="$!{partsCategoryVoPartsThird.name}">$!{partsCategoryVoPartsThird.name}</span><i class="icon-close"></i>
+		    					</li>
+		    				#end			    						    					
+	    				</ul>
+	    				
+	    			</div>
+	    			#end
+	    		</div>
+	    		<!--隐藏的车型信息-->
+				#if("$!vehicleModelPanel"=="open")
+				<div class="center">
+				#end
+				#if("$!vehicleModelPanel"=="close" || "$!vehicleModelPanel"=="")	
+				<div class="center cur">  	    	
+				#end
+	    			<div class="box2">
+						<div class="top1">
+							<h3 style="float:left;">车型详情</h3>
+							<span class="close">收起</span>
+						</div>
+						<div class="bottom1">
+							<dl class="clearfix">
+								<dt><img src="${mallStatic}/images/u622.jpg" alt="" /></dt>
+								<dd>
+									<div class="nav">
+										<span class="cur">基本信息</span><span class="noborder">车身信息</span><span>技术数据</span>
+									</div>
+									<div class="content">
+										<div class="cur">
+											<p><span class="font14">品牌：</span>$!{productCategoryVO.name}</p>
+											<p><span class="font14">车型：</span>$!{vehicleTypeVO.name}</p>
+											<p><span class="font14">生产开始年月：</span>2012/07</p>
+											<p><span class="font14">生产结束年月：</span>2015/07</p>
+										</div>
+										<div>
+											<p><span class="font14">车身类型：</span>Couple</p>
+											<p><span class="font14">驱动方式：</span>Front Where Drive</p>
+										</div>
+										<div class="three">
+											<ul class="jishu">
+												<li><span class="font14">功率（千瓦）：</span>51</li>
+												<li><span class="font14">功率（马力）：</span>70</li>
+												<li><span class="font14">气缸：</span>4</li>
+												<li><span class="font14">制动系统：</span>51</li>
+												<li><span class="font14">发动机类型：</span>Patrol Engine</li>
+												<li><span class="font14">燃料种类：</span>Patrol</li>
+												<li><span class="font14">每个燃烧室中的气门：</span>2</li>
+												<li><span class="font14">技术排量（毫升）：</span>1471</li>
+												<li><span class="font14">ABS：</span>without ABS</li>
+												<li><span class="font14">ASR：</span>without ASR</li>
+											</ul>
+										</div>
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</div>
+	    		</div>
+	    		<!--5个div，汽车车系，汽车车型，配件类型，配件类型，配件分类-->
+	    		<div class="bottom">
+	
+					<div class="pannel_type clearfix" style="background: #f3f3f4;border-bottom:solid 1px #e6e6e6;font-size: 14px;line-height: 28px;cursor: pointer; display: none;">
+						<h3 style="float: left;">
+							#if("$!partsCategoryType"=="normalCategory")
+							常见配件层级
+							#else
+							原厂配件层级
+							#end
+						</h3>
+						<div class="model_change" style="float: right;color: #3399ff;">
+							#if("$!partsCategoryType"=="normalCategory")
+							按原厂配件层级筛选
+							#else
+							按常见配件层级筛选
+							#end
+						</div>
+					</div>
+	    								    			
+	    			<dl class="panel_state clearfix autoParts">
+	    				<dt>
+	    					#if("$!type"=="car")
+	    						汽车车系
+	    					#end
+	    					#if("$!type"=="vehicleType")
+	    						汽车车型
+	    					#end
+	    					#if("$!type"=="partsCategory_root")
+	    						#if("$!partsCategoryType"=="normalCategory")
+	    						常见配件一级类目
+	    						#else
+	    						配件大类
+	    						#end
+	    					#end
+	    					#if("$!type"=="partsCategory_second")
+	    						配件小类
+	    					#end
+	    					#if("$!type"=="partsCategory_third")
+	    						分组大类
+	    					#end
+	    					#if("$!type"=="parts_true")
+	    						#if("$!brandType"=="BMW" || "$!partsCategoryType"=="normalCategory")
+	    						分组大类
+	    						#else
+	    						配件小类
+	    						#end
+	    					#end
+<!--	    					
+	    					#if("$!brandType"=="BMW")
+		    					#if("$!type"=="partsCategory_second")
+		    						配件小类
+		    					#end
+		    					#if("$!type"=="partsCategory_third" || "$!type"=="parts_true")
+		    						分组大类
+		    					#end		    					
+	    					#end	    					
+	    					#if("$!brandType"=="BENZ")
+		    					#if("$!type"=="partsCategory_second" || "$!type"=="parts_true")
+		    						配件小类
+		    					#end	
+	    					#end
+-->	    					   	
+	    				</dt>
+
+	    				<dd>
+	    					<div class="chexi leftfix">
+		    					<ul>
+
+		    						#if("$!type"=="car")
+			    						#foreach($!car in $!cars)
+			    						<li><span><a href="javascript:;" onclick="getChild('$!{car.mainID}','$!{type}');">$!{car.name}</a></span></li>
+			    						#end
+		    						#end
+		    						
+		    						#if("$!type"=="vehicleType")
+			    						#foreach($!car in $!vehicleTypeVOs)
+			    						<li><span><a href="javascript:;" onclick="getChild('$!{car.mainID}','$!{type}');">$!{car.name}</a></span></li>
+			    						#end
+		    						#end	    		 
+		    						
+		    						#if("$!type"=="partsCategory_root")
+			    						#foreach($!car in $!partsCategoryRoots)
+			    						<li><span><a href="javascript:;" onclick="getChild('$!{car.mainID}','$!{type}');">$!{car.name}</a></span></li>
+			    						#end
+		    						#end		  
+		    						  						
+		    						#if("$!type"=="partsCategory_second")
+			    						#foreach($!car in $!partsCategoryChilds)
+			    						<li><span><a href="javascript:;" onclick="getChild('$!{car.mainID}','$!{type}');">$!{car.name}</a></span></li>
+			    						#end
+		    						#end	
+		    						#if("$!type"=="partsCategory_third")
+			    						#foreach($!car in $!partsCategoryThirds)
+			    						<li><span><a href="javascript:;" onclick="getChild('$!{car.mainID}','$!{type}');">$!{car.name}</a></span></li>
+			    						#end
+		    						#end			    		
+		    						#if("$!type"=="parts_true")
+		    							#if("$!brandType" == 'BMW' || "$!partsCategoryType" == "normalCategory")
+					    					#if("$!partsCategoryVoPartsThird"!="")
+						    					<li><span>$!{partsCategoryVoPartsThird.name}</span></li>
+						    				#end
+						    			#else
+					    					#if("$!partsCategoryVoParts"!="")
+						    					<li><span>$!{partsCategoryVoParts.name}</span></li>
+						    				#end	
+		    							#end
+		    						#end
+		    						
+<!--
+		    						#if("$!brandType" == 'BMW')
+		    						    #if("$!type"=="parts_true")
+					    					#if("$!partsCategoryVoPartsThird"!="")
+						    					<li><span>$!{partsCategoryVoPartsThird.name}</span></li>
+						    				#end	
+		    							#end			    						
+		    						#end
+		    						#if("$!brandType" == 'BENZ')
+		    						    #if("$!type"=="parts_true")
+					    					#if("$!partsCategoryVoParts"!="")
+						    					<li><span>$!{partsCategoryVoParts.name}</span></li>
+						    				#end	
+		    							#end				    						
+		    						#end		    										
+-->
+	    															    						   						
+		    					</ul>
+	    					</div>
+	    					<span class="pack_up">收起</span>
+	    				</dd>
+	    			</dl>
+
+	    			</div>
+	    		<!--配件明细-->
+	    		#if("$!typeParts"=="isTrue" )
+	    		<div class="parts_list">
+	    			<div class="main">
+						<div class="result">
+							<span class="count">配件明细</span>
+						</div>
+						<div class="sales_list">
+							<table class="sales_pro">
+								<thead>
+									<tr>
+										<th class="wid5">NO.</th>
+										<th class="wid20">配件名称</th>
+										<th class="wid15">OEM</th>
+										<th class="wid5">操作</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									
+		    						#foreach($!parts in $!productsParts)
+										<tr class="odd">
+											<td class="products">$!{velocityCount}</td>
+											<td class="stock">$!{parts.name}</td>
+											<td class="number">$!{parts.code}</td>
+											<td class="operation"><span><a href="$!{domain}/mall/item/productInfo.htm?productId=$!parts.mainID" target="_blank">查看详情</a></span></td>
+										</tr>
+		    						#end									
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+			    	<div class="pagerbar">
+			    		             <!-- 配件产品分页信息 -->
+             				#pagination($!productDTO)
+			    	</div>
+	    		</div>
+	    		
+	    		#end
+	    		
+	    	</div>
+	    </div>
+	     
+	</div>
+	<div class="loaner"></div>
+</div>
+		#parse("layout/bottom.vm") 
+
+<form action="$!{domain}/mall/product/searchProductList.htm" id="seach" method="get">
+<input type="hidden" value="$!itemDto.brandID" name="brandID" id="brandID">
+<input type="hidden" value="$!itemDto.pageNo" name="pageNo" id="pageNo">
+<input type="hidden" value="" name="orderByClause" id="orderByClause">
+<input type="hidden" value="$!itemDto.startSalePrice" name="startSalePrice" id="startSalePrice">
+<input type="hidden" value="$!itemDto.endSalePrice" name="endSalePrice" id="endSalePrice">
+<input type="hidden" value="$!itemDto.productType" name="productType" id="productType">
+<input type="hidden" value="$!pname" name="name" id="name">
+<input type="hidden" value="$!catID" name="catID" id="catID">
+<input type="hidden" value="$!cType" name="cType" id="cType">
+<input type="hidden" id="customerID" value="$!user.mainID">
+<input type="hidden" value="dataData" name="dataData" id="dataData">
+<!--*******************************************sxc-->
+<input type="hidden" value="$!partsCategoryVo.mainID" name="partsCategoryId" id="partsCategoryId">
+<input type="hidden" value="$!partsCategoryVo.flevel" name="partsCategoryFLevel" id="partsCategoryFLevel">
+<input type="hidden" value="$!partsCategoryVoAncestor.mainID" name="partsCategoryAncestorId" id="partsCategoryAncestorId">
+<input type="hidden" value="$!partsCategoryVoAncestor.flevel" name="partsCategoryAncestorFLevel" id="partsCategoryAncestorFLevel">
+<input type="hidden" value="$!vehicleTypeVO.mainID" name="vehicleTypeId" id="vehicleTypeId">
+<input type="hidden" value="$!productCategoryVO.mainID" name="carMainID" id="carMainID">
+<input type="hidden" value="$!type" name="type" id="type">
+<input type="hidden" value="$!productCategoryVO_vehicle.mainID" name="productCategoryId" id="productCategoryId">
+
+<input type="hidden" value="$!partsCategoryVoParts.mainID" name="partsCategoryId_parts" id="partsCategoryId_parts">
+<input type="hidden" value="$!typeParts" name="typeParts" id="typeParts">
+<input type="hidden" value="$!keyName" name="currentName" id="currentName">
+<input type="hidden" value="$!searchModel" name="searchModel" id="searchModel">
+<input type="hidden" value="$!vehicleModelPanel" name="vehicleModelPanel" id="vehicleModelPanel">
+<input type="hidden" value="$!partsCategoryThirdsSize" name="partsCategoryThirdsSize" id="partsCategoryThirdsSize">
+<input type="hidden" value="$!partsCategoryVoPartsThird.mainID" name="partsCategoryIdThird" id="partsCategoryIdThird">
+
+<input type="hidden" value="$!brandType" name="brandType" id="brandType">
+<input type="hidden" value="$!typePartsOne" name="typePartsOne" id="typePartsOne">
+
+<input type="hidden" value="$!partsCategoryType" name="partsCategoryType" id="partsCategoryType">
+</form>
+
+
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+
+<script type="text/javascript" src="$!{mallStatic}/js/auto_brand_lead.js"></script>
+
+<script>
+	
+	$(document).ready(function(){
+		/*下面三行控制footer置底（当body产生margin-top时）*/
+		var newSpace=$(document.body).height()-190;
+		$("#all").css("min-height",newSpace);
+		$("html,body").css("height","0");
+//		parts = $!parts;
+	/*配件明细中隔行变色*/
+	$(".sales_list .sales_pro tbody tr:even").css("background-color","#c7e7ff")
+	$(".sales_list .sales_pro tbody tr:odd").css("background-color","#eff8ff")
+	/**/
+		$("#mainContainer .right .bottom dd").each(function(){
+			if($(this).children("div").children().children().length<=15){
+				$(this).children("span").hide();
+			}else{
+				$(this).children("span").show();
+			};
+		});
+		/*配件大类的展开和收起*/
+		var lock=true;
+		var Spack_up=$("#mainContainer .right .bottom .pack_up");
+		Spack_up.click(function(){
+			if(lock){
+				$(this).html('展开').css("background-image","url(../../images/ico-down.gif)");
+            	$(this).parent().css("max-height","90px");	
+            	lock=false;
+        	}else{
+            	$(this).html('收起').css("background-image","url(../../images/ico-up.gif)");
+            	$(this).parent().css("max-height","inherit");
+            	lock=true;
+        	}
+		});
+		$(".main .sales_list tbody").each(function(){
+			if($(this).children().length>0){
+				Spack_up.html('展开').css("background-image","url(../../images/ico-down.gif)");
+            	Spack_up.parent().css("max-height","90px");	
+            	lock=false;
+			}else{
+				Spack_up.html('收起').css("background-image","url(../../images/ico-up.gif)");
+            	Spack_up.parent().css("max-height","inherit");
+            	lock=true;
+			};
+		});
+		$("#mainContainer .left .common.hot_search ul li i:gt(2)").removeClass("cur_bg");
+		$("#mainContainer .left .common.Car_history ul li i:gt(2)").removeClass("cur_bg");
+		$("#mainContainer .left .common.Vin_history ul li i:gt(2)").removeClass("cur_bg");
+		$("#mainContainer .left .common.Oem_history ul li i:gt(2)").removeClass("cur_bg");
+
+		//原厂/常见配件分类切换(每次切换提交分类类型到后台,同时返回到刚选定车型的时刻)
+		$(".pannel_type .model_change").click(function(){
+			$("#partsCategoryId").val("");
+			$("#partsCategoryId_parts").val("");	
+			$("#partsCategoryIdThird").val("");			
+			$("#type").val("vehicleType");
+			$("#typeParts").val("");
+			if (jQuery.trim($(".pannel_type h3").text()) == "常见配件层级"){
+				$("#partsCategoryType").val("originalCategory");
+			}else{
+				$("#partsCategoryType").val("normalCategory");
+			}
+			
+			searchSubmit();
+		});
+
+	});
+	function load(){
+		var n=$(".autoPartList li").length;
+			if(n>=3){
+				$(".pannel_type").css('display','block');
+			}else{
+				$(".pannel_type").css('display','none');
+			};
+			
+	}
+
+</script>
+
+</body>
+
+
+</html>

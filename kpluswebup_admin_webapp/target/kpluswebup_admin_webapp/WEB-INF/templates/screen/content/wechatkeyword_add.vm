@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增关键词回复</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>内容管理 》微信内容 》关键词回复 》新增关键词回复</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			#parse("layout/wechat_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/content/addWechatKeyword.htm"
+						method="post">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">微信名称：</div>
+									<div class="formRow">
+										<select name="interfaceConfigID" class="select">
+											#foreach($!interfaceConfig in $!interfaceConfigList)
+											<option value="$!interfaceConfig.mainID">$!interfaceConfig.name</option>
+											#end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">回复类型：</div>
+									<div class="formRow">
+										<input type="radio" name="replyType"
+											onclick="changeKeywordType(1);" checked="checked" value="1">文字模式，用户发送关键词时会以文字模式向用户回复一条信息！
+										<br> <input type="radio" name="replyType"
+											onclick="changeKeywordType(2);" value="2">图文模式，用户发送关键词时会以图文模式向用户回复一条信息！
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">关键词：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="keyword">
+									</div>
+								</dd>
+								<dd class="clearfix" id="replyContent">
+									<div class="formTt">回复内容：</div>
+									<div class="formRow">
+										<textarea rows="5" cols="80" name="replyContent"> </textarea>
+									</div>
+								</dd>
+								<div id="replyType" style="display: none;">
+									<dd class="clearfix">
+										<div class="formTt">标题：</div>
+										<div class="formRow">
+											<input type="text" class="cText cTextLen" name="title">
+										</div>
+									</dd>
+									<dd class="clearfix">
+										<div class="formTt">简介：</div>
+										<div class="formRow">
+											<textarea rows="5" cols="80" name="content"> </textarea>
+										</div>
+									</dd>
+									<dd class="clearfix">
+										<div class="formTt">图文封面：</div>
+										<div class="formRow">
+											<input type="hidden" class="cText cTextLen" name="picURL"
+												id="picURL"> <img id="uploadImage" src="">   <input
+												type="file" id="myBlogImage" name="myfiles"
+												onchange="ajaxFileUpload()" />
+										</div>
+									</dd>
+									<dd class="clearfix">
+										<div class="formTt">链接类型：</div>
+										<div class="formRow">
+											<select name="linkType" id="linkType"
+												onchange="changeWechatLinkType(this.value);" class="select">
+												<option value="1">链接</option>
+												<option value="2">商品</option>
+											</select>
+										</div>
+									</dd>
+									<dd class="clearfix" id="replyLink">
+										<div class="formTt">链接：</div>
+										<div class="formRow" id="linkRow">
+											<input type="text" class="cText cTextLen"
+												name="replyLink">
+										</div>
+									</dd>
+								</div>
+								#parse("layout/searchitem.vm")
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/content/addWechatKeyword.htm",$!menuAllList)
+										) <input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+										#end
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+	<script type="text/javascript">
+		$(function() {
+			$(".wechat_menu_3").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+
+			$("#itemID").hide();
+
+		})
+
+		function changeWechatLinkType(value) {
+			if (value == "1") {
+				$("#replyLink").show();
+				$("#itemID").hide();
+			} else {
+				$("#replyLink").hide();
+				$("#itemID").show();
+			}
+		}
+	</script>
+</body>
+</html>

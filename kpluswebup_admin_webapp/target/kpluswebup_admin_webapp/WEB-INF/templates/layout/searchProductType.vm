@@ -1,0 +1,74 @@
+<div class="alertBox">
+		<a href="javascript:;" id="close" class="close" onclick="ico1.hide();"></a>
+		<div class="alertBoxHead">
+			产品类型：<span><input type="text" name="keyword" id="keyword" onchange="searchProductType()" />
+				<button onclick="searchProductType()"></button></span>
+		</div>
+		<div class="alertTable">
+			<div class="tableHead">
+				<div style="width: 280px;">产品类型名称</div>
+				<div style="width: 280px;">操作</div>
+			</div>
+			<div class="tableBody">
+				<table class="tableList grid">
+
+					<tbody id="serachList">
+						<tr>
+							<td style="width: 280px;"></td>
+							<td style="width: 280px;"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+<script>
+	var ico1 = $(".alertBox").divWin({
+		width : 605,
+		height : 500,
+		autoSize : false
+	});
+
+	function searchProductType() {
+		var keyword = jQuery("#keyword").val();
+		var data = {
+			name : keyword,
+			pageSize : 10000
+		}
+		var url = "searchProductType.do";
+		jQuery
+				.ajax({
+					url : url,
+					type : "POST",
+					data : data,
+					dataType : "json",
+					success : function(data) {
+						if (data.code == 0) {
+							var catAry = data.result;
+							$("#serachList").empty()
+							for ( var i in catAry) {
+								$("#serachList")
+										.append(
+												" <tr> <td style='width: 280px;'>"+ catAry[i].name+ "</td><td><a onclick='addProductType(&quot;"+catAry[i].name+"&quot; ,&quot;"+catAry[i].mainID+"&quot;)'> 确定</a></td> </tr>  ");
+							}
+						} else {
+							alert("加载失败");
+						}
+					},
+					error : function() {
+						alert("加载失败");
+					}
+				});
+
+	}
+	function addProductType(name,mainID) {
+		jQuery("#productTypeMainID").val(mainID);
+		jQuery("#productTypeName").val(name);
+		ico1.hide();
+	}
+</script>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增会员等级</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+		        <em class="icon iconMenu1 "></em><a href="memberList.htm">会员中心</a> &gt; <a href="membergradeList.htm">会员等级</a> &gt; <span>新增会员等级</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="javascript:;" class="hover">新增会员等级</a></li>
+				</ul>
+			</div>
+
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/member/addMemberGrade.htm"
+						method="post">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">等级名称：</div>
+									<div class="formRow">
+										<input type="text" name="name" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">图标：</div>
+									<div class="formRow">
+										<div class="formRow">
+											<input type="hidden" class="cText cTextLen" value=""
+												name="picURL" id="picURL"> <img id="uploadImage"
+												src="$!customerGradeDTO.picURL">   <input type="file"
+												id="myBlogImage" name="myfiles" onchange="ajaxFileUpload()" />
+										</div>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">等级配置：</div>
+									<div class="formRow">
+										<select class="select" name="gradeSet"
+											onchange="changeGradeType(this.value)">
+											<!-- <option value="1">一次消费</option>
+											<option value="2">累计消费</option> -->
+											<option value="4">邀请会员数</option>
+										</select> <input type="text" class="cText"
+											style="width: 110px; height: 30px;" name="GradeAmount">
+									</div>
+								</dd>
+								<dd class="clearfix" id="timeID" style="display: none;">
+									<div class="formTt">消费时间段：</div>
+									<div class="formRow">
+										<input type="text" name="startTime" class="cText"
+											onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+											readonly="readonly">&nbsp;至&nbsp; <input type="text"
+											name="endTime" class="cText"
+											onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+											readonly="readonly">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">排序：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="sortOrder">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">备注：</div>
+									<div class="formRow">
+										<textarea rows="5" cols="80" name="description"> </textarea>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/member/addMemberGrade.htm",$!menuAllList)
+										) <input type="submit" class="save" value="提交"> #end <input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+
+</html>

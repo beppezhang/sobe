@@ -1,0 +1,12 @@
+/*topbar,header,nav固定定位*/
+body{margin-top:190px;}
+#topbar{width: 100%;z-index: 100;}
+#header{width: 100%;z-index: 100;background:none;}
+#nav{width: 100%;z-index: 100;border:none;}
+#box{position:fixed;top:31px;left:0;width: 100%;background: url(../img/logo/head_bg.jpg) no-repeat center center;z-index:100;}
+#topbar {position: fixed;top: 0;left: 0;background: #f3f3f3;width: 100%;z-index: 100;}
+#navbar li a{color:#fff;}
+#allCategory{height:40px;margin-left:175px;}
+/*css写三角形*/
+#navbar li.cur .triangle{display:block;}
+#navbar li .triangle{border-bottom:10px solid #fff;border-left:10px solid transparent;border-right:10px solid transparent;width:1px;margin:0 auto;display:none;}

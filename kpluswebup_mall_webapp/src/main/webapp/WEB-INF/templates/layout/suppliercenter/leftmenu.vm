@@ -1,0 +1,50 @@
+<div id="leftNav">
+   	<div class="atp"><a href="$!domain/index.htm"><img src="$!{mallStatic}/images/a1.png"></a></div>
+   	#if("$!{supplier.lastloginTime}"=="")
+   	<dl>
+           <dt class="s6"><a href="password.htm">修改密码</a></dt>
+       </dl>  
+   	#else   	
+       <dl>
+           <dt class="s1">商品管理</dt>
+           <dd><a href="productCategory.htm">商品发布</a></dd>
+           <dd><a href="item.htm?type=sale">出售中的商品</a></dd>
+           <dd style="width: 0px;height: 0px"><a href="javascript:void()" ><!--待审核商品--></a></dd>
+           <dd><a href="item.htm?type=unSale">下架的商品</a></dd>
+           <dd><a href="businClass.htm">分类管理</a></dd>
+       </dl>
+
+
+ 
+       <dl>
+       	   <dt class="s2">交易管理</dt>
+           <dd><a href="order.htm">订单列表</a></dd>
+           <!-- <dd><a href="carrienotes.htm">取货单列表</a></dd> -->
+       </dl>
+       <dl>
+       	   <dt class="s3" style="width: 0px;height: 0px"><a href="finalstatement.htm"><!--财务管理--></a></dt>
+       </dl>
+       <dl>
+           <dt class="s4"><a href="statistics.htm">销售统计</a></dt>
+       </dl>
+       <dl>
+           <dt class="s5"><a href="accountInfo.htm">店铺信息</a></dt>
+           <dd><a href="accountInfo.htm">基本信息</a></dd>
+           <dd><a href="showSupplier.htm" target="_blank">查看店铺</a></dd>
+       </dl>   
+       <dl>
+           <dt class="s6"><a href="password.htm">修改密码</a></dt>
+       </dl>    
+       <dl style="width: 0px;height: 0px">
+       	   <dt class="s7"><a><!--退换货管理--></a></dt>
+       	   <dd><a href="salesApplyMallList.htm?type=return"><!--退货单列表--></a></dd>
+       	   <dd><a href="salesApplyMallList.htm?type=change"><!--换货单列表--></a></dd>
+       </dl>    
+       
+      <dl>
+           <dt class="s8">运费管理</dt>
+           <dd><a href="expressList.htm">物流公司</a></dd>
+           <dd><a href="freightTemplateList.htm">运费模板</a></dd>
+       </dl>
+       #end
+   </div>

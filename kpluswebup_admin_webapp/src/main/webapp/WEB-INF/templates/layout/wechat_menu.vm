@@ -1,0 +1,16 @@
+<div class="contentLf tabList">
+	<ul>
+		#if($!menuUtil.isExistMenu("/admin/content/wechatMenuList.htm",$!menuAllList)
+		)
+		<li class="wechat_menu_1"><a
+			href="$!{domain}/admin/content/wechatMenuList.htm">菜单配置</a></li> #end
+		#if($!menuUtil.isExistMenu("/admin/content/wechatReplyList.htm",$!menuAllList)
+		)
+		<li class="wechat_menu_2"><a
+			href="$!{domain}/admin/content/wechatReplyList.htm">关注回复</a></li> #end
+		#if($!menuUtil.isExistMenu("/admin/content/wechatKeywordList.htm",$!menuAllList)
+		)
+		<li class="wechat_menu_3"><a
+			href="$!{domain}/admin/content/wechatKeywordList.htm">关键词回复</a></li> #end
+	</ul>
+</div>

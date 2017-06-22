@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+<title>帮助中心</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="css/global.css">
+<link rel="stylesheet" type="text/css" href="css/indi.css">
+</head>
+<body>
+	<div class="help_conter">
+    	<ul>
+        	<li name="n1" id="n1">
+            	<a href="#n1">购物流程</a> 
+                <div class="answer">
+                	<b></b>
+                    <p>
+                	购物流程购物流程购物流程购物流程购物流程
+                    </p>
+                </div>
+            </li>
+            <li>
+            	<a href="#">货到付款</a> 
+                <div class="answer">
+                	<b></b>
+                    <p>
+                	货到付款货到付款货到付款货到付款货到付款
+                    </p>
+                </div>
+            </li>
+            <li name="n3" id="n3">
+            	<a href="#n3">配送费收取标准</a> 
+                <div class="answer">
+                	<b></b>
+                    <p>
+                	配送费收取标准配送费收取标准配送费收取标准配送费收取标准
+                    </p>
+                </div>
+            </li>
+            <li>
+            	<a href="#">售后政策</a> 
+                <div class="answer">
+                	<b></b>
+                    <p>
+                	售后政策售后政策售后政策售后政策售后政策
+                    </p>
+                </div>
+            </li>
+            <li>
+            	<a href="#">常见问题解答</a> 
+                <div class="answer">
+                	<b></b>
+                    <p>
+                	常见问题解答
+                    </p>
+                </div>
+            </li>    
+        </ul>
+    </div>
+  
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script>
+	$(function(){
+		$(".help_conter li a").click(function(){
+			$(this).toggleClass("on");
+			$(this).next(".answer").toggle();
+		})		
+	})
+
+</script>
+	
+    
+    
+</body>
+</html>
+
+

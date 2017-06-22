@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+<title>会员邀请</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+<style>
+		 .wp_body{ width:100%; height:100%; display:block; position:fixed; z-index:500; background:#000; opacity:0.8;}
+		 #shareImg{width:100%; position:fixed; z-index:501;}
+	</style>
+</head>
+<body id="tBody">
+	#parse("wap/layout/head_sider.vm")
+	<div class="logo_box ct">
+	<p><img src="$!domain/wap/img/logo.png" class="logo"></p>
+    <p><input id="register" name="" type="button" class="btn" value="注册成为会员"></p>
+    <div id="feng">
+    <p><img src="$!domain$!customer.qrcodeurl" class="twocode"></p>
+    <p>扫描二维码即可邀请会员</p>
+    <p><input name="" type="button" class="btn01" onclick="fenxiang();" value="发送给好友"> <input name="" type="button" class="btn01" value="分享到朋友圈"></p>
+	</div>
+	<input type="hidden" id="domain" value="$!domain">
+	<input type="hidden" id="userID" value="$!wxuser.mainID">
+	<input type="hidden" id="customerID" value="$!customerID">
+</div>
+<script type="text/javascript">
+	function fenxiang(){
+		jQuery("#tBody").prepend("<div class='wp_body'></div>");
+		jQuery("#tBody").prepend("<img src='$!domain/wap/img/share.png' id='shareImg'/>")
+	}
+	jQuery(document).on("click",".wp_body",function(){
+		jQuery(this).remove();
+		jQuery("#shareImg").remove();
+	})
+	jQuery(document).on("click","#shareImg",function(){
+			jQuery(this).remove();
+			jQuery(".wp_body").remove();
+	})
+	
+	jQuery(function(){
+		var customerID = jQuery("#customerID").val();
+		var userID = jQuery("#userID").val();
+		if (userID != customerID){
+			jQuery("#feng").hide();
+		} 
+		jQuery("#register").on("click",function(){
+			var domain = jQuery("#domain").val();
+			if (customerID != userID){
+				window.location= domain+'/weixin/toRegister.htm?mainID='+customerID;
+			}
+		});
+	});
+</script>
+
+ <script type="text/javascript">
+    jQuery(function(){
+		jQuery(".userLink").addClass("cur");
+	});
+    </script> 
+</body> 
+</htmL>

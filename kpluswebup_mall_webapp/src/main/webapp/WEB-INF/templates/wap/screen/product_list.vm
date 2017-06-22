@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<title>产品列表</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+	<div id="banner_box" class="box_swipe">
+  <ul>
+  #foreach($!ad in $!ad1)
+    <li> <a href="$!ad.advertLink"> <img src="$!imgurl/$!ad.picURL" alt="$!ad.name"/> </a> </li>
+  #end
+  </ul>
+  <ol>
+  #foreach($!ad in $!ad1)
+    <li></li>
+	#end 
+  </ol>
+</div>
+<div class="category_bar clearfix">
+	<div>
+		#foreach($!li in $!list)
+			#if("$!threeID"=="$!li.mainID")
+			<span class="cur"><a href="$!{domain}/weixin/productList.htm?categoryID=$!categoryID&threeID=$!li.mainID">$!li.name</a></span>
+			#else
+			<span><a href="$!{domain}/weixin/productList.htm?categoryID=$!categoryID&threeID=$!li.mainID">$!li.name</a></span>
+			#end
+        	
+        #end
+    </div>
+</div>
+#if("$!products"!="")
+<div class="products_list">
+	<ul>
+	#foreach($!product in $!products)
+    	<li class="clearfix">
+        	<span class="pimg"><a href="$!{domain}/weixin/productDetail.htm?productID=$!product.mainID"><img src="$!{imgurl}$!product.picURL"></a></span>
+            <div class="txt">
+            	<h4><a href="$!{domain}/weixin/productDetail.htm?productID=$!product.mainID">$!product.name</a></h4>
+                <p><em class="f14 col01">￥$!NumberTool.format("#0.00",$!product.minSalesPrice)</em></p>
+                <p class="txt_r"><del class="lt">￥$!NumberTool.format("#0.00",$!product.minStandrardPrice)</del> $!product.maxSalesVolume人已购买</p>
+            </div>
+        </li>
+     #end
+    </ul>
+</div>
+#else
+<p class="no_result">----  <em>暂无产品</em> ----</p>
+#end
+<script>
+		
+		$(function(){
+			new Swipe(document.getElementById('banner_box'), {
+				speed:500,
+				auto:3000,
+				callback: function(){
+					var lis = $(this.element).next("ol").children();
+					lis.removeClass("cur").eq(this.index).addClass("cur");
+				}
+			});
+			$(".category_bar span").click(function(){
+				$(this).addClass("cur").siblings().removeClass("cur")	
+			})
+		});
+		
+		jQuery(function(){
+			jQuery(".searchLink").addClass("cur");
+		});
+</script>
+</body> 
+</htmL>

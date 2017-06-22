@@ -1,0 +1,11 @@
+/*搜索首页header部分修改样式*/
+.layout{margin-left: auto;width: 100%;}
+.lt{float: none;width: 200px;margin: 80px auto 20px;}
+#header .logo img{float: none;}
+.searchBox{float: none;display: block;margin: 0 auto;}
+.searchBox {width: 730px;}
+.searchBar .ipt {width: 600px;margin-bottom: 30px;}
+
+
+
+

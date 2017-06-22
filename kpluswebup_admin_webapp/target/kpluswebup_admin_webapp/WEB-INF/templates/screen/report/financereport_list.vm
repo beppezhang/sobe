@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>财务报表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>统计报表》财务报表</span>
+		</div>
+		<div class="tableListBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/report/financeReportList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!accountDetailDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!accountDetailDTO.pageSize">
+				<div class="tableTool" style="height: 100px;">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">交易号：</span><input type="text"
+									name="searchmainID" id="searchmainID" class="cText"
+									value="$!accountDetailDTO.serialNumber" /></td>
+								<td><span class="grayF">交易用户：</span><input type="text"
+									name="searchcustomerName" id="searchcustomerName" class="cText"
+									value="$!accountDetailDTO.customerName" /></td>
+								<td rowspan="2">
+									#if($!menuUtil.isExistMenu("/admin/report/financeReportList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+							<tr>
+								<td><span class="grayF">支付时间：</span> <input type="text"
+									name="searchStartTime" id="searchStartTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!accountDetailDTO.startTime)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+									<input type="text" name="searchEndTime" id="searchEndTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!accountDetailDTO.endTime)" /></td>
+								<td><span class="grayF">付款方式：</span> <select class="select"
+									name="searchType" id="searchType">
+										<option value="">全部</option>
+										<option #if("$!accountDetailDTO.paymentType"==
+											"1")selected="selected" #end value="1">款到发货</option>
+										<option #if("$!accountDetailDTO.paymentType"==
+											"2")selected="selected" #end value="2">货到付款</option>
+										<option #if("$!accountDetailDTO.paymentType"==
+											"3")selected="selected" #end value="3">自提</option>
+								</select></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div class="tableListBar">
+				<div class="tableTool">
+					<!-- <a href="javascript:;" title="全选" id="selectAll"><em
+						class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+						id="unSelect"><em class="icon iconInverse"></em></a> -->
+						#if($!menuUtil.isExistMenu("/admin/report/exportFinanceReport.do",$!menuAllList)
+					) <a href="javascript:;" title="导出" id="exportFinanceReport"><em
+					class="icon iconExport"></em></a> #end
+				</div>
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td></td>
+						<td>交易号</td>
+						<td>交易金额</td>
+						<td>交易用户</td>
+						<td>付款方式</td>
+						<td>付款时间</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!finance in $!financeList)
+					<tr>
+						<td style="width: 30px"><!-- <label class="label"> <input type="checkbox"
+								value="$!finance.mainID" id="check_box_$!finance.mainID" /></label> --></td>
+						<td>$!finance.serialNumber</td>
+						<td>$!NumberTool.format("#0.00",$!finance.amount)</td>
+						<td>$!finance.customerName</td>
+						<td>#if("$!finance.paymentType"=="1")款到发货#end
+							#if("$!finance.paymentType"=="2")<font style="color:blue">货到付款</font>#end
+							#if("$!finance.paymentType"=="3")<font style="color:green">自提</font>#end</td>
+						<td>$!date.format('yyyy-MM-dd HH:mm:ss',$!finance.createTime)</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!accountDetailDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

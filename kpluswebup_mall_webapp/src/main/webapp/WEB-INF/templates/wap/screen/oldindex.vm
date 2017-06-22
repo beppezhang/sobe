@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<title>首页</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+	#parse("wap/layout/head_sider.vm")
+	<div id="banner_box" class="box_swipe">
+  <ul>
+  #foreach($!ad in $!indexAdvert)
+    <li> <a href="$!ad.advertLink"> <img src="$!imgurl/$!ad.picURL" alt="$!ad.description"/> </a> </li>
+  #end  
+  </ul>
+  <ol>
+  #foreach($!ad in $!indexAdvert)
+    <li></li>
+  #end  
+  </ol>
+</div>
+<nav>
+  <div class="clearfix"> 
+  #foreach($!li in $!list)
+  	#set($i=$!list.indexOf($!li))
+  	#set($i=$i+1)
+      <a href="$!{domain}/weixin/productSearch.htm?categoryID=$!li.mainID"><i class="n$i"></i><br>$!li.name</a>
+  #end    
+  </div>
+</nav>
+<div class="titbar sp"> <strong>新品预售</strong> </div>
+<div class="pro_unit">
+  <div class="ad_box clearfix">
+    <div class="lt"> <a href="$!ad1.advertLink"><img src="$!imgurl/$!ad1.picURL"></a> </div>
+    <div class="rt"> <a href="$!ad2.advertLink"> <img src="$!imgurl/$!ad2.picURL"></a> <a href="$!ad3.advertLink"><img src="$!imgurl/$!ad3.picURL"></a> </div>
+  </div>
+</div>
+<div class="titbar sp"> <strong>掌上秒杀</strong> </div>
+#if("$!flashSale.mainID"!="")
+<div class="pro_unit rush clearfix">
+  <div class="lt">
+    <p class="col04 f14">精选商品限时秒杀</p>
+    #if("$!flashSale.endDate"!="")
+    <p class="cdbox mt10" data="$!date.format('yyyy-MM-dd HH:mm:ss',$!flashSale.endDate)"><em class='cdHour'></em> : <em class='cdMin'></em> : <em class='cdSec'></em></p>
+  	#else
+  	<p class="cdbox mt10" data="2014-01-01 00:00:00"><em class='cdHour'></em> : <em class='cdMin'></em> : <em class='cdSec'></em></p>	
+  	#end
+  </div>
+  <div class="rt"> <a href="$!{domain}/weixin/itemDetail.htm?itemID=$!flashSale.itemID&flashID=$!flashSale.mainID"><img src="$!{imgurl}/$!flashSale.picUrl"></a>
+    <h2>$!flashSale.itemName</h2>
+    <p><em class="col01">$!{flashSale.peopleRush}</em>人已经购买</p>
+  </div>
+</div>
+#else
+#end
+<div class="titbar sp"> <strong>精品推荐</strong> </div>
+<div class="shop_list">
+  <ul>
+  #foreach($!product in $!recommends)
+    <li> 
+        <a href="$!{domain}/weixin/productDetail.htm?productID=$!product.mainID"> 
+          		<img src="$!{imgurl}$!product.picURL" alt="">
+             <p>$!product.name<br>
+          <strong class="col01 mt10 f14">￥$!product.minSalesPrice</strong> <del class="mt10">￥$!product.minStandrardPrice</del></p>
+        </a>   
+    </li>
+  #end 
+  </ul>
+</div>
+<script>
+		jQuery(function(){
+			new Swipe(document.getElementById('banner_box'), {
+				speed:500,
+				auto:3000,
+				callback: function(){
+					var lis = $(this.element).next("ol").children();
+					lis.removeClass("cur").eq(this.index).addClass("cur");
+				}
+			});
+		});
+		
+		jQuery(function(){
+			jQuery(".homeLink").addClass("cur");
+		});
+</script>
+</body>
+</html>

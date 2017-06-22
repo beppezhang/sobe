@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>系统错误</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<style>
+	body{ background:#f5f5f5;}
+	#footer{ margin:0;}
+	.errorbody{ width:580px; margin:15px auto; line-height:30px; padding:110px 20px 110px 400px; background:#fff url(/images/not-find.png) 240px 90px no-repeat;}
+	.errorbody h1{ color:#111; font-size:16px; font-weight:bold;}
+	.errorbody a{ color:#06C}
+</style>
+</head>
+
+<body>
+ 
+<!-- top bar -->
+	#parse("layout/head_top.vm")
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+<div class="errorbody">
+	<h1>抱歉！您访问的页面似乎出了点问题……</h1> 
+    <p>您的页面将于 <em id="tz" class="col01">5</em> 秒内自动转到首页</p>
+    <p><a href="$!{domain}/index.htm" class="col02">[点击手动跳转]</a></p>
+</div>
+<!-- footer -->
+#parse("layout/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script>
+	$(function () {            
+	   setTimeout("skip();", 1000);
+	   var url=window.location.href;
+	    if(url.indexOf("weixin")>0) {
+	    	$(".col02").attr("href","$!{domain}/weixin/index.htm");
+	    }else{
+	    	$(".col02").attr("href","$!{domain}/index.htm");
+	    }
+	});
+	function skip() {
+		var sec = $("#tz").text();
+		$("#tz").text(--sec);
+		if (sec > 0)
+			setTimeout("skip();", 1000);
+		else
+			var ua = navigator.userAgent;
+			var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
+		    isIphone = !ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
+		    isAndroid = ua.match(/(Android)\s+([\d.]+)/),
+		    isMobile = isIphone || isAndroid;
+			var url=window.location.href;
+		    if(url.indexOf("weixin")>0) {
+		    	window.location.href = "$!{domain}/weixin/index.htm";
+		    }else{
+		    	window.location.href = "$!{domain}/index.htm";
+		    }
+	}
+ 
+</script>
+</body>
+</html>

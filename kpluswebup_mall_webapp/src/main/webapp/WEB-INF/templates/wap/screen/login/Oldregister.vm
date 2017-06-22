@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+<title>注册</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+<div class="login">
+	<form action="$!domain/weixin/register.htm" method="post" class="registerForm">
+		<input type="hidden" name="mainID" value="$!customerVO.mainID">
+		<input class="phone" name="phone" placeholder="请输入手机号码" onblur="yzphone();" type="tel"/>
+		<input class="pwd pwd_a" name="passwod" placeholder="请输入您密码" type="password"/>
+		<input class="vcode" name="code" placeholder="请输入验证码" onblur="yzcode();" type="tel"/>
+		<a class="code_btn" href="javascript:sendSms();">点击获取验证码</a>	
+		<p class="agree">
+			<input class="ck" type="checkbox" checked="checked"/>
+			<span>我已阅读并同意</span>
+			<a class="agreement">
+			《黑虎网用户注册协议》
+			</a>
+		</p>
+		<a class="login_btn" href="javascript:register();">立即注册</a>
+	</form>	
+	</div>
+	<input type="hidden" class="yzphone" value="false">
+	<input type="hidden" class="yzcode" value="false">
+</body>
+<script type="text/javascript">
+	
+	function register(){
+		var check = jQuery(".ck").is(":checked");
+		if (check == false){
+			return;
+		}
+		var pwd = jQuery(".pwd").val();
+		if (pwd == ""){
+			alert("密码不能为空！");
+			return;
+		}
+		if (pwd.length < 6){
+			alert("密码长度不能小于6！");
+			return;
+		}
+		var yzphone = jQuery(".yzphone").val();
+		var yzcode = jQuery(".yzcode").val();
+		if (yzphone == "true" && yzcode=="true"){
+			jQuery(".registerForm").submit();
+		}
+		
+	}
+	
+	function yzphone(){
+		var phone=jQuery(".phone").val();
+		var filter=/^1[3|4|5|8][0-9]\d{8}$/;
+		if (phone == ""){
+			alert("手机号码不能为空！");
+			return;
+		}else if(!filter.test(phone)){
+			alert("手机格式不正确！");
+			return;
+		}else {
+			jQuery.ajax({url : "ajaxCheckUsername.do",
+					type : "POST",
+					data : {'phone' : phone}, 
+				dataType : "json",
+				 success : function(data) {
+					if (data.code == 0) {
+					    if(data.result){
+					    	alert("用户名已存在！");
+					    }else{
+					    	jQuery(".yzphone").val("true");
+					    }
+					} else {
+						alert("系统出错！");
+					}
+			     },
+				   error : function() {
+					alert("请求出错!");
+				 }
+			});
+		}
+	}
+	
+	function yzcode(){
+		var code = jQuery(".vcode").val();
+		if (code == ""){
+			alert("验证码不能为空！");
+			return;
+		}
+		var phone = jQuery(".phone").val();
+		jQuery.ajax({
+    		url : "checkSmsCode.do",
+    		type : "POST",
+    		data : {"code":code,"phone":phone},
+    		dataType : "json",
+    		success : function(data) {
+    			if (data.code == 0) {
+    				jQuery(".yzcode").val("true");
+    			} else {
+    				alert("验证码错误！");
+    			}
+    		},
+    		error : function() {
+    			alert("系统出错！");
+    		}
+    	});
+	}
+
+
+	function sendSms(){
+		var phone=jQuery(".phone").val();
+		jQuery.ajax({
+			url : "sendRegisterSms.do",
+			type : "POST",
+			data : {"phone":phone},
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 0) {
+					jQuery(".code_btn").text("发送成功！");
+				} else {
+					jQuery(".code_btn").text("发送失败!");
+				}
+			},
+			error : function() {
+				alert("系统报错！");
+			}
+		});
+	}
+</script>
+</html>

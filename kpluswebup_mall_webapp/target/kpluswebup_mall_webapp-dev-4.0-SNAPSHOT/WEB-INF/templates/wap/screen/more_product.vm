@@ -1,0 +1,15 @@
+ #foreach($!item in $!itemList)
+<li><a
+	href="$!{domain}/weixin/productDetail.htm?productID=$!item.productID"><img
+		src="$!{imgurl}$!item.picURL" class="pimg"></a>
+	<h3>
+		<a
+			href="$!{domain}/weixin/productDetail.htm?productID=$!item.productID">$!item.name</a>
+	</h3>
+	<p>
+		<em class="col01 f14">￥$!NumberTool.format("#0.00",$!item.salesPrice)</em>
+		<del>￥$!NumberTool.format("#0.00",$!item.standrardPrice)</del>
+	</p>
+	<p>已售出:$!item.salesVolume件</p></li>
+#end
+<input type="hidden" id="pageNo1" name="pageNo" value="$!pageNo">

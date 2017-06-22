@@ -1,0 +1,28 @@
+#macro( pagination $obejct )
+ <tfoot>
+            <tr>
+                <td colspan="17"><div>
+                    <span class="btnpage">
+                    <a class="btnfirst disabled" onclick="userSearch(1)">首页  </a>
+                    <a class="btnprev disabled"  onclick="userSearch('$obejct.PrePage')">上一页</a>
+                    <a class="btnnext disabled" onclick="userSearch('$obejct.NextPage')" >下一页</a>
+                    <a class="btnlast disabled" onclick="userSearch('$obejct.pageCount')" >尾页</a>
+                    </span>
+                    <span class="info">共有<strong>$!{obejct.totalCount}</strong>条记录 当前页<strong>$!{obejct.pageNo}/$!{obejct.pageCount}</strong></span>
+                    <span class="selPage">
+<!--                     <select onchange="__doPostBack('ctl00$GridBlock$sgList','page,1,'+ this.value)" class="select"> -->
+<!--                     <option selected="selected" value="10">每页10条</option> -->
+<!--                     <option value="20">每页20条</option> -->
+<!--                     <option value="50">每页50条</option> -->
+<!--                     <option value="100">每页100条</option> -->
+<!--                     <option value="200">每页200条</option> -->
+<!--                     <option value="300">每页300条</option> -->
+<!--                     </select> -->
+<!--                      跳转到第 <select onchange="__doPostBack('ctl00$GridBlock$sgList','page,'+ this.value)"> -->
+<!--                     <option selected="selected" value="1">1</option> -->
+<!--                     </select> 页 -->
+                    </span></div>
+                </td>
+            </tr>
+            </tfoot>       
+#end

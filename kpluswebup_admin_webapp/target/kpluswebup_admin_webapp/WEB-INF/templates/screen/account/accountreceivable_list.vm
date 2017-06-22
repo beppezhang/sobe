@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>应收账款</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>财务中心 》应收账款</span>
+		</div>
+		<div class="tableListBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/receivable/receivableList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!receivableDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!receivableDTO.pageSize">
+				<div class="tableTool" style="height: 150px;">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">订单编号：</span><input type="text"
+									name="searchmainID" id="searchmainID" class="cText"
+									value="$!receivableDTO.mainID" /></td>
+								<td><span class="grayF">物流单号：</span><input type="text"
+									name="searchexpressNumber" id="searchexpressNumber" class="cText"
+									value="$!receivableDTO.expressNumber" /></td>
+								<td><span class="grayF">支付方式：</span> <select class="select"
+									name="searchType" id="searchType">
+										<option value="">全部</option>
+										<option #if("$!receivableDTO.paymentType"==
+											"1")selected="selected" #end value="1">款到发货</option>
+										<option #if("$!receivableDTO.paymentType"==
+											"2")selected="selected" #end value="2">货到付款</option>
+											<option #if("$!receivableDTO.paymentType"==
+											"3")selected="selected" #end value="3">自提</option>
+								</select></td>
+							</tr>
+							<tr>
+								<td><span class="grayF">创建时间：</span> <input type="text"
+									name="searchStartTime" id="searchStartTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!receivableDTO.startTime)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+									<input type="text" name="searchEndTime" id="searchEndTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!receivableDTO.endTime)" /></td>
+								<td><span class="grayF">收款时间：</span> <input type="text"
+									name="searchStartModifyTime" id="searchStartModifyTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!receivableDTO.startModifyTime)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+									<input type="text" name="searchEndModifyTime" id="searchEndModifyTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!receivableDTO.endModifyTime)" /></td>
+
+								<td><span class="grayF">状态：</span> <select class="select"
+									name="searchStatus" id="searchStatus">
+										<option value="">全部</option>
+										<option #if("$!receivableDTO.paymentStatus"==
+											"0")selected="selected" #end value="0">未收款</option>
+										<option #if("$!receivableDTO.paymentStatus"==
+											"1")selected="selected" #end value="1">已收款</option>
+								</select></td>
+								<td rowspan="3">
+									#if($!menuUtil.isExistMenu("/admin/receivable/receivableList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+							<tr>
+								<td style="width: 700px;" colspan="3"><span class="grayF">地区：</span>
+									<select class="select" id="provinceID"
+									name="provinceID" onchange="changeProvinceIDs(this.value)">
+										<option value="0">全部</option>
+										#foreach($!province in $!provinceList)
+										   <option #if("$!provinceID"=="$!province.mainID") selected="selected" #end value="$!province.mainID">$!province.name</option> 
+									    #end
+									</select>
+									<select class="select" id="cityID" onchange="changeCity(this.value)"
+									name="cityID">
+										<option value="0">全部</option>
+										#foreach($!city in $!cityList)
+										   <option #if("$!cityID" == "$!city.mainID") selected="selected" #end value="$!city.mainID">$!city.name</option>
+									    #end
+									</select>
+									<select class="select" id="districtID" name="districtID" >
+										<option value="0">全部</option>
+										#foreach($!district in $!districtList) 
+										    <option #if("$!districtID" == "$!district.mainID") selected="selected" #end	value="$!district.mainID">$!district.name</option>
+										#end
+									</select>
+								</td><td></td><td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div class="tableListBar">
+				<div class="tableTool">
+					<a href="javascript:;" title="全选" id="selectAll"><em
+						class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+						id="unSelect"><em class="icon iconInverse"></em></a>
+					#if($!menuUtil.isExistMenu("/admin/receivable/confirmReceivable.do",$!menuAllList)
+					) <a href="javascript:;" id="confirmAccountReceivableAll"
+						title="确认收款"><em class="icon iconRefund"></em></a> #end <a
+						href="javascript:;" title="导出" id="exportReceivable"><em
+						class="icon iconExport"></em></a>
+				</div>
+				<table class="tableList grid">
+					<thead>
+						<tr>
+							<td><label class="label"> <input type="checkbox"
+									value="" id="all" /></label></td>
+							<td>订单编号</td>
+							<td>物流单号</td>
+							<td>收款金额</td>
+							<td>创建时间</td>
+							<td>支付方式</td>
+							<td>收款时间</td>
+							<td>地区</td>
+							<td>买家状态</td>
+							<td>状态</td>
+							<td>商家发票</td>
+							<td>用户凭证</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody id="list">
+						#foreach($!receivable in $!receivableList)
+						<tr>
+							<td><label class="label"> <input type="checkbox"
+									value="$!receivable.mainID" id="check_box_$!receivable.mainID" /></label></td>
+							<td><a target="_blank"
+								href="$!{doamin}/admin/order/orderInfo.htm?mainIds=$!receivable.mainID">$!receivable.mainID</a></td>
+							<td>$!receivable.expressNumber</td>
+							<td class="price"><p>￥$!NumberTool.format("#0.00",$!receivable.totalAmount)</p></td>
+							<td><span
+								title="$!date.format('yyyy-MM-dd HH:mm:ss',$!receivable.createTime)"
+								class="dealtime">$!date.format('yyyy-MM-dd
+									HH:mm:ss',$!receivable.createTime)</span></td>
+							<td  #if("$!receivable.paymentType"=="2") style="color: #1181fa;" #end>#if("$!receivable.paymentType"=="1")款到发货#elseif("$!receivable.paymentType"=="2")货到付款 #else <font color="greend">自提 </font>#end</td>
+							<td><span
+								title="$!date.format('yyyy-MM-dd HH:mm:ss',$!receivable.receivableTime)"
+								class="dealtime">$!date.format('yyyy-MM-dd
+									HH:mm:ss',$!receivable.receivableTime)</span></td>
+							<td >$!receivable.dvProvinceName $!receivable.dvCityName $!receivable.dvDistrictName</td>
+							<td>
+							    #if("$!receivable.orderStatus"=="0")
+			                   <p>交易结束</p>
+			                   #elseif("$!receivable.orderStatus"=="1")
+			                      #if("$!receivable.paymentStatus" =="1")
+			                        <p>买家已支付</p>
+			                      #else
+			                  	   <p>待确认</p>
+			                      #end
+			                   #elseif("$!receivable.orderStatus"=="2")
+			                     <p>待出库</p>
+			                   #elseif("$!receivable.orderStatus"=="3")
+			                    <p>待发货</p>
+			                   #elseif("$!receivable.orderStatus"=="4")
+			                    <p>已发货</p>
+			                   #elseif("$!receivable.orderStatus"=="5")
+			                    <p>已收货</p>
+			                   #elseif("$!receivable.orderStatus"=="6")
+			                    <p>已完成</p>
+			                   #elseif("$!receivable.orderStatus"=="7")
+			                    <p>售后申请中</p>
+			                   #elseif("$!receivable.orderStatus"=="8")
+			                    <p>售后处理中</p>
+			                   #elseif("$!receivable.orderStatus"=="9")
+			                    <p>已售后</p>
+			                   #elseif("$!receivable.orderStatus"=="10")
+			                    <p>售后已取消</p>
+			                   #elseif("$!receivable.orderStatus"=="11")
+			                    <p>售后申请被拒绝</p>
+			                   #end
+							</td>
+							<td >#if($!receivable.paymentStatus==0) 未收款
+								#elseif($!receivable.paymentStatus==1) 已收款 #end</td>
+							<td>
+							  #if("$!receivable.sendOutURL" != "")
+								 <a href="$!qrurl$!receivable.sendOutURL"   style="color: blue;" target="_blank">查看商家发票</a>
+								<!-- <img src="$!qrurl$!receivable.proofURL"> onmousemove="ShowDiv('$!{qrurl}$!{receivable.sendOutURL}','$!receivable.mainID')" onMouseOut="HideDiv('$!receivable.mainID')"-->
+								 <div id="divPic$!{receivable.mainID}" style="display: none;"><img src="$!qrurl$!receivable.sendOutURL" style="width: 500px;height: 500px"></div>
+							  #end
+							</td>
+							<td>
+							  #if("$!receivable.proofURL" != "")
+								 <a href="$!qrurl$!receivable.proofURL"   style="color: blue;" target="_blank">查看用户凭证</a>
+								<!-- <img src="$!qrurl$!receivable.proofURL"> onmousemove="ShowDiv('$!{qrurl}$!{receivable.proofURL}','$!receivable.mainID')" onMouseOut="HideDiv('$!receivable.mainID')" -->
+								 <div id="divPic$!{receivable.mainID}" style="display: none;"><img src="$!qrurl$!receivable.proofURL" style="width: 500px;height: 500px"></div>
+							  #end
+							</td>
+							<td>#if($!menuUtil.isExistMenu("/admin/receivable/confirmReceivable.do",$!menuAllList))
+									#if($!receivable.paymentStatus==0) 
+										#if("$!receivable.orderStatus"!="0")
+										<a href="javascript:;"
+										onclick="confirmReceivable('$!receivable.mainID');"
+										class="icon iconAffirm" title="确认收款"></a>&nbsp; 
+										#end
+									#end 
+								#end
+								#if($!menuUtil.isExistMenu("/admin/receivable/cancelReceivable.do",$!menuAllList))
+								#if($!receivable.paymentStatus==1) <a href="javascript:;"
+								onclick="cancelReceivable('$!receivable.mainID');"
+								class="icon iconCancel" title="撤销收款"></a>&nbsp; 
+								#end 
+								#end
+							</td>
+						</tr>
+						#end
+					</tbody>
+					#pagination($!receivableDTO)
+				</table>
+			</div>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+	<script type="text/javascript">
+		function changeProvinceIDs(value) {
+			if (value != 0) {
+				jQuery.ajax({
+					url : "$!domain/admin/member/ajaxGetCityByParentID.do",
+					type : 'POST',
+					dataType : 'json',
+					data : {
+						'parentID' : value
+					},
+					success : function(data) {
+						if (data.code == 0) {
+							var areaAry = data.result;
+							jQuery("#cityID").empty();
+							jQuery('#cityID').append(
+										"<option value='0'>"
+												+ "全部" + "</option>");
+							for ( var id in areaAry) {
+								jQuery('#cityID').append(
+										"<option value=" + areaAry[id].mainID + ">"
+												+ areaAry[id].name + "</option>");
+							}
+							changeCity(areaAry[0].mainID);
+						}
+					}
+				});
+			}else{
+				jQuery("#cityID").empty();
+				jQuery('#cityID').append( "<option value='0'>全部</option>");
+				jQuery("#districtID").empty();
+				jQuery('#districtID').append( "<option value='0'>全部</option>");
+			}
+		}
+		function changeCity(value) {
+		   	if (value != 0) {
+		   		jQuery.ajax({
+		   			url : "$!domain/admin/member/ajaxGetCityByParentID.do",
+		   			type : 'POST',
+		   			dataType : 'json',
+		   			data : {
+		   				'parentID' : value
+		   			},
+		   			success : function(data) {
+		   				if (data.code == 0) {
+		   					var areaAry = data.result;
+		   					jQuery("#districtID").empty();
+		   					jQuery('#districtID').append(
+										"<option value='0'>"
+												+ "全部" + "</option>");
+		   					for ( var id in areaAry) {
+		   						jQuery('#districtID').append(
+		   								"<option value=" + areaAry[id].mainID + ">"
+		   										+ areaAry[id].name + "</option>");
+		   					}
+		   				}
+		   			}
+		   		});
+		   	}else{
+		   		jQuery("#districtID").empty();
+				jQuery('#districtID').append( "<option value='0'>全部</option>");
+		   	}
+		   }
+		
+		function ShowDiv(pic,mainID)
+		{
+			$("#divPic"+mainID).css("display","block");
+		 //还可以让div跟着图片所在的当前窗体位置居中，代码略。
+		}
+		function HideDiv(mainID)
+		{
+			$("#divPic"+mainID).css("display","none");
+		}
+	</script>
+	
+
+</body>
+</html>

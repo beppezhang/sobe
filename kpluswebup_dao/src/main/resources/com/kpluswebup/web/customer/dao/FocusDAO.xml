@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.FocusDAO">
+	
+	<!-- 根据点击量排序的查询sql
+	<select id="findFocusByCustomerID" parameterType="FocusEntity"
+		resultType="FocusEntity">
+		SELECT count(1) as num, f.myFocusInfo,f.referenceID FROM focus f 
+		WHERE f.isDelete=0 
+		<if test="customerID != null">
+			AND f.customerID = #{customerID}
+		</if>
+		<if test="focusType != null">
+			AND f.focusType = #{focusType}
+		</if>
+		GROUP BY f.referenceID,f.myFocusInfo
+		order by count(1) desc
+		<if test="limitNum != null">
+			LIMIT #{limitNum}
+		</if>
+	</select>
+	-->
+	
+	<!--改表前查最近搜索信息
+	<select id="findFocusByCustomerID" parameterType="FocusEntity"
+		resultType="FocusEntity">
+		SELECT f.referenceid,f.myfocusinfo FROM focus f 
+		WHERE f.createtime IN 
+		(
+		SELECT MAX(createtime) FROM focus 
+		WHERE isDelete=0 
+		<if test="customerID != null">
+			AND f.customerID = #{customerID}
+		</if>
+		<if test="focusType != null">
+			AND f.focusType = #{focusType}
+		</if>
+		GROUP BY(referenceid)
+		ORDER BY MAX(createtime) DESC
+		)
+		ORDER BY f.createtime DESC
+		<if test="limitNum != null">
+			LIMIT #{limitNum}
+		</if>
+	</select>
+	-->
+	
+	<!--改表后查最近搜索信息-->
+	<select id="findFocusByCustomerID" parameterType="FocusEntity"
+		resultType="FocusEntity">
+		SELECT f.referenceid,f.myfocusinfo FROM focus f 
+		WHERE f.isDelete=0 
+		<if test="customerID != null">
+			AND f.customerID = #{customerID}
+		</if>
+		<if test="focusType != null">
+			AND f.focusType = #{focusType}
+		</if>
+		ORDER BY f.modifytime DESC
+		<if test="limitNum != null">
+			LIMIT #{limitNum}
+		</if>
+	</select>
+	
+	<!--插入新的我的关注信息-->
+	<insert id="insert" parameterType="FocusEntity">
+		INSERT INTO focus(
+ 		mainID,
+		customerID,
+		myFocusInfo,
+		referenceID,
+		focusType,
+		createTime,
+		isDelete,
+		modifyTime,
+		searchCount
+		)
+		VALUES
+		(
+		#{mainID},
+		#{customerID},
+		#{myFocusInfo},
+		#{referenceID},
+		#{focusType},
+		now(),
+		#{isDelete},
+		now(),
+		1
+		)
+	</insert>
+	
+	<!--根据customerID和referenceID等查出相应关注信息-->
+	<select id="findExistFocus" parameterType="FocusEntity"
+		resultType="FocusEntity">
+		SELECT * FROM focus 
+		WHERE isDelete=0 
+		<if test="customerID != null">
+			AND customerID = #{customerID}
+		</if>
+		<if test="referenceID != null">
+			AND referenceID = #{referenceID}
+		</if>
+		<if test="myFocusInfo != null">
+			AND myFocusInfo = #{myFocusInfo}
+		</if>
+		<if test="focusType != null">
+			AND focusType = #{focusType}
+		</if>
+	</select>
+
+	<!--更新搜索时间和点击量-->
+	<update id="update" parameterType="FocusEntity">
+		UPDATE focus 
+		SET modifytime=NOW(),
+		searchcount=searchcount+1 
+		WHERE isDelete=0 
+		<if test="customerID != null">
+			AND customerID = #{customerID}
+		</if>
+		<if test="referenceID != null">
+			AND referenceID = #{referenceID}
+		</if>
+		<if test="myFocusInfo != null">
+			AND myFocusInfo = #{myFocusInfo}
+		</if>
+		<if test="focusType != null">
+			AND focusType = #{focusType}
+		</if>
+	</update>	
+
+</mapper>

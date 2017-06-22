@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>配货单</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+.tableListBar {
+	padding: 0 20px 20px;
+	border-bottom: 1px solid #000;
+	width: 600px;
+	margin-left: 20px;
+}
+
+.qm {
+	padding-top: 3px;
+}
+
+.qm button {
+	padding: 3px 30px;
+	font-size: 12px;
+	color: #424242;
+	margin-right: 20px;
+	margin-top: 80px;
+	margin-bottom: 10px;
+}
+
+.qm  .dy {
+	margin-left: 100px;
+}
+
+.qm  .ck {
+	margin-left: 150px;
+}
+.od_detail div table {
+    border: 1px solid #555;
+}
+.od_detail div table td {
+    border-bottom: 1px solid #555;
+}
+.od_detail div table th {
+    border-bottom: 1px solid #555;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<!--menu E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>订单管理》配货单</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			#foreach($!salesOrder in $!salesOrderList)
+			<div class="p20Box ddanInfo" data="$!salesOrder.mainID">
+				<div class="detailTit" style="font-size: 26px;height: 60px;">
+					<!--  <img src="theme/default/images/zfb.png" alt="" width="100" height="40"/> -->
+					<span>订单配货单</span>
+					<div style="width: 450px; line-height: 30px;">
+						<p>打印序号：$!salesOrder.invoiceStatus</p>
+						<p>打印时间：$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!salesOrder.modifyTime)</p>
+					</div>
+				</div>
+				<div class="od_detail p20Box" style="font-size: 26px;line-height: 40px;">
+					<ul>
+						<li style="width: 50%">订单编号：<span>$!salesOrder.mainID</span></li>
+						<li style="width: 50%">用户名：<span>$!salesOrder.customerUserName</span></li>
+					</ul>
+					<ul>
+						<li style="width: 50%">姓名：<span>$!salesOrder.dvName</span></li>
+						<li style="width: 50%">联系电话：<span>$!salesOrder.dvMobile</span></li>
+					</ul>
+					<div>
+						<p>
+							发票：<span>#if("$!salesOrder.invoiceType"=="0")不需要#elseif("$!salesOrder.invoiceType"=="1")个人#elseif("$!salesOrder.invoiceType"=="2")公司#end</span>
+						</p>
+						<p>
+							抬头：<span>$!salesOrder.invoiceTitle</span>
+						</p>
+					</div>
+					<div>
+						<p>
+							买家备注：<span>$!salesOrder.memo</span>
+						</p>
+						<p>
+							后台备注：<span>$!salesOrder.description</span>
+						</p>
+					</div>
+					<div>
+						<table border="1">
+							<thead>
+								<tr>
+									<th style="width: 17%">商品编号</th>
+									<th style="width: 30%">商品名称</th>
+									<th style="width: 10%">单价</th>
+									<th style="width: 8%">数量</th>
+									<th style="width: 23%">供应商</th>
+									<th style="width: 12%">合计</th>
+								</tr>
+							</thead>
+							<tbody>
+								#foreach ($salesOrderLine in $salesOrder.salesOrderLineList)
+								<tr>
+									<td>$!salesOrderLine.itemID</td>
+									<td>$!salesOrderLine.itemName</td>
+									<td>
+									   ￥$!salesOrderLine.transactionPrice
+									</td>
+									<td>$!salesOrderLine.itemCount</td>
+									<td>$!salesOrderLine.supplierName</td>
+									<td>
+									   ￥$!salesOrderLine.allamount
+									</td>
+								</tr>
+								#end
+							</tbody>
+						</table>
+					</div>
+					<hr />
+					<ul class="threeList">
+						<li class="fr">商品金额总数：<span>￥$!NumberTool.format("#0.00",$!salesOrder.productAmount)</span></li>
+						<li class="fr">商品数量：<span>$!salesOrder.itemCount</span></li>
+					</ul>
+					<ul class="threeList">
+						<li>物流公司：<span>$!salesOrder.expressName</span></li>
+						<li>物流单号：<span>$!salesOrder.expressNumber</span></li>
+						<li>运费：<span>$!NumberTool.format("#0.00",$!salesOrder.expressFee)</span></li>
+					</ul>
+					<hr />
+					<ul class="threeList">
+						<li class="fr"><span>分拣员签字：</span></li>
+					</ul>
+					<ul class="threeList">
+						<li class="fr"><span>分拣员时间：</span></li>
+					</ul>
+					<hr />
+				</div>
+				<div class="centerBtn">
+					<input class="save" value="打印" onclick="doPrint(2);" type="button" />
+					#if("$!salesOrder.orderStatus"=="2") <input class="cencle"
+						value="出库" onclick="changeOrderStatus('$!salesOrder.mainID','3')"
+						type="button" /> #end
+				</div>
+			</div>
+		</div>
+		#end
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

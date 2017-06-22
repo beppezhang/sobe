@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>会员详情页</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 	overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>会员中心》会员列表》会员信息</span>
+		</div>
+		<div class="userInfoBar">
+			<div class="userInfos">
+				<dl class="clearfix">
+					<dt class="fl">
+						#if("$!customerVO.avatar"!="") <img class="avatar"
+							src="$!{qrurl}$!customerVO.avatar"> #else <img
+							class="avatar" src="$!{adminStatic}/img/default-avatar.jpg">
+						#end
+					</dt>
+					<dd class="fl">
+						<table class="userTable">
+							<tbody>
+								<tr>
+									<td><em class="grayF">会员编号：</em>$!{customerVO.mainID}</td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									<td><em class="grayF">用户名：</em>$!{customerVO.username}</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td><em class="grayF">姓名：</em>$!{customerVO.name}</td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									<td><em class="grayF">手机号：</em>$!{customerVO.mobile}</td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</dd>
+					<dd class="fr" style="margin-top: 35px;">
+						<div class="userTool">
+							<a class="icon iconEdit"
+								href="$!{domain}/admin/member/editMemberPage.htm?mainId=$!{customerVO.mainID}"
+								title="编辑"></a> #if("$!customerVO.status"=="2") <a
+								href="javascript:;" class="icon iconUnLock" title="解锁"
+								onclick="isLockCustomer('$!customerVO.mainID','1')"></a>&nbsp;
+							#end #if("$!customerVO.status"=="1") <a href="javascript:;"
+								title="锁定" onclick="isLockCustomer('$!customerVO.mainID','2')"><em
+								class="icon iconLock"></em></a> #end
+						</div>
+					</dd>
+				</dl>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			<!-- #parse("/layout/member_menu.vm") -->
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class='icon arrowLfWeight'></em><a class="hover"
+						href="javascript:;">基本信息</a></li>
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<!--table  S------->
+					<div class="infoTableBar">
+						<table class="infoTable">
+							<tbody>
+								<tr>
+									<td><span class="grayF">采购商编号：</span>$!{customerVO.mainID}</td>
+									<td><span class="grayF">采购商等级：</span>$!{customerVO.gradeName}</td>
+									<td><span class="grayF">公司名称：</span>$!{customerVO.companyName}</td>
+								</tr>
+								<tr>
+									<td><span class="grayF">联系人姓名：</span>$!{customerVO.name}</td>
+									<td><span class="grayF">公司地址：</span>$!{customerVO.provinceName}$!{customerVO.cityName}$!{customerVO.address}</td>
+									<td><span class="grayF">手机号：</span>$!{customerVO.mobile}</td>
+									<!-- <td><span class="grayF">出生日期：</span>$!date.format('yyyy-MM-dd',$!{customerVO.birthday})</td> -->
+								</tr>
+								<tr>
+									<!-- <td><span class="grayF">性别：</span>
+										#if("$!{customerVO.sex}"=="1") 男 #end
+										#if("$!{customerVO.sex}"=="2") 女 #end</td>-->
+									<td><span class="grayF">电话：</span>$!{customerVO.telephone}</td> 
+									<td><span class="grayF">注册时间：</span>$!date.format('yyyy-MM-dd HH:mm:ss',$!{customerVO.createTime})</td>
+									<td><!-- <span class="grayF">注册IP：</span>$!customerVO.registerIP --></td>
+								</tr>
+								<!-- <tr>
+									<td><span class="grayF">营业执照：</span>
+											<div class="formRow">
+											    <a href="$!{qrurl}$!customerVO.picURL1" target="_blank"><img id="uploadImage1" src="$!{qrurl}$!customerVO.picURL1" width="100" height="100"></a> 
+											</div>
+									</td> 
+									<td><span class="grayF">税务登记证：</span>
+											<div class="formRow">
+											     <a href="$!{qrurl}$!customerVO.picURL2" target="_blank"><img id="uploadImage2" src="${qrurl}$!customerVO.picURL2" width="100" height="100"></a>
+											</div>
+									</td> 
+									<td><span class="grayF">组织机构代码：</span>
+											<div class="formRow">
+											     <a href="$!{qrurl}$!customerVO.picURL3" target="_blank"><img id="uploadImage3" src="${qrurl}$!customerVO.picURL3" width="100" height="100"></a>
+											</div>
+									</td> 
+								</tr> -->
+								<tr>
+									<td><span class="grayF">状态：</span>
+										#if("$!customerVO.status"=="2") <em class="lock">锁定</em> #end
+										#if("$!customerVO.status"=="1") <em class="normalSta">正常</em>#end
+										#if("$!customerVO.status"=="3") <em>未审核</em>#end
+										#if("$!customerVO.status"=="4") <em>审核失败</em>#end
+										</td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+					<!--table  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	$(function() {
+		$(".member_menu_1").append("<em class='icon arrowLfWeight'></em>")
+				.find("a").addClass("hover");
+	})
+	//菜单
+	$(".navLi").bind("mouseenter", function() {
+		$(this).closest(".navLi").find(".navUiSe").show();
+	})
+	$(".navLi").bind("mouseleave", function() {
+		$(this).closest(".navLi").find(".navUiSe").hide();
+	});
+
+	//店面名称
+	$(".setInfoBar").bind("mouseenter", function() {
+		$(this).find(".setInfoList").show();
+	})
+	$(".setInfoBar").bind("mouseleave", function() {
+		$(this).find(".setInfoList").hide();
+	})
+	//显示头部消息
+	$("#sysInfo").bind("click", function() {
+		$("#headerInfo").show();
+	})
+	$("#headerInfo").bind("mouseleave", function() {
+		$("#headerInfo").hide();
+	})
+	//搜索商店
+	$("#searchShop").inputFocus();
+</script>
+</html>

@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>购物车</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/shopcart.css">
+</head>
+
+<body>
+<!-- top bar -->
+#parse("layout/head_top.vm")
+<div id="processBar">
+	<div class="layout clearfix">
+    	<div class="logo lt">
+    		<!--
+        	<a href="index.htm"><img src="$!{domainImg}$!shopLogo" style="width:200px;height: 60px"></a>
+        	-->
+        	<a href="index.htm"><img src="$!{mallStatic}/img/logo/soubei.png"></a>
+        </div>
+        <div class="probar">
+        	<span id="p1"></span>
+            <span id="p2"></span>
+            <span id="p3" class="on"></span>
+            <span id="p4"></span>
+        </div>
+    </div>
+</div>
+
+<div class="layout">
+	<h1 class="cp mt15">支付提交</h1>
+    <p class="col02">订单详情内容可通过查看<a href="$!domain/mall/buyer/userOrderList.htm" class="col01">我的订单</a>进行核对处理。</p>
+
+ 	<!--div class="ordbox mt15">
+     #if($!salesOrderVO.paymentType == 2)
+    <h2 class="f16">您选择的货到付款，收货时请付款：<strong class="col03">$!NumberTool.format("#0.00",$!salesOrderVO.totalAmount)</strong>元</h2>
+    #else
+    	<h2 class="f16">您选择的款到发货，发货前请付款：<strong class="col03">$!NumberTool.format("#0.00",$!salesOrderVO.totalAmount)</strong>元</h2>
+    #end
+    </div> -->
+
+  	<div class="ordbox mt15">
+    	<h2 class="f16">请在60分钟内完成支付，否则订单会被自动取消。应付金额：<strong class="col03">$!amount</strong>元</h2>
+    </div>
+
+     <div class="ordbox notop">
+        	<div class="shopcartList" id="productList">
+                <table cellspacing="0" cellpadding="0">
+                  <tr>
+                    <th>订单号</th>
+                    <th>支付方式</th>
+                    <th>订单金额（元）</th>
+                    <th>商品金额（元）</th>
+                    <th>运费（元）</th>
+                    <!--<th>物流</th>-->
+                  </tr>
+
+				#foreach($salesOrderVO in $!salesorderList)
+        			#if($!salesOrderVO)
+								<tr class="orderTd">
+				                  	<td align="center"><a href="$!domain/mall/buyer/orderDetail.htm?mainID=$!salesOrderVO.mainID" class="col01" >$!salesOrderVO.mainID</a></td>
+				                    <td align="center">
+				                     	  #if($!salesOrderVO.paymentType == 2)
+									                      货到付款
+									                      #elseif($!salesOrderVO.paymentType == 3)
+									                      自提
+									                      #else
+									                      款到发货
+									                      #end
+				                    </td>
+				                    <td align="center">$!NumberTool.format("#0.00",$!salesOrderVO.totalAmount)</td>
+				                    <td align="center">$!NumberTool.format("#0.00",$!salesOrderVO.productAmount)</td>
+				                    <td align="center">$!NumberTool.format("#0.00",$!salesOrderVO.expressFee)</td>
+				                    <!-- <td align="center">顺丰速递</td> -->
+				                </tr>
+                	#end
+				#end
+				</table>
+
+            </div>
+     </div>
+    <div class="ordbox notop">
+		<h2 class="f16">选择在线支付</h2>
+         <ul class="clearfix" id="payway">
+           	 <li><img src="$!{mallStatic}/images/pic-alipay.png"></li>
+           	 <!--
+             <li><img src="$!{mallStatic}/images/pic-caifutong.png"></li>
+             <li><img src="$!{mallStatic}/images/pic-bank.png"></li>
+             -->
+         </ul>
+    </div>
+    <p class="ct mt15">
+        #if("$!salesOrderVO.paymentType"=="1")
+        <!-- <a href="$!{domain}/orderAliPay.htm?orderID=$!salesOrderVO.mainID" class="goLink">去支付</a> -->
+        #end 
+        #if("$!salesOrderVO.paymentType"=="2")
+       <!--  <a href="$!{domain}/orderNetPay.htm?orderID=$!salesOrderVO.mainID" class="goLink">去支付</a>  -->
+        #end
+    </p>
+    
+    <p class="ct mt15">
+    	<!--
+    	<a href="$!{domain}/orderAliPay.htm?orderID=$!salesOrderVO.mainID" class="goLink">支付</a>
+    	-->
+    	<a href="javascript:void(0);" class="goLink" onclick="shoppingCart4();">支付</a>
+    </p>
+        
+</div>
+
+#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery.validate.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/shoppingcart.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/slide.js"></script>
+<script>
+
+function shoppingCart4(){
+
+	var idArr = new Array();  
+	var idsContainer = $("#productList").find('.col01');  //获取所有节点的dom数组  
+	for(var index = 0; index < idsContainer.length; index++){  
+	    var $container = $(idsContainer[index]); //循环遍历每一个dom节点  
+	    var id  = $container.text();
+	    idArr.push(id);  
+	}  	
+	var vals = idArr.join(',');
+	//alert(vals);
+	window.location.href = "shoppingCart4.htm?ordersList=" + vals;
+
+	/*
+	var temp = $("#salesorders").val();
+	
+	var valArr = new Array;
+	$(".col01").each(function(i) {
+		valArr[i] = $(this).val();
+	});
+	
+	var vals = valArr.join(',');
+	alert(vals);
+	window.location.href = "shoppingCart4.htm?ordersList=" + vals;
+	*/
+}
+</script>
+</body>
+</html>

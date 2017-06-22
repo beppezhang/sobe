@@ -1,0 +1,879 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.CustomerDAO">
+
+	<sql id="Base_Column_List">
+		mainID, username, password, lastLoginTime, nick,
+		name,avatar,
+		email, mobile,
+		scoreIntotal,
+		amount, score, gradeID, sex,
+		birthday, age,
+		countryID, provinceID, cityID,
+		isDelete,status,
+		updateTime, creator,
+		modifier,
+		modifyTime,createTime,lastLoginIP,registerIP,telephone,address,zip
+	</sql>
+	<sql id="Member_Column_list">
+		c.mainID,c.username,c.password,c.lastLoginTime,c.nick,
+		c.name,c.avatar,g.name gradeName,
+		c.email,c.mobile,
+		c.scoreIntotal,
+		c.amount,c.score,c.gradeID,c.sex,
+		c.birthday,c.age,
+		c.countryID,c.provinceID,c.cityID,
+		c.isDelete,c.status,
+		c.updateTime,c.creator,
+		c.modifier,
+		c.modifyTime,c.createTime,c.lastLoginIP,c.registerIP,c.telephone,c.address,c.zip,c.companyName
+	</sql>
+
+	<insert id="insertCustomer" parameterType="customerDTO">
+		INSERT INTO
+		kplus_customer(
+		mainID,
+		username,
+		PASSWORD,
+		lastLoginTime,
+		nick,
+		name,
+		avatar,
+		email,
+		mobile,
+		scoreIntotal,
+		amount,
+		score,
+		gradeID,
+		sex,
+		birthday,
+		age,
+		countryID,
+		provinceID,
+		cityID,
+		districtID,
+		isDelete,
+		status,
+		updateTime,
+		creator,
+		createTime,
+		lastLoginIP,
+		registerIP,
+		telephone,
+		address,
+		zip,
+		referee,
+		openid,
+		qrcodeurl,
+		companyName,
+		picURL1,
+		picURL2,
+		picURL3,
+		invoice
+		)
+		VALUES
+		(
+		#{mainID},
+		#{username},
+		#{password},
+		#{lastLoginTime},
+		#{nick},
+		#{name},
+		#{avatar},
+		#{email},
+		#{mobile},
+		0,
+		0,
+		0,
+		#{gradeID},
+		#{sex},
+		#{birthday},
+		#{age},
+		#{countryID},
+		#{provinceID},
+		#{cityID},
+		#{districtID},
+		0,
+		1,
+		now(),
+		#{creator},
+		now(),
+		#{lastLoginIP},
+		#{registerIP},
+		#{telephone},
+		#{address},
+		#{zip},
+		#{referee},
+		#{openid},
+		#{qrcodeurl},
+		#{companyName},
+		#{picURL1},
+		#{picURL2},
+		#{picURL3},
+		#{invoice}
+		)
+	</insert>
+
+	<update id="updateCustomerByMainId" parameterType="customerDTO">
+		update kplus_customer
+		<set>
+			modifyTime = now()
+			<if test="username != null">
+				, username = #{username}
+			</if>
+			<if test="password != null">
+				, password = #{password}
+			</if>
+			<if test="lastLoginTime != null">
+				,lastLoginTime = #{lastLoginTime}
+			</if>
+			<if test="avatar != null">
+				,avatar = #{avatar}
+			</if>
+			<if test="email != null">
+				,email = #{email}
+			</if>
+			<if test="mobile != null">
+				,mobile = #{mobile}
+			</if>
+			<if test="scoreIntotal != null">
+				,scoreIntotal = #{scoreIntotal}
+			</if>
+			<if test="amount != null">
+				,amount = #{amount}
+			</if>
+			<if test="score != null">
+				,score = #{score}
+			</if>
+			<if test="gradeID != null">
+				,gradeID = #{gradeID}
+			</if>
+			<if test="sex != null">
+				,sex = #{sex}
+			</if>
+			<if test="birthday != null">
+				,birthday = #{birthday}
+			</if>
+			<if test="age != null">
+				,age = #{age}
+			</if>
+			<if test="loginTimes != null">
+				,loginTimes = #{loginTimes}
+			</if>
+			<if test="countryID != null">
+				,countryID = #{countryID}
+			</if>
+			<if test="provinceID != null">
+				,provinceID = #{provinceID}
+			</if>
+			<if test="cityID != null">
+				,cityID = #{cityID}
+			</if>
+			<if test="districtID != null">
+				,districtID = #{districtID}
+			</if>
+			<if test="status != null">
+				,status = #{status}
+			</if>
+			<if test="lastLoginIP != null">
+				,lastLoginIP = #{lastLoginIP}
+			</if>
+			<if test="address != null">
+				,address = #{address}
+			</if>
+			<if test="zip != null">
+				,zip = #{zip}
+			</if>
+			<if test="telephone != null">
+				,telephone = #{telephone}
+			</if>
+			<if test="name != null">
+				,name = #{name}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="openid != null">
+				,openid = #{openid}
+			</if>
+			<if test="companyName != null">
+				,companyName = #{companyName}
+			</if>
+			<if test="picURL1 != null">
+				,picURL1 = #{picURL1}
+			</if>
+			<if test="picURL2 != null">
+				,picURL2 = #{picURL2}
+			</if>
+			<if test="picURL3 != null">
+				,picURL3 = #{picURL3}
+			</if>
+			<if test="invoice != null">
+				,invoice = #{invoice}
+			</if>
+			<if test="openingBank != null">
+				,openingBank = #{openingBank}
+			</if>
+			<if test="accountNumber != null">
+				,accountNumber = #{accountNumber}
+			</if>
+			<if test="bankAccount != null">
+				,bankAccount = #{bankAccount}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+	<select id="findCustomerByPagination" parameterType="customerDTO"
+		resultType="customerVO">
+		SELECT
+			c.mainID,
+			c.username,
+			c. PASSWORD,
+			c.lastLoginTime,
+			c.nick,
+			c. NAME,
+			c.avatar,
+			g. NAME gradeName,
+			c.email,
+			c.mobile,
+			c.scoreIntotal,
+			c.amount,
+			c.score,
+			c.gradeID,
+			c.sex,
+			c.birthday,
+			c.age,
+			c.countryID,
+			c.provinceID,
+			c.cityID,
+			c.isDelete,
+			c. STATUS,
+			c.updateTime,
+			c.creator,
+			c.modifier,
+			c.modifyTime,
+			c.createTime,
+			c.lastLoginIP,
+			c.registerIP,
+			c.telephone,
+			c.address,
+			c.zip,
+			c.companyName,
+			pr.`name` AS provinceName,
+			ci.`name` AS cityName,
+			dis.`name` AS districtName
+		FROM
+			kplus_customer c
+		LEFT JOIN kplus_customer_grade g ON c.gradeID = g.mainID
+		LEFT JOIN kplus_area pr ON pr.mainID = c.provinceID
+		LEFT JOIN kplus_area ci ON ci.mainID = c.cityID
+		LEFT JOIN kplus_area dis ON dis.mainID = c.districtID
+		WHERE
+			c.isDelete = 0
+		<if test="nick != null">
+			AND c.nick like '%${nick}%'
+		</if>
+		<if test="name != null  ">
+			AND c.name like '%${name}%'
+		</if>
+		<if test="username != null ">
+			AND c.username like '%${username}%'
+		</if>
+		<if test="gradeID!=null">
+			AND c.gradeID=#{gradeID}
+		</if>
+		<if test="mainID != null">
+			AND c.mainID=#{mainID}
+		</if>
+		<if test="mobile != null">
+			AND c.mobile like '%${mobile}%'
+		</if>
+		<if test="email != null">
+			AND c.email like '%${email}%'
+		</if>
+		<if test="status != null">
+			AND c.status=#{status}
+		</if>
+		<if test="status==null">
+			and c.status in (1,2)
+		</if>
+		<if test="provinceID != null">
+			AND c.provinceID = #{provinceID}
+		</if>
+		<if test="cityID != null">
+			AND c.cityID = #{cityID}
+		</if>
+		<if test="districtID != null">
+			AND c.districtID = #{districtID}
+		</if>
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findCustomerCount" parameterType="customerDTO"
+		resultType="java.lang.Long">
+		SELECT
+			COUNT(c.mainID)
+		FROM
+			kplus_customer c
+		LEFT JOIN kplus_customer_grade g ON c.gradeID = g.mainID
+		LEFT JOIN kplus_area pr ON pr.mainID = c.provinceID
+		LEFT JOIN kplus_area ci ON ci.mainID = c.cityID
+		LEFT JOIN kplus_area dis ON dis.mainID = c.districtID
+		WHERE
+			c.isDelete = 0
+		<if test="nick != null">
+			AND c.nick like '%${nick}%'
+		</if>
+		<if test="name != null  ">
+			AND c.name like '%${name}%'
+		</if>
+		<if test="username != null ">
+			AND c.username like '%${username}%'
+		</if>
+		<if test="gradeID!=null">
+			AND c.gradeID=#{gradeID}
+		</if>
+		<if test="mainID != null">
+			AND c.mainID=#{mainID}
+		</if>
+		<if test="mobile != null">
+			AND c.mobile like '%${mobile}%'
+		</if>
+		<if test="email != null">
+			AND c.email like '%${email}%'
+		</if>
+		<if test="status != null">
+			AND c.status=#{status}
+		</if>
+		<if test="status==null">
+			and c.status in (1,2)
+		</if>
+		<if test="provinceID != null">
+			AND c.provinceID = #{provinceID}
+		</if>
+		<if test="cityID != null">
+			AND c.cityID = #{cityID}
+		</if>
+		<if test="districtID != null">
+			AND c.districtID = #{districtID}
+		</if>
+	</select>
+	
+	<select id="findCustomerApplyByPagination" parameterType="customerDTO"
+		resultType="customerVO">
+		SELECT
+			c.mainID,
+			c.username,
+			c. PASSWORD,
+			c.lastLoginTime,
+			c.nick,
+			c. NAME,
+			c.avatar,
+			g. NAME gradeName,
+			c.email,
+			c.mobile,
+			c.scoreIntotal,
+			c.amount,
+			c.score,
+			c.gradeID,
+			c.sex,
+			c.birthday,
+			c.age,
+			c.countryID,
+			c.provinceID,
+			c.cityID,
+			c.isDelete,
+			c. STATUS,
+			c.updateTime,
+			c.creator,
+			c.modifier,
+			c.modifyTime,
+			c.createTime,
+			c.lastLoginIP,
+			c.registerIP,
+			c.telephone,
+			c.address,
+			c.zip,
+			c.companyName,
+			pr.`name` AS provinceName,
+			ci.`name` AS cityName,
+			dis.`name` AS districtName
+		FROM
+			kplus_customer c
+		LEFT JOIN kplus_customer_grade g ON c.gradeID = g.mainID
+		LEFT JOIN kplus_area pr ON pr.mainID = c.provinceID
+		LEFT JOIN kplus_area ci ON ci.mainID = c.cityID
+		LEFT JOIN kplus_area dis ON dis.mainID = c.districtID
+		WHERE
+			c.isDelete = 0
+		<if test="nick != null">
+			AND c.nick like '%${nick}%'
+		</if>
+		<if test="name != null  ">
+			AND c.name like '%${name}%'
+		</if>
+		<if test="username != null ">
+			AND c.username like '%${username}%'
+		</if>
+		<if test="gradeID!=null">
+			AND c.gradeID=#{gradeID}
+		</if>
+		<if test="mainID != null">
+			AND c.mainID=#{mainID}
+		</if>
+		<if test="mobile != null">
+			AND c.mobile like '%${mobile}%'
+		</if>
+		<if test="email != null">
+			AND c.email like '%${email}%'
+		</if>
+		<if test="status != null">
+			AND c.status=#{status}
+		</if>
+		<if test="status==null">
+			and c.status in (3,4)
+		</if>
+		<if test="provinceID != null">
+			AND c.provinceID = #{provinceID}
+		</if>
+		<if test="cityID != null">
+			AND c.cityID = #{cityID}
+		</if>
+		<if test="districtID != null">
+			AND c.districtID = #{districtID}
+		</if>
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findCustomerApplyCount" parameterType="customerDTO"
+		resultType="java.lang.Long">
+		SELECT
+			COUNT(c.mainID)
+		FROM
+			kplus_customer c
+		LEFT JOIN kplus_customer_grade g ON c.gradeID = g.mainID
+		LEFT JOIN kplus_area pr ON pr.mainID = c.provinceID
+		LEFT JOIN kplus_area ci ON ci.mainID = c.cityID
+		LEFT JOIN kplus_area dis ON dis.mainID = c.districtID
+		WHERE
+			c.isDelete = 0
+		<if test="nick != null">
+			AND c.nick like '%${nick}%'
+		</if>
+		<if test="name != null  ">
+			AND c.name like '%${name}%'
+		</if>
+		<if test="username != null ">
+			AND c.username like '%${username}%'
+		</if>
+		<if test="gradeID!=null">
+			AND c.gradeID=#{gradeID}
+		</if>
+		<if test="mainID != null">
+			AND c.mainID=#{mainID}
+		</if>
+		<if test="mobile != null">
+			AND c.mobile like '%${mobile}%'
+		</if>
+		<if test="email != null">
+			AND c.email like '%${email}%'
+		</if>
+		<if test="status != null">
+			AND c.status=#{status}
+		</if>
+		<if test="status==null">
+			and c.status in (3,4)
+		</if>
+		<if test="provinceID != null">
+			AND c.provinceID = #{provinceID}
+		</if>
+		<if test="cityID != null">
+			AND c.cityID = #{cityID}
+		</if>
+		<if test="districtID != null">
+			AND c.districtID = #{districtID}
+		</if>
+	</select>
+
+	<select id="findCustomerByMainID" parameterType="String"
+		resultType="customerVO">
+		select
+		c.mainID,c.username,c.password,c.lastLoginTime,c.nick,
+		c.name,c.avatar,g.name as gradeName,
+		c.openingBank,c.accountNumber,c.bankAccount,
+		c.email,c.mobile,p.name as
+		provinceName,t.name as cityName,
+		c.scoreIntotal,
+		c.amount,c.score,c.gradeID,c.sex,
+		c.birthday,c.age,
+		c.countryID,c.provinceID,c.cityID,c.districtID,
+		c.isDelete,c.status,
+		c.updateTime,c.creator,
+		c.modifier,c.openid,
+		c.modifyTime,c.createTime,c.lastLoginIP,c.registerIP,c.telephone,c.address,c.zip,
+		c.referee,c.companyName,c.picURL1,c.picURL2,c.picURL3
+		from
+		kplus_customer c
+		left join kplus_customer_grade g on
+		c.gradeID=g.mainID
+		left join kplus_area
+		p on c.provinceID=p.mainID
+		left
+		join kplus_area t on
+		c.cityID=t.mainID
+		where c.isDelete=0
+		AND
+		c.mainID=#{mainId}
+	</select>
+
+	<select id="findCustomerByOpenID" parameterType="String"
+		resultType="customerVO">
+		select
+		c.mainID,c.username,c.password,c.lastLoginTime,c.nick,
+		c.name,c.avatar,g.name as gradeName,
+		c.email,c.mobile,p.name as
+		provinceName,t.name as cityName,
+		c.scoreIntotal,
+		c.amount,c.score,c.gradeID,c.sex,
+		c.birthday,c.age,
+		c.countryID,c.provinceID,c.cityID,
+		c.isDelete,c.status,
+		c.updateTime,c.creator,
+		c.modifier,c.openid,
+		c.modifyTime,c.createTime,c.lastLoginIP,c.registerIP,c.telephone,c.address,c.zip
+		from kplus_customer c
+		left join kplus_customer_grade g on
+		c.gradeID=g.mainID
+		left join kplus_area
+		p on c.provinceID=p.mainID
+		left
+		join kplus_area t on c.cityID=t.mainID
+		where c.isDelete=0
+		AND
+		c.mainID=#{openid} or c.openid=#{openid}
+	</select>
+
+	<update id="deleteCustomerByMainId">
+		update kplus_customer
+		set
+		modifyTime = now(),isDelete=1
+		where mainID=#{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<select id="findCustomerSalesOrderByPagination" parameterType="salesOrderDTO"
+		resultType="customerSalesOrderVO">
+		select c.mainID as customerID,
+		s.mainID as orderID,
+		d.name as
+		consignee,
+		s.paymentType,
+		s.totalAmount,
+		s.orderStatus,
+		s.paymentStatus,
+		s.createTime as orderTime,
+		s.printStatus
+		from kplus_salesorder s
+		left
+		join kplus_customer c on s.customerID=c.mainID
+		left join
+		kplus_salesorder_deliveryaddress d on d.salesOrderID=s.mainID
+		where
+		s.isDelete=0 and c.mainID=#{customerID}
+	</select>
+
+	<select id="findCustomerSalesOrderCount" parameterType="salesOrderDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_salesorder where
+		isDelete=0
+		and customerID=#{customerID}
+	</select>
+
+	<select id="findCustomerConsultingByPagination" parameterType="itemConsultingDTO"
+		resultType="itemConsultingVO">
+		select c.*,i.name as itemName,cs.username as customerName from
+		kplus_item_consulting c
+		left join
+		kplus_item i on c.itemID=i.mainID
+		left
+		join kplus_customer cs on c.customerID=cs.mainID
+		where c.isDelete=0 and
+		cs.isDelete=0
+		<if test="customerID!=null">
+			and c.customerID=#{customerID}
+		</if>
+		order by c.id desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findCustomerConsultingCount" parameterType="itemConsultingDTO"
+		resultType="java.lang.Long">
+		select count(c.mainID) from kplus_item_consulting c
+		left join
+		kplus_item i on c.itemID=i.mainID
+		left
+		join kplus_customer cs on
+		c.customerID=cs.mainID
+		where c.isDelete=0 and
+		cs.isDelete=0
+		<if test="customerID!=null">
+			and c.customerID=#{customerID}
+		</if>
+	</select>
+
+	<select id="findConsultingByMainID" parameterType="itemConsultingDTO"
+		resultType="itemConsultingVO">
+		select c.*,i.name as itemName from kplus_item_consulting c
+		left join kplus_item i on c.itemID=i.mainID
+		where c.isDelete=0 and
+		c.mainID=#{mainID}
+	</select>
+
+	<update id="replyConsulting" parameterType="itemConsultingDTO">
+		update kplus_item_consulting
+		<set>
+			replyTime=now(),modifyTime=now()
+			<if test="reply!=null">
+				,reply=#{reply}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="replier != null">
+				,replier = #{replier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="deleteConsultingByMainID">
+		update kplus_item_consulting
+		set isDelete=1
+		where
+		mainID=#{mainID}
+	</update>
+
+	<select id="findCustomerReviewByPagination" parameterType="itemReviewDTO"
+		resultType="itemReviewVO">
+		select c.*,i.name as itemName,cu.username as customerName from
+		kplus_item_review c
+		left join
+		kplus_item i on c.itemID=i.mainID
+		left join
+		kplus_customer cu on c.customerID=cu.mainID
+		<if test="customerID!=null">
+			where c.customerID=#{customerID}
+		</if>
+		order by c.id desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findCustomerReviewCount" parameterType="itemReviewDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_item_review
+		<if test="customerID!=null">
+			where customerID=#{customerID}
+		</if>
+	</select>
+
+	<select id="findReviewByMainID" parameterType="itemReviewDTO"
+		resultType="itemReviewVO">
+		select c.*,i.name as itemName,cu.name as customerName from
+		kplus_item_review c
+		left
+		join kplus_item i on c.itemID=i.mainID
+		left join
+		kplus_customer cu on
+		c.customerID=cu.mainID
+		where c.mainID=#{mainID}
+	</select>
+
+	<update id="replyReview" parameterType="itemReviewDTO">
+		update kplus_item_review
+		<set>
+			replyTime=now(),modifyTime=now()
+			<if test="reply!=null">
+				,reply=#{reply}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="replier != null">
+				,replier = #{replier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="updateReviewByMainID" parameterType="itemReviewDTO">
+		update kplus_item_review
+		<set>
+			<if test="status!=null">
+				status=#{status}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<select id="findCustomerAll" resultType="customerVO">
+		select * from
+		kplus_customer where isDelete=0
+	</select>
+
+	<select id="getUserMember" resultType="customerVO"
+		parameterType="customerDTO">
+		select c.username,
+		c.scoreIntotal,
+		c.avatar,
+		count(ks.mainID) as
+		orderAmount,
+		SUM(ks.totalamount) AS orderTotalCount,
+		SUM(ks.scoreTotal)
+		as scoreIntotal,
+		max(ks.createTime) AS maxcreateTime
+		from kplus_customer
+		c
+		LEFT JOIN kplus_salesorder ks on ks.customerID=c.mainID
+		where
+		c.isDelete=0
+		and c.referee=#{referee}
+		<if test="username !=null">
+			and c.username=#{username}
+		</if>
+		GROUP BY c.username
+		limit #{startRow} ,#{pageSize}
+		<!-- select g.username,g.scoreIntotal,g.avatar, COUNT(k.mainID) AS orderAmount,SUM(k.totalamount) 
+			AS orderTotalCount,max(k.createTime) AS maxcreateTime from kplus_customer 
+			c, kplus_customer g,kplus_salesorder k where c.mainID = g.userMemberID and 
+			g.mainID=k.customerID and c.isDelete=0 and g.userMemberID = #{mainID} <if 
+			test="username !=null"> and g.username=#{username} </if> GROUP BY g.username -->
+	</select>
+
+	<select id="findCusertomerByUserName" parameterType="java.lang.String"
+		resultType="customerVO">
+		select * from kplus_customer ks
+		where ks.isDelete=0
+		and
+		ks.status=1 and
+		ks.username=#{username} or ks.name=#{username}
+	</select>
+	
+	<select id="findCusertomerByName" parameterType="java.lang.String"
+		resultType="customerVO">
+		select * from kplus_customer ks
+		where ks.isDelete=0
+		and
+		ks.status=1 and
+	    ks.name=#{name}
+	</select>
+
+	<select id="findMemberByMainID" parameterType="java.lang.String"
+		resultType="customerVO">
+		select * from kplus_customer where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+	
+	<select id="findCustomer" parameterType="customerDTO"
+		resultType="customerVO">
+		SELECT
+			c.mainID,
+			c.username,
+			c. PASSWORD,
+			c.lastLoginTime,
+			c.nick,
+			c. NAME,
+			c.avatar,
+			g. NAME gradeName,
+			c.email,
+			c.mobile,
+			c.scoreIntotal,
+			c.amount,
+			c.score,
+			c.gradeID,
+			c.sex,
+			c.birthday,
+			c.age,
+			c.countryID,
+			c.provinceID,
+			c.cityID,
+			c.isDelete,
+			c. STATUS,
+			c.updateTime,
+			c.creator,
+			c.modifier,
+			c.modifyTime,
+			c.createTime,
+			c.lastLoginIP,
+			c.registerIP,
+			c.telephone,
+			c.address,
+			c.zip,
+			c.companyName,
+			pr.`name` AS provinceName,
+			ci.`name` AS cityName,
+			dis.`name` AS districtName
+		FROM
+			kplus_customer c
+		LEFT JOIN kplus_customer_grade g ON c.gradeID = g.mainID
+		LEFT JOIN kplus_area pr ON pr.mainID = c.provinceID
+		LEFT JOIN kplus_area ci ON ci.mainID = c.cityID
+		LEFT JOIN kplus_area dis ON dis.mainID = c.districtID
+		WHERE
+			c.isDelete = 0
+		<if test="nick != null">
+			AND c.nick like '%${nick}%'
+		</if>
+		<if test="name != null  ">
+			AND c.name like '%${name}%'
+		</if>
+		<if test="username != null ">
+			AND c.username like '%${username}%'
+		</if>
+		<if test="gradeID!=null">
+			AND c.gradeID=#{gradeID}
+		</if>
+		<if test="mainID != null">
+			AND c.mainID=#{mainID}
+		</if>
+		<if test="mobile != null">
+			AND c.mobile like '%${mobile}%'
+		</if>
+		<if test="email != null">
+			AND c.email like '%${email}%'
+		</if>
+		<if test="status != null">
+			AND c.status=#{status}
+		</if>
+		<if test="status==null">
+			and c.status in (1,2)
+		</if>
+		<if test="provinceID != null">
+			AND c.provinceID = #{provinceID}
+		</if>
+		<if test="cityID != null">
+			AND c.cityID = #{cityID}
+		</if>
+		<if test="districtID != null">
+			AND c.districtID = #{districtID}
+		</if>
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+	</select>
+	
+	<!--****************************sxc**********************************-->
+	<select id="findCusertomerByUserNameNOStatus" parameterType="java.lang.String"
+		resultType="customerVO">
+		select * from kplus_customer ks
+		where ks.isDelete=0
+		and ks.username=#{username}
+	</select>	
+	
+</mapper>

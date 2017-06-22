@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.supplier.dao.SupplierGroupDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID, name, description,
+		isDelete, creator,
+		modifier,
+		modifyTime,createTime
+	</sql>
+
+	<select id="findSupplierGroupByMainID" parameterType="java.lang.String"
+		resultType="supplierGroupVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_zy_supplier_group
+		where isDelete=0 and mainID = #{mainID}
+	</select>
+
+	<select id="findAllSupplierGroup" resultType="supplierGroupVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_zy_supplier_group
+		where isDelete=0
+	</select>
+	<select id="findSupplierGroupByPagination" parameterType="supplierGroupDTO"
+		resultType="supplierGroupVO">
+		select * from kplus_zy_supplier_group where isDelete=0 limit
+		#{startRow} ,#{pageSize}
+	</select>
+	<select id="findSupplierGroupCount" parameterType="supplierGroupDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_zy_supplier_group where
+		isDelete=0
+	</select>
+
+	<insert id="insertSupplierGroup" parameterType="supplierGroupDTO">
+		insert into
+		kplus_zy_supplier_group(
+		id,
+		mainID,
+		name,
+		description,
+		isDelete,
+		creator,
+		createTime
+		)
+		values(
+		#{id},
+		#{mainID},
+		#{name},
+		#{description},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updateSupplierGroupByMainID" parameterType="supplierGroupDTO">
+		update kplus_zy_supplier_group
+		<set>
+			modifyTime=now()
+			<if test="name!=null">
+				,name=#{name}
+			</if>
+			<if test="description!=null">
+				,description=#{description}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="deleteSupplierGroupByMainID" parameterType="supplierGroupDTO">
+		update
+		kplus_zy_supplier_group set isDelete=1 where mainID=#{mainID}
+	</update>
+
+	<select id="findSupplierGroupSetByGroupId" parameterType="java.lang.String"
+		resultType="supplierGroupSetVO">
+		select * from kplus_zy_supplier_groupSet where isDelete=0 and
+		groupID=#{groupID}
+	</select>
+
+	<update id="deleteGroupSetByID" parameterType="supplierGroupSetDTO">
+		update
+		kplus_zy_supplier_groupSet set isDelete=1 where id=#{id}
+	</update>
+
+	<insert id="insertGroupSet" parameterType="supplierGroupSetDTO">
+		insert into
+		kplus_zy_supplier_groupSet(
+		groupID,
+		setType,
+		minimum,
+		maxmum,
+		isDelete,
+		creator,
+		createTime
+		)
+		values(
+		#{groupID},
+		#{setType},
+		#{minimum},
+		#{maxmum},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updateGroupSetByID" parameterType="supplierGroupSetDTO">
+		update kplus_zy_supplier_groupSet
+		<set>
+			modifyTime=now()
+			<if test="minimum!=null">
+				,minimum=#{minimum}
+			</if>
+			<if test="maxmum!=null">
+				,maxmum=#{maxmum}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="findSupplierByGroupSet" parameterType="supplierVO"
+		resultType="supplierVO">
+		select * from kplus_zy_supplier where isDelete=0
+		<if test="mincreateTime!=null">
+			and createTime&gt;=#{mincreateTime}
+		</if>
+		<if test="maxcreateTime!=null">
+			and createTime&lt;=#{maxcreateTime}
+		</if>
+		
+		<if test="userName!=null">
+			and userName like '%${userName}%'
+		</if>
+	</select>
+
+	<insert id="insertSupplierGroupMember" parameterType="supplierGroupMemberDTO">
+		insert into
+		kplus_zy_supplier_groupmember(
+		groupID,
+		supplierID,
+		createTime,
+		creator
+		)
+		values(
+		#{groupID},
+		#{supplierID},
+		now(),
+		#{creator}
+		)
+	</insert>
+
+	<select id="findSupplierGroupMemberByGroupID" parameterType="java.lang.String"
+		resultType="supplierGroupMemberVO">
+		select * from kplus_zy_supplier_groupmember where
+		groupID=#{groupID}
+	</select>
+
+	<select id="findSupplierGroupMemberByPagination" parameterType="supplierGroupMemberDTO"
+		resultType="supplierGroupMemberVO">
+		SELECT
+			g.*, c.userName as username,
+			c.`companyName` as name,
+			c.lastloginTime as lastLoginTime,
+			c.lastloginIP as lastLoginIP
+		FROM
+			kplus_zy_supplier_groupmember g
+		LEFT JOIN kplus_zy_supplier c ON g.supplierID = c.mainID
+		WHERE
+			g.groupID = #{groupID} limit #{startRow}
+			,
+			#{pageSize}
+	</select>
+
+	<select id="findSupplierGroupMemberCount" parameterType="supplierGroupMemberDTO"
+		resultType="java.lang.Long">
+		select count(id) from kplus_zy_supplier_groupmember where
+		groupID=#{groupID}
+	</select>
+
+	<delete id="deleteSupplierGroupMemberByGroupID" parameterType="java.lang.String">
+		delete
+		from kplus_zy_supplier_groupmember where groupID=#{groupID}
+	</delete>
+
+	<select id="findSupplierGroupByName" parameterType="supplierGroupDTO"
+		resultType="supplierGroupVO">
+		select mainID,name as userName from kplus_zy_supplier_group where
+		isDelete=0
+		<if test="name!=null">
+			and name like '%${name}%'
+		</if>
+		limit
+		#{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findSupplierGroupByNameCount" parameterType="supplierGroupDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_zy_supplier_group where
+		isDelete=0
+		<if test="name!=null">
+			and name like '%${name}%'
+		</if>
+		limit
+		#{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findSupplierGroupMember" resultType="supplierGroupMemberVO">
+		select * from kplus_zy_supplier_groupmember
+	</select>
+	
+	<!--  <select id="findGroupMemberByGroupIDSupplierID" parameterType="supplierGroupMemberDTO" resultType="customerVO">
+		select kc.*,grade.`name` as  gradeName
+		 from kplus_zy_supplier ks 
+	     LEFT JOIN kplus_zy_supplier_groupmember ksg  on ks.mainID=ksg.customerID 
+	     LEFT JOIN kplus_customer_grade grade on grade.mainID=ks.gradeID
+			where ksg.groupID=#{groupID} and ks.mainID=#{customerID}
+	</select>-->
+</mapper>

@@ -1,0 +1,319 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+<style type="text/css">
+  .edit{
+    width: 39px;
+  }
+</style>
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+    #parse("layout/suppliercenter/leftmenu.vm")
+    <div id="rightMain">
+        <div class="crumbs">
+            商家管理中心 &gt; <a href="supplierCenter.htm">首页</a> &gt; 商品退换货列表
+        </div>
+        <div class="p15">
+            <div class="stitbar">
+                <strong>
+                  #if($!type == 'return') 
+                                                                               退货单列表
+                  #elseif($!type == 'change') 
+                                                                              换货单列表
+                  #end
+                </strong>
+            </div>
+            #if($!salesApplyList.size() == 0)
+            <div style="height: 100px;padding: 49px 0;font-size: 20px;text-align:center; line-height: 100px;">暂无退换货单！</div>
+            #end
+
+            #if($!salesApplyList.size() != 0)
+            <div class="selbar txt_r">
+                <form action="item.htm">
+                  <span style="display: inline-block; height: 28px;font-size: 16px;">售后单号</span>
+                  <input type="hidden" name="type" value="$!{type}" id="type"/>
+                  <input name="searchSalesApplyID" type="text" class="ipt" value="$!{searchSalesApplyID}"> <input name="" type="button" id="itemSerach" class="sbtn" value="搜索"></span>
+                </form>
+            </div>
+            <table class="sellist mt25">
+              <tr>
+                <th width="500">商品信息</th>
+                <th>售后单号</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+              <tr>
+               <td class="txt_r" colspan="5">
+                   <!-- <label for="sel_all" class="lt"><input name="allCk" id="sel_all" class="allCk" type="checkbox" value=""> 全选</label> -->
+                    <!-- <a href="#" class="apLink">申请售后</a> -->
+               </td>
+              </tr>
+              <!-- 列表循环 -->
+              #foreach($!salesApply in $!salesApplyList)
+              <tbody class="proUnit" data-id="$!item.mainID">
+                  <tr>
+                     <td colspan="4" class="bg">订单号：$!salesApply.salesOrderID</td>
+                  </tr>
+                  <tr>
+                      <td class="goEdit" style="cursor: pointer">
+                        <a href="javaScript:seeItem('$!salesApply.productID','$!salesApply.itemID');"><img src="$!{domainImg}$!salesApply.itemPicURL" class="pimg lt"></a>
+                        <p><a href="javaScript:seeItem('$!salesApply.productID','$!salesApply.itemID');" class="col01 edit">$!salesApply.itemName</a></p>
+                      </td>
+                      <td class="ct">
+                          $!salesApply.mainID
+                      </td>
+                      <td class="ct">
+                         #if("$!salesApply.status"=="0")
+                                                                                             申请
+                         #elseif("$!salesApply.status"=="1")
+                                                                                            拒绝
+                         #elseif("$!salesApply.status"=="2")
+                                                                                            处理中
+                         #elseif("$!salesApply.status"=="3")
+                                                                                            完成
+                         #elseif("$!salesApply.status"=="4")
+                                                                                          已取消
+                         #end
+                      </td>
+                      <td class="ct">
+                        <!--  #if("$!salesApply.status"=="0")
+	                        #if($!type=="return")
+	                        <a href="javascript:changeStatus('$!salesApply.mainID','2')" class="">退货</a><br>
+	                        #elseif($!type=="change")
+	                        <a href="javascript:changeStatus('$!salesApply.mainID','2')" class="">换货</a><br>
+	                        #end
+                      	    <a href="javascript:changeStatus('$!salesApply.mainID','1')" class="">拒绝</a><br>
+                         #end -->
+                        #if("$!salesApply.status"=="2")
+                           <a class="btnLink mt10" href="javascript:;" onclick="javascript:affirmAfterSale('$!salesApply.mainID')" style="color: blue;"> 确认售后</a><br>
+                        #end
+                        <a href="editSalesApply.htm?mainId=$!{salesApply.mainID}&type=$!type" class="">查看</a>
+                    </td>
+                  </tr>
+              </tbody>
+              #end
+            </table>
+            #end
+        </div>
+        <form id="serachform" name="serachform" method="get" action="item.htm">
+                  <input type="hidden" name="type" value="$!type"/>
+                  <input type="hidden" name="itemName" value="$!itemName"/>
+                  <input type="hidden" name="categoryMainID" value="$!categoryMainID"/>
+                  <input type="hidden" id="pageNo" name="pageNo"
+                  value="$!itemDTO.pageNo">
+                 <input type="hidden" id="pageSize" name="pageSize" 
+                      value="$!itemDTO.pageSize">
+               </form>
+        #if($!itemList.size() != 0)
+        <div class="pagerbar clearfix ct">
+        #pagination($!itemDTO)
+        </div>
+        #end
+    </div>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+ #if($!itemList.size() != 0)
+<script type="text/javascript">
+jQuery(function() {
+ 
+  jQuery(".pagerbar").pager({
+      pagenumber : $itemDTO.pageNo,
+      pagecount : $itemDTO.pageCount,
+      buttonClickCallback : PageClick
+    });
+  })
+
+  PageClick = function(pageclickednumber) {
+    jQuery(".pagerbar").pager({
+      pagenumber : pageclickednumber,
+      pagecount : $itemDTO.pageCount,
+      buttonClickCallback : PageClick
+    })
+    jQuery("#pageNo").val(pageclickednumber);
+    jQuery("#serachform").submit();
+}
+</script>
+#end
+<script>
+$(function(){
+        #if($!type == 'return') 
+            $("dd:eq(8)").addClass("on");
+        #elseif($!type == 'change') 
+            $("dd:eq(9)").addClass("on");
+        #end
+        
+        /* $(".goEdit").on("click",".edit",function(){
+            var itemMainID = $(this).parents(".proUnit").attr("data-id");
+            if (typeof itemMainID == 'undefined') {
+                return;
+            };
+            location.href = "itemDetail.htm?itemMainID="+itemMainID+"&type="+"$!type";
+        }); */
+        $(".delBtn").on("click", function(){
+            var _this = this;
+            if (!confirm("确定删除该商品吗")) {
+              return false;
+            };
+            var itemMainID = $(this).parents(".proUnit").attr("data-id");
+            if (typeof itemMainID == 'undefined') {
+                return;
+            };
+            jQuery.ajax({
+              url: "itemRemove.do",
+              type: "POST",
+              dataType: "text",
+              data: {
+                itemMainID: itemMainID
+              },
+              success: function(data){
+                if (data == 0) {
+                  $(_this).parents(".proUnit").remove();
+                };
+              }
+
+            })
+            
+        });
+        $("#itemSerach").click(function(){
+          $("form").eq(0).submit();
+         /* var itemName = $("input[name='itemName']").val();
+          if (itemName != '') {
+          };*/
+        });
+        $(".submit").click(function(){
+          var _this = this;
+          var itemMainID = $(_this).parents("tbody").attr("data-id");
+          var salePrice = $(_this).parents("tbody").find(".saleprice").val();
+          var stock = $(_this).parents("tbody").find(".stock").val();
+          var priceReg = /^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/;
+          var numReg = /^[0-9]+$/;
+          if (!priceReg.test(salePrice)) {
+            alert("价格格式有误");
+            return;
+          };
+          if (!numReg.test(stock)) {
+            alert("库存格式有误");
+            return;
+          };
+          jQuery.ajax({
+            url: "item.do",
+            type: "POST",
+            dataType: "text",
+            data: {
+              itemMainID: itemMainID,
+              salePrice: salePrice,
+              stock: stock
+            },
+            success: function(data){
+              if (data == 0) {
+                alert("操作成功");
+                $(_this).text("已提交").removeClass("submit").unbind("click");
+              };
+            }
+          })
+        });
+    })
+    
+</script>
+<script type="text/javascript">
+function changeStatus(mainID, status) {
+	updateStatus(mainID, status);
+}
+
+function updateStatus(mainID, status) {
+	var type = jQuery("#type").val();
+	var data = {
+		mainId : mainID,
+		status : status
+	};
+	if (confirm("确定要操作吗？")) {
+		var url = "changeAfterSaleStatus.do";
+		jQuery.ajax({
+			url : url,
+			type : "POST",
+			data : data,
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 0) {
+					alert("操作成功");
+					//window.location.href="$!{domain}/mall/seller/salesApplyList.htm?type="+type;
+					location.reload();
+				} else {
+					alert("操作失败");
+				}
+			},
+			error : function() {
+				alert("操作失败");
+			}
+		});
+	} else {
+		return false;
+	}
+}
+
+function seeItem(productID,itemID){
+    if(productID != null && itemID != null){
+	    var data = {
+				productID : productID,
+			itemID : itemID
+		}
+	   jQuery.ajax({
+				url : "$!{domain}/mall/seller/seeItem.do",
+				type : "POST",
+				data : data,
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 0) {
+						var tempwindow=window.open('_blank');
+						tempwindow.location='$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID;
+						//window.open('$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID);
+					} else {
+						alert("该商品已下架！");
+					}
+				},
+				error : function() {
+					alert("操作失败");
+				}
+		});
+    }else{
+       alert("商品已下架！");
+    }
+}
+
+/** 确认售后* */
+function affirmAfterSale(mainID) {
+	jQuery.ajax({
+		url : "affirmAfterSale.do",
+		data : {
+			"mainID" : mainID
+		},
+		type : "POST",
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 0) {
+				alert("售后成功！");
+				location.reload();
+			} else {
+				alert("售后失败！");
+			}
+		},
+		error : function() {
+			alert("系统出错！");
+		}
+	});
+}
+</script>
+</body>
+</html>

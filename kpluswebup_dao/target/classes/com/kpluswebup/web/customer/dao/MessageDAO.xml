@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.MessageDAO">
+
+	<select id="findMessageByPagination" parameterType="messageDTO"
+		resultType="messageVO">
+		select m.*,c.username as customerUserName,c.name as
+		customerName,o.name as operatorName from
+		kplus_message m
+		left join
+		kplus_customer c on m.sendee=c.mainID
+		left join kplus_operator o on
+		m.sender=o.mainID
+		where m.sendeeDeleted=0 and
+		m.senderDeleted=0
+		<if test="sendee!=null">
+			and m.sendee=#{sendee}
+		</if>
+		<if test="searchUserName!=null">
+			and c.username like '%${searchUserName}%'
+		</if>
+		<if test="searchCustomerName!=null">
+			and c.name like '%${searchCustomerName}%'
+		</if>
+		<if test="searchOperatorName!=null">
+			and o.name like '%${searchOperatorName}%'
+		</if>
+		order by m.id desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findMessageCount" parameterType="messageDTO"
+		resultType="java.lang.Long">
+		select count(m.mainID) from kplus_message m
+		left join
+		kplus_customer c
+		on m.sendee=c.mainID
+		left join kplus_operator o on m.sender=o.mainID
+		where m.sendeeDeleted=0 and
+		m.senderDeleted=0
+		<if test="sendee!=null">
+			and m.sendee=#{sendee}
+		</if>
+		<if test="searchUserName!=null">
+			and c.username like '%${searchUserName}%'
+		</if>
+		<if test="searchCustomerName!=null">
+			and c.name like '%${searchCustomerName}%'
+		</if>
+		<if test="searchOperatorName!=null">
+			and o.name like '%${searchOperatorName}%'
+		</if>
+	</select>
+
+
+	<insert id="messageSend" parameterType="messageDTO">
+		insert into
+		kplus_message(
+		mainID,
+		sendee,
+		title,
+		content,
+		isReaded,
+		createTime,
+		sender,
+		sendeeDeleted,
+		senderDeleted,
+		creator
+		)values(
+		#{mainID},
+		#{sendee},
+		#{title},
+		#{content},
+		#{isReaded},
+		now(),
+		#{sender},
+		0,
+		0,
+		#{creator}
+		)
+	</insert>
+	
+	<update id="updateMeaaageByMainID" parameterType="messageDTO">
+	  update kplus_message
+	  <set>
+	    <if test="isReaded != null">
+	       isReaded = #{isReaded}
+	    </if>
+	    where mainID=#{mainID}
+	  </set>
+	
+	</update>
+
+</mapper>

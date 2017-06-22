@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.order.dao.SalesOrderShippingAddressDAO">
+
+	<sql id="Base_Column_List">
+		id, salesOrderID, name, countryID, provinceID, cityID,
+		disctrictID,
+		address, zip,
+		telephone, mobile, creator, createTime,
+		modifier, modifyTime
+	</sql>
+
+	<select id="selectByPrimaryKey" resultType="salesOrderVO"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_salesorder_shippingaddress
+		where id = #{id}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		kplus_salesorder_shippingaddress
+		where id = #{id}
+	</delete>
+
+	<insert id="insertSalesOrderShippingAddress" parameterType="salesOrderShippingAddressDTO">
+		insert into kplus_salesorder_shippingaddress
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="salesOrderID != null">
+				salesOrderID,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="countryID != null">
+				countryID,
+			</if>
+			<if test="provinceID != null">
+				provinceID,
+			</if>
+			<if test="cityID != null">
+				cityID,
+			</if>
+			<if test="disctrictID != null">
+				disctrictID,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="zip != null">
+				zip,
+			</if>
+			<if test="telephone != null">
+				telephone,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			createTime
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="salesOrderID != null">
+				#{salesOrderID},
+			</if>
+			<if test="name != null">
+				#{name},
+			</if>
+			<if test="countryID != null">
+				#{countryID},
+			</if>
+			<if test="provinceID != null">
+				#{provinceID},
+			</if>
+			<if test="cityID != null">
+				#{cityID},
+			</if>
+			<if test="disctrictID != null">
+				#{disctrictID},
+			</if>
+			<if test="address != null">
+				#{address},
+			</if>
+			<if test="zip != null">
+				#{zip},
+			</if>
+			<if test="telephone != null">
+				#{telephone},
+			</if>
+			<if test="mobile != null">
+				#{mobile},
+			</if>
+			<if test="creator != null">
+				#{creator},
+			</if>
+			now()
+		</trim>
+	</insert>
+	<update id="updateBySalesOrderShippingAddressByOrderID"
+		parameterType="salesOrderDeliveryAddressDTO">
+		update kplus_salesorder_shippingaddress
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="countryID != null">
+				countryID = #{countryID},
+			</if>
+			<if test="provinceID != null">
+				provinceID = #{provinceID},
+			</if>
+			<if test="cityID != null">
+				cityID = #{cityID},
+			</if>
+			<if test="disctrictID != null">
+				disctrictID = #{disctrictID},
+			</if>
+			<if test="address != null">
+				address = #{address},
+			</if>
+			<if test="zip != null">
+				zip = #{zip},
+			</if>
+			<if test="telephone != null">
+				telephone = #{telephone},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime = #{modifyTime}
+			</if>
+		</set>
+		where salesOrderID = #{salesOrderID}
+	</update>
+
+	<select id="findSalesOrderShippingAddressByOrderID"
+		parameterType="java.lang.String" resultType="salesOrderShippingAddressVO">
+		select * from
+		kplus_salesorder_shippingaddress where
+		salesOrderID=#{salesOrderID}
+	</select>
+</mapper>

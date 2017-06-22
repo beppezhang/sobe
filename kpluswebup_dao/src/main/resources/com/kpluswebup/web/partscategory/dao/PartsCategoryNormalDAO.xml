@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.partscategory.dao.PartsCategoryNormalDAO">
+	<cache readOnly="true"></cache>
+	<!-- zhangshangliang:根据ancestorID 查询-->
+	<!--
+	<select id="findPartsCategoryNormalByAncestorID" resultType="PartsCategoryVo" parameterType="java.lang.String">
+		select pc.* from partscategory_normal pc where pc.isDelete=0 and pc.ancestorID in 
+		(
+		select mainID from partscategory_normal where ancestorID = #{ancestorID}
+		) order by pc.findex
+				
+	</select>
+	-->
+	<!-- 根据ancestorId查询 -->
+	<select id="findPartsCategoryNormalByAncestorID" resultType="PartsCategoryVo" parameterType="java.lang.String">
+		select pc.* from partscategory_normal pc where pc.isDelete=0 and pc.ancestorID=#{mainID} order by pc.findex
+	</select> 
+	
+	<!--查询flevel=1的数据-->
+	<select id="findPartsCategoryNormalOneLevel" resultType="PartsCategoryVo" >
+		select pc.* from partscategory_normal pc where pc.isDelete=0 and pc.ancestorID in 
+		(
+		select mainID from partscategory_normal where ancestorID = '00000000-0000-0000-0000-000000000000'
+		) order by pc.findex
+	</select>
+	
+	<!--根据flevel来查询 -->
+	<select id="findPartsCategoryNormalByFlevel" resultType="PartsCategoryVo" parameterType="int">
+		select pc.* from partscategory_normal pc where pc.isDelete=0 and pc.flevel=#{flevel}
+		order by pc.findex
+	</select>
+	
+	<!-- 根据mainID查询  -->
+	<select id="findPartsCategoryNormalByMainId" resultType="PartsCategoryVo" parameterType="java.lang.String">
+		select pc.* from partscategory_normal pc where pc.isDelete=0 and pc.mainId=#{mainId}
+		
+	</select>
+	
+		
+
+</mapper>

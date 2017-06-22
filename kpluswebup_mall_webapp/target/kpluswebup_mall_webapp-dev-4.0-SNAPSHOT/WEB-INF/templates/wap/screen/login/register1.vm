@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+<title>注册</title>
+<meta http-equiv="Content-Type"
+	content="application/vnd.wap.xhtml+xml; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/user.css">
+</head>
+<body>
+	<form action="$!domain/weixin/register.htm" method="post"
+		class="registerForm">
+		<div class="layout">
+			<div class="logbox">
+				<p class="name">
+					<input name="mobile" id="mobile" type="text" class="ipt mobile"
+						placeholder="请输入手机号码"> <em class="prompt_1 col05"></em>
+				</p>
+				<p class="pwd">
+					<input id="pwd" name="password" type="password"
+						class="ipt password" placeholder="输入您的密码"> <em
+						class="prompt_1 col05"></em>
+				</p>
+				<p class="key">
+					<input name="validateCode" type="text" class="ipt02 validdateCode"
+						maxlength="4" autocomplete="off" placeholder="输入校检码"><img
+						id="code_img" src="$!{domain}/imageServlet"
+						onclick="javascript:refresh(this);" alt="" width="80" height="26" />
+					<em class="prompt_1 col05"></em>
+				</p>
+				<p class="verify">
+					<input name="verify" id="verify" type="text" class="ipt02 verify"
+						placeholder="输入您的验证码"><a href="javascript:;"
+						onclick="sendSms();" class="keybtn getvf">点击获取</a>
+				</p>
+				<p class="companyName">
+					<input name="companyName" id="companyName" type="text" class="ipt companyName"
+						placeholder="请输入公司名称"> <em class="prompt_1 col05"></em>
+				</p>
+				<p class="trad">
+					<a href="javascript:;" class="txt_r clearfix"> <span class="lt">上传营业执照</span>
+						<span class="pic"><img id="uploadImage" src=""></span> <input
+						type="hidden" name="picURL" id="picURL" class="picURL"> <input
+						name="myfiles" type="file" id="myBlogImage" accept="image/*"
+						class="picFile" placeholder="上传营业执照" onchange="ajaxFileUpload()" />
+						<em class="prompt_1 col05"></em>
+					</a>
+				</p>
+				<p class="name1">
+					<input name="name" id="name" type="text" class="ipt name1"
+						placeholder="请输入收件人"> <em class="prompt_1 col05"></em>
+				</p>
+				<p class="ssq">
+					<select name="provinceID" class="ipt03"	onchange="changeProvinceID(this.value);">
+						#foreach($!province in $!provinceList)
+						<option #if("$!member.provinceID"=="$!province.mainID") selected="selected" #end value="$!province.mainID">$!province.name</option>
+					    #end
+					</select> 
+					<select name="cityID" onchange="changeCity(this.value);"	class="ipt03 cityed" id="cityid"> 
+						#foreach($!city in $!cityList)
+						<option #if("$!member.cityID" == "$!city.mainID") selected="selected" #end value="$!city.mainID">$!city.name</option>
+						#end
+					</select> 
+					<select name="districtID" id="districtid" class="district ipt03">
+						#foreach($!district in $!districtList)
+						<option #if("$!member.districtID" == "$!district.mainID") selected="selected" #end	value="$!district.mainID">$!district.name</option>
+					    #end
+					</select>
+				</p>
+				<p class="addr">
+					<input name="address" type="text" class="ipt02"
+						placeholder="请输入公司地址">
+				</p>
+			</div>
+			<!--<p class="error">账号或密码有误</p>-->
+			<p class="ck">
+				<i class="on"></i>已阅读并同意<a href="$!{domain}/weixin/announcement.htm"
+					target="_blank" class="col07">《黑虎网用户注册协议》</a>
+			</p>
+			<p class="ct">
+				<a href="javascript:register();" class="log_btn">下一步</a>
+			</p>
+		</div>
+	</form>
+	<script type="text/javascript"
+		src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="$!{domain}/wap/js/register.js"></script>
+	<script>
+		$(function() {
+			$(".trad a").find("em").click(function() {
+				$(this).addClass("on").siblings().removeClass("on");
+			})
+		})
+		function ajaxFileUpload() {
+			jQuery.ajaxFileUpload({
+				url : '/file/fileUpload.do',
+				secureuri : false,// 是否启用安全提交,默认为false
+				fileElementId : 'myBlogImage',// 文件选择框的id属性
+				dataType : 'text',// 服务器返回的格式,可以是json或xml等
+				success : function(data, status) {
+					data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+					data = data.replace("</PRE>", '');
+					data = data.replace("<pre>", '');
+					data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+					if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+						$("img[id='uploadImage']").attr("src",
+								data.substring(2));
+						$("#uploadImage").show();
+						$("#picURL").val(data.substring(2));
+						$('#result').html("图片上传成功<br/>");
+					} else {
+						$('#result').html('图片上传失败，请重试！！');
+					}
+				},
+				error : function(data, status, e) { // 服务器响应失败时的处理函数
+					$('#result').html('图片上传失败，请重试！！');
+				}
+			});
+		}
+
+		function refresh(obj) {
+			obj.src = "$!{domain}/imageServlet?" + Math.random();
+		}
+	</script>
+</body>
+</html>

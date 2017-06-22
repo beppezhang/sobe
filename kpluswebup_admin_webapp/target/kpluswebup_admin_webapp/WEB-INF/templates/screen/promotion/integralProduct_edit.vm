@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑礼品</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body onload="findProductTypeBrand('$!productTypeMainID')">
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+	 <div class="conTit">
+			<span>营销管理 》编辑礼品</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			     <div class="contentLf tabList">
+                	<ul>
+                    	<li>
+                    	    <em class="icon arrowLfWeight"></em>
+                        	<a href="$!{domain}/admin/product/editIntegralProductPage.htm?mainID=$!productID&productTypeMainID=$!productTypeMainID" class="hover">礼品信息</a>
+                        </li>
+                    	<li>
+                           
+                        	<a href="$!{domain}/admin/product/addIntegralItemPage.htm?productID=$!productID&productTypeMainID=$!productTypeMainID" >新增商品</a>
+                        </li>
+                        <li>
+                            <a href="$!{domain}/admin/product/IntegralProductImgPic.htm?productID=$!productID&productTypeMainID=$!productTypeMainID">礼品相册</a>
+                        </li>
+                    </ul>
+                </div>
+
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/product/updateIntegralProduct.htm" method="post">
+			     	<input type="hidden" class="cText cTextLen" name="mainID" value="$!productVO.mainID">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">产品名称：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="name" value="$!productVO.name">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">计量单位：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="unit" value="$!productVO.unit">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">产品分类：</div>
+									<div class="formRow" >
+										<select name="catalog">
+											<option value="3"   #if("$!productVO.catalog"=="3") selected #end >积分产品</option> 
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt"><a href="javascript:;" class="blueBtn" onclick="ico1.show();">产品类型</a>：</div>
+									<div class="formRow">
+										<input type="hidden" name="productTypeMainID" id="productTypeMainID" value="$!productTypeMainID">
+										<input type="text" class="cText cTextLen" name="productTypeName" value="$!productVO.productTypeName" id="productTypeName" disabled="disabled">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">品牌：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen" id="pbrandID" value="$!productVO.brandID">
+										<select name="brandID" id="brandID">
+											<option value="0">无</option> 
+										</select>
+									</div>
+								</dd>
+                              
+								<dd class="clearfix">
+									<div class="formTt">默认图片：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen" value="" name="picURL" id="picURL">
+										<img id="uploadImage" src="$!productVO.picURL">  
+										<input type="file" id="myBlogImage" name="myfiles" onchange="ajaxFileUpload()" />
+									</div>
+								</dd>
+								<div id="ptpo">
+								</div>
+								<dd class="clearfix">
+									<div class="formTt">页面标题：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" value="$!productVO.title" name="title">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">页面关键词：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" value="$!productVO.metaKeywords" name="metaKeywords">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">页面描述：</div>
+									<div class="formRow">
+										<textarea rows="5" cols="80" name="metaDescription">$!productVO.metaDescription</textarea>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">产品描述：</div>
+									<div class="formRow">
+										<textarea  class="cText cTextLen"  name="description" id="text_description">$!productVO.description</textarea>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										<input type="submit" class="save" value="下一步"> <input type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+							<input type="hidden" value="" name="productDetail" id="productDetail">
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	
+		<div class="alertBox">
+		<a href="javascript:;" id="close" class="close" onclick="ico1.hide();"></a>
+		<div class="alertBoxHead">
+			产品类型名称：<span><input type="text" name="keyword" id="keyword" onchange="searchProductType()" />
+				<button onclick="searchProductType()"></button></span>
+		</div>
+		<div class="alertTable">
+			<div class="tableHead">
+				<div style="width: 280px;">产品名称</div>
+				<div style="width: 280px;">操作</div>
+			</div>
+			<div class="tableBody">
+				<table class="tableList grid">
+
+					<tbody id="serachList">
+						<tr>
+							<td style="width: 280px;"></td>
+							<td style="width: 280px;"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+function findProductTypeBrand(productTypeMainID){
+	var data = {
+			productTypeMainID : productTypeMainID
+		}
+		var url = "findProductTypeBrand.do";
+		jQuery.ajax({
+		url : url,
+		type : "POST",
+		data : data,
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 0) {
+				var catAry = data.result;
+				$("#brandID").empty()
+				var pbrandID=$("#pbrandID").val()
+				for ( var i in catAry) {	
+				if(pbrandID==catAry[i].brandID){
+				$("#brandID").append("<option value='"+catAry[i].brandID+"'  selected >"+catAry[i].brandName+"</option> ");
+				}else{
+				$("#brandID").append("<option value='"+catAry[i].brandID+"'   >"+catAry[i].brandName+"</option> ");
+				}	
+				
+				}
+			} else {
+				alert("加载失败");
+			}
+		},
+		error : function() {
+			alert("加载失败");
+		}
+	});
+		findProductTypeProductProp(productTypeMainID)
+}
+
+function findProductTypeProductProp(productTypeMainID){
+	var productID=jQuery("#productID").val();
+	var data = {
+			productTypeMainID : productTypeMainID,
+			productID:productID
+		}
+		var url = "productTypeProductProp.do";
+		jQuery.ajax({
+		url : url,
+		type : "POST",
+		data : data,
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 0) {
+				var catAry = data.result;
+				$("#ptpo").empty()
+				for ( var i in catAry) {
+				$("#ptpo").append("<dd class='clearfix'><div class='formTt'>"+catAry[i].name+":</div><div class='formRow'>"+catAry[i].propValues+"</div></dd>");
+				}
+			} else {
+				alert("加载失败");
+			}
+		},
+		error : function() {
+			alert("加载失败");
+		}
+	});
+}
+jQuery(function(){
+    jQuery(".save").bind("click",function(){
+        var _val="";
+        jQuery("input[type='checkbox'],input[type='radio']").each(function(){
+            if(jQuery(this).prop("checked")){
+                _val+=jQuery(this).val()+"|";
+            }
+        })
+        jQuery("#productDetail").val(_val);
+    })
+})
+
+
+		var ico1 = $(".alertBox").divWin({
+		width : 605,
+		height : 500,
+		autoSize : false
+	});
+
+	function searchProductType() {
+		var keyword = jQuery("#keyword").val();
+		var data = {
+			name : keyword,
+			pageSize : 10000
+		}
+		var url = "searchProductType.do";
+		jQuery
+				.ajax({
+					url : url,
+					type : "POST",
+					data : data,
+					dataType : "json",
+					success : function(data) {
+						if (data.code == 0) {
+							var catAry = data.result;
+							$("#serachList").empty()
+							for ( var i in catAry) {
+								$("#serachList")
+										.append(
+												" <tr> <td style='width: 280px;'>"+ catAry[i].name+ "</td><td><a onclick='addProductType(&quot;"+catAry[i].name+"&quot; ,&quot;"+catAry[i].mainID+"&quot;)'> 确定</a></td> </tr>  ");
+							}
+						} else {
+							alert("加载失败");
+						}
+					},
+					error : function() {
+						alert("加载失败");
+					}
+				});
+
+	}
+	function addProductType(name,mainID) {
+		jQuery("#productTypeMainID").val(mainID);
+		jQuery("#productTypeName").val(name);
+		findProductTypeBrand(mainID);
+		ico1.hide();
+	}
+</script>
+</html>

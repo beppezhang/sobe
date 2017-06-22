@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>卡塔网络</title>
+#parse("control/public_css_js.vm")
+<link rel="stylesheet" href="$!{mallStatic}/css/list.css">
+</head>
+<body>
+<!-- sider tool bar  -->
+#parse("layout/head_sider.vm")
+ 
+<!-- top bar -->
+#parse("layout/head_top.vm")
+<!-- 头部LOGO -->
+#parse("layout/logo.vm")
+<!-- 头部LOGO -->
+
+<!-- 主导航 -->
+#parse("layout/menu.vm")
+
+
+<!-- banner -->
+<!-- 品牌简介 -->
+<div class="arrival_list">
+	<div class="layout pos_r clearfix">
+		<img src="$!{mallStatic}/img/t04.png" alt="新品预售 new sale">
+        <div class="tit"><img src="$!{mallStatic}/img/t05.png"><h3>精品商品超低价</h3><span class="bg"></span></div>
+        <ul class="clearfix">
+        #foreach($!presale in $!list)
+        	<li>
+               <p class="pimg ct"><a href="$!{domain}/mall/item/itemDetail.htm?preID=$!presale.mainID&itemID=$!presale.itemID" target="_blank"><img src="$!{imgurl}$!presale.picURL" class="imgMove"></a></p>
+               <h4><a href="#" target="_blank">$!presale.itemName</a></h4>
+               <p class="txt_r clearfix"><span class="lt"><em class="f18 col01">￥$!presale.salesPrice</em> <del class="f14">￥$!presale.standrardPrice</del></span> <strong class="f14 col01">$!{presale.peopleBuy}</strong>人已买</p>
+               <p class="cdbox" data="$!presale.endDate"></p>
+            </li>
+        #end
+        </ul>
+         #pagination($!preSaleDTO)
+  </div>
+</div>
+<form action="$!{domain}/mall/item/preSaleList.htm" id="seach" method="get">
+<input type="hidden" value="$!preSaleDTO.pageNo" name="pageNo" id="pageNo">
+</form>
+<!-- footer -->
+#parse("layout/footer.vm")
+<!-- <script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>-->
+<!-- <script>
+	$(function(){
+		$(".arrival_list li").hover(function(){
+			$(this).attr("class","cur")	
+		},function(){
+			$(this).removeAttr("class")
+		})	
+		$(".pagerbar").pager({
+				pagenumber:1,
+				pagecount:5,
+				buttonClickCallback:PageClick
+		});
+	})
+	PageClick = function(pageclickednumber){
+		$(".pagerbar").pager({
+			pagenumber:pageclickednumber,
+			pagecount:5,
+			buttonClickCallback:PageClick
+		})
+	}
+</script> -->
+
+</body>
+</html>

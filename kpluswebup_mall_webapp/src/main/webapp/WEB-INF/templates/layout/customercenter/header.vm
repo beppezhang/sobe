@@ -1,0 +1,20 @@
+<!-- 头部LOGO -->
+<!-- <div id="header" class="sp">
+	<div class="layout txt_r clearfix">
+		<span class="lt"><a href="$!{domain}/index.htm"><img
+				src="$!{imgurl}$!{shopLogo}" class="logo" alt="卡塔网络"></a></span> <img
+			src="$!{mallStatic}/img/pic-sm.png">
+	</div>
+</div>
+<link rel="stylesheet" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" href="$!{mallStatic}/css/users.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/user.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script> -->
+
+
+<div class="crumbs">
+	<div class="layout clearfix">
+	   	<a href="$!{domain}/index.htm" class="home">首页</a> &gt; <a href="${domain}/mall/buyer/userCenter.htm">我的商城</a>
+	</div>
+</div>

@@ -1,0 +1,505 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="${mallStatic}/css/supplier.css">
+<link rel="stylesheet" href="${mallStatic}/css/base.css">
+<link rel="stylesheet" href="${mallStatic}/css/busin.css">
+<link rel="stylesheet" type="text/css" href="${mallStatic}/css/jquery.mcdropdown.min.css">
+<style type="text/css">
+span.error {
+height: 16px;
+  line-height: 16px;
+  padding-left: 18px;
+  margin-left: 10px;
+  display: inline-block;
+	  background: url(${mallStatic}/images/icons_9.png) no-repeat left center;
+	  color: #f67649;
+  }
+  span.ok {
+  height: 16px;
+  line-height: 16px;
+  padding-left: 18px;
+  margin-left: 10px;
+  display: inline-block;
+  background: url(${mallStatic}/images/icons_8.png) no-repeat left center;
+  color: #196c18;
+  }
+</style>
+<script src="${mallStatic}/js/jquery-1.9.1.js" type="text/javascript"></script>
+<script type="text/javascript" src="${mallStatic}/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="$!{domain}/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/jquery.scrollto.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/verify.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/public.js"></script>
+
+<script type="text/javascript">
+function selCategory(id){
+    //验证
+    var errorresult=$(".errorresult");
+    errorresult.removeClass("error text-error");
+    errorresult.text("");
+    $("#productTypeMainID").val(id);
+   jQuery.ajax({url:"${domain}/mall/seller/addProductTypeProductItemPro.htm",
+			type : 'GET',
+			contentType:"application/x-www-form-urlencoded;charset=UTF-8", 
+    		dataType:"html",
+			data :{'productTypeMainID' :id,'productID':'$!productID'}, 
+			success : function(data) {
+				 typeChange(id);
+			 $("#child_list1").html(data);
+			// $("#child_list1")[0].innerHTML = data;
+			}
+		});
+  
+ }
+function typeChange(productTypeMainID){
+	var data = {
+		productTypeMainID : productTypeMainID
+	}
+	var url = "findProductTypeBrand.do";
+	jQuery.ajax({
+		url : url,
+		type : "POST",
+		data : data,
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 0) {
+				var catAry = data.result;
+				$("#brandID").empty()
+				var pbrandID = $("#pbrandID").val()
+				for ( var i in catAry) {
+					if (pbrandID == catAry[i].brandID) {
+						$("#brandID").append(
+								"<option value='"+catAry[i].brandID+"'  selected >"
+										+ catAry[i].brandName
+										+ "</option> ");
+					} else {
+						$("#brandID").append(
+								"<option value='"+catAry[i].brandID+"'   >"
+										+ catAry[i].brandName
+										+ "</option> ");
+					}
+
+				}
+
+			} else {
+				alert("加载失败");
+			}
+		},
+		error : function() {
+			alert("加载失败");
+		}
+	});
+	//findProductTypeProductProp(productTypeMainID)
+}
+function itemMainIDCheck(val){
+    var mainID = $(this).val();
+	     if(mainID==""){
+	    	 mainID = false;
+	    	 alert("商品编码必须填写");
+	     }else{
+	    	 mainID = true;
+	     }	
+	
+}
+function findProductTypeProductProp(productTypeMainID) {
+	var productID = '$!productID';
+	if(productID==''){
+	  productID = jQuery("#productID").val();
+		
+	}
+	var data = {
+		productTypeMainID : productTypeMainID,
+		productID : productID
+	}
+	var url = "productTypeProductProp.do";
+	jQuery
+			.ajax({
+				url : url,
+				type : "POST",
+				data : data,
+				dataType : "json",
+				success : function(data) {
+					 if (data.code == 0) {
+						var catAry = data.result;
+						$("#ptpo").empty()
+						for ( var i in catAry) {
+							$("#ptpo")
+									.append(
+											"<li class='clearfix'><span class='name'>"
+													+ catAry[i].name
+													+ ":</span><span class='name'><em>*</em>"
+													+ catAry[i].propValues
+													+ "</span></li>");
+						} 
+					} else {
+						alert("加载失败");
+					}
+				},
+				error : function() {
+					alert("加载失败");
+				}
+			});
+}	
+
+
+$(document).ready(function (){
+	if('$!productTypeMainID'!=''){
+		selCategory('$!productTypeMainID')
+	}
+	
+	
+		$("#brandID").blur(function(){
+			if($(this).val()==""){
+				alert();
+				return;
+			}
+		})
+	$("#name").blur(function(){
+	     var expressName = $(this).val();
+		     if(expressName==""){
+			     commoditymak = false;
+			     $(this).next("span").removeClass("ok").addClass("error").text("商品标题不能空");
+		     }else{
+ 		     	 jQuery.ajax({
+  		     	 	url:"findExpress.do?format=json",
+  		     	 	type : "POST",
+  		     	 	data:{expressName:expressName},
+  		     	 	dataType : "json",
+   					success : function(data) {
+   						if(!jQuery.isEmptyObject(data)){
+  	 						$("#name").next("span").removeClass("ok").addClass("error").text("名称不可重复");
+  						}else{
+  						     $("#name").next("span").removeClass("error").addClass("ok").text("");
+  						}
+   					},
+   					error : function() {
+  						alert("加载失败");
+  					}
+  		     	 });
+		    	 
+			     commoditymak = true;
+			     $(this).next("span").removeClass("error").addClass("ok").text("");
+		     }		
+		});
+		
+	$("#contactPerson").blur(function(){
+	     var contactPerson = $(this).val();
+		     if(contactPerson==""){
+			     commoditymak = false;
+			     $(this).next("span").removeClass("ok").addClass("error").text("业务联系人不能为空");
+		     }else{
+			     commoditymak = true;
+			     $(this).next("span").removeClass("error").addClass("ok").text("");
+		     }		
+		});
+		
+	$("#mobile").blur(function(){
+	     var mobile = $(this).val();
+		     if(mobile==""){
+			     commoditymak = false;
+			     $(this).next("span").removeClass("ok").addClass("error").text("联系电话不能为空");
+		     }else{
+			     commoditymak = true;
+			     $(this).next("span").removeClass("error").addClass("ok").text("");
+		     }		
+		});
+		
+	
+	$("#salesprice").blur(function(){
+	     var salesprice = $(this).val();
+		     if(salesprice==""){
+		    	 salesprice = false;
+		    alert("销售价必须填写");
+		     }else{
+		    	 salesprice = true;
+		     }	
+		});
+	$("#itemMainID").blur(function(){
+	     var mainID = $(this).val();
+		     if(mainID==""){
+		    	 mainID = false;
+		    alert("商品编码必须填写");
+		     }else{
+		    	 mainID = true;
+		     }	
+		});
+	
+	$("#stock").blur(function(){
+	     var stock = $(this).val();
+		     if(stock==""){
+		    	 stock = false;
+		    alert("库存必须填写");
+		     }else{
+		    	 salesprice = true;
+		     }	
+		});
+	
+	//市场价验证
+		$("#productStandPrice").blur(function(){
+       var marketname = $(this).val();  
+       if(marketname=="元"){
+          marketmak = false;
+          $(this).next().removeClass("ok").addClass("error").text("市场价格不能空");
+       }else{
+        if(marketname!="元"){      
+        var pdtato1 = /^[0-9]+\.?[0-9]*$/;      
+        if(pdtato1.test(marketname)){
+        marketmak = true;
+        $(this).next("span").removeClass("error").addClass("ok").text("");                                     
+        }else{
+        marketmak = false;
+        $(this).next("span").removeClass("ok").addClass("error").text("请输入数字");
+	        };
+	      };
+	    };    
+      });
+		 //商品描述
+	      $("#product_mark").blur(function(){
+		     var descriptionname = $(this).val();
+		     if(descriptionname==""){
+		     descriptionmak = false;
+		     $(this).next("span").removeClass("ok").addClass("error").text("商品描述不能空");
+		     }else{
+		     descriptionmak = true;
+		     $(this).next("span").removeClass("error").addClass("ok").text("");
+		     };	
+		}); 	
+	//验证所属分类
+	$(".productTypeMainID").blur(function(){
+		 	 var productTypeMainID=$(".productTypeMainID").val();
+		     if(productTypeMainID==""){
+		    	 productTypeMainID = false;
+		    	 $(this).next("span").removeClass("ok").addClass("error").text.text("请选择所属分类!");
+		     }else{
+		    	 productTypeMainID = true;
+		    	 $(this).next("span").removeClass("error").addClass("ok").text("");
+			}
+ 		});
+	//验证所属分类
+	$(".supplierCategoryID").blur(function(){
+		 	 var supplierCategoryID=$(".supplierCategoryID").val();
+		 	 if(supplierCategoryID==""){
+		 		supplierCategoryID = false;
+		    	 $(this).next("span").removeClass("ok").addClass("error").text.text("请选择所属分类!");
+		     }else{
+		    	 supplierCategoryID = true;
+		    	 $(this).next("span").removeClass("error").addClass("ok").text("");
+		     }
+ 		});
+   $(".productTypeMainID").mcDropdown(".mcdropdown_menuCat");
+   $(".supplierCategoryID").mcDropdown(".mcdropdown_menuCat1"); 
+    $(".page_submit").click(function(){
+        $(".verify_nonempty, .verify_isnan, .verify_textlength").blur();
+        $(".category").each(function(){
+            var _val = $(this).val();
+            if(!_val){
+                $(this).addClass("text_error");
+            }else{
+                $(this).removeClass("text_error");
+            }
+        });
+        if($(".text_error").length){
+            $($(".text_error")[0]).focus().ScrollTo();
+            return false;
+        }
+    });
+    /**
+    jQuery(".nextLink").bind(
+			"click",
+			function() {
+				## $("#productTypeMainID,#supplierCategoryID,#product_mark,#productStandPrice,#name").blur();
+				//alert($("#name").val());
+				if($("#name").val()==""){
+					$("#name").next("span").removeClass("ok").addClass("error").text("公司名称不能为空");
+					return false;
+				}
+		     	 jQuery.ajax({
+	  		     	 	url:"findExpress.do?format=json",
+	  		     	 	type : "POST",
+	  		     	 	data:{expressName:$("#name").val()},
+	  		     	 	dataType : "json",
+	   					success : function(data) {
+	   						if(!jQuery.isEmptyObject(data)){
+	  	 						$("#name").next("span").removeClass("ok").addClass("error").text("名称不可重复");
+	  						}else{
+	  						     $("#name").next("span").removeClass("error").addClass("ok").text("");
+	  						}
+	   					},
+	   					error : function() {
+	  						alert("加载失败");
+	  					}
+	  		     	 });
+				
+				if($("#contactPerson").val()=="" ){
+					commoditymak = false;
+					$("#contactPerson").next("span").removeClass("ok").addClass("error").text("业务联系人不能为空");
+					return false;
+				}
+				if($("#mobile").val()=="" ){
+					commoditymak = false;
+					$("#mobile").next("span").removeClass("ok").addClass("error").text("联系电话不能为空");
+					return false;
+				}
+			});
+	 **/
+			
+		
+
+});
+
+	function expressForm(){
+				## $("#productTypeMainID,#supplierCategoryID,#product_mark,#productStandPrice,#name").blur();
+				//alert($("#name").val());
+				if($("#name").val()==""){
+					$("#name").next("span").removeClass("ok").addClass("error").text("公司名称不能为空");
+					return false;
+				}
+		     	 jQuery.ajax({
+	  		     	 	url:"findExpress.do?format=json",
+	  		     	 	type : "POST",
+	  		     	 	data:{expressName:$("#name").val()},
+	  		     	 	dataType : "json",
+	   					success : function(data) {
+	   						if(!jQuery.isEmptyObject(data)){
+	  	 						$("#name").next("span").removeClass("ok").addClass("error").text("名称不可重复");
+	  						}else{
+	  						     $("#name").next("span").removeClass("error").addClass("ok").text("");
+	  						}
+	   					},
+	   					error : function() {
+	  						alert("加载失败");
+	  					}
+	  		     	 });
+				
+				if($("#contactPerson").val()=="" ){
+					commoditymak = false;
+					$("#contactPerson").next("span").removeClass("ok").addClass("error").text("业务联系人不能为空");
+					return false;
+				}
+				if($("#mobile").val()=="" ){
+					commoditymak = false;
+					$("#mobile").next("span").removeClass("ok").addClass("error").text("联系电话不能为空");
+					return false;
+				}			
+				
+		    $("#expressForm").submit();
+		};		
+
+</script>
+</head>
+
+<body>
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	 #parse("layout/suppliercenter/leftmenu.vm")
+     <form action="$!domain/mall/seller/addExpress.htm" method="post" id="expressForm">
+        <input type="hidden" name="supplierID" value="$!{supplierVO.mainID}">
+         <input type="hidden" name="mainID" value="$!productID">
+    <div id="rightMain">
+    	<div class="crumbs">
+        	商家管理中心 &gt; 商品管理 &gt; 发布商品
+        </div>
+        <div class="p15">
+            <div class="stitbar">
+                <strong>新增物流公司</strong>
+            </div>
+            <div class="accInfo mt25 shop_setting">
+                <dl class="clearfix verify">
+                    <dt><em class="red">*</em>公司名称：</dt>
+                    <dd><input class="text langtext verify_textlength verify_nonempty" data-length="30" data-length-follow="true" data-nonempty-istrim="true" type="text" id="name" name="name"><span class="prompt_1"></span></dd>
+                    <span class="note">还可以输入<em class="verify_handle" data-length-follow="true" data-length-turn="true">30</em>个字</span>
+                </dl>
+
+                <dl class="clearfix verify">
+                    <dt><em class="red">*</em>业务联系人：</dt>
+                    <dd><input class="text langtext verify_textlength verify_nonempty" data-length="30" data-length-follow="true" data-nonempty-istrim="true" type="text" id="contactPerson" name="contactPerson"><span class="prompt_1"></span></dd>
+                    <span class="note">还可以输入<em class="verify_handle" data-length-follow="true" data-length-turn="true">30</em>个字</span>
+                </dl>
+                <dl class="clearfix verify">
+                    <dt><em class="red">*</em>联系电话：</dt>
+                    <dd><input class="text langtext verify_textlength verify_nonempty" data-length="30" data-length-follow="true" data-nonempty-istrim="true" type="text" id="mobile" name="mobile"><span class="prompt_1"></span></dd>
+                    <span class="note">还可以输入<em class="verify_handle" data-length-follow="true" data-length-turn="true">30</em>个字</span>
+                </dl>
+				#*
+                <dl class="clearfix verify">
+                    <dt><em class="red">*</em>跟踪参数：</dt>
+                    <dd><input class="text langtext verify_textlength verify_nonempty" data-length="30" data-length-follow="true" data-nonempty-istrim="true" type="text" id="code" name="code"><span class="prompt_1"></span></dd>
+                    <span class="note">还可以输入<em class="verify_handle" data-length-follow="true" data-length-turn="true">30</em>个字</span>
+                </dl>
+                *#
+                <dl class="clearfix">
+                    <dt>默认：</dt>
+                    <dd>
+	                    <input class="select" type="radio" checked="" value="1" name="isDefault">
+						是    
+						<input class="select" type="radio" value="0" name="isDefault">
+						否 
+                    </dd>
+                </dl>
+                <dl class="clearfix verify">
+                    <dt>介绍：</dt>
+                    <dd><textarea class="text langtext" rows="8" cols="70"  data-length="30" data-length-follow="true" data-nonempty-istrim="true" type="text" id="description" name="description"></textarea><span class="prompt_1"></span></dd>
+                    <span class="note">还可以输入<em class="verify_handle" data-length-follow="true" data-length-turn="true">30</em>个字</span>
+                </dl>
+            </div>
+            <input type="hidden" value="" name="productDetail" id="productDetail">
+             <div id="allPreList"></div>
+              #if("$!operatorMethod"=="add")
+	             #if($!{supplierVO.cashDep}>0.0)
+	            <p class="ct mt25"><input type="button" style="background: #41a8f7 none repeat scroll 0 0;  color: #fff;  display: inline-block;  font-size: 12px;  line-height: 23px;  padding: 3px 10px;" class="nextLink" value="提交" onclick="expressForm()"/></p>
+	            #end
+              #else
+              <p class="ct mt25"><input type="button" style="background: #41a8f7 none repeat scroll 0 0;  color: #fff;  display: inline-block;  font-size: 12px;  line-height: 23px;  padding: 3px 10px;" class="nextLink" value="提交" onclick="expressForm()"/></p>
+              #end
+       </div>
+    </div>
+    </form>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+<script type="text/javascript" src="${mallStatic}/js/jquery.mcdropdown.min.js"></script>
+	<script type="text/javascript">
+	function ajaxFileUpload1s(type) {
+		jQuery.ajaxFileUpload({
+			url : "$!domain"+'/file/fileUpload.do',
+			secureuri : false,// 是否启用安全提交,默认为false
+			fileElementId : 'myBlogImage' + type,// 文件选择框的id属性
+			dataType : 'text',// 服务器返回的格式,可以是json或xml等
+			success : function(data, status) {
+				data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+				data = data.replace("</PRE>", '');
+				data = data.replace("<pre>", '');
+				data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+				if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+					$("img[id='uploadImage" + type + "']").attr("src",
+							"$!domain"+data.substring(2));
+					$("#picURL" + type).val(data.substring(2));
+					$('#result').html("图片上传成功<br/>");
+				} else {
+					$('#result').html('图片上传失败，请重试！！');
+				}
+			},
+			error : function(data, status, e) { // 服务器响应失败时的处理函数
+				$('#result').html('图片上传失败，请重试！！');
+			}
+		});
+	}
+	jQuery(document).ready(function() {
+		var  cas = '$!{supplierVO.cashDep}';
+		if('$!operatorMethod'=='add'){
+			if(cas==''||cas=='undefined'){
+				cas=0;
+			}
+			if(parseInt(cas)<=0){
+				alert("想发布商品先交保证金");
+			}
+		}
+	})
+  </script>
+  <script type="text/javascript" src="${mallStatic}/js/ajaxfileupload.js"></script>
+  <script type="text/javascript" src="$!{mallStatic}/js/user.js"></script>
+</body>
+</html>

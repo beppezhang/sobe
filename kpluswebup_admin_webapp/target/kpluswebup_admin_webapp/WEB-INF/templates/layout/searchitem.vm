@@ -1,0 +1,107 @@
+<dd class="clearfix" id="itemID">
+	<div class="formTt">选择商品：</div>
+	<div class="formTt"></div>
+	<div class="formRow">
+		<a href="javascript:;" onclick="ico1.show();" style="color: blue;">选择商品</a>&nbsp;&nbsp;
+		<input type="hidden" name="productID" id="productid"
+			value="$!itemVO.productID"> <input type="hidden"
+			name="itemID" id="itemid" value="$!itemVO.mainID"> <span
+			id="itemname">#if("$!itemVO.name"!="")$!itemVO.name#end</span>
+	</div>
+</dd>
+<div class="alertBox">
+	<a href="javascript:;" id="close" class="close" onclick="ico1.hide();"></a>
+	<div class="alertBoxHead">
+		产品类型： <span><select id="type"><option value="0">产品名称</option>
+				<option value="1">商品名称</option></select> <input type="text" name="keyword"
+			id="keyword" onchange="searchitem()" />
+			<button onclick="searchitem()"></button></span>
+	</div>
+	<div class="alertTable">
+		<div class="tableHead">
+			<div style="width: 210px;">商品编号</div>
+			<div style="width: 180px;">商品名称</div>
+			<div style="width: 75px;">销售价格</div>
+			<div style="width: 75px;">操作</div>
+		</div>
+		<div class="tableBody">
+			<table class="tableList grid">
+
+				<tbody id="serachList">
+					<tr>
+						<td style="width: 210px;"></td>
+						<td style="width: 180px;"></td>
+						<td style="width: 75px;"></td>
+						<td style="width: 75px;"></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+	var ico1 = $(".alertBox").divWin({
+		width : 605,
+		height : 500,
+		autoSize : false
+	});
+
+	function searchitem() {
+		var keyword = jQuery("#keyword").val();
+		var type = jQuery("#type").find("option:selected").val();
+		var catalog = "$!catalog";
+		var data = {
+			name : keyword,
+			type : type,
+			pageSize : 10000,
+			catalog : catalog
+		}
+
+		var url = "$!{domain}/admin/product/searchItem.do";
+		jQuery.ajax({
+			url : url,
+			type : "POST",
+			data : data,
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 0) {
+					var catAry = data.result;
+					$("#serachList").empty()
+					for ( var i in catAry) {
+						$("#serachList").append(
+								" <tr> <td style='width: 210px;'>"
+										+ catAry[i].mainID
+										+ "</td><td style='width: 180px;'>"
+										+ catAry[i].name
+										+ "</td><td style='width: 75px;'>"
+										+ catAry[i].salesPrice
+										+ "</td><td><a onclick='additem(&quot;"
+										+ catAry[i].productID
+										+ "&quot; ,&quot;" + catAry[i].mainID
+										+ "&quot;,&quot;" + catAry[i].name
+										+ "&quot;)'> 确定</a></td> </tr>  ");
+					}
+				} else {
+					alert("加载失败");
+				}
+			},
+			error : function() {
+				alert("加载失败");
+			}
+		});
+
+	}
+	function additem(productid, itemid, itemname) {
+		jQuery("#productid").val(productid);
+		jQuery("#itemid").val(itemid);
+		jQuery("#itemname").text(itemname);
+		ico1.hide();
+
+	}
+</script>

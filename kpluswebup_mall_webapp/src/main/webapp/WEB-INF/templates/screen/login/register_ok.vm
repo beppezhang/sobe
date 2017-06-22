@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>上海晨阑数据技术有限公司</title>
+    <link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+	<link rel="stylesheet" type="text/css" href="$!{mallStatic}/style/login.css">
+	<link rel="stylesheet" type="text/css" href="$!{mallStatic}/style/register3.css">
+</head>
+
+<body>
+
+<!-- 头部 -->
+	<div class="header">
+		<div class="w">
+			<div class="zl">
+				<a href="$!{domain}/index.htm" style="background:url($!{imgurl}$!shopLogo) no-repeat 0 0;"></a>
+			</div>
+			<ul class="zr">
+				<li><a href="$!{domain}/mall/member/toLogin.htm">登录</a></li>
+				<li class="spacer"></li>
+				<li><a href="$!{domain}/index.htm">首页</a></li>
+				<li class="spacer"></li>
+				<li><a href="$!{domain}/helpCenter.htm" target="_blank">帮助中心</a></li>
+			</ul>
+			<span class="clean_up"></span>
+		</div>
+	</div>
+	
+<!-- 内容 -->
+	<div class="content matter">
+		<div class="ct">
+			<div class="step">
+				<ul>
+					<li>您的页面将于 <em id="tz" class="col01">5</em> 秒内自动转到首页...<a href="$!{domain}/index.htm">返回首页</a></li>
+				</ul>
+			</div>
+		</div>
+	</div> 
+	
+ #parse("layout/bottom.vm")
+	<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script>
+	jQuery(function () {            
+	   setTimeout("skip();", 1000);
+	});
+	function skip() {
+		var sec = $("#tz").text();
+		$("#tz").text(--sec);
+		if (sec > 0)
+			setTimeout("skip();", 1000);
+		else
+			window.location.href = "$!{domain}/index.htm";
+	}
+ 
+</script>
+</body>
+</html>

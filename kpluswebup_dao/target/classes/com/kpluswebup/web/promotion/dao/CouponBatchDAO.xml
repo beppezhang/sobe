@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.promotion.dao.CouponBatchDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID, name, type, amount, conditionAmount, score,
+		description,
+		fromDate, endDate,
+		useFromDate, useEndDate, status,
+		isDelete, creator, createTime, modifier,
+		modifyTime
+	</sql>
+
+	<select id="findCouponBatchByMainID" parameterType="java.lang.String"
+		resultType="couponPromotionVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_coupon_batch
+		where isDelete=0 and mainID = #{mainID}
+	</select>
+
+	<select id="findAllCouponBatch" resultType="couponPromotionVO">
+		select
+		cb.mainID,cb.name
+		from kplus_coupon_batch cb
+		where cb.status=1 and
+		cb.isDelete=0
+	</select>
+
+	<select id="findCouponBatchByPagination" parameterType="couponBatchDTO"
+		resultType="couponBatchVO">
+		select c.*,o.username as createName from kplus_coupon_batch
+		c
+		left join kplus_operator
+		o on
+		c.creator=o.mainID
+		where c.isDelete=0
+		order by
+		c.id desc limit #{startRow}
+		,#{pageSize}
+	</select>
+	<select id="findCouponBatchCount" parameterType="couponBatchDTO"
+		resultType="java.lang.Long">
+		select count(c.mainID) from kplus_coupon_batch c
+		left join
+		kplus_operator
+		o on
+		c.creator=o.mainID
+		where
+		c.isDelete=0
+	</select>
+
+	<insert id="insertCouponBatch" parameterType="couponBatchDTO">
+		insert into
+		kplus_coupon_batch(
+		mainID,
+		name,
+		type,
+		amount,
+		conditionAmount,
+		couponCount,
+		score,
+		description,
+		fromDate,
+		endDate,
+		useFromDate,
+		useEndDate,
+		status,
+		couponDay,
+		isDelete,
+		creator,
+		createTime
+		) values(
+		#{mainID},
+		#{name},
+		#{type},
+		#{amount},
+		#{conditionAmount},
+		#{couponCount},
+		#{score},
+		#{description},
+		#{fromDate},
+		#{endDate},
+		#{useFromDate},
+		#{useEndDate},
+		1,
+		#{couponDay},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+	<insert id="insertCoupon" parameterType="couponDTO">
+		insert into
+		kplus_coupon(
+		mainID,
+		batchID,
+		password,
+		amount,
+		customerID,
+		salesOrderID,
+		useTime,
+		status,
+		fromDate,
+		endDate,
+		isDelete,
+		couponDay,
+		creator,
+		createTime
+		)values(
+		#{mainID},
+		#{batchID},
+		#{password},
+		#{amount},
+		#{customerID},
+		#{salesOrderID},
+		#{useTime},
+		#{status},
+		#{fromDate},
+		#{endDate},
+		0,
+		#{couponDay},
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<select id="findCouponBatchByMainId" parameterType="java.lang.String"
+		resultType="couponBatchVO">
+		select * from kplus_coupon_batch where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<update id="updateCouponBatch" parameterType="couponBatchDTO">
+		update kplus_coupon_batch
+		<set>
+			modifyTime=now()
+			<if test="name!=null">
+				,name=#{name}
+			</if>
+			<if test="description!=null">
+				,description=#{description}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="deleteCouponBatch" parameterType="java.lang.String">
+		update
+		kplus_coupon_batch set isDelete=1 where mainID=#{mainID}
+	</update>
+
+	<update id="deleteCoupon" parameterType="java.lang.String">
+		update kplus_coupon set
+		isDelete=1 where batchID=#{batchID}
+	</update>
+
+	<select id="findCouponByBatchID" parameterType="couponDTO"
+		resultType="couponVO">
+		select c.*,ct.username as customerName from kplus_coupon c
+		left join kplus_customer ct on c.customerID=ct.mainID
+		where
+		c.isDelete=0 and
+		c.batchID=#{batchID} limit #{startRow} ,#{pageSize}
+	</select>
+	<select id="findCouponCount" parameterType="couponDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_coupon where isDelete=0 and
+		batchID=#{batchID}
+	</select>
+
+	<select id="findCouponByCouponBatchID" parameterType="java.lang.String"
+		resultType="couponVO">
+		select * from kplus_coupon where isDelete=0 and
+		batchID=#{batchID}
+	</select>
+
+	<update id="updateCouponStatus" parameterType="couponDTO">
+		update kplus_coupon
+		<set>
+			<if test="status!=null">
+				status=#{status}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="updateCouponBatchStatus" parameterType="couponDTO">
+		update kplus_coupon
+		<set>
+			<if test="status!=null">
+				status=#{status}
+			</if>
+		</set>
+		where batchID=#{batchID}
+	</update>
+	<update id="updateCouponBatchSta" parameterType="couponBatchDTO">
+		update kplus_coupon_batch
+		<set>
+			<if test="status!=null">
+				status=#{status}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+</mapper>

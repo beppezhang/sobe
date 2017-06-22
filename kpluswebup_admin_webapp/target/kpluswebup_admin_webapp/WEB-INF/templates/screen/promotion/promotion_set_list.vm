@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>适用范围</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》满送促销》适用范围</span>
+		</div>
+		<div class="userInfoBar">
+			<div class="userInfos">
+				<dl class="clearfix">
+					<dd class="fl">
+						<table class="userTable">
+							<tbody>
+								<tr>
+									<td><em class="grayF">名称：</em>$!promotionVO.name</td>
+									<td><em class="grayF">类型：</em>#if("$!promotionVO.type"=="1")满额减额
+										#elseif("$!promotionVO.type"=="2")满额赠品
+										#elseif("$!promotionVO.type"=="3")满额免邮
+										#elseif("$!promotionVO.type"=="4")满额打折
+										#elseif("$!promotionVO.type"=="5")满额赠券
+										#elseif("$!promotionVO.type"=="6")注册赠券
+										#elseif("$!promotionVO.type"=="7")满件送件
+										#elseif("$!promotionVO.type"=="8")满件免邮
+										#elseif("$!promotionVO.type"=="9")买就减额
+										#elseif("$!promotionVO.type"=="10")买就赠品
+										#elseif("$!promotionVO.type"=="11")买就免邮
+										#elseif("$!promotionVO.type"=="12")买就打折
+										#elseif("$!promotionVO.type"=="13")买就赠券 #end</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td><em class="grayF">有效期：</em>$!date.format("yyyy-MM-dd
+										HH:mm:ss",$!promotionVO.fromDate) 至 $!date.format("yyyy-MM-dd
+										HH:mm:ss",$!promotionVO.endDate)</td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</dd>
+					<dd class="fr" style="margin-top: 35px;"></dd>
+				</dl>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><a
+						href="$!{domain}/admin/promotion/editPromotion.htm?mainId=$!promotionVO.mainID">基本信息</a></li>
+					<li><em class="icon arrowLfWeight"></em><a class="hover"
+						href="$!{domain}/admin/promotion/promotionSetList.htm?promotionID=$!promotionVO.mainID">适用范围</a></li>
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="systemBar">
+						<dl class="formSet">
+							<dd class="clearfix">
+								<div class="formTt">
+									<a id="promotionId" rel="$!promotionVO.mainID"
+										onclick="addPromotionSet();" href="javascript:;">新增</a>
+								</div>
+							</dd>
+							#if($!productTypeList.size()>0)
+							<dd class="clearfix">
+								<div class="formTt">产品类型：</div>
+								<div class="formRow" style="width: 80%;">
+									#foreach($!productType in $!productTypeList) $!productType.name<a
+										href="javascript:;" class="icon iconDel"
+										onclick="deletePromotionSet('$!productType.id');" title="删除"></a>
+									#end
+								</div>
+							</dd>
+							#end #if($!productCategoryList.size()>0)
+							<dd class="clearfix">
+								<div class="formTt">产品类目：</div>
+								<div class="formRow" style="width: 80%;">
+									#foreach($!productCategory in $!productCategoryList)
+									$!productCategory.name
+									#if($!menuUtil.isExistMenu("/admin/promotion/deletePromotion.do",$!menuAllList)
+							)
+									<a href="javascript:;" class="icon iconDel"
+										onclick="deletePromotionSet('$!productCategory.id');"
+										title="删除"></a> 
+									#end
+									#end
+								</div>
+							</dd>
+							#end #if($!productList.size()>0)
+							<dd class="clearfix">
+								<div class="formTt">产品：</div>
+								<div class="formRow" style="width: 80%;">
+									#foreach($!product in $!productList) $!product.name<a
+										href="javascript:;" class="icon iconDel"
+										onclick="deletePromotionSet('$!product.id');" title="删除"></a>
+									#end
+								</div>
+							</dd>
+							#end #if($!itemList.size()>0)
+							<dd class="clearfix">
+								<div class="formTt">商品：</div>
+								<div class="formRow" style="width: 80%;">
+									#foreach($!item in $!itemList) $!item.name<a
+										href="javascript:;" class="icon iconDel"
+										onclick="deletePromotionSet('$!item.id');" title="删除"></a>
+									#end
+								</div>
+							</dd>
+							#end
+						</dl>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function addPromotionSet() {
+			var promotionId = jQuery("#promotionId").attr("rel");
+			var e = '<div style="width:500px">'
+					+ '<table class="searchTable">'
+					+ '<tbody>'
+					+ '<input type="hidden" id="promotionId" value='+promotionId+'>'
+					+ '	<tr>'
+					+ '		<td><span class="grayF"></span> <select class="select" id="promotionsetType" name="promotionsetType">'
+					/* + '				<option value="1">产品类型</option>' */
+					+ '				<option value="2">产品类目</option>'
+		/* 			+ '				<option value="3">产品名称</option>'
+					+ '				<option value="4">商品名称</option>' */
+					+ '		</select></td>'
+					+ '		<td><span class="grayF"></span><input type="text" id="promotionsetName"'
+					+ '			name="promotionsetName" class="cText cTextLen"/></td>'
+					+ '		<td rowspan="3"><input class="searchBtn" type="button"'
+					+ '			value="搜索" onclick="searchPromotionSet()" /></td>'
+					+ '	</tr></tbody></table></div><div id="promotionItemId" class="tableListBar"></div>'
+			kt.getDialog("新增适用范围", e);
+		}
+
+		function searchPromotionSet() {
+			var promotionsetType = jQuery("#promotionsetType").val();
+			var promotionsetName = jQuery("#promotionsetName").val();
+			jQuery
+					.ajax({
+						url : "promotionItemList.do",
+						type : 'POST',
+						dataType : 'json',
+						data : {
+							promotionsetType : promotionsetType,
+							promotionsetName : promotionsetName
+						},
+						success : function(data) {
+							if (data.code == 0) {
+								var areaAry = data.result;
+								var e = '<table class="tableList grid">'
+										+ '<thead>'
+										+ '<tr>'
+										+ '<td><label class="label"> <input type="checkbox" onclick="selectAll()" id="all" /></label></td>'
+										+ '<td>编号</td>'
+										+ '<td>名称</td>'
+										+ '</tr>'
+										+ '</thead>'
+										+ '<tbody id="list" class="promotionsetlist">'
+										+ '</tbody>' + '</table>'
+								jQuery("#promotionItemId").html(e);
+								var pdata;
+								for ( var id in areaAry) {
+									pdata = pdata
+											+ "<tr><td><label class='label'><input type='checkbox' value='"+areaAry[id].mainID+"' id='check_box_"+areaAry[id].mainID+"' /></label></td>"
+											+ "<td>" + areaAry[id].mainID
+											+ "</td>" + "<td>"
+											+ areaAry[id].name + "</td>"
+								}
+								jQuery('.promotionsetlist').html(pdata);
+								var save = '<dd class="clearfix">'
+										+ '<div class="formTt">&nbsp;</div>'
+										+ '<div style="margin-left:50%;" class="formRow">'
+										+ '<input type="button" onclick="submitPromotionSet();"'
+										+ 'class="save" value="提交"></div></dd>'
+								jQuery(".tableList").after(save);
+							}
+						}
+					})
+		}
+
+		function submitPromotionSet() {
+			var promotionId = jQuery("#promotionId").val();
+			var promotionsetType = jQuery("#promotionsetType").val();
+			var valArr = new Array;
+			$("#list :checkbox:checked").each(function(i) {
+				valArr[i] = $(this).val();
+			});
+			var vals = valArr.join(',');
+			if (vals != "") {
+				jQuery.ajax({
+					url : "addPromotionSet.do",
+					type : 'POST',
+					dataType : 'json',
+					data : {
+						promotionID : promotionId,
+						promotionsetIds : vals,
+						promotionsetType : promotionsetType
+					},
+					success : function(data) {
+						if (data.code == 0) {
+							alert("新增成功");
+							location.reload();
+						} else {
+							alert("新增失败");
+						}
+					},
+					error : function() {
+						alert("新增失败");
+					}
+				})
+			} else {
+				alert("请选择促销条件");
+			}
+		}
+
+		function selectAll() {
+			// 全选或全不选
+			if (jQuery("#all")[0].checked) {
+				jQuery("#list :checkbox").prop("checked", true);
+			} else {
+				jQuery("#list :checkbox").prop("checked", false);
+			}
+		}
+	</script>
+	#parse("layout/footer.vm")
+</body>
+</html>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.FavoriteDAO">
+
+	<select id="findFavoriteByPagination" parameterType="favoriteDTO"
+		resultType="favoriteVO">
+		select
+		a.id,
+		b.mainID as productID,
+		b.`name` as productName,
+		c.picURL as
+		picUrl,
+		c.salesPrice as minSalesPrice ,
+		c.standrardPrice as
+		minStandrardPrice,
+		b.`status` as status,
+		b.isDelete as isDelete,
+		a.createTime,
+		c.salesPrice as salePrice,
+		c.mainID as itemID
+		from
+		kplus_favorite a
+		INNER JOIN kplus_product b on
+		a.productID=b.mainID
+		LEFT JOIN kplus_item c on
+		c.productID=b.mainID
+		LEFT JOIN kplus_zy_supplier s on
+		b.supplierID=s.mainID
+		where
+		<if test="customerID != null">
+			a.customerID=#{customerID}
+		</if>
+		and b.isDelete=0
+		and c.isDelete=0
+		and a.isDelete=0
+		and s.isDelete=0
+		group by
+		b.mainID
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findFavoriteCount" parameterType="favoriteDTO"
+		resultType="java.lang.Long">
+		select count(y.id)
+		from 
+		(select
+		a.id,
+		b.mainID as productID,
+		b.`name` as productName,
+		c.picURL as
+		picUrl,
+		c.salesPrice as minSalesPrice ,
+		c.standrardPrice as
+		minStandrardPrice,
+		b.`status` as status,
+		b.isDelete as isDelete,
+		a.createTime,
+		c.salesPrice as salePrice,
+		c.mainID as itemID
+		from
+		kplus_favorite a
+		INNER JOIN kplus_product b on
+		a.productID=b.mainID
+		LEFT JOIN kplus_item c on
+		c.productID=b.mainID
+		LEFT JOIN kplus_zy_supplier s on
+		b.supplierID=s.mainID
+		where
+		<if test="customerID != null">
+			a.customerID=#{customerID}
+		</if>
+		and b.isDelete=0
+		and c.isDelete=0
+		and a.isDelete=0
+		and s.isDelete=0
+		group by
+		b.mainID
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>) y
+		<!-- select count(id) from kplus_favorite where customerID=#{customerID}
+		and isDelete=0
+		<if test="itemID != null">
+			and itemID=#{itemID}
+		</if>
+		<if test="productID != null">
+			and productID=#{productID}
+		</if> -->
+	</select>
+
+	<select id="findCountByitemIdOrProductId" parameterType="favoriteDTO"
+		resultType="java.lang.Long">
+		select count(id) from kplus_favorite where isDelete=0
+		<if test="itemID != null">
+			and itemID=#{itemID}
+		</if>
+		<if test="productID != null">
+			and productID=#{productID}
+		</if>
+	</select>
+
+	<insert id="insertFavorite" parameterType="favoriteDTO">
+		insert into
+		kplus_favorite(
+		customerID,
+		productID,
+		itemID,
+		createTime,
+		creator,
+		modifier,
+		modifyTime,
+		isDelete
+		)values(
+		#{customerID},
+		#{productID},
+		#{itemID},
+		now(),
+		#{creator},
+		#{modifier},
+		#{modifyTime},
+		0
+		)
+	</insert>
+	<select id="findFavoriteByCustomer" parameterType="favoriteDTO"
+		resultType="favoriteVO">
+		SELECT A.* FROM kplus_favorite A
+		WHERE A.isDelete=0 AND
+		A.customerID=#{customerID}
+		AND A.productID=#{productID}
+		group by
+		A.productID
+	</select>
+
+	<select id="findFavoriteByCustomerItem" parameterType="favoriteDTO"
+		resultType="favoriteVO">
+
+		select * from kplus_favorite where isDelete=0
+		<if test="customerID != null">
+			and customerID=#{customerID}
+		</if>
+		<if test="itemID != null">
+			and itemID=#{itemID}
+		</if>
+		<if test="productID != null">
+			and productID=#{productID}
+		</if>
+
+
+	</select>
+
+	<select id="findFavoritesByCustomer" parameterType="favoriteDTO"
+		resultType="favoriteVO">
+		SELECT
+		A.*,B.`name` AS itemName,
+		item.salesPrice AS salePrice,
+		C.picURL as picUrl,
+		C.`name` as productName
+		FROM
+		kplus_favorite A
+		INNER JOIN kplus_product C on
+		A.productID=C.mainID
+		LEFT JOIN kplus_item B on
+		B.productID=C.mainID
+		left join kplus_zy_supplier_item item ON item.itemID=B.mainID
+		WHERE item.salesPrice = (
+		select min(salesPrice) as price from
+		kplus_zy_supplier_item where productID
+		=C.mainID and stock>=2 and
+		status = 1 and isDelete=0 order by
+		modifyTime asc
+		)
+		and A.isDelete=0
+		AND B.isDelete=0
+		AND C.isDelete=0
+		AND A.customerID=#{customerID}
+		group by
+		A.productID
+	</select>
+
+	<update id="updateFavoriteByID" parameterType="java.lang.Long">
+		update
+		kplus_favorite set isDelete=1 where id=#{id}
+	</update>
+
+	<!-- <select id="findEmailByMainID" parameterType="java.lang.String" resultType="emailVO"> 
+		select * from kplus_email where isDelete=0 and mainID=#{mainID} </select> -->
+
+	<!--<update id="updateEmailStatus" parameterType="emailDTO"> update kplus_email 
+		<set> status=#{status} </set> where mainID=#{mainID} </update> -->
+
+</mapper>

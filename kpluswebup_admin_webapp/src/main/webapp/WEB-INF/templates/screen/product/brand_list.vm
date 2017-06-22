@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>品牌列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="tableListBar">
+			<div class="conTit">
+			<em class="icon iconMenu2"></em><a href="productList.htm">产品管理</a>
+			&gt; <span>品牌列表</span>
+				<!--<span>产品管理 》品牌列表</span>-->
+			</div>
+			<div class="tableTool">
+				#if($!menuUtil.isExistMenu("/admin/product/addBrandPage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/product/addBrandPage.htm" class="TableAddBtn" title="新增品牌">+新增品牌</a>
+				#end
+			</div>
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/product/brandlist.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!brandDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!brandDTO.pageSize">
+			</form>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+
+						<td>品牌</td>
+						<td>logo</td>
+						<td>官网地址</td>
+						<td>排序</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					#foreach( $!brandVO in $!list)
+					<tr>
+						<td>$!brandVO.name</td>
+						<td>#if($!brandVO.picURL!="")<img alt=""
+							src="$!{mallStatic}/img/logo/$!brandVO.picURL" style="width: 60px; height: 60px">
+							#end
+						</td>
+						<td>$!brandVO.domain</td>
+						<td>$!brandVO.sortOrder</td>
+						<td class="last">
+							#if($!menuUtil.isExistMenu("/admin/product/editBrandPage.htm",$!menuAllList)
+							) <a class="icon iconEdit"
+							href="$!{domain}/admin/product/editBrandPage.htm?mainID=$!brandVO.mainID"
+							title="编辑"></a>&nbsp; #end
+							#if($!menuUtil.isExistMenu("/admin/product/deleteBrand.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconDel"
+							onclick="deleteBrand('$!{brandVO.mainID}')" title="删除"></a> #end
+						</td>
+					</tr>
+					#end #pagination($!brandDTO)
+				</tbody>
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+
+</html>

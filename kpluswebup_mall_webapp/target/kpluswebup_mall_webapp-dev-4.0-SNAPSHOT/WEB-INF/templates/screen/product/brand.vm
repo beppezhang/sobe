@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>卡塔网络</title>
+#parse("control/public_css_js.vm")
+<link rel="stylesheet" href="$!{mallStatic}/css/list.css">
+</head>
+<body>
+<!-- sider tool bar  -->
+#parse("layout/head_sider.vm")
+ 
+<!-- top bar -->
+#parse("layout/head_top.vm")
+<!-- 头部LOGO -->
+#parse("layout/logo.vm")
+<!-- 头部LOGO -->
+
+<!-- 主导航 -->
+#parse("layout/menu.vm")
+
+
+<!-- banner -->
+<!-- 品牌简介 -->
+<div class="layout clearfix">
+    <div id="brand_info" class="mt10">
+    	<span class="blogo">
+        	<a href="javascript:;"><img src="$!{imgurl}$!{brandVo.picURL}"></a>
+        </span>
+        <p>$!{brandVo.description}</p>
+    </div>
+    <div class="filterbar mt10">
+    	<em class="rt">共<i class="col01">$!{list.size()}</i>个商品</em>
+    	<strong>排序:</strong>
+    	<span class="on"><a href="$!{domain}/mall/item/brandHistory.htm?brandId=$!brandVo.mainID">默认<i></i></a></span>
+        <span><a href="javascript:;" class="pirce">价格<i></i></a></span>
+        <span><a href="javascript:;" class="salesVolume">销量<i></i></a></span>
+        <!--<span><a href="$!{domain}/mall/item/brandHistory.htm?brandId=$!brandVo.mainID">人气<i></i></a></span>  -->
+        <span><a href="javascript:;" class="creatTime">上架时间<i></i></a></span>
+    </div>
+    <div class="prolist sp">
+    		#if($!{list.size()}==0)
+        	<div class="ct mt25 col04">
+            	-- 暂无商品 -- 
+            </div>
+    		#else
+        	<ul class="clearfix">
+        	   #foreach($!product in $!list)
+            	<li>
+                	<strong class="sp_sell">特卖</strong>
+                    <p class="ct"><a href="$!{domain}/mall/product/productDetail.htm?productID=$!product.mainID" target="_blank"><img src="$!{imgurl}$!product.picURL" class="pimg imgMove"></a></p>
+                    <h4><a href="#" target="_blank">$!{product.name}</a></h4>
+                    <!--<p>价格：<strong class="col01 f18">￥ $!{product.scorePrice}</strong>  <em class='jf f18 col05'>$!{product.salesScore}</em></p>  -->
+                    <p>价格：<strong class="col01 f18">￥$!NumberTool.format("#0.00",$!product.minSalesPrice)</strong>  <del>￥$!NumberTool.format("#0.00",$!product.minStandrardPrice)</del></p>
+                </li>
+               #end
+            </ul> 
+            #end
+    </div>
+        #pagination($!product)
+</div>
+<form action="$!{domain}/mall/item/brandHistory.htm" id="seach" method="get">
+<input type="hidden" value="$!product.brandID" name="brandId" id="brandId">
+<input type="hidden" value="$!product.pageNo" name="pageNo" id="pageNo">
+<input type="hidden" value="" name="salePrice" id="salePrice" class="price1">
+<input type="hidden" value="" name="salesVolume" id="salesVolume" class="salesVolume1">
+<input type="hidden" value="" name="creatTime" id="creatTime" class="creatTime1">
+</form>
+<!-- footer -->
+#parse("layout/footer.vm")
+<!-- <script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>-->
+<script type="text/javascript">
+jQuery(function(){
+	jQuery(".creatTime").click(function(){
+		jQuery(".creatTime1").val("1");
+		window.location.href="$!{domain}/mall/item/brandHistory.htm?brandId=$!brandVo.mainID&creatTime='1'";
+	});
+	jQuery(".pirce").click(function(){
+		jQuery(".price1").val("1");
+		window.location.href="$!{domain}/mall/item/brandHistory.htm?brandId=$!brandVo.mainID&salesPrice='1'";
+	});
+	jQuery(".salesVolume").click(function(){
+		jQuery(".salesVolume1").val("1");
+		window.location.href="$!{domain}/mall/item/brandHistory.htm?brandId=$!brandVo.mainID&salesVolume='1'";
+	});
+})
+
+
+
+</script> 
+</body>
+</html>

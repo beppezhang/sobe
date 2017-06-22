@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>我的金币</title>
+</head>
+<body>
+<!-- top bar -->
+#parse("layout/head_top.vm")
+#parse("layout/customercenter/header.vm")
+<!-- crumb -->
+<div id="crumb">
+	<div class="layout clearfix">
+    	<a href="${domain}/index.htm">首页</a> &gt; <a href="${domain}/mall/buyer/userCenter.htm">用户中心</a>
+    </div>
+</div>
+<div class="layout mt10 clearfix">
+  #parse("layout/customercenter/leftmenu.vm")	
+    <div class="mainbody bg">
+    	<div class="titbar_m mt10">
+        	<strong>我的金币</strong>
+        </div>
+        
+         <div class="pro_unit">
+         <form action="$!{domain}/mall/buyer/userPoints.htm"
+			id="seach" method="post">
+			<input type="hidden" id="pageNo" name="pageNo"
+				value="$!accountDetailDTO.pageNo"> 
+			<input type="hidden" id="pageSize" name="pageSize" 
+			    value="$!accountDetailDTO.pageSize">
+		 </form>
+            <table cellspacing="0" cellpadding="0" class="table01">
+                  <tr>
+                    <th width="160">金币</th>
+                    <th width="100">获取方式</th>
+                    <th width="320">获取信息</th>
+                    <th>获取时间</th>
+                  </tr>
+                  #foreach($!accountDetail in $!list)
+                  <tr>
+                    <td><em class="coin col01">
+                        #if("$!accountDetail.detailType"=="1" || "$!accountDetail.detailType"=="3" || "$!accountDetail.detailType"=="4" || "$!accountDetail.detailType"=="5" || "$!accountDetail.detailType"=="7")
+                        +
+                        #else
+                        - 
+                        #end
+                        #if("$!accountDetail.amount"=="")
+                          0
+                        #else
+                           $!NumberTool.format("#0",$!accountDetail.amount)</em></td>
+                        #end
+                    <td>
+	                    #if("$!accountDetail.detailType"=="4")订单奖励
+	                    #elseif("$!accountDetail.detailType"=="1")充值
+	                    #elseif("$!accountDetail.detailType"=="2")订单消费
+	                    #elseif("$!accountDetail.detailType"=="3")退款
+	                    #elseif("$!accountDetail.detailType"=="5")金币奖励
+	                    #elseif("$!accountDetail.detailType"=="6")金币惩罚
+	                    #elseif("$!accountDetail.detailType"=="7")扫码送金币
+	                    #elseif("$!accountDetail.detailType"=="8")取消订单退金币
+	                    #end</td>
+                    <td><a href="javascript:;" target="_blank" class="col02">$!accountDetail.description</a></td>
+                    <td>$!date.format('yyyy-MM-dd HH:mm:ss',$!accountDetail.createTime)</td>
+                  </tr>
+                  #end
+            </table>
+            #pagination($!accountDetailDTO)
+        </div>
+    </div>	
+</div>
+<!-- footer -->
+#parse("layout/footer.vm")
+<script type="text/javascript">
+jQuery(document).ready(function(){
+  jQuery("#user_points_list_cur").addClass("active cur").siblings(".level0").removeClass("cur");
+});
+</script>
+</body>
+</html>

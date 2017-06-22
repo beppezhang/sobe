@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>整车车型</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>产品管理 》整车车型</span>
+		</div>
+		<div class="tableListBar">
+			<!--<div class="tableTool">
+				#if($!menuUtil.isExistMenu("/admin/product/addProductTypePage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/product/addProductTypePage.htm" class="TableAddBtn"
+					title="新增类型">+新增类型</a> #end
+			</div>-->
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/product/vehicleTypeList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!vehicleTypeVO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!vehicleTypeVO.pageSize">
+			</form>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td>No.</td>
+						<td>整车车型编号</td>
+						<td>整车车型名称</td>
+						<td>年款</td>
+						<td>排量</td>
+						<td>整车车型描述</td>
+						<!--<td>操作</td>-->
+					</tr>
+				</thead>
+				<tbody>
+					#foreach( $!vehicleTypeVO in $!list)
+					<tr>
+						<td>$velocityCount</td>
+						<td>$!vehicleTypeVO.mainID</td>
+						<td>$!vehicleTypeVO.name</td>
+						<td>$!vehicleTypeVO.modelYear</td>
+						<td>$!vehicleTypeVO.displacement</td>
+						<td>$!vehicleTypeVO.description</td>
+						<!--<td class="last">
+							#if($!menuUtil.isExistMenu("/admin/product/editProductTypePage.htm",$!menuAllList)
+							) <a class="icon iconEdit"
+							href="$!{domain}/admin/product/editProductTypePage.htm?mainID=$!productTypeVO.mainID"
+							title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/product/deleteProductType.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconDel"
+							onclick="deleteProductType('$!productTypeVO.mainID')" title="删除"></a>
+							#end
+						</td>-->
+					</tr>
+					#end #pagination($!vehicleTypeVO)
+				</tbody>
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+
+</script>
+</html>

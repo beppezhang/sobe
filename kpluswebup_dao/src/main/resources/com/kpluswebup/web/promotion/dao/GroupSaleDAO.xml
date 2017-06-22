@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.promotion.dao.GroupSaleDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID, productID, itemID, penalty, minimum,
+		limitCount, salesPrice,
+		customerGrade,
+		customerGroup, description,
+		fromDate, endDate, isDelete, creator, createTime,
+		modifier,
+		modifyTime
+	</sql>
+
+	<select id="findGroupSaleByMainID" resultType="groupSaleVO"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_groupsale
+		where mainID = #{mainID} and isDelete=0
+	</select>
+
+	<select id="findGroupSaleByPagination" resultType="groupSaleVO"
+		parameterType="groupSaleDTO">
+		SELECT
+		p.name as productName,
+		i.name as itemName,
+		gs.mainID,gs.salesPrice,gs.fromDate,gs.endDate,gs.createTime,o.username
+		as createName
+		FROM
+		kplus_groupsale gs
+		LEFT JOIN kplus_product p ON
+		gs.productID = p.mainID
+		LEFT JOIN
+		kplus_item i ON gs.itemID = i.mainID
+		left join kplus_operator
+		o on
+		gs.creator=o.mainID
+		WHERE
+		gs.isDelete = 0
+		AND p.isDelete = 0
+		AND
+		i.isDelete = 0
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findGroupSaleCount" resultType="java.lang.Long"
+		parameterType="preSaleDTO">
+		SELECT
+		count(gs.id)
+		FROM
+		kplus_groupsale gs
+		LEFT JOIN
+		kplus_product p ON gs.productID = p.mainID
+		LEFT JOIN
+		kplus_item i ON
+		gs.itemID = i.mainID
+		left join kplus_operator
+		o on gs.creator=o.mainID
+		WHERE
+		gs.isDelete = 0
+		AND p.isDelete = 0
+		AND i.isDelete = 0
+	</select>
+
+	<insert id="addGroupSaleSelective" parameterType="groupSaleDTO">
+		insert into kplus_groupsale
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="mainID != null">
+				mainID,
+			</if>
+			<if test="productID != null">
+				productID,
+			</if>
+			<if test="itemID != null">
+				itemID,
+			</if>
+			<if test="penalty != null">
+				penalty,
+			</if>
+			<if test="minimum != null">
+				minimum,
+			</if>
+			<if test="limitCount != null">
+				limitCount,
+			</if>
+			<if test="salesPrice != null">
+				salesPrice,
+			</if>
+			<if test="customerGrade != null">
+				customerGrade,
+			</if>
+			<if test="customerGroup != null">
+				customerGroup,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="fromDate != null">
+				fromDate,
+			</if>
+			<if test="endDate != null">
+				endDate,
+			</if>
+			<if test="isDelete != null">
+				isDelete,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				createTime
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="mainID != null">
+				#{mainID},
+			</if>
+			<if test="productID != null">
+				#{productID},
+			</if>
+			<if test="itemID != null">
+				#{itemID},
+			</if>
+			<if test="penalty != null">
+				#{penalty},
+			</if>
+			<if test="minimum != null">
+				#{minimum},
+			</if>
+			<if test="limitCount != null">
+				#{limitCount},
+			</if>
+			<if test="salesPrice != null">
+				#{salesPrice},
+			</if>
+			<if test="customerGrade != null">
+				#{customerGrade},
+			</if>
+			<if test="customerGroup != null">
+				#{customerGroup},
+			</if>
+			<if test="description != null">
+				#{description},
+			</if>
+			<if test="fromDate != null">
+				#{fromDate},
+			</if>
+			<if test="endDate != null">
+				#{endDate},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete},
+			</if>
+			<if test="creator != null">
+				#{creator},
+			</if>
+			<if test="createTime != null">
+				#{createTime}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateGroupSaleByMainID" parameterType="groupSaleDTO">
+		update kplus_groupsale
+		<set>
+			modifyTime=now()
+			<if test="productID != null">
+				,productID = #{productID}
+			</if>
+			<if test="productID != null">
+				,itemID = #{itemID}
+			</if>
+			<if test="penalty != null">
+				,penalty = #{penalty}
+			</if>
+			<if test="minimum != null">
+				,minimum = #{minimum}
+			</if>
+			<if test="limitCount != null">
+				,limitCount = #{limitCount}
+			</if>
+			<if test="salesPrice != null">
+				,salesPrice = #{salesPrice}
+			</if>
+			<if test="customerGrade != null">
+				,customerGrade = #{customerGrade}
+			</if>
+			<if test="customerGroup != null">
+				,customerGroup = #{customerGroup}
+			</if>
+			<if test="description != null">
+				,description = #{description}
+			</if>
+			<if test="fromDate != null">
+				,fromDate = #{fromDate}
+			</if>
+			<if test="endDate != null">
+				,endDate = #{endDate}
+			</if>
+			<if test="isDelete != null">
+				,isDelete = #{isDelete}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+	<update id="deleteGroupSaleByMainID" parameterType="java.lang.String">
+		update
+		kplus_groupsale set isDelete=1 where mainID = #{mainID}
+	</update>
+
+</mapper>

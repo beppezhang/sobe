@@ -1,0 +1,9 @@
+<div id="header">
+	<div class="layout txt_r clearfix"> 
+    	<span class="lt"><a href="$!{domain}/index.htm"><img src="$!{imgurl}$!{shopLogo}" class="logo" alt="卡塔网络"></a></span>
+    	<img  style="width: 570px"   src="$!{mallStatic}/img/pic-sm.png">
+        <span class="scbox">
+        <a href="$!{domain}/shoppingCart1.htm"><img src="$!{mallStatic}/img/pic-shopcart.png" class="sc_img"></a>
+        </span>
+    </div>
+</div>

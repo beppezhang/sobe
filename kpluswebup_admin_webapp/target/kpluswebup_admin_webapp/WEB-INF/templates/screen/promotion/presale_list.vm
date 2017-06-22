@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品预售</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》商品预售</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/promotion/preSaleList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!preSaleDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!preSaleDTO.pageSize">
+				<div class="tableTool">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">商品编号：</span><input type="text"
+									name="searchItemID" class="cText" value="$!preSaleDTO.itemID" /></td>
+								<td><span class="grayF">商品名称：</span><input type="text"
+									name="searchItemName" class="cText"
+									value="$!preSaleDTO.itemName" /></td>
+								<td><span class="grayF">预售时间：</span> <input type="text"
+									name="searchFromDate" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!preSaleDTO.fromDate)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+									<input type="text" name="searchEndDate" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!preSaleDTO.endDate)" /></td>
+								<td rowspan="3">
+									#if($!menuUtil.isExistMenu("/admin/promotion/preSaleList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a>
+				#if($!menuUtil.isExistMenu("/admin/promotion/deletePreSale.do",$!menuAllList)
+				) <a href="javascript:;" title="删除" id="deletePreSaleAll"><em
+					class="icon iconDel"></em></a> #end
+				#if($!menuUtil.isExistMenu("/admin/promotion/addPreSale.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/promotion/addPreSale.htm"
+					class="TableAddBtn" title="新增预售">+新增预售</a> #end
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="" id="all" /></label></td>
+						<td>商品编号</td>
+						<td>商品名称</td>
+						<td>预售价格(元)</td>
+						<td>预售数量</td>
+						<td>开始时间</td>
+						<td>结束时间</td>
+						<td>创建时间</td>
+						<td>创建人</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!preSale in $!preSaleList)
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="$!preSale.mainID" id="check_box_$!preSale.mainID" /></label></td>
+						<td>$!preSale.itemID</td>
+						<td>$!preSale.itemName</td>
+						<td>$!NumberTool.format("#0.00",$!preSale.salesPrice)</td>
+						<td>$!preSale.maxmumQty</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!preSale.fromDate)</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!preSale.endDate)</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!preSale.createTime)</td>
+						<td>$!preSale.createName</td>
+						<td>
+							#if($!menuUtil.isExistMenu("/admin/promotion/editPreSale.htm",$!menuAllList)
+							) <a
+							href="$!{domain}/admin/promotion/editPreSale.htm?mainId=$!preSale.mainID"
+							class="icon iconEdit" title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/promotion/deletePreSale.do",$!menuAllList)
+							) <a href="javascript:;"
+							onclick="deletePreSale('$!preSale.mainID');" class="icon iconDel"
+							title="删除"></a> #end
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!preSaleDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>

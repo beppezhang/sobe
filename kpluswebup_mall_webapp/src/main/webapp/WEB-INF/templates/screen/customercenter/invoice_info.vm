@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>发票信息</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/jquery-ui.css">
+<style>
+/***错误提示样式***/
+form.cmxform label.error,label.error {
+	color: red;
+}
+</style>
+
+</head>
+<body>
+<!-- top bar -->
+	#parse("layout/head_top.vm")
+<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+<!-- 主导航 -->
+	#parse("layout/menu.vm")
+<!-- body头部 -->
+	#parse("layout/customercenter/header.vm")
+	
+<div class="layout clearfix">
+<!-- 左边菜单 -->
+	#parse("layout/customercenter/leftmenu.vm")
+<div class="mainbody">
+	<div class="tittab txt_r clearfix">
+      	  <span class="cur lt">发票信息</span>
+	</div>
+	<form action="$!{domain}/mall/buyer/saveInvoiceInfo.htm" method="post" id="userForm">
+		<input type="hidden" name="mainID" value="$!customerVO.mainID" />
+		<div class="userInfo mt25">
+			<div class="pic"></div>
+				<dl class="clearfix">
+					<dt>税务登记证：</dt>
+					<dd>
+						<input type="hidden" value="$!customerVO.picURL2" name="picURL2" id="picURL2"> 
+						<img id="uploadImage2" src="$!{domain}$!customerVO.picURL2" style="width: 100px; height: 100px;">
+						<input name="myfiles" type="file" id="myBlogImage2" class="srcHen"onchange="ajaxFileUploads(2);" />
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>单位名称：</dt>
+					<dd><input name="companyName" type="text" class="ipt" value="$!customerVO.companyName"></dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>地址：</dt>
+					<dd><input name="address" type="text" class="ipt" value="$!customerVO.address"></dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>电话：</dt>
+					<dd><input name="mobile" type="text" class="ipt" value="$!customerVO.mobile"></dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>开户银行：</dt>
+					<dd><input name="openingBank" type="text" class="ipt" value="$!customerVO.openingBank"></dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>帐号：</dt>
+					<dd><input name="accountNumber" type="text" class="ipt" value="$!customerVO.accountNumber"></dd>
+				</dl>
+				<dl class="clearfix">
+					<dt>账户：</dt>
+					<dd><input name="bankAccount" type="text" class="ipt" value="$!customerVO.bankAccount"></dd>
+				</dl>
+			</div>
+			<p class="mt25" style="padding-left:280px;"><a href="javascript:;" class="saveLink" onclick="saveInvoiceInfo();">保存修改</a></p>
+		</form>
+	</div>
+</div>
+<!-- footer -->
+	#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery.validate.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/user.js"></script>
+<script type="text/javascript">
+function saveInvoiceInfo() {
+	$("#userForm").submit();
+}
+
+jQuery(document).ready(function(){
+	jQuery("#invoiceInfo").addClass("cur").siblings(".leve10").removeClass("cur");
+})
+
+jQuery(document).ready(
+	function() {
+		jQuery("#user_info_cur").addClass("active cur").siblings(".level0").removeClass("cur");
+		jQuery("form").validate({
+			rules : {
+				companyName : {
+					required : true
+				},
+				address : {
+					required : true
+				},
+				mobile : {
+					required : true,
+					digits : true,
+					minlength : 11
+				},
+				openingBank : {
+					required : true
+				},
+				accountNumber : {
+					required : true
+				},
+				bankAccount : {
+					required : true
+				}
+			},
+			messages : {
+				companyName : {
+					required : "必填字段"
+				},
+				address : {
+					required : "必填字段"
+				},
+				mobile : {
+					required : "必填字段",
+					digits : "只能输入数字",
+					minlength : jQuery.validator
+							.format("请输入正确的手机号")
+					
+				},
+				openingBank : {
+					required : "必填字段"
+				},
+				accountNumber : {
+					required : "必填字段"
+				},
+				bankAccount : {
+					required : "必填字段"
+				}
+			}
+		});
+	});
+/** 上传头像 * */
+function ajaxFileUpload() {
+	jQuery.ajaxFileUpload({
+		url : '/file/fileUpload.do',
+		secureuri : false,// 是否启用安全提交,默认为false
+		fileElementId : 'myBlogImage',// 文件选择框的id属性
+		dataType : 'text',// 服务器返回的格式,可以是json或xml等
+		success : function(data, status) {
+			data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+			data = data.replace("</PRE>", '');
+			data = data.replace("<pre>", '');
+			data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+			if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+				jQuery("img[id='uploadImage']").attr("src",
+						data.substring(2));
+				jQuery("#picURL").val(data.substring(2));
+				var mainID = jQuery("#mainID").val();
+				var picURL = jQuery("#picURL").val();
+				jQuery.ajax({
+					url : '/mall/buyer/saveAvatar.do',
+					data : {
+						'mainID' : mainID,
+						'picURL' : picURL
+					},
+					secureuri : false,// 是否启用安全提交,默认为false
+					fileElementId : 'myBlogImage',// 文件选择框的id属性
+					dataType : 'text',// 服务器返回的格式,可以是json或xml等
+					success : function() {
+					}
+				});
+			} else {
+				jQuery('#result').html('图片上传失败，请重试！！');
+			}
+		},
+		error : function(data, status, e) { // 服务器响应失败时的处理函数
+			jQuery('#result').html('图片上传失败，请重试！！');
+		}
+	});
+}
+</script>
+</body>
+</html>

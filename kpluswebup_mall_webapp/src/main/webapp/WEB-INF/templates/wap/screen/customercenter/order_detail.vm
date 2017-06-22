@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+<head>
+<title>订单详情</title>
+<meta http-equiv="Content-Type"
+	content="application/vnd.wap.xhtml+xml; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/indi.css">
+<style>
+body {
+	padding-bottom: 150px;
+}
+
+.amount {
+	bottom: 55px;
+}
+</style>
+</head>
+
+<body>
+	<div class="order_details clearfix">
+		<span class="fullname">$!order.dvName</span> <span class="tele">$!order.dvMobile</span>
+		<p class="address">$!salesOrderVO.dvProvinceName
+			$!salesOrderVO.dvCityName $!salesOrderVO.dvDistrictName
+			$!salesOrderVO.dvAddress</p>
+	</div>
+
+	<div class="order_info">
+		<span class="order">订单信息</span>
+	</div>
+	<div class="info">
+
+		<p>
+			<!-- #if("$!order.orderStatus"=="1"&&"$!order.paymentStatus"=="0"&&"$!order.paymentType"=="1")
+    	<a class="btn imm_pay"
+				href="javascript:;" onclick="wxPay('$!order.mainID')">立即支付</a>
+		#end -->
+			订单状态<span class="col01"> #if($!order.orderStatus==0) 已取消
+				#elseif("$!order.orderStatus"=="1"&&"$!order.paymentStatus"=="0")
+				未支付
+				#elseif("$!order.orderStatus"=="1"&&"$!order.paymentStatus"=="1")
+				已支付 #elseif($!order.orderStatus==2) 待出库
+				#elseif($!order.orderStatus==3) 待发货 #elseif($!order.orderStatus==4)
+				已发货 #elseif($!order.orderStatus==5) 已收货
+				#elseif($!order.orderStatus==6) 已完成
+				#elseif("$!order.orderStatus"=="7") 售后申请中
+				#elseif("$!order.orderStatus"=="8") 售后处理中
+				#elseif("$!order.orderStatus"=="9") 已售后
+				#elseif("$!order.orderStatus"=="10") 售后已取消
+				#elseif("$!order.orderStatus"=="11") 售后申请被拒绝 #end </span>
+		</p>
+		<p>
+			订单编号<span>$!order.mainID</span>
+		</p>
+		<p>
+			订单金额<span class="col01">￥$!NumberTool.format("#0.00",$!order.totalAmount)</span>
+		</p>
+		<p>
+			下单时间<span>$!date.format('yyyy-MM-dd',$!order.createTime)</span>
+		</p>
+		<p>
+			支付方式<span>#if("$!order.paymentType"=="1")款到发货
+				#end#if("$!order.paymentType"=="2")货到付款#end</span>
+		</p>
+	</div>
+
+	<div class="order_info">
+		<span class="shopping">商品信息</span>
+	</div>
+	#foreach($!li in $!list)
+	<div class="commodity">
+		<ul>
+			<li><a
+				href="$!domain/weixin/productDetail.htm?productID=$!li.productID"
+				class="commodity_info clearfix"> <img
+					src="$!{imgurl}$!li.itemPicUrl">
+					<h3
+						href="$!domain/weixin/productDetail.htm?productID=$!li.productID">$!li.itemName</h3>
+					<em class="f14">￥$!NumberTool.format("#0.00",$!li.salesPrice)<b>x$!li.itemCount</b></em>
+			</a> #if("$!order.orderStatus"=="6") <a class="refund"
+				href="$!domain/weixin/changeOrder.htm?orderID=$!order.mainID">售后
+			</a>#end</li>
+		</ul>
+	</div>
+	#if("$!order.orderStatus"=="4" || "$!order.orderStatus"=="5" || "$!order.orderStatus"=="6")
+	<div class="order_info">
+		<span class="order">物流信息</span>
+	</div>
+	<div class="info">
+		#foreach($!salesOrderTransVO in $!salesOrderVO.salesOrderTrans)
+		<p>
+			$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderTransVO.operatorDate)
+			<span>$!salesOrderTransVO.status #if($!velocityCount==1) <em
+				class="col02">【宏递快运】 快递编号：$!salesOrderTransVO.orderCode</em> #end
+			</span>
+		</p>
+		#end
+	</div>#end
+	<div class="order_info">&nbsp;</div>
+	<div class="amount">
+		<p>
+			<span>总金额</span><em>￥$!NumberTool.format("#0.00",$!order.totalAmount)</em>（共
+			$!list.size() 件 邮费￥$!NumberTool.format("#0.00",$!order.expressFee)）
+		</p>
+	</div>#end
+#parse("wap/layout/head_sider.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+jQuery(function() {
+	jQuery(".userLink").addClass("cur");
+});
+function wxPay(orderId) {
+	jQuery.ajax({
+		url : "ajaxGetWXPay.do",
+		type : 'POST',
+		dataType : "json",
+		data : {
+			'orderId' : orderId
+		},
+		success : function(rt) {
+			if (rt.code == 0) {
+				WeixinJSBridge
+					.invoke(
+							'getBrandWCPayRequest',
+							{
+								"appId" : rt.result.appId, //公众号名称，由商户传入
+								"timeStamp" : rt.result.timeStamp, //时间戳
+								"nonceStr" : rt.result.nonceStr, //随机串
+								"package" : "prepay_id="
+										+ rt.result.prePayId,
+								"signType" : "MD5",
+								"paySign" : rt.result.paySign
+							},
+							function(res) {
+								if (res.err_msg == "get_brand_wcpay_request:ok") {
+									window.location.href = "/weixin/getPayCallBack.htm?orderId="
+											+ orderId;
+								}
+							})
+			}
+		}
+	});
+}
+</script>
+</body>
+</html>
+

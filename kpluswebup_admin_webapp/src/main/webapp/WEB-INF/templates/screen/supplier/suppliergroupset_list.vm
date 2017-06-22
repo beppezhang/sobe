@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>组内供应商</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+		        <em class="icon iconMenu1 "></em><a href="supplierList.htm">供应商管理</a> &gt; <a href="suppliergroupList.htm">供应商分组</a> &gt; <a href="editSupplierGroupPage.htm?mainID=$!{supplierGroupVO.mainID}">编辑分组</a> &gt; <span>组内供应商</span>
+		</div>
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul class="supplier_menu">
+					<li class="supplier_menu_1"><a
+						href="${domain}/admin/supplier/editSupplierGroupPage.htm?mainID=$!{supplierGroupVO.mainID}">基本信息</a></li>
+					<li class="member_menu_2"><em class="icon arrowLfWeight"></em><a
+						class="hover"
+						href="$!{domain}/admin/supplier/supplierGroupSetList.htm?groupID=$!{supplierGroupVO.mainID}">组内供应商</a></li>
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+					<form id="serachform" name="serachform" method="post"
+						action="$!{domain}/admin/supplier/supplierGroupSetList.htm?groupId=$!supplierGroupVO.mainID">
+						<input type="hidden" id="pageNo" name="pageNo"
+							value="$!supplierGroupMemberDTO.pageNo"> <input type="hidden"
+							id="pageSize" name="pageSize" value="$!supplierGroupMemberDTO.pageSize">
+					</form>
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td>供应商编号</td>
+									<td>用户名</td>
+									<td>公司名称</td>
+									<td>最近登录时间</td>
+									<td>最近登录IP</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!suppliergroupset in $!suppliergroupsetList)
+								<tr>
+									<td>$!suppliergroupset.supplierID</td>
+									<td>$!suppliergroupset.username</td>
+									<td>$!suppliergroupset.name</td>
+									<td>$!date.format("yyyy-MM-dd
+										HH:mm:ss",$!suppliergroupset.lastLoginTime)</td>
+									<td>$!suppliergroupset.lastLoginIP</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!supplierGroupMemberDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <script type="text/javascript">
+ $(function(){
+////////////////////////////////菜单样式///////////////////////////////////////
+	 $(".member_menu_2").append("<em class='icon arrowLfWeight'></em>").find("a").addClass("hover").siblings().removeClass("hover");
+ })
+</script> -->
+#parse("layout/footer.vm")
+</body>
+</html>

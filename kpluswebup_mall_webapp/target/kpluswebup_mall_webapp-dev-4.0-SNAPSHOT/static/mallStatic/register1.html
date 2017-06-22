@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>注册页面1</title>
+	<meta charset="utf-8"/>
+	<link rel="stylesheet" type="text/css" href="css/global.css">
+	<link rel="stylesheet" type="text/css" href="style/login.css">
+	<link rel="stylesheet" type="text/css" href="style/register1.css">
+</head>
+<body>
+	<!-- 头部 -->
+	<div class="header">
+		<div class="w">
+			<div class="zl">
+				<a href="#" target="_blank">log</a>
+			</div>
+			<ul class="zr">
+				<li class="#" target="_blank"><a href="">首页</a></li>
+				<li class="spacer"></li>
+				<li><a href="#" target="_blank">帮助中心</a></li>
+			</ul>
+			<span class="clean_up"></span>
+		</div>
+	</div>
+
+	<!-- 内容 -->
+	<div class="content matter">
+		<div class="ct">
+			<div class="step">dsf</div>
+			<div class="detail">
+				<div class="form">
+					<div class="it">
+						<span class="pt1"><b>*</b>手机号码</span>
+						<span class="pt_val"><input type="text" name="tel" class="tel" autocomplete="off" placeholder="请输入您的手机号码"></span>
+					</div>
+					<div class="it">
+						<span class="pt1">&nbsp;</span>
+						<span class="pt_val"><input name="" class="getvf" type="button" value="点此获取验证码"></span>
+					</div>
+					<div class="it">
+						<span class="pt1"><b>*</b>验证码</span>
+						<span class="pt_val"><input type="text" name="verify" class="verify" autocomplete="off" placeholder="输入验证码"></span>
+					</div>
+					<div class="it">
+						<span class="pt1"><b>*</b>登陆密码</span>
+						<span class="pt_val"><input type="text" name="logpwd" class="logpwd" autocomplete="off" placeholder="设置您的登陆密码"></span>
+					</div>
+					<div class="it">
+						<span class="pt1"><b>*</b>再次确认</span>
+						<span class="pt_val"><input type="text" name="re_log" class="re_log" autocomplete="off" placeholder="再次输入您的登陆密码"></span>
+					</div>
+					
+					<div class="it">
+						<span class="pt1"><b>*</b>手机号码</span>
+						<span class="pt_val"><input type="text" name="p-tel" class="p-tel" autocomplete="off" placeholder="输入您的手机号码"></span>
+					</div>
+					<div class="it">
+						<span class="pt1"><b>*</b>公司名称</span>
+						<span class="pt_val"><input type="text" name="compy" class="compy" autocomplete="off" placeholder="输入公司名称"></span>
+					</div>
+					<div class="sp">
+						<span class="pt1"><b>*</b>营业执照</span>
+						<span class="pt_val cump"><input type="file" name="busi" class="up_file" autocomplete="off"></span>
+					</div>
+					<div class="it">
+						<span class="pt1"><b>*</b>收货地址</span>
+						<span class="pt_val">
+							<select value="prv">
+								<option>选择省份</option>
+								<option>选择省份</option>
+							</select>
+							<select value="city">
+								<option>选择市</option>
+								<option>选择市</option>
+							</select>
+							<select value="county">
+								<option>选择区县</option>
+								<option>选择区县</option>
+							</select>
+						</span>
+					</div>
+					<div class="it">
+						<span class="pt1"></span>
+						<span class="pt_val"><input type="text" style="width:333px;"name="comp_adr" class="logname" autocomplete="off" placeholder="输入公司的地址"></span>
+					</div>
+
+					<div class="it">
+						<span class="pt1"></span>
+						<span class="pt_val">
+							<span>
+								<input type="checkbox" name="sel_box" class="sel_box" style="border:none;">
+							</span>
+							<span class="xy">
+								创建网站账户的同时，我同意 : -遵守-<a class="col01" href="#">《网站服务协议》</a>
+							</span>
+						</span>
+					</div>
+					
+					
+					<div class="it">
+						<span class="pt1 fw"></span>
+						<a class="pt_val psub" href="###" target="_blank">下一步</a>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<!-- 底部 -->
+	<div class="foot" style="margin-top:100px;">
+		<div class="w">
+			<div class="v">
+				<ul class="fr">
+					<li target="_blank"><a href="#">关于中邮普泰</a></li>
+					<li class="spacer"></li>
+					<li><a href="#" target="_blank">我们的团队</a></li>
+					<li class="spacer"></li>
+					<li><a href="#" target="_blank">网站联盟</a></li>
+					<li class="spacer"></li>
+					<li><a href="#" target="_blank">热门搜索</a></li>
+					<li class="spacer"></li>
+					<li><a href="#" target="_blank">友情链接</a></li>
+					<li class="spacer"></li>
+					<li><a href="#" target="_blank">诚征人才</a></li>
+				</ul>
+			</div>
+			<div class="v">
+				<ul class="fr">
+					<li>浙ICP备2121245</li>
+					<li class="spacer"></li>
+					<li>台字B1.B2-201300004</li>
+					<li class="spacer"></li>
+					<li>互联网药品信息服务资格证</li>
+					<li class="spacer"></li>
+					<li>互联网药品交易服务资格证</li>
+				</ul>
+			</div>
+			<div class="v">
+				<ul class="fr">
+					<li>Copyright 中邮普泰 2007-2015 , All rights Reserved</li>
+				</ul>
+			</div>
+			<span class="cl_up"></span>
+		</div>
+	</div>
+<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>    
+<script>
+$(function(){
+	$(".getvf").click(function(){
+		 var i=60;
+		 var countdown = setInterval(CountDown, 1000);
+		 function CountDown() {
+			$(".getvf").attr("disabled",true).addClass("off").val( i + "秒后重新获取!");
+			if (i == 0) {
+				$(".getvf").removeAttr("disabled").removeClass("off").val("重新获取验证码");
+				clearInterval(countdown);
+			}
+			i--;
+		}
+	})	
+})
+</script>    
+</body>
+</html>

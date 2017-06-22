@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user.css">
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	#parse("layout/suppliercenter/leftmenu.vm")
+	
+    <div id="rightMain">
+       <div class="crumbs">
+          商家管理中心 &gt; <a href="supplierCenter.htm">首页</a> &gt; 订单列表
+       </div>
+       <div class="p15">
+             <div class="odbox clearfix">
+                   <div class="lt_box">
+                      <div class="tt">
+                          <strong>订单信息</strong>
+                      </div>
+                      <div class="mes">
+                          <dl class="clearfix">
+                              <dt>收货地址：</dt>
+                              <dd>
+                                  $!salesOrderVO.dvName，$!salesOrderVO.dvProvinceName $!salesOrderVO.dvCityName $!salesOrderVO.dvDistrictName $!salesOrderVO.dvAddress
+             
+                              </dd>
+                          </dl>
+                          <dl class="clearfix">
+                              <dt>收货人：</dt>
+                              <dd>$!salesOrderVO.dvName </dd>
+                          </dl>
+                          <dl class="clearfix">
+                              <dt>手机号码：</dt>
+                              <dd>$!salesOrderVO.dvMobile </dd>
+                          </dl>
+                          <dl class="clearfix">
+                              <dt>发票类型：</dt>
+                              <dd>
+                              #if("$!salesOrderVO.invoiceType"=="1")个人   #end
+                              #if("$!salesOrderVO.invoiceType"=="2")公司  #end
+                              </dd>
+                          </dl>
+                          <dl class="clearfix">
+                              <dt>发票：</dt>
+                              <dd>$!salesOrderVO.invoiceTitle </dd>
+                          </dl>
+                           
+                          <dl class="clearfix">
+                              <dt>买家留言：</dt>
+                              <dd>
+                                  $!salesOrderVO.memo
+                              </dd>
+                          </dl>
+                          <dl class="clearfix">
+                              <dt style="color:red;">交易凭证：</dt>
+                              <dd>
+                                 <img src="$!doaminImg$!salesOrderVO.proofURL">
+                              </dd>
+                          </dl>
+                          <dl class="clearfix bt">
+                              <dt>订单编号：</dt>
+                              <dd>
+                                  <em class="rt more"><a href="#" class="col02">更多</a></em>
+                                  $!salesOrderVO.mainID
+                              </dd>
+                          </dl>
+                      </div>
+                  </div>
+                  <div class="rt_box">
+                      <h2 class="status ok">订单状态：
+                        #if("$!salesOrderVO.orderStatus"=="0") 订单已取消
+                        #elseif("$!salesOrderVO.orderStatus"=="1") 待确认
+                        #elseif("$!salesOrderVO.orderStatus"=="2") 待出库
+                        #elseif("$!salesOrderVO.orderStatus"=="3") 待发货
+                        #elseif("$!salesOrderVO.orderStatus"=="4") 已发货
+                        #elseif("$!salesOrderVO.orderStatus"=="5") 已收货
+                        #elseif("$!salesOrderVO.orderStatus"=="6") 已完成
+                        #elseif("$!salesOrderVO.orderStatus"=="7") 售后申请中
+                        #elseif("$!salesOrderVO.orderStatus"=="8") 售后处理中
+                        #elseif("$!salesOrderVO.orderStatus"=="9") 已售后
+                        #elseif("$!salesOrderVO.orderStatus"=="10") 售后已取消  
+                        #elseif("$!salesOrderVO.orderStatus"=="11") 售后申请被拒绝 #end  
+                      </h2>
+                      <p class="mt20 ml35">1、发货后请及时将发票图上传；</p>
+					  <p class="ml35">2、如遇付款问题请及时联系客服：400-757-1888</p>
+                  </div>
+              </div>
+              <table class="odTable mt25">
+                 <tbody class="odlist"> 
+                
+                        <tr class="sp">
+                            <th width="400" class="bl">商品</th>
+                            <th width="15%">单价(元)</th>
+                            <th width="15%">数量</th>
+                            <th width="15%">售后维权</th>
+                            <th  width="15%" class="br">交易操作</th>
+                        </tr>
+                      
+                     <tr>
+                        <td class="bg" colspan="5">
+                            <span class="ml10">物流公司： <a href="#" class="col01">$!salesOrderVO.expressName</a></span>
+                            <span class="ml35">物流单号：$!salesOrderVO.expressNumber</span>
+                            <!-- <span class="ml35"><a href="#" class="col01 cp">物流跟踪</a></span> -->
+                        </td>
+                     </tr>  
+                     #foreach($!salesOrderLine in $!salesOrderVO.salesOrderLineList)      
+                      <tr>
+                        <td class="bl">
+                            <a href="javaScript:seeItem('$!{salesOrderLine.productID}','$!{salesOrderLine.itemID}');" class="col01">
+                                <img src="$!{domainImg}$!salesOrderLine.itemPicUrl" class="pimg lt">
+                                $!salesOrderLine.itemName
+                            </a>
+                        </td>
+                        <td class="ct">$!NumberTool.format("#0.00",$!salesOrderLine.salesPrice)</td>
+                        <td class="ct">$!salesOrderLine.itemCount</td>
+                        <td class="ct">
+                           #if("$!salesOrderLine.status" == "1")
+                                                                                                           正常                                                                           
+                           #else
+                                                                                                        买家申请售后                                                                                  
+                           #end
+                        </td>
+                         #if("$!{velocityCount}"=="1")
+                        <td class="ct bl br" rowspan="$!salesOrderVO.salesOrderLineList.size()">
+                            #if("$!salesOrderVO.orderStatus"=="0") 已取消
+                            #elseif("$!salesOrderVO.orderStatus"=="1") 待确认
+                            #elseif("$!salesOrderVO.orderStatus"=="2") 待出库
+                            #elseif("$!salesOrderVO.orderStatus"=="3") 待发货
+                            #elseif("$!salesOrderVO.orderStatus"=="4") 已发货
+                            #elseif("$!salesOrderVO.orderStatus"=="5") 已收货
+                            #elseif("$!salesOrderVO.orderStatus"=="6") 已完成
+                            #elseif("$!salesOrderVO.orderStatus"=="7") 退换货申请中
+                            #elseif("$!salesOrderVO.orderStatus"=="8") 已退货
+                            #elseif("$!salesOrderVO.orderStatus"=="9") 拒绝申请
+                            #elseif("$!salesOrderVO.orderStatus"=="10") 已换货 #end    
+                        </td>
+                        #end
+                      </tr>
+                      #end
+                 </tbody> 
+                
+                 <tr>
+                    <td colspan="7" class="btmTotal txt_r">
+                       <!--  <p>其他信息：满500减50</p> -->
+                        <p>
+                          #if($!salesOrderVO.expressFee)
+                          运费：￥$!NumberTool.format("#0.00",$!salesOrderVO.expressFee)
+                          #else
+                          #end
+                        </p>
+                        <p><strong>订单金额：<em class="col03 f16">￥$!NumberTool.format("#0.00",$!salesOrderVO.totalAmount)</em>元</strong></p>
+                    </td>
+                 </tr> 
+           </table>
+            <!--<div class="tittab txt_r mt20 clearfix" id="logistics" name="logistics">
+       	    <span class="cur lt">物流动态</span>
+        </div>-->
+        <div class="logistics">
+        	<ul>
+        	   #foreach($!salesOrderTransVO in $!salesOrderVO.salesOrderTrans)
+            	<li>
+                	<span class="logtime">
+                    	#if($!salesOrderTransVO.operatorDate!='')
+                    		$!salesOrderTransVO.operatorDate
+                    	#end
+                    	#if($!salesOrderTransVO.operatorDate=='')
+                    		$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderTransVO.reciveTime)
+                    	#end
+                    </span>
+                   
+                    <span class="logmes">
+                    	$!salesOrderTransVO.scanSite
+                   		 $!salesOrderTransVO.operators
+                    	$!salesOrderTransVO.status
+                    	 #if($!velocityCount==1)
+                    	 卖家已发货<em class="col02">【宏递快运】 快递编号：$!salesOrderTransVO.orderCode</em> 
+                    	 #end
+                    </span>
+                </li>
+                #end
+            </ul>
+        </div>
+       </div>      
+    </div>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+<script type="text/javascript">
+  $("dd:eq(5)").addClass("on");
+  function seeItem(productID,itemID){
+	    if(productID != null && itemID != null){
+		    var data = {
+					productID : productID,
+				itemID : itemID
+			}
+		   jQuery.ajax({
+					url : "$!{domain}/mall/seller/seeItem.do",
+					type : "POST",
+					data : data,
+					dataType : "json",
+					success : function(data) {
+						if (data.code == 0) {
+							var tempwindow=window.open('_blank');
+							tempwindow.location='$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID;
+							//window.open('$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID);
+						} else {
+							alert("该商品已下架！");
+						}
+					},
+					error : function() {
+						alert("操作失败");
+					}
+			});
+	    }else{
+	       alert("商品已下架！");
+	    }
+		
+	}
+</script>
+</body>
+</html>

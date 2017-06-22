@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+<title>我的订单</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/indi.css">
+</head>
+<body>
+	<div class="my_order clearfix">
+    	<ul class="clearfix">
+            <li class="cur">
+                <a href="$!{domain}/weixin/userOrder.htm">全部</a>
+            </li>
+        	<li>
+                <a href="$!{domain}/weixin/userOrder.htm?orderStatus=1">待付款</a>
+            </li>
+            <li>
+                <a href="$!{domain}/weixin/userOrder.htm?orderStatus=4">待收货</a>
+            </li>
+            <li>
+                <a href="$!{domain}/weixin/userOrder.htm?orderStatus=6">已结束</a>
+            </li>
+        </ul>
+    </div>
+    
+    #foreach($!li in $!list)
+    <div class="pay_state">
+    	<h2 class="txt_r clearfix">
+        	<span class="state lt">
+        	#if($!li.orderStatus==0) 订单已取消
+			#elseif("$!li.orderStatus"=="1"&&"$!li.paymentStatus"=="0") 未支付
+			#elseif("$!li.orderStatus"=="1"&&"$!li.paymentStatus"=="1") 已支付
+			#elseif($!li.orderStatus==2) 待出库
+			#elseif($!li.orderStatus==3) 待发货
+			#elseif($!li.orderStatus==4) 已发货
+			#elseif($!li.orderStatus==5) 已收货
+			#elseif($!li.orderStatus==6) 已完成
+			#elseif("$!li.orderStatus"=="7") 售后申请中
+			#elseif("$!li.orderStatus"=="8") 售后处理中
+			#elseif("$!li.orderStatus"=="9") 已售后
+			#elseif("$!li.orderStatus"=="10") 售后已取消
+			#elseif("$!li.orderStatus"=="11") 售后申请被拒绝
+			#end
+        	</span>
+			<!-- #if($!li.orderStatus==4) <a href="http://m.kuaidi100.com/index_all.html?type=shentong&postid=$!li.expressNumber&callbackurl=$!domain/weixin/userOrder.htm" ><span class="number">物流单号:$!li.expressNumber</span></a>#end -->
+            <a href="$!domain/weixin/userOrderDetail.htm?orderID=$!li.mainID"><span class="number">订单编号:$!li.mainID</span></a>
+        </h2>
+        <input type="hidden" name="productID" value="$!li.productID">
+        <ul>
+        #foreach($!line in $!li.salesOrderLineList)
+        	<li>
+            	<a href="javascript:;" class="clearfix productDetail" data-productID="$!line.productID" data-domain="$!domain">
+<!--             	<a href="$!domain/weixin/productDetail.htm?productID=$!line.productID" class="clearfix productDetail" data-productID="$!line.productID"> -->
+                	<img src="$!{imgurl}$!line.itemPicUrl" alt=""/>
+                    <strong class="lt">$!line.itemName</strong>
+                    <b class="rt">x $!line.itemCount</b>
+                    <em>￥$!NumberTool.format("#0.00",$!line.salesPrice)</em>
+                </a>
+            </li>
+            #end
+        </ul>
+        <div class="total clearfix">
+        	<div class="total_info">
+                <strong>合计<em>￥$!NumberTool.format("#0.00",$!li.totalAmount)</em></strong>
+                <span>( 运费 ￥#if("$!li.expressFee"!="")$!NumberTool.format("#0.00",$!li.expressFee)#else 0.00 #end)</span>
+            </div>
+            #if("$!li.orderStatus"=="1")
+			<a class="btn cancel_order"
+				href="$!domain/weixin/usercancel.htm?orderID=$!li.mainID">取消订单</a>
+			#elseif("$!li.orderStatus"=="5" || "$!li.orderStatus"=="6") <a
+				class="btn services"
+				href="$!domain/weixin/changeOrder.htm?orderID=$!li.mainID">我要售后</a>
+				
+				<a class="btn services" href="javascript:;" onclick="deleteSalesOrder('$!li.mainID')">删除订单</a>
+			#elseif(!("$!li.orderStatus"=="1"&&"$!li.paymentStatus"=="0"))
+            <a class="btn cancel_order" href="$!domain/weixin/userOrderDetail.htm?orderID=$!li.mainID">订单详情</a>
+			#end
+			#if("$!li.orderStatus"=="0")
+				<a class="btn services" href="javascript:;" onclick="deleteSalesOrder('$!li.mainID')">删除订单</a>
+			#end
+			
+        </div>
+        <div class="pay_state">
+    </div>     
+        </div>
+    #end
+   #parse("wap/layout/head_sider.vm")
+<script type="text/javascript" src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script>
+<script>
+   $(function(){
+		var orderStatus="$!{orderStatus}";
+		if(orderStatus!=""){
+			if(orderStatus=="1"){
+			   $(".my_order li").eq(1).find("a").addClass("on").closest("li").siblings("li").find("a").removeClass("on");
+			}else if(orderStatus=="4"){
+			   $(".my_order li").eq(2).find("a").addClass("on").closest("li").siblings("li").find("a").removeClass("on");
+			}else if(orderStatus=="6"){
+			   $(".my_order li").eq(3).find("a").addClass("on").closest("li").siblings("li").find("a").removeClass("on");
+			}
+		}else{
+		   $(".my_order li").eq(0).find("a").addClass("on").closest("li").siblings("li").find("a").removeClass("on");
+		}
+   })
+	function wxPay(orderId){
+    jQuery.ajax({url:"ajaxGetWXPay.do",
+		type : 'POST',
+    	dataType:"json", 
+		data :{'orderId' :orderId}, 
+		success : function(rt) {
+		   if(rt.code==0){
+		      WeixinJSBridge.invoke('getBrandWCPayRequest',{
+		      "appId" : rt.result.appId, //公众号名称，由商户传入
+		      "timeStamp": rt.result.timeStamp , //时间戳
+		      "nonceStr" :rt.result.nonceStr, //随机串
+		      "package" : "prepay_id="+rt.result.prePayId,
+		      "signType" : "MD5", 
+		      "paySign" : rt.result.paySign 
+		      },function(res){
+		       if(res.err_msg=="get_brand_wcpay_request:ok"){
+		        window.location.href="/weixin/getPayCallBack.htm?orderId="+orderId;
+		       }
+		    })
+		   }
+		}
+	});
+   }
+   
+   /** 删除订单* */
+	function deleteSalesOrder(mainID) {
+		jQuery.ajax({
+			url : "deleteSalesOrder.do",
+			data : {
+				"mainID" : mainID
+			},
+			type : "POST",
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 0) {
+					alert("删除成功！");
+					location.reload();
+				} else {
+					alert("删除失败！");
+				}
+			},
+			error : function() {
+				alert("系统出错！");
+			}
+		});
+	}
+   
+   /** 商品是否下架 **/
+   jQuery(".productDetail").click(function(){
+	  var productID = jQuery(this).attr("data-productID");
+	  jQuery.ajax({
+			url : "checkProductByID.do",
+			data : {
+				"productID" : productID
+			},
+			type : "POST",
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 0) {
+					window.location.href="/weixin/productDetail.htm?productID="+productID;
+				} else {
+					alert("该宝贝已下架！");
+				}
+			},
+			error : function() {
+				alert("系统出错！");
+			}
+		});
+	  
+   });
+</script>
+	
+	
+</body>
+</html>
+
+

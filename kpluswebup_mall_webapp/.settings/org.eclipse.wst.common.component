@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="kpluswebup_mall_webapp">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/css" source-path="/src/main/webapp/static/mallStatic/css"/>
+        <wb-resource deploy-path="/images" source-path="/src/main/webapp/static/mallStatic/images"/>
+        <wb-resource deploy-path="/img" source-path="/src/main/webapp/static/mallStatic/img"/>
+        <wb-resource deploy-path="/js" source-path="/src/main/webapp/static/mallStatic/js"/>
+        <dependent-module archiveName="kpluswebup_service_system-4.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kpluswebup_service_system/kpluswebup_service_system">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kpluswebup_dao-4.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kpluswebup_dao/kpluswebup_dao">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kpluswebup_common-4.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kpluswebup_common/kpluswebup_common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kpluswebup_service_order-4.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kpluswebup_service_order/kpluswebup_service_order">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kpluswebup_service_customer-4.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kpluswebup_service_customer/kpluswebup_service_customer">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kpluswebup_service_product-4.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kpluswebup_service_product/kpluswebup_service_product">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kpluswebup_service_promotion-4.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kpluswebup_service_promotion/kpluswebup_service_promotion">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kpluswebup_service_account-4.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kpluswebup_service_account/kpluswebup_service_account">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kpluswebup_service_content-4.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kpluswebup_service_content/kpluswebup_service_content">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kpluswebup_service_supplier-4.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kpluswebup_service_supplier/kpluswebup_service_supplier">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="java-output-path" value="/kpluswebup_mall_webapp/target/classes"/>
+        <property name="context-root" value="kpluswebup_mall_webapp-dev-4.0-SNAPSHOT"/>
+    </wb-module>
+</project-modules>

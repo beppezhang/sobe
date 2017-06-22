@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>站内信</title>
+</head>
+<body>
+<!-- top bar -->
+#parse("layout/head_top.vm")
+#parse("layout/customercenter/header.vm")
+<!-- crumb -->
+<div id="crumb">
+	<div class="layout clearfix">
+    	<a href="${domain}/index.htm">首页</a> &gt; <a href="${domain}/mall/buyer/userCenter.htm">用户中心</a>
+    </div>
+</div>
+<div class="layout mt10 clearfix">
+#parse("layout/customercenter/leftmenu.vm")
+    <div class="mainbody bg">
+    	<div class="titbar_m mt10">
+        	<strong>站内信</strong>
+        </div>
+        <div class="pro_unit">
+        <form action="$!{domain}/mall/buyer/userMessage.htm"
+						id="seach" method="post">
+						<input type="hidden" id="pageNo" name="pageNo"
+							value="$!dto.pageNo"> 
+						<input type="hidden"
+							id="pageSize" name="pageSize" value="$!dto.pageSize">
+					</form>
+            <table cellspacing="0" cellpadding="0" class="table01">
+                  <tr>
+                    <th width="160"><select name=""><option>全部消息</option></select></th>
+                    <th>内容</th>
+                    <th width="160">时间</th>
+                    <th>读取状态</th>
+                  </tr>
+                   #foreach($!MessageVO in $!list)
+                  <tr>
+                    <td><em class="news">$!MessageVO.title</em></td>
+                    <td>$!MessageVO.content</td>
+                    <td>$!date.format('yyyy-MM-dd HH:mm:ss ',$!MessageVO.createTime)</td>
+                    <td>
+                    #if("$!{MessageVO.isReaded}"==0)
+                        <a href="$!{domain}/mall/buyer/updateMessageStatus.htm?messageId=$!{MessageVO.mainID}">未读</a> 
+                    #else
+                                                                         已读
+                    #end</td>
+                  </tr>
+             	 #end
+            </table>
+            #pagination($!dto)
+        </div>
+    </div>	
+</div>
+<!-- footer -->
+#parse("layout/footer.vm")
+<script type="text/javascript">
+jQuery(document).ready(function(){
+  jQuery("#user_message_list_cur").addClass("active cur").siblings(".level0").removeClass("cur");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/base.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user1.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/jquery-ui.css">
+<script type="text/javascript" src="$!{mallStatic}/script/admin.js">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+<script language="javascript" src="$!{mallStatic}/script/jquery-1.9.1.js"></script>
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+
+/*template*/
+.templates{margin: 20px 55px;}
+.templates .box{border-bottom: 1px solid #e7ecee;line-height: 30px;color: #333;padding:10px 0;clear: both;overflow: hidden;}
+.templates .template{width: 90%;float: left;}
+.templates .template ul{clear: both;overflow: hidden;}
+.templates .template ul li{width: 24%;float: left;}
+.templates .template ul li strong{color: #555;}
+.templates .template span{color: #999;}
+.templates .btn{float: right;width: 10%;text-align: right;padding-top: 20px;}
+.templates .btn a{width: 68px;height: 28px;display: inline-block;background: #f6f8f8;color: #555;border:solid #eaeeea 1px;text-align: center;line-height: 28px;margin-top: 20px;border-radius: 3px;}
+.templates .btn a.red{border-color: #eb5933;background: #eb5933;color: #fff;}
+
+</style>
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	#parse("layout/suppliercenter/leftmenu.vm")
+	 <div id="rightMain">
+      <div class="crumbs">
+          商家管理中心 &gt; <a href="supplierCenter.htm">首页</a> &gt; 运费管理
+      </div>
+       <div class="p15">
+            <div class="stitbar">
+                <strong>运费模板</strong>
+                <span class="rt">
+					<a id="exportSupplierSalesOrder" class="icon iconExport areabut" title="+新增模板" href="addFreightTemplatePage.htm" style="border-color: #cd4121;color: #cd4121 !important;">+新增模板</a>
+				</span>
+            </div>
+			
+
+						<!--form  S------->
+						<div class="systemBar">
+							<div class="templates">
+								#foreach($!freighttemplate in $!freighttemplateList)
+								<div class="box">
+									<div class="template">
+										<ul>
+											<li><strong>模板名称：$!freighttemplate.name</strong></li>
+											<li><strong>物流公司：$!freighttemplate.expressName</strong></li>
+											<li><strong>计费方式：#if("$!freighttemplate.priceType"=="1")按重量
+													#elseif("$!freighttemplate.priceType"=="2")按件数
+													#elseif("$!freighttemplate.priceType"=="3")按体积
+													#elseif("$!freighttemplate.priceType"=="4")按单 #end </strong></li>	
+										</ul>
+										<ul>
+											<li><span>起步单位：</span>$!freighttemplate.firstCondition
+													#if("$!freighttemplate.priceType"=="1")千克
+													#elseif("$!freighttemplate.priceType"=="2")件
+													#elseif("$!freighttemplate.priceType"=="3")cm³
+													#elseif("$!freighttemplate.priceType"=="4")单
+													#end
+											</li>
+											<li><span>起步价：</span>$!NumberTool.format("#0.00",$!freighttemplate.firstPrice)元</li>
+											<li><span>加价单位：</span>$!freighttemplate.addUnit
+													#if("$!freighttemplate.priceType"=="1")千克
+													#elseif("$!freighttemplate.priceType"=="2")件
+													#elseif("$!freighttemplate.priceType"=="3")cm³
+													#elseif("$!freighttemplate.priceType"=="4")单
+													#end
+											</li>
+											<li><span>加价：</span>$!NumberTool.format("#0.00",$!freighttemplate.addPrice)元</li>
+										</ul>
+										#foreach($!ftPrice in $!freighttemplate.priceList)
+										<p>
+											<span>地区：</span>#foreach($!areaSet in
+											$!ftPrice.priceareasetList)$!areaSet.areaName #end
+										</p>
+										<ul>
+											<li><span>起步单位：</span>$!ftPrice.firstCondition
+													#if("$!freighttemplate.priceType"=="1")千克
+													#elseif("$!freighttemplate.priceType"=="2")件
+													#elseif("$!freighttemplate.priceType"=="3")cm³
+													#elseif("$!freighttemplate.priceType"=="4")单
+													#end
+											</li>
+											<li><span>起步价：</span>$!NumberTool.format("#0.00",$!ftPrice.firstPrice)元</li>
+											<li><span>加价单位：</span>$!ftPrice.addUnit
+													#if("$!freighttemplate.priceType"=="1")千克
+													#elseif("$!freighttemplate.priceType"=="2")件
+													#elseif("$!freighttemplate.priceType"=="3")cm³
+													#elseif("$!freighttemplate.priceType"=="4")单
+													#end
+											</li>
+											<li><span>加价：</span>$!NumberTool.format("#0.00",$!ftPrice.addPrice)元</li>
+										</ul>
+										#end
+									</div>
+									<div class="btn" style="padding-top: 0;text-align: center;">
+										<strong>操作</strong>
+										<a class="red"
+											href="editFreightTemplatePage.htm?mainID=$!freighttemplate.mainID">编辑</a>
+										<a
+											href="javascript:;"
+											onclick="setDefaultFreightTemplate('$!freighttemplate.mainID');">默认</a>
+										<a href="javascript:;"
+											onclick="deleteFreightTemplate('$!freighttemplate.mainID');">删除</a>
+									</div>
+								</div>
+								#end
+							</div>
+						</div>
+						<!--form  E------->
+
+					 <div class="pagerbar clearfix ct">#pagination($!FreightTemplateVO)</div> 
+						
+        </div>      
+    </div>
+               
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-ui.min.js"></script>
+<script type="text/javascript">
+  $("dd:eq(11)").addClass("on");
+  $(".datepicker").datepicker();  
+</script>
+</body>
+</html>

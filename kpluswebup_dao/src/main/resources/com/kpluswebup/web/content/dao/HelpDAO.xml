@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.content.dao.HelpDAO">
+
+	<select id="findHelpByPagination" parameterType="cmsHelpCenterDTO"
+		resultType="cmsHelpCenterVO">
+		select
+		co.mainID,
+		co.name,
+		ca.name as categoryName,
+		co.sortOrder
+		from
+		kplus_cms_helpcenter
+		co left join kplus_cms_category
+		ca on
+		co.categoryID=ca.mainID where
+		co.isDelete=0
+		<if test="name !=null">
+			and co.name like '%${name}%'
+		</if>
+		order by
+		co.sortOrder
+		desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findHelpCount" parameterType="cmsHelpCenterDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_cms_helpcenter where
+		isDelete=0
+		<if test="name !=null">
+			and name like '%${name}%'
+		</if>
+	</select>
+
+	<update id="deleteHelpByMainID" parameterType="cmsHelpCenterDTO">
+		update
+		kplus_cms_helpcenter set isDelete=1 where
+		mainID=#{mainID}
+	</update>
+
+	<insert id="insertHelp" parameterType="cmsHelpCenterDTO">
+		insert into
+		kplus_cms_helpcenter(
+		mainID,
+		categoryID,
+		name,
+		content,
+		sortOrder,
+		isDelete,
+		creator,
+		createTime
+		)
+		values(
+		#{mainID},
+		#{categoryID},
+		#{name},
+		#{content},
+		#{sortOrder},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<select id="findHelpByMainID" parameterType="cmsHelpCenterDTO"
+		resultType="cmsHelpCenterVO">
+		select * from kplus_cms_helpcenter where mainID=#{mainID}
+		and isDelete=0
+	</select>
+	
+	<select id="findHelps" resultType="cmsHelpCenterVO">
+		select * from kplus_cms_helpcenter 
+		where isDelete=0
+	</select>
+
+	<update id="updateHelpByMainID" parameterType="cmsHelpCenterDTO">
+		update kplus_cms_helpcenter
+		<set>
+			modifyTime=now()
+			<if test="name != null">
+				, name = #{name}
+			</if>
+			<if test="categoryID != null">
+				, categoryID = #{categoryID}
+			</if>
+			<if test="content != null">
+				, content = #{content}
+			</if>
+			<if test="sortOrder != null">
+				,sortOrder = #{sortOrder}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID =#{mainID}
+	</update>
+	<select id="findHelpCategoryNameList" parameterType="cmsCategoryDTO"
+		resultType="cmsCategoryVO">
+		select
+		c.*
+		from kplus_cms_category
+		c where
+		c.isDelete=0 and c.categoryType=4 order by
+		c.sortOrder
+		desc
+	</select>
+
+	<select id="frinCmsHelpCenterList" parameterType="java.lang.String"
+		resultType="cmsHelpCenterVO">
+		SELECT h.* FROM kplus_cms_helpcenter h LEFT JOIN
+		kplus_cms_category c ON c.mainID= h.categoryID
+		where h.isDelete=0 and c.isDelete=0 and c.mainID=#{mainID}
+	</select>
+	
+</mapper>

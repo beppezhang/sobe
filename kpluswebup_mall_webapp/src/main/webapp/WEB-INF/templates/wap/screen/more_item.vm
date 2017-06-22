@@ -1,0 +1,24 @@
+#foreach($!item in $!itemList)
+<li>
+	<div class="tb">
+		<span class="pimg cell"><a
+			href="$!{domain}/weixin/productDetail.htm?productID=$!item.productID"><img
+				src="$!{imgurl}$!item.picURL"></a></span> <span class="ptxt cell">
+			<p>
+				<a
+					href="$!{domain}/weixin/productDetail.htm?productID=$!item.productID">$!item.name</a>
+			</p>
+			<p class="mt5">
+				<em class="pirce col01">￥$!NumberTool.format("#0.00",$!item.salesPrice)</em>
+				<del>￥$!NumberTool.format("#0.00",$!item.standrardPrice)</del>
+			</p>
+			<p class="txt_r clearfix">
+				<a
+					href="javascript:addcat('$!item.productID','$!item.mainID','$!item.supplierID','$!item.stock');"
+					class="qkLink">加入购物车</a>
+			</p>
+		</span>
+	</div>
+</li>
+#end
+<input type="hidden" id="pageNo1" name="pageNo" value="$!pageNo">

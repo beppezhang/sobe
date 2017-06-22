@@ -1,0 +1,607 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="${mallStatic}/css/supplier.css">
+<link rel="stylesheet" href="${mallStatic}/css/base.css">
+<link rel="stylesheet" href="${mallStatic}/css/busin.css">
+<link rel="stylesheet" type="text/css" href="${mallStatic}/css/jquery.mcdropdown.min.css">
+<style type="text/css">
+span.error {
+height: 16px;
+  line-height: 16px;
+  padding-left: 18px;
+  margin-left: 10px;
+  display: inline-block;
+	  background: url(${mallStatic}/images/icons_9.png) no-repeat left center;
+	  color: #f67649;
+  }
+  span.ok {
+  height: 16px;
+  line-height: 16px;
+  padding-left: 18px;
+  margin-left: 10px;
+  display: inline-block;
+  background: url(${mallStatic}/images/icons_8.png) no-repeat left center;
+  color: #196c18;
+  }
+</style>
+<script src="${mallStatic}/js/jquery-1.9.1.js" type="text/javascript"></script>
+<script type="text/javascript" src="${mallStatic}/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="$!{domain}/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/jquery.scrollto.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/verify.js"></script>
+<script type="text/javascript" src="${mallStatic}/js/public.js"></script>
+
+<script type="text/javascript">
+function selCategory(id){
+    //验证
+    var errorresult=$(".errorresult");
+    errorresult.removeClass("error text-error");
+    errorresult.text("");
+    $("#productTypeMainID").val(id);
+   jQuery.ajax({url:"${domain}/mall/seller/addProductTypeProductItemPro.htm",
+			type : 'GET',
+			contentType:"application/x-www-form-urlencoded;charset=UTF-8", 
+    		dataType:"html",
+			data :{'productTypeMainID' :id,'productID':'$!productID'}, 
+			success : function(data) {
+				 typeChange(id);
+			 $("#child_list1").html(data);
+			// $("#child_list1")[0].innerHTML = data;
+			}
+		});
+  
+ }
+function typeChange(productTypeMainID){
+	var data = {
+		productTypeMainID : productTypeMainID
+	}
+	var url = "findProductTypeBrand.do";
+	jQuery.ajax({
+		url : url,
+		type : "POST",
+		data : data,
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 0) {
+				var catAry = data.result;
+				$("#brandID").empty()
+				var pbrandID = $("#pbrandID").val()
+				for ( var i in catAry) {
+					if (pbrandID == catAry[i].brandID) {
+						$("#brandID").append(
+								"<option value='"+catAry[i].brandID+"'  selected >"
+										+ catAry[i].brandName
+										+ "</option> ");
+					} else {
+						$("#brandID").append(
+								"<option value='"+catAry[i].brandID+"'   >"
+										+ catAry[i].brandName
+										+ "</option> ");
+					}
+
+				}
+
+			} else {
+				alert("加载失败");
+			}
+		},
+		error : function() {
+			alert("加载失败");
+		}
+	});
+	//findProductTypeProductProp(productTypeMainID)
+}
+function itemMainIDCheck(val){
+    var mainID = $(this).val();
+	     if(mainID==""){
+	    	 mainID = false;
+	    	 alert("商品编码必须填写");
+	     }else{
+	    	 mainID = true;
+	     }	
+	
+}
+function findProductTypeProductProp(productTypeMainID) {
+	var productID = '$!productID';
+	if(productID==''){
+	  productID = jQuery("#productID").val();
+		
+	}
+	var data = {
+		productTypeMainID : productTypeMainID,
+		productID : productID
+	}
+	var url = "productTypeProductProp.do";
+	jQuery
+			.ajax({
+				url : url,
+				type : "POST",
+				data : data,
+				dataType : "json",
+				success : function(data) {
+					 if (data.code == 0) {
+						var catAry = data.result;
+						$("#ptpo").empty()
+						for ( var i in catAry) {
+							$("#ptpo")
+									.append(
+											"<li class='clearfix'><span class='name'>"
+													+ catAry[i].name
+													+ ":</span><span class='name'><em>*</em>"
+													+ catAry[i].propValues
+													+ "</span></li>");
+						} 
+					} else {
+						alert("加载失败");
+					}
+				},
+				error : function() {
+					alert("加载失败");
+				}
+			});
+}	
+var editor;
+KindEditor.ready(function(K) {
+    editor = K.create("textarea.product_mark", {
+        allowFileManager : true
+    });
+});
+
+$(document).ready(function (){
+	if('$!productTypeMainID'!=''){
+		selCategory('$!productTypeMainID')
+	}
+	
+	
+		$("#brandID").blur(function(){
+			if($(this).val()==""){
+				alert();
+				return;
+			}
+		})
+	$("#name").blur(function(){
+	     var commodityname = $(this).val();
+		     if(commodityname==""){
+		     commoditymak = false;
+		     $(this).next("span").removeClass("ok").addClass("error").text("商品标题不能空");
+		     }else{
+		     commoditymak = true;
+		     $(this).next("span").removeClass("error").addClass("ok").text("");
+		     }		
+		});
+	
+	$("#salesprice").blur(function(){
+	     var salesprice = $(this).val();
+		     if(salesprice==""){
+		    	 salesprice = false;
+		    alert("销售价必须填写");
+		     }else{
+		    	 salesprice = true;
+		     }	
+		});
+	$("#itemMainID").blur(function(){
+	     var mainID = $(this).val();
+		     if(mainID==""){
+		    	 mainID = false;
+		    alert("商品编码必须填写");
+		     }else{
+		    	 mainID = true;
+		     }	
+		});
+	
+	$("#stock").blur(function(){
+	     var stock = $(this).val();
+		     if(stock==""){
+		    	 stock = false;
+		    alert("库存必须填写");
+		     }else{
+		    	 salesprice = true;
+		     }	
+		});
+	
+	//市场价验证
+		$("#productStandPrice").blur(function(){
+       var marketname = $(this).val();  
+       if(marketname=="元"){
+          marketmak = false;
+          $(this).next().removeClass("ok").addClass("error").text("市场价格不能空");
+       }else{
+        if(marketname!="元"){      
+        var pdtato1 = /^[0-9]+\.?[0-9]*$/;      
+        if(pdtato1.test(marketname)){
+        marketmak = true;
+        $(this).next("span").removeClass("error").addClass("ok").text("");                                     
+        }else{
+        marketmak = false;
+        $(this).next("span").removeClass("ok").addClass("error").text("请输入数字");
+	        };
+	      };
+	    };    
+      });
+		 //商品描述
+	      $("#product_mark").blur(function(){
+		     var descriptionname = $(this).val();
+		     if(descriptionname==""){
+		     descriptionmak = false;
+		     $(this).next("span").removeClass("ok").addClass("error").text("商品描述不能空");
+		     }else{
+		     descriptionmak = true;
+		     $(this).next("span").removeClass("error").addClass("ok").text("");
+		     };	
+		}); 	
+	//验证所属分类
+	$(".productTypeMainID").blur(function(){
+		 	 var productTypeMainID=$(".productTypeMainID").val();
+		     if(productTypeMainID==""){
+		    	 productTypeMainID = false;
+		    	 $(this).next("span").removeClass("ok").addClass("error").text.text("请选择所属分类!");
+		     }else{
+		    	 productTypeMainID = true;
+		    	 $(this).next("span").removeClass("error").addClass("ok").text("");
+			}
+ 		});
+	//验证所属分类
+	$(".supplierCategoryID").blur(function(){
+		 	 var supplierCategoryID=$(".supplierCategoryID").val();
+		 	 if(supplierCategoryID==""){
+		 		supplierCategoryID = false;
+		    	 $(this).next("span").removeClass("ok").addClass("error").text.text("请选择所属分类!");
+		     }else{
+		    	 supplierCategoryID = true;
+		    	 $(this).next("span").removeClass("error").addClass("ok").text("");
+		     }
+ 		});
+   $(".productTypeMainID").mcDropdown(".mcdropdown_menuCat");
+   $(".supplierCategoryID").mcDropdown(".mcdropdown_menuCat1"); 
+    $(".page_submit").click(function(){
+        $(".verify_nonempty, .verify_isnan, .verify_textlength").blur();
+        $(".category").each(function(){
+            var _val = $(this).val();
+            if(!_val){
+                $(this).addClass("text_error");
+            }else{
+                $(this).removeClass("text_error");
+            }
+        });
+        if($(".text_error").length){
+            $($(".text_error")[0]).focus().ScrollTo();
+            return false;
+        }
+    });
+    
+    jQuery(".nextLink").bind(
+			"click",
+			function() {
+				$("#productTypeMainID,#supplierCategoryID,#product_mark,#productStandPrice,#name").blur();
+				if($("#supplierCategoryID").val()==""){
+					 alert("请选择店铺分类");
+						return false;
+				}
+				if($(".formRow select[id='brandID']").text()==''){
+					alert('请选择品牌');
+				return false;
+				}
+				if($("#productTypeMainID").val()==""){
+					 alert("请选择所属分类");
+						return false;
+				}
+				if($("#name").val()==""){
+					 alert("请输入产品名称");
+						return false;
+				}
+				if($("#productStandPrice").val()=="元"){
+					 alert("请输入产品市场价格");
+						return false;
+				}
+				if($(".error").length>0){
+					alert("请填写完整的信息");
+					return false;
+				}
+				
+				if($(".select_product_color input:checkbox:checked").size()<1||$(".select_product_size input:checkbox:checked").size()<1){
+					alert("请选择销售属性");
+					return false;
+				}
+				var _val = "";
+				jQuery("input[type='checkbox'],input[type='radio']").not(".isRecommend").each(
+					function() {
+						if (jQuery(this).prop("checked")) {
+							_val += jQuery(this).val() + "|";
+						}
+					}
+				)
+				jQuery("#productDetail").val(_val);
+				
+				jQuery("#allPreList").html("");
+	            var str="";//用于保存以“,”分割并拼接起来的字符串val 说明：商品编号,销售规格,商品名称,图片,市场价,采购价,销售价格(元),库存,起订数,体积,重量(kg),线下货号,排序
+	            jQuery("tbody tr[data-name]").each(function(){
+	               
+	                ind1="";
+	                ind2="";
+	                jQuery(this).find("td").each(function(){
+	                    if(jQuery(this).index()==0){//表格第一列
+	                    	ind1=jQuery(this).html().replace(/^\s+|\s+$/g,"")+":"+jQuery(this).attr("data")+"~";
+	                    	ind2=jQuery(this).attr("propType");
+	                        return true;
+	                    }else if(jQuery(this).index()==1){//表格第四保存img src
+	                    	jQuery(this).find("ul").each(function(){
+	                    		 str="";
+	                    		 str2="";
+	                    		 str2+=ind2;
+	                    		 str+=ind1;
+	                    		jQuery(this).find("li").each(function(){
+		                    		if(jQuery(this).index()==0){
+			                        	str+=jQuery(this).html().replace(/^\s+|\s+$/g,"")+":"+jQuery(this).attr("data")+"|";
+			                        	str2+=jQuery(this).attr("propType")
+			                        	str+=str2+"|";
+			                       		return true;
+		                    		}else{
+		                    			/* if(jQuery(this).find("input").val().replace(/^\s+|\s+$/g,"")==""){
+		                    				alert("不能为空");
+		                    				return;
+		                    			} */
+		                    			str += jQuery(this).find("input").val().replace(/^\s+|\s+$/g,"") + "|";
+		                    		}
+	                    		})
+	                    		 str +=jQuery("#productStandPrice").val()+ "|"+jQuery("#name").val()+ "|";
+				                jQuery("#allPreList").append("<input type='hidden' name='items' value='"+str+"'/>");//生成隐藏域
+	                    	})
+	                    }
+	                })
+	               
+	            })
+	            return;
+			})
+});
+
+</script>
+</head>
+
+<body>
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	 #parse("layout/suppliercenter/leftmenu.vm")
+	 #if($!operatorMethod=='add')
+    <form action="$!domain/mall/seller/addProduct.htm" method="post">
+     #elseif($!operatorMethod=='edit')
+     <form action="$!domain/mall/seller/updateProduct.htm" method="post">
+     #end
+        <input type="hidden" name="supplierID" value="$!{supplierVO.mainID}">
+         <input type="hidden" name="mainID" value="$!productID">
+    <div id="rightMain">
+    	<div class="crumbs">
+        	商家管理中心 &gt; 商品管理 &gt; 发布商品
+        </div>
+        <div class="p15">
+            <div class="stitbar">
+                <strong>发布商品</strong>
+            </div>
+            <div class="accInfo mt25 shop_setting">
+                <dl class="clearfix verify">
+                    <dt><em class="red">*</em>产品名称：</dt>
+                    <dd><input class="text langtext verify_textlength verify_nonempty" data-length="30" data-length-follow="true" data-nonempty-istrim="true" type="text" id="name" name="name" value="$!{productVO.name}"><span class="prompt_1"></span></dd>
+                    <span class="note">还可以输入<em class="verify_handle" data-length-follow="true" data-length-turn="true">30</em>个字</span>
+                </dl>
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>所属分类：</dt>
+                    <dd>
+                        <div class="cons">
+                            <div style="margin:5px 0;"><input type="text" name="productTypeMainID" class="productTypeMainID" value="$!productTypeMainID" /><span></span></div>
+                            <ul class="mcdropdown_menu mcdropdown_menuCat">
+                            #foreach($!productCategoryVO in $!categoryList)
+                                <li rel="$!productCategoryVO.productTypeID"  #if($!categoryList.size()==0) onclick="selCategory('$!productCategoryVO.productTypeID');" #end>$!productCategoryVO.name
+                                    <ul>
+                                     #foreach($!childProductCategoryVO in $!productCategoryVO.levelTwo)
+                                        <li rel="$!childProductCategoryVO.productTypeID" #if($!productCategoryVO.levelTwo.size()==0) onclick="selCategory('$!childProductCategoryVO.productTypeID');" #end>$!childProductCategoryVO.name
+                                            <ul>
+                                             #foreach($!lastProductCategoryVO in $!childProductCategoryVO.levelThre)
+                                                <li rel="$!lastProductCategoryVO.productTypeID" onclick="selCategory('$!lastProductCategoryVO.productTypeID');">$!lastProductCategoryVO.name</li>
+                                               #end
+                                            </ul>
+                                        </li>
+                                     #end
+                                    </ul>
+                                </li>
+                                #end
+                            </ul>
+                            <div class="child_list" id="child_list1">
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>店铺分类：$!supplierCategoryID11</dt>
+                    <dd>
+                        <div class="cons">
+                            <div style="margin:5px 0;"><input type="text" name="supplierCategoryID" class="supplierCategoryID" value="$!supplierCategoryID" /><span></span></div>
+                            <ul class="mcdropdown_menu mcdropdown_menuCat1">
+	                           	   #foreach($!supplierCategoryVO in $!businclassList)
+	                                <li rel="$!supplierCategoryVO.mainID">$!supplierCategoryVO.name
+	                               	   <ul>
+	                                    #foreach($!childSupplierCategoryVO in $!supplierCategoryVO.childBusinClassList)
+	                                        <li rel="$!childSupplierCategoryVO.mainID">$!childSupplierCategoryVO.name</li>
+	                                    #end
+	                                   </ul>
+		                             </li>
+	                                #end
+                            </ul>
+                            <div class="child_list" id="child_list2">
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>市场价格：</dt>
+                    <dd>
+                        <input class="text shorttext think_value verify_nonempty verify_isnan" data-think-value="元" data-think-istrim="true" data-nonempty-istrim="true" type="text" value="$!productVO.standPrice" id="productStandPrice" name="productStandPrice" data-think-color="rgb(116, 116, 71)" style="color: rgb(204, 204, 204);">
+                    	<span></span>
+                    	<span class="note">价格字段请使用纯数字</span>
+                    </dd>
+                </dl>
+              <!--   <dl class="clearfix">
+                    <dt><em class="red">*</em>销售数量：</dt>
+                    <dd>
+                        <input class="text shorttext porduct_hasnumber" type="text" value="0" readonly="">
+                        <span class="note">（请如实填写）</span>
+                    </dd>
+                </dl> 
+                <dl class="clearfix">
+                    <dt>商品编号：</dt>
+                    <dd>
+                        <input class="text" type="text">
+                    </dd>
+                </dl>-->
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>产品图片：</dt>
+                    <dd>
+                        <ul class="cons file_list">
+                        #if("$!{pictures}"!="null"&&"$!{pictures}" !="")
+	                      #foreach($!productPictureVO in $!{pictures})
+	                      #if($!{velocityCount}<=5)
+	                          <input type="hidden" name="imgid$!{velocityCount}" value="" />
+			                 <li>
+			                 #if("$!productPictureVO.picURL"!="")
+			                 <img id="uploadImage$!{velocityCount}" src="$!{domain}/$!productPictureVO.picURL" alt="请上传商品正面图片">
+			                 #else
+			                 <img id="uploadImage$!{velocityCount}" src="$!{mallStatic}/images/default.png" alt="请上传商品正面图片">
+			                 #end
+			                 <span onclick="delimg('$!{velocityCount}')">删除</span>
+			                 <p><a class="areasubmit file_label" href="javascript:;">上传图片
+			                 <input type="file" name="myfiles" id="myBlogImage$!{velocityCount}" onchange="ajaxFileUpload1s('$!{velocityCount}')" />
+			                 <input type="hidden" id="picURL$!{velocityCount}" value='$!productPictureVO.picURL' name="picsURL"/></a></p>
+			                  </li> 
+			                  #end
+	                      #end
+	                   #else
+			                   <input type="hidden" name="imgid1" value="" />
+			                 <li><img id="uploadImage1" src="$!{mallStatic}/images/default.png" alt="请上传商品正面图片">
+			                 <span onclick="delimg(1)">删除</span>
+			                 <p><a class="areasubmit file_label" href="javascript:;">上传图片
+			                 <input type="file" name="myfiles" id="myBlogImage1" onchange="ajaxFileUpload1s(1)" />
+			                 <input type="hidden" id="picURL1" value='$!commodityPic.picurl' name="picsURL"/></a></p>
+			                 
+			                 </li>  
+			                 <input type="hidden" name="imgid2" value=""/>
+			                 <li><img id="uploadImage2" src="$!{mallStatic}/images/default.png" alt="请上传商品正面图片">
+			                 <span onclick="delimg(2)">删除</span>
+			                 <p><a class="areasubmit file_label" href="javascript:;">上传图片
+			                 <input type="file" name="myfiles" id="myBlogImage2" onchange="ajaxFileUpload1s(2)" />
+			                 <input type="hidden" id="picURL2" value='$!commodityPic.picurl' name="picsURL"/></a></p>
+			                
+			                 </li>  
+			                 <input type="hidden" name="imgid3" value=""/>
+			                 <li><img id="uploadImage3" src="$!{mallStatic}/images/default.png" alt="请上传商品正面图片">
+			                 <span onclick="delimg(3)">删除</span>
+			                 <p><a class="areasubmit file_label" href="javascript:;">上传图片
+			                 <input type="file" name="myfiles" id="myBlogImage3" onchange="ajaxFileUpload1s(3)" />
+			                 <input type="hidden" id="picURL3" value='$!commodityPic.picurl' name="picsURL"/></a></p>
+			                 
+			                 </li>
+			                 <input type="hidden" name="imgid4" value=""/>
+			                 <li><img id="uploadImage4" src="$!{mallStatic}/images/default.png" alt="请上传商品正面图片">
+			                 <span onclick="delimg(4)">删除</span>
+			                 <p><a class="areasubmit file_label" href="javascript:;">上传图片
+			                 <input type="file" name="myfiles" id="myBlogImage4" onchange="ajaxFileUpload1s(4)" />
+			                 <input type="hidden" id="picURL4" value='$!commodityPic.picurl' name="picsURL"/></a></p>
+			                
+			                 </li>
+			                 <input type="hidden" name="imgid5" value=""/>
+			                 <li><img id="uploadImage5" src="$!{mallStatic}/images/default.png" alt="请上传商品正面图片">
+			                 <span onclick="delimg(5)">删除</span>
+			                 <p><a class="areasubmit file_label" href="javascript:;">上传图片
+			                 <input type="file" name="myfiles" id="myBlogImage5" onchange="ajaxFileUpload1s(5)" />
+			                 <input type="hidden" id="picURL5" value='$!commodityPic.picurl' name="picsURL"/>
+			                 </a></p>
+			                 </li>  
+	                   #end
+                        </ul>
+					           <p class="note">(提示:图片大小：800*800)</p>        
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>商品描述：</dt>
+                    <dd>
+                        <div class="cons">
+                            <textarea class="product_mark" style="width:760px;height:300px;visibility:hidden;" name="description">$!{productVO.description}</textarea><span></span>
+                        </div>
+                    </dd>
+                    <dd style="padding-left:190px;">
+		                <div class="cons">
+		                   	<span class="note">(提示:文本宽度框790为最佳)</span>
+		                </div>
+           			 </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt>是否上架：</dt>
+                    <dd>
+	                    #if($!productVO!='null')
+	                        <label><input type="radio" class="radio" name="status" #if($!productVO.status==2||$!productVO.status==1) checked="checked" #end value="1">是</label>
+	                        <label><input type="radio" class="radio" name="status" #if($!productVO.status==0) checked="checked" #end value="0">否</label>
+	                    #else
+	                   		<label><input type="radio" class="radio" name="status" value="1">是</label>
+	                        <label><input type="radio" class="radio" name="status" checked="checked" value="0">否</label>
+	                    #end
+                    </dd>
+                </dl>
+            </div>
+            <input type="hidden" value="" name="productDetail" id="productDetail">
+             <div id="allPreList"></div>
+              #if("$!operatorMethod"=="add")
+	             #if($!{supplierVO.cashDep}>0.0)
+	            <p class="ct mt25"><input type="submit" style="background: #41a8f7 none repeat scroll 0 0;  color: #fff;  display: inline-block;  font-size: 12px;  line-height: 23px;  padding: 3px 10px;" class="nextLink" value="提交"/></p>
+	            #end
+              #else
+              <p class="ct mt25"><input type="submit" style="background: #41a8f7 none repeat scroll 0 0;  color: #fff;  display: inline-block;  font-size: 12px;  line-height: 23px;  padding: 3px 10px;" class="nextLink" value="提交"/></p>
+              #end
+       </div>
+    </div>
+    </form>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+<script type="text/javascript" src="${mallStatic}/js/jquery.mcdropdown.min.js"></script>
+	<script type="text/javascript">
+	function ajaxFileUpload1s(type) {
+		jQuery.ajaxFileUpload({
+			url : "$!domain"+'/file/fileUpload.do',
+			secureuri : false,// 是否启用安全提交,默认为false
+			fileElementId : 'myBlogImage' + type,// 文件选择框的id属性
+			dataType : 'text',// 服务器返回的格式,可以是json或xml等
+			success : function(data, status) {
+				data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+				data = data.replace("</PRE>", '');
+				data = data.replace("<pre>", '');
+				data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+				if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+					$("img[id='uploadImage" + type + "']").attr("src",
+							"$!domain"+data.substring(2));
+					$("#picURL" + type).val(data.substring(2));
+					$('#result').html("图片上传成功<br/>");
+				} else {
+					$('#result').html('图片上传失败，请重试！！');
+				}
+			},
+			error : function(data, status, e) { // 服务器响应失败时的处理函数
+				$('#result').html('图片上传失败，请重试！！');
+			}
+		});
+	}
+	jQuery(document).ready(function() {
+		var  cas = '$!{supplierVO.cashDep}';
+		if('$!operatorMethod'=='add'){
+			if(cas==''||cas=='undefined'){
+				cas=0;
+			}
+			if(parseInt(cas)<=0){
+				alert("想发布商品先交保证金");
+			}
+		}
+	})
+  </script>
+  <script type="text/javascript" src="${mallStatic}/js/ajaxfileupload.js"></script>
+  <script type="text/javascript" src="$!{mallStatic}/js/user.js"></script>
+</body>
+</html>

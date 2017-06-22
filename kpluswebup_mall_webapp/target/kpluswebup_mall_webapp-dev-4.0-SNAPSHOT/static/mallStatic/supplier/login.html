@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家管理中心</title>
+<link rel="stylesheet" type="text/css" href="../css/supplier.css">
+<style>
+	body{ background:url(../images/lbg.jpg)}
+</style>
+</head>
+
+<body>
+	<div class="logbody">
+    	<div class="ncsc-login-container">
+              <div class="ncsc-login-title">
+                <h2>商家管理中心</h2>
+                <span>请输入您注册商铺时申请的商家名称<br>
+                登录密码为商城用户通用密码</span></div>
+              <form id="form_login" action="index.php?act=seller_login&amp;op=login" method="post">
+                <input type="hidden" name="formhash" value="16-dnw3l2D9b6wja3soe22sLnV4setY">    <input name="nchash" type="hidden" value="879f6430">
+                <input type="hidden" name="form_submit" value="ok">
+                <div class="input">
+                  <label>用户名</label>
+                  <span class="repuired"></span>
+                  <input name="seller_name" type="text" class="text">
+                  <span class="ico"><img src="../images/ico-login_user.jpg"></span> </div>
+                <div class="input">
+                  <label>密码</label>
+                  <span class="repuired"></span>
+                  <input name="password" type="password" autocomplete="off" class="text">
+                  <span class="ico"><img src="../images/ico-login_psw.jpg"></span> </div>
+                <div class="input">
+                  <label>验证码</label>
+                  <span class="repuired"></span>
+                  <input type="text" name="captcha" id="captcha" autocomplete="off" class="text" style="width: 80px;" maxlength="4" size="10">
+                  <span class="ico"><img src="../images/ico-login_yz.jpg"></span>
+                  <span><img src="../images/yz.jpg"></span>
+                  <input type="submit" class="login-submit" value="商家登录">
+                </div>
+              </form>
+              <div class="copyright mt10"> Copyright &copy; 中邮普泰 2007-2015 ,All Arights Reserved</div>
+            </div>
+    </div>
+</body>
+</html>

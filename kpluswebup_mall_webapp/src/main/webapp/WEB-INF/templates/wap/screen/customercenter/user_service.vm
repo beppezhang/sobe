@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+<title>我的售后</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/indi.css">
+</head>
+<body>
+<div class="service clearfix"> 
+	<ul class="clearfix">
+		<li>
+			<a href="$!domain/weixin/userService.htm" #if("$!status"=="2"||"$!status"=="") class="cur" #end>售后</a>
+		</li>
+		<li>
+			<a href="$!domain/weixin/userService.htm?status=3" #if("$!status"=="3") class="cur" #end>已结束</a>
+		</li>
+	</ul>
+</div>
+   
+<div class="pay_state">
+     #if("$!status" != "3")
+	     #foreach($!li in $!salesOrderSalesApplyList)
+			 #if("$!li.status"!="3")
+			    <h2 class="txt_r clearfix">
+					<span class="state lt">#if("$!li.status"=="0")申请中 #end
+			       						   #if("$!li.status"=="1")拒绝 #end
+			       						   #if("$!li.status"=="2")处理中 #end
+			       						   #if("$!li.status"=="3")完成 #end
+			       						   #if("$!li.status"=="4")已取消 #end</span>
+			       	<span class="number lt">订单编号:$!li.salesOrderID</span>
+				</h2>
+				<ul>
+					<li>
+						<a href="$!domain/weixin/productDetail.htm?productID=$!li.productID" class="clearfix">
+							<img src="$!{imgurl}$!li.itemPicURL" alt=""/>
+							<strong class="lt">$!li.itemName</strong>
+			 				<b class="rt">NO:$!li.numberIMEI</b>
+							<em>#if("$!li.salesType"=="1")维修 #end
+			       					#if("$!li.salesType"=="2")换机 #end</em>
+						</a>
+					</li>
+				</ul>
+				<div class="total clearfix">
+					<div class="total_info">
+			               <!-- <strong>合计<em>￥$!NumberTool.format("#0.00",$!li.totalAmount)</em></strong>
+							<span>( 运费 ￥0.00 )</span> -->
+			        </div>
+			        #if("$!li.status"=="0")<a class="btn imm_pay" href="javascript:;" onclick="cancelAfterSale('$!li.mainID')">取消申请</a>#end
+			        #if("$!li.status"=="2")<a class="btn imm_pay" href="javascript:;" onclick="affirmAfterSale('$!li.mainID')">确认售后</a>#end
+			        <a class="btn cancel_order" href="$!domain/weixin/userOrderDetail.htm?orderID=$!li.salesOrderID">查看详细</a>
+			    </div>
+			 #end
+        #end
+	#else
+			 #foreach($!li in $!salesOrderSalesApplyList)
+			    <h2 class="txt_r clearfix">
+					<span class="state lt">#if("$!li.status"=="0")申请中 #end
+			       						   #if("$!li.status"=="1")拒绝 #end
+			       						   #if("$!li.status"=="2")处理中 #end
+			       						   #if("$!li.status"=="3")完成 #end
+			       						   #if("$!li.status"=="4")已取消 #end</span>
+			       	<span class="number lt">订单编号:$!li.salesOrderID</span>
+				</h2>
+				<ul>
+					<li>
+						<a href="$!domain/weixin/productDetail.htm?productID=$!li.productID" class="clearfix">
+							<img src="$!{imgurl}$!li.itemPicURL" alt=""/>
+							<strong class="lt">$!li.itemName</strong>
+			 				<b class="rt">NO:$!li.numberIMEI</b>
+							<em>#if("$!li.salesType"=="1")维修 #end
+			       					#if("$!li.salesType"=="2")换机 #end</em>
+						</a>
+					</li>
+				</ul>
+				<div class="total clearfix">
+					<div class="total_info">
+			               <!-- <strong>合计<em>￥$!NumberTool.format("#0.00",$!li.totalAmount)</em></strong>
+							<span>( 运费 ￥0.00 )</span> -->
+			        </div>
+			        #if("$!li.status"=="0")<a class="btn imm_pay" href="javascript:;" onclick="cancelAfterSale('$!li.mainID')">取消申请</a>#end
+			        #if("$!li.status"=="2")<a class="btn imm_pay" href="javascript:;" onclick="affirmAfterSale('$!li.mainID')">确认售后</a>#end
+			        <a class="btn cancel_order" href="$!domain/weixin/userOrderDetail.htm?orderID=$!li.salesOrderID">查看详细</a>
+			    </div>
+            #end
+     #end
+</div>
+#parse("wap/layout/head_sider.vm")
+<script type="text/javascript" src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script>
+<script>
+$(function(){
+	var status ="$!status"
+	if(status!=""){
+		if(status=="2"){
+			$(".service li").click(function(){
+				$(this).find("a").addClass("cur").closest("li").siblings("li").find("a").removeClass("cur");
+			})
+		}if(status=="3"){
+			$(".service li").click(function(){
+				$(this).find("a").addClass("cur").closest("li").siblings("li").find("a").removeClass("cur");
+			})
+		}
+	}
+})
+/** 取消售后* */
+function cancelAfterSale(mainID) {
+	jQuery.ajax({
+		url : "cancelAfterSale.do",
+		data : {
+			"mainID" : mainID
+		},
+		type : "POST",
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 0) {
+				alert("取消成功！");
+				location.reload();
+			} else {
+				alert("取消失败！");
+			}
+		},
+		error : function() {
+			alert("系统出错！");
+		}
+	});
+}
+
+/** 确认售后* */
+function affirmAfterSale(mainID) {
+	jQuery.ajax({
+		url : "affirmAfterSale.do",
+		data : {
+			"mainID" : mainID
+		},
+		type : "POST",
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 0) {
+				alert("售后成功！");
+				location.reload();
+			} else {
+				alert("售后失败！");
+			}
+		},
+		error : function() {
+			alert("系统出错！");
+		}
+	});
+}
+</script>
+</body>
+</html>

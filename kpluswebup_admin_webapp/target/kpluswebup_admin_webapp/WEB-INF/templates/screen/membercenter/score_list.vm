@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>积分明细</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<em class="icon iconMenu1 "></em><a href="memberList.htm">会员中心</a>
+			&gt; <span>积分明细</span>
+		</div>
+		<div class="tabBar clearfix">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/member/scoreList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!accountDetailDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!accountDetailDTO.pageSize">
+			</form>
+			<div class="contentRt">
+				<div class="tableListBar">
+					<div class="tableTool">
+						#if($!menuUtil.isExistMenu("/admin/member/addScorePage.htm",$!menuAllList)
+						) <a href="$!{domain}/admin/member/addScorePage.htm"
+							class="TableAddBtn" title="积分奖惩">+积分奖惩</a> #end
+					</div>
+					<table class="tableList grid">
+						<thead>
+							<tr>
+								<td>用户名</td>
+								<td>类型</td>
+								<td>时间</td>
+								<td>积分</td>
+								<td>可用积分</td>
+								<td>备注</td>
+							</tr>
+						</thead>
+						<tbody id="list">
+							#foreach($!score in $!scoreList)
+							<tr>
+								<td>
+									#if($!menuUtil.isExistMenu("/admin/member/detailMember.htm",$!menuAllList)
+									) <a
+									href="$!{domain}/admin/member/detailMember.htm?mainId=$!score.customerID">$!score.customerName</a>
+									#end
+								</td>
+								<td>#if("$!score.detailType"=="4")订单奖励#elseif("$!score.detailType"=="5")积分奖励#elseif("$!score.detailType"=="6")积分惩罚#elseif("$!score.detailType"=="7")扫码送积分#elseif("$!score.detailType"=="8")取消订单退积分#end</td>
+								<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!score.createTime)</td>
+								<td>$!NumberTool.format("#0",$!score.amount)</td>
+								<td>$!NumberTool.format("#0",$!score.blance)</td>
+								<td>$!score.description</td>
+							</tr>
+							#end
+						</tbody>
+						#pagination($!accountDetailDTO)
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

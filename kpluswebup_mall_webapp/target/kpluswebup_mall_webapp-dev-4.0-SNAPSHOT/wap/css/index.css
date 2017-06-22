@@ -1,0 +1,35 @@
+/* CSS Document */
+body {background:#fff;}
+
+/* nav */
+nav{ padding:8px 0; background:#fff; width:100%;overflow:hidden; margin-top:10px;}
+nav div{white-space:nowrap;}
+nav a{width:25%; display:inline-block; text-align:center;color:#333; font-size:14px; line-height:16px; overflow:hidden; white-space:nowrap;}
+nav i{ width:50px; height:50px;display:inline-block; border-radius:10px; overflow:hidden; }
+
+/* banner */
+.box_swipe{overflow:hidden;position:relative; display:block;}
+.box_swipe ul{-webkit-padding-start: 0px;}
+.box_swipe ul li{ text-align:center; width:100%;}
+.box_swipe ul li img{width:100%; height:auto;vertical-align:middle}
+.box_swipe ul.pro{ padding:5px 0 10px 0;}
+.box_swipe ul.pro li img{ max-width:100%; height:210px; vertical-align:middle}
+.box_swipe ol{ background:#000; opacity:0.7; display:inline-block;position:absolute;z-index:10;overflow:hidden; padding:0 10px 3px 10px; border-radius:10px; bottom:8%; left:50%;}
+.box_swipe ol li{display:inline-block;margin:0 2px;width:8px;height:8px; overflow:hidden;background-color:#80776f;border-radius:50%;}
+.box_swipe ol li.cur{background-color:#fff;}
+
+/* list */
+
+.blist{}
+.blist li{ float:left; width:47%; margin:2% 0 0 2%}
+.blist li .pimg{ width:100%;}
+
+.blist02{ width:100%; max-width:640px; margin:0 auto;}
+.blist02 ul{ display:block; margin:1% 3%; width:94%; overflow:hidden;}
+.blist02 li{ float:left; width:49.5%;}
+.blist02 li:nth-of-type(1),.blist02 li:nth-of-type(3){ margin-right:1%}
+.blist02 a img{ width:100%; vertical-align:top; margin-bottom:5px;}
+
+#totop{ position:fixed; z-index:99; right:3%; bottom:15%; display:none}
+#totop img{ width:40px;}
+

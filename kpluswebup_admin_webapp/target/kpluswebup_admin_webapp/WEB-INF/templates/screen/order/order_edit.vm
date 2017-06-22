@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订单编辑</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+.cTextLen {
+	height: 25px;
+	border-radius: 3px;
+}
+
+.dText {
+	border-radius: 3px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<input id="salesOrderLineIds" type="hidden" value="$!salesOrderLineIds" />
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>订单详情</span>
+		</div>
+		<form id="updateSalesOrder"
+			action="$!{domain}/admin/order/updateSalesOrder.htm" method="post"
+			enctype="multipart/form-data">
+			<input type="hidden" value="$!{salesOrder.id}" name="id" /> <input
+				type="hidden" value="$!{salesOrder.mainID}" name="mainID" /> <input
+				type="hidden" value="$!{salesOrder.productAmount}"
+				name="productAmount" id="productAmountFormValue" /> <input
+				type="hidden" value="" name="priceAndItemCountStr"
+				id="priceAndItemCountStr" />
+			<div class="ddanInfo">
+				<dl class="">
+					<dd>
+						<table>
+							<tbody>
+								<tr>
+									<td>订单编号：$!salesOrder.mainID</td>
+									<td>订单状态： #if($!salesOrder.orderStatus==0) 已关闭
+										#elseif($!salesOrder.orderStatus==1) 待确认
+										#elseif($!salesOrder.orderStatus==2) 待出库
+										#elseif($!salesOrder.orderStatus==3) 待发货
+										#elseif($!salesOrder.orderStatus==4) 已发货
+										#elseif($!salesOrder.orderStatus==5) 已收货
+										#elseif($!salesOrder.orderStatus==6) 已完成
+										#elseif($!salesOrder.orderStatus==7) 已退换货 #end</td>
+									<td>支付状态： #if($!salesOrder.paymentStatus==0) 未支付
+										#elseif($!salesOrder.paymentStatus==1) 已支付
+										#elseif($!salesOrder.paymentStatus==2) 部分支付 #end</td>
+									<td>订单总额：￥$!NumberTool.format("#0.00",$!salesOrder.totalAmount)(含运费：￥$!NumberTool.format("#0.00",$!salesOrder.expressFee))</td>
+								</tr>
+							</tbody>
+						</table>
+					</dd>
+				</dl>
+				<dl class="">
+					<dt>
+						<em class="bold">订单详情</em>
+					</dt>
+					<dd>
+						<table>
+							<tbody>
+								<tr>
+									<td>客户：$!salesOrder.username</td>
+									<td>支付方式： #if($!salesOrder.paymentType==1) 支付宝
+										#elseif($!salesOrder.paymentType==2) 货到付款 #end</td>
+									<td>下单时间：$!date.format('yyyy-MM-dd HH:mm:ss
+										',$!salesOrder.createTime)</td>
+									<td>支付时间：</td>
+								</tr>
+							</tbody>
+						</table>
+					</dd>
+				</dl>
+				<dl class="">
+					<dt>
+						<em class="bold">收货人及发货信息</em>
+					</dt>
+					<dd>
+						<table>
+							<tbody>
+								<tr>
+									<td>收货人姓名：<input type="text" class="cText cTextLen"
+										name="dvName" value="$!salesOrder.dvName" /></td>
+									<td>电话号码：<input type="text" class="cText cTextLen"
+										name="dvMobile" value="$!salesOrder.dvMobile" /></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td colspan="4">详细地址：<input style="margin-left: 12px;"
+										type="text" class="cText cTextLen" name="dvAddress"
+										value="$!salesOrder.dvAddress" /></td>
+								</tr>
+								<tr>
+									<td colspan="4">买家留言：<input style="margin-left: 12px;"
+										type="text" class="cText cTextLen" name="memo"
+										value="$!salesOrder.memo" /></td>
+								</tr>
+							</tbody>
+						</table>
+					</dd>
+				</dl>
+			</div>
+			<div class="tableListBar" style="padding: 0 20px;">
+				<table class="goodsTable">
+					<thead>
+						<tr>
+							<td>商品名称</td>
+							<td>单价（元）</td>
+							<td>销售价（元）</td>
+							<td>数量</td>
+							<td>商品总价（元）</td>
+							<td>运费（元）</td>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach ($salesOrderLine in $salesOrder.salesOrderLineList)
+						<tr>
+							<td class="baobei"><a href="javascript:;" class="imgBar"> <img
+									src="$!{adminStatic}/theme/default/images/goods.jpg" width="50"
+									height="50" alt="" />
+							</a>
+								<div class="baobeiDesc">
+									<p class="baobeiName">
+										<a href="javascript:;">$!salesOrderLine.productName
+											$!salesOrderLine.itemName</a>
+									</p>
+									<div class="spec">
+										#foreach($!itemdetail in $!salesOrderLine.itemDetailList) <span>$!itemdetail.itemPropName：$!itemdetail.itemPropValue</span>
+										#end
+									</div>
+									<span class="goodIcons"></span>
+								</div></td>
+							<td><input type="text" class="dText"
+								id="p_$!{salesOrderLine.id}" onchange="updateValues()"
+								name="transactionPrice$velocityCount"
+								value="$!NumberTool.format(" #0.00",$!salesOrderLine.transactionPrice)"/></td>
+							<td>$!NumberTool.format("#0.00",$!salesOrderLine.salesPrice)</td>
+							<td><input type="text" class="dText"
+								id="q_$!{salesOrderLine.id}" onchange="updateValues()"
+								name="itemCount$velocityCount"
+								value="$!salesOrderLine.itemCount" /></td> #if($velocityCount==1)
+							<td rowspan="$salesOrder.salesOrderLineList.size()" class="mid">
+								<em id="productAmount" class="bold orangeF">$!NumberTool.format("#0.00",$!salesOrder.productAmount)</em>
+							</td>
+							<td rowspan="$salesOrder.salesOrderLineList.size()" class="mid">
+								<em class="bold"><input type="text" class="dText"
+									name="expressFee" value="$!NumberTool.format(" #0.00",$!salesOrder.expressFee)"/></em>
+							</td> #end
+						</tr>
+						#end
+					</tbody>
+				</table>
+			</div>
+			<div style="margin-top: 15px; padding-left: 500px" class="formRow">
+				<input type="button" class="save" value="提交" onclick="submitForm();">
+				<input type="reset" name="cencle" class="cencle" value="重置">
+			</div>
+		</form>
+		<div class="clear"></div>
+
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script src="$!{adminStatic}/script/jquery-1.9.1.js" language="javascript"></script>
+<script type="text/javascript">
+	
+</script>
+</html>

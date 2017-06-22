@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.WechatMessageDAO">
+
+	<select id="findWechatMessageByPagination" parameterType="wechatMessageDTO"
+		resultType="wechatMessageVO">
+		select w.*,i.name as wechatName,c.username as
+		customerName,u.wechatNick from
+		kplus_wechatmessage w
+		left join
+		kplus_interfaceconfig i on
+		w.interfaceConfigID=i.mainID
+		left join
+		kplus_customer c on
+		w.customerID=c.mainID
+		left join kplus_wechatuser u
+		on w.openID=u.openID
+		where w.isDelete=0
+		<if test="customerName!=null">
+			and c.username like '%${customerName}%'
+		</if>
+		<if test="wechatNick!=null">
+			and u.wechatNick like '%${wechatNick}%'
+		</if>
+		<if test="sendType!=null">
+			and w.sendType=#{sendType}
+		</if>
+		<if test="status!=null">
+			and w.status=#{status}
+		</if>
+		order by w.id desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findWechatMessageCount" parameterType="wechatMessageDTO"
+		resultType="java.lang.Long">
+		select count(w.mainID) from
+		kplus_wechatmessage w
+		left join
+		kplus_interfaceconfig i on w.interfaceConfigID=i.mainID
+		left join
+		kplus_customer c on w.customerID=c.mainID
+		left join kplus_wechatuser u
+		on w.openID=u.openID
+		where w.isDelete=0
+		<if test="customerName!=null">
+			and c.username like '%${customerName}%'
+		</if>
+		<if test="wechatNick!=null">
+			and u.wechatNick like '%${wechatNick}%'
+		</if>
+		<if test="sendType!=null">
+			and w.sendType=#{sendType}
+		</if>
+		<if test="status!=null">
+			and w.status=#{status}
+		</if>
+	</select>
+
+	<select id="findWechatMessageByMainID" parameterType="java.lang.String"
+		resultType="wechatMessageVO">
+		select w.*,i.name as wechatName,c.username as
+		customerName,u.wechatNick from
+		kplus_wechatmessage w
+		left join
+		kplus_interfaceconfig i on
+		w.interfaceConfigID=i.mainID
+		left join
+		kplus_customer c on
+		w.customerID=c.mainID
+		left join kplus_wechatuser u
+		on w.openID=u.openID
+		where w.isDelete=0 and
+		w.mainID=#{mainID}
+	</select>
+
+	<insert id="insertWechatMessage" parameterType="wechatMessageDTO">
+		insert into
+		kplus_wechatmessage(
+		mainID,
+		wechatMessageID,
+		customerID,
+		openID,
+		content,
+		interfaceConfigID,
+		sendType,
+		status,
+		isDelete,
+		creator,
+		createTime
+		)values(
+		#{mainID},
+		#{wechatMessageID},
+		#{customerID},
+		#{openID},
+		#{content},
+		#{interfaceConfigID},
+		#{sendType},
+		#{status},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updateWechatMessage" parameterType="wechatMessageDTO">
+		update kplus_wechatmessage
+		<set>
+			modifyTime=now()
+			<if test="status!=null">
+				,status=#{status}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<select id="findWechatMessageByParentID" parameterType="java.lang.String"
+		resultType="wechatMessageVO">
+		select * from kplus_wechatmessage where isDelete=0 and
+		wechatMessageID=#{wechatMessageID}
+	</select>
+
+</mapper>

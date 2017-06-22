@@ -1,0 +1,78 @@
+<input type="hidden" name="addressID" value="$!addressVO.id">
+<dl class="clearfix">
+	<dt>
+		<em class="col01 f14">*</em>收货人姓名
+	</dt>
+	<dd>
+		<input name="name" type="text" value="$!addressVO.name"
+			class="ipt short">
+	</dd>
+</dl>
+<dl class="clearfix">
+	<dt>省/市/区</dt>
+	<dd>
+		<select name="provinceId" class="select"
+			onchange="changeProvinceID(this.value)"> #foreach($!province
+			in $!provinceList)
+			<option #if("$!addressVO.provinceID"==
+				"$!province.mainID")selected="selected" #end
+				value="$!province.mainID">$!province.name</option> #end
+		</select> &nbsp; <select name="cityId" id="cityid" class="select"
+			onchange="changeCity(this.value)"> #foreach($!city in
+			$!cityList)
+			<option #if("$!addressVO.cityID"==
+				"$!city.mainID")selected="selected" #end value="$!city.mainID">$!city.name</option>
+			#end
+		</select> &nbsp; <select name="districtId" id="districtid" class="select">
+			#foreach($!district in $!districtList)
+			<option #if("$!addressVO.disctrictID"==
+				"$!district.mainID")selected="selected" #end
+				value="$!district.mainID">$!district.name</option> #end
+		</select>
+	</dd>
+</dl>
+<dl class="clearfix">
+	<dt>
+		<em class="col01 f14">*</em>详细地址
+	</dt>
+	<dd>
+		<input name="address" type="text" value="$!addressVO.address"
+			class="ipt long">
+	</dd>
+</dl>
+<!-- <dl class="clearfix">
+	<dt>
+		<em class="col01 f14">*</em>邮政编码
+	</dt>
+	<dd>
+		<input name="zip" type="text" value="$!addressVO.zip"
+			class="ipt short">
+	</dd>
+</dl> -->
+<dl class="clearfix">
+	<dt>
+		<em class="col01 f14">*</em>电话号码
+	</dt>
+	<dd>
+		<input name="telephone" type="text" value="$!addressVO.telephone"
+			class="ipt short">
+	</dd>
+</dl>
+<dl class="clearfix">
+	<dt>
+		<em class="col01 f14">*</em>手机号码
+	</dt>
+	<dd>
+		<input name="mobile" type="text" value="$!addressVO.mobile"
+			class="ipt short">
+	</dd>
+</dl>
+<dl class="clearfix">
+	<dt>
+		<em class="col01 f14"></em>设为默认
+	</dt>
+	<dd>
+		<input id="addressDefault" #if("$!addressVO.isDefault"==
+			"0")checked="checked" #end name="isDefault" type="checkbox">
+	</dd>
+</dl>

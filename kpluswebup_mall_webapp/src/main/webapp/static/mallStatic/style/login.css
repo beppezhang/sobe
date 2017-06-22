@@ -1,0 +1,39 @@
+.clean_up{display: block;overflow: hidden;clear: both;height: 0;line-height: 0;font-size: 0;}
+.cl_up:after {visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
+
+.w{width:1200px;margin:0 auto;}
+a:hover{text-decoration:underline;}
+
+.header{width:100%;height:80px;line-height:80px;background: url(../img/logo/head_bg.jpg) no-repeat center center;border-bottom:1px solid #e6e6e6;}
+.header .zl{float:left;}
+.header .zl a{width:200px;height:70px;margin-right:73px;display:inline-block;}
+.header .zr{float:right;}
+.header .zr li{float:left;height:80px;padding:0 2px;}
+.header .zr .spacer{width: 1px;height:14px;margin-top:32px;padding:0;background:#fff;overflow: hidden;}
+.header .zr li a{padding:0 8px;color:#fff;}
+
+
+/*.content{width:100%;padding-bottom:126px;}*/
+/*.content .wrp{background:url(../pic/gameico.jpg) no-repeat 88px 115px;}*/
+.content .login_form{width:252px;padding:20px;float:right;overflow: visible;border:1px solid #d4d4d4;margin: 100px 155px 0 0;}
+.content .login_form .log_box h2{height:32px;line-height:32px;font-size:16px;text-align:center;border-bottom:1px solid #d4d4d4;}
+.content .login_form .log_box .item{position:relative;padding:21px 0 12px 0; text-align:right;}
+.content .login_form .log_box .item span{color:#4d4d4d;font-size:12px;font-weight:600; float:left;}
+.content .login_form .log_box .item a{color:#40a8f7;font-size:12px;}
+.content .login_form .log_box .la input{height:35px;width:247px;border:none;border:1px solid #cccccc;padding-left:6px;font-size:12px;font-weight:500;line-height: 35px;color:#999;}
+.content .login_form .log_box .la .slog{display:inline-block;width:249px;height:35px;margin-top:18px;border-radius:2px;text-align:center;color:#fff;line-height:35px;background:#40a8f7}
+.content .login_form .log_box .la .ck{width:12px;height:12px;border:none;}
+.content .login_form .log_box .la span{color:#333333;}
+.content .login_form .log_box .la a{color:#40a8f7;}
+.content .login_form .log_box .agree{margin-top:18px;}
+
+.foot{width: 1200px;margin: 0 auto;background: #fff;text-align: center;padding-top: 10px;border-top: 1px solid #e6e6e6;}
+.foot .fr{display:inline-block;color:#666666;}
+.foot .fr li{float:left;padding:0 2px;}
+.foot .fr .spacer{width: 1px;height:14px;margin-top:3px;padding:0;background:#4d4d4d;overflow: hidden;}
+
+/*实现footer部分在任意分辨率下置低*/
+html, body{height: 100%;}
+#all{min-height: 100%;height: auto !important;height: 100%;margin: 0 auto -38px;}
+#all .loaner{height:38px;}
+

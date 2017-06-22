@@ -1,0 +1,216 @@
+<script type="text/javascript">
+function itemMainIDCheck(val){
+	var data = {
+			itemMainID : val
+		}
+	jQuery
+	.ajax({
+		url : '$!{domain}/mall/seller/findItemByMainID.do',
+		type : "POST",
+		data : data,
+		dataType : "json",
+		success : function(data) {
+			 if (data.code == 0&&data.result.mainID) {
+				alert("商品编号已经存在");
+				$("#itemMainID").val('');
+			} 
+		},
+		error : function() {
+			alert("系统出错");
+		}
+	});
+}
+
+$(function(){
+$(".select_product_color").on("click", "input:checkbox", function(){
+        var t = $(this).parent();
+        if(t.find("input:checkbox:checked").length){
+            var _ul = "";
+            $(".select_product_size input:checked").each(function(index, el){
+                _ul += "<ul data-name='" + $(el).parent().attr("for") + "'><li  data1='"+$(this).val()+"' propType='"+$(this).attr("idsss")+"' data='"+$(this).val()+"'>" + $(el).parent().text() + "</li><li><input class='text' type='text' id='salesprice' name='salesprice'></li><li><input class='text size_hasnumber' name='stock' id='stock'  type='text'></li><li><input class='text' id='itemMainID' onblur='itemMainIDCheck(this.value)' name='itemMainID' type='text'><span></span></li><li><input class='text' id='itemName'  maxlength='40' name='itemName' type='text'></li><li><input class='text' id='dataItemId' name='dataItemId' maxlength='40' type='hidden'></li></ul>";
+            });
+            $("table.size_table").append("<tr data-name='" + t.attr("for") + "'><td id='colorTd' propType='"+$(this).attr("idsss")+"' data1='"+$(this).val()+"' data='"+$(this).val()+"'>" + t.text() + "</td><td colspan='5'>" + _ul + "</td></tr>");
+        }else{
+            $("table.size_table tr[data-name='" + t.attr("for") + "']").remove();
+        }
+        if($(".select_product_color input:checkbox:checked").length){
+            $("table.size_table").show();
+        }else{
+            $("table.size_table").hide();
+        }
+    });
+    
+
+$(".select_product_size").on("click", "input:checkbox", function(){
+    var t = $(this).parent(), ta = $("table.size_table"), tr = ta.find("tr:has('td')");
+    if($(".select_product_color input:checkbox:checked").length == 0){
+        tr.find("td:last").html("");
+    }else{
+        if(t.find("input:checkbox:checked").length){
+            tr.find("td:last").append("<ul data-name='" + t.attr("for") + "'><li  data1='"+$(this).val()+"' propType='"+$(this).attr("idsss")+"' data='"+$(this).val()+"'>" + t.text() + "</li><li><input class='text' name='salesprice' id='salesprice'  type='text'></li><li><input class='text size_hasnumber' id='stock'  name='stock' type='text'></li><li><input class='text'  id='itemMainID' onblur='itemMainIDCheck(this.value)'  name='itemMainID' type='text'></li><li><input class='text' id='itemName' name='itemName' maxlength='40' type='text'></li><li><input class='text' id='dataItemId' name='dataItemId' maxlength='40' type='hidden'></li></ul>");
+        }else{
+            $("table.size_table ul[data-name='" + t.attr("for") + "']").remove();
+        }
+    }
+});
+
+//颜色选中循环
+$(".select_product_color input:checkbox:checked").each(function(index, obj){
+	var value=$(obj).attr("idsss");//颜色属性值id
+	var t = $(this).parent();
+	if(t.find("input:checkbox:checked").length){
+		var _ul = "";
+		$(".select_product_size input:checked").each(function(index, el){
+			 var value2=$(el).attr("idsss");
+			 var dataItemId = $(".prop_value"+value+value2).attr("dataItemId");
+			 if(typeof dataItemId=='undefined'){
+				 dataItemId=$(this).attr("dataItemId");
+			 }
+			 var dataPrice = $(".prop_value"+value+value2).attr("dataPrice");
+			 if(typeof dataPrice=='undefined'){
+				 dataPrice=$(this).attr("dataPrice");
+			 }
+			  var dataName = $(".prop_value"+value+value2).attr("dataName");
+			  if(typeof dataName=='undefined'){
+				  dataName=$(this).attr("dataName");
+				 }
+			   var dataStock = $(".prop_value"+value+value2).attr("dataStock");
+			   if(typeof dataStock=='undefined'){
+				   dataStock=$(this).attr("dataStock");
+				 }
+			   var dataSkuCode = $(".prop_value"+value+value2).attr("dataSkuCode");
+			   if(typeof dataSkuCode=='undefined'){
+				   dataSkuCode=$(this).attr("dataSkuCode");
+				 }
+		_ul += "<ul data-name='" + $(el).parent().attr("for") + "'><li data1='"+$(this).val()+"' propType='"+value2+"'  data='"+$(this).val()+"'>" + $(el).parent().text() + "</li><li><input name='salesprice' id='salesprice' class='text' value='"+dataPrice+"' type='text'></li> <li><input type='text' id='stock'  name='stock' value='"+dataStock+"' class='text size_hasnumber'></li>            <li><input id='itemMainID'  name='itemMainID' onblur='itemMainIDCheck(this.value)' value='"+dataSkuCode+"'  class='text size_hasnumber' type='text'></li><li><input class='text' id='itemName' value='"+dataName+"' name='itemName' maxlength='40' type='text'></li><li><input class='text' id='dataItemId' value='"+dataItemId+"' name='dataItemId' maxlength='40' type='hidden'></li></ul>";
+		});
+		$("table.size_table").append("<tr data-name='" + t.attr("for") + "'><td id='colorTd' propType='"+value+"' data1='"+$(this).val()+"' data='"+$(this).val()+"'>" + t.text() + "</td><td colspan='5'>" + _ul + "</td></tr>");
+	}else{
+			$("table.size_table tr[data-name='" + t.attr("for") + "']").remove();
+		}
+		if($(".select_product_color input:checkbox:checked").length){
+			$("table.size_table").show();
+		}else{
+			$("table.size_table").hide();
+		}
+});
+
+//$(".select_product_color").
+
+$("#salesprice").blur(function(){
+    var salesprice = $(this).val();
+	     if(salesprice==""){
+	    	 salesprice = false;
+	    alert("销售价必须填写");
+	     }else{
+	    	 salesprice = true;
+	     }	
+	});
+
+	
+$("#stock").blur(function(){
+    var stock = $(this).val();
+	     if(stock==""){
+	    	 stock = false;
+	    alert("库存必须填写");
+	     }else{
+	    	 salesprice = true;
+	     }	
+	});
+	
+$("#brandID").blur(function(){
+	if($(this.val()=="")){
+		alert();
+		return;
+	}
+})
+$(".size_table").on("valueup", "input.size_hasnumber", function(){
+    t = $(this);
+    if(!t.attr("data-temp-hasnumber") && t.attr("data-temp-hasnumber") == t.val()){
+        return;
+    }
+    t.attr("data-temp-hasnumber", t.val());
+    var _number = 0;
+    t.parents(".size_table").find("input.size_hasnumber").each(function(index, el){
+        if(parseInt($(el).val())){d
+            _number += parseInt($(el).val());
+        }
+    });
+    $(".porduct_hasnumber").val(_number);
+});
+})
+</script>
+	<span class="name">品牌：</span> <input type="hidden" class="cText cTextLen" id="pbrandID" value="$!productVO.brandID"/>
+		<div class="formRow">
+			<select name="brandID" id="brandID"></select>
+		</div>
+	<div id="ptpo">	
+	 #foreach($!itemDeatilVo in $!checkItemTypeListGroup)
+     <input type="hidden" class="prop_value$!itemDeatilVo.propTypeID" dataSkuCode='$!itemDeatilVo.skuCode' dataPrice='$!itemDeatilVo.salesPrice' dataName='$!itemDeatilVo.name' dataStock='$!itemDeatilVo.stock' dataItemId = '$!itemDeatilVo.itemID'/>
+     #end 
+<em class="red">*</em> 产品基本属性：设置产品基本属性
+                                <ul  id="ptpo">
+                                #foreach($!productTypeProductPropVO in $!productTypeProductPropList)
+		                                #if($!productTypeProductPropVO.propType==2)
+		                                    <li class="clear"><span class="name">$!productTypeProductPropVO.name：</span>
+		                                     #foreach($!productPropValueVO in $!productTypeProductPropVO.productPropValueList)
+				                                            <input class="checkbox" type="checkbox" #foreach($!productDetailVO in $!checkProdutTypeList) #if($!productDetailVO.pTypePPropID==$!productPropValueVO.mainID) checked="checked" #end #end name="productPropValue_$!productTypeProductPropVO.mainID" value="$!{productPropValueVO.mainID}_$!{productPropValueVO.name}_$!{productTypeProductPropVO.mainID}">$!productPropValueVO.name</input>
+		                                      #end
+		                                    </li>
+		                                #else
+		                                    <li class="clear"><span class="name"><em>*</em>$!productTypeProductPropVO.name：</span>
+		                                        <select name="$!productTypeProductPropVO.productPropID">
+		                                          #foreach($!productPropValueVO in $!productTypeProductPropVO.productPropValueList)
+		                                            <option #foreach($!productDetailVO in $!checkProdutTypeList) #if($!productDetailVO.pTypePPropID==$!productPropValueVO.mainID) checked="checked" #end #end name="productPropValue_$!productTypeProductPropVO.mainID" value="$!{productPropValueVO.mainID}_$!{productPropValueVO.name}_$!{productTypeProductPropVO.mainID}}">$!productPropValueVO.name</option>
+		                                           #end
+		                                        </select>
+		                                    </li>
+		                                #end
+                                 #end
+                                </ul>
+                                <p class="child_list_title"><em class="red">*</em> 规格：设置产品规格</p>
+                                <ul>
+                                 #foreach($!productTypeItemPropVO in $!productTypeItemPropList)
+                                 #set($index = $!{velocityCount})
+	                                  #if($!{index}==1)
+	                                    <li class="clearfix select_product_color">
+	                                  #else
+	                                  	<li class="select_product_size">
+	                                  #end
+                                        <span class="name">$!productTypeItemPropVO.name：</span>
+                                        <div class="cons">
+                                          <p>
+                                             #foreach($!itemPropValueVO in $!productTypeItemPropVO.itemPropValueList)
+	                                              #if($!{index}==1)
+				                                    <label for="select-color-$!{velocityCount}"><!-- 后面的id和for属性 类推 -->
+					                                    <input id="select-color-$!{velocityCount}" idsss=$!{itemPropValueVO.mainID}  #foreach($!itemDetailVO in $!checkItemTypeList) #if($!itemDetailVO.itemPropID==$!itemPropValueVO.mainID)  dataPrice='$!{itemDetailVO.salesPrice}'  dataSkuCode='$!{itemDetailVO.skuCode}' dataName='$!{itemDetailVO.name}' dataStock='$!{itemDetailVO.stock}' checked="checked" #end #end class="checkbox" value="$!{itemPropValueVO.mainID}:$!{productTypeItemPropVO.mainID}" name="select-product-color" type="checkbox">
+				                                  #else
+				                                  <label for="select-size-$!{velocityCount}"><!-- 后面的id和for属性 类推 -->
+					                                    <input id="select-size-$!{velocityCount}"idsss=$!{itemPropValueVO.mainID}  #foreach($!itemDetailVO in $!checkItemTypeList) #if($!itemDetailVO.itemPropID==$!itemPropValueVO.mainID) checked="checked" dataSkuCode='$!{itemDetailVO.skuCode}' dataPrice='$!{itemDetailVO.salesPrice}' dataName='$!{itemDetailVO.name}' dataStock='$!{itemDetailVO.stock}' #end #end class="checkbox" value="$!{itemPropValueVO.mainID}:$!{productTypeItemPropVO.mainID}" name="select-product-size" type="checkbox">
+				                                  #end
+				                                 $!itemPropValueVO.name
+				                                </label>
+				                              #end
+                                         </p>
+                                        </div>
+                                    </li>
+                                    #end
+                                   <table class="size_table">
+                                <tr>
+                                    <th>规格1</th>
+                                    <th colspan="5">
+                                        <ul>
+                                            <li>规格2</li>
+                                            <li>价格<em>*</em></li>
+                                            <li>库存</li>
+                                            <li>商品编码<em>*</em></li>
+                                             <li>商品名称<em>*</em></li>
+                                        </ul>
+                                    </th>
+                                </tr> 
+                                            </table>
+                                        </div>
+                                    </li>
+                                </ul>
+             </div>                   
+                                

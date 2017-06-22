@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>取货单详情</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+.printMes{ float:left; background:#fff; width:730px; padding:40px; border:1px dashed #ccc; display:inline-block; min-height:500px;_height:500px;}
+.printMes h1{ font-size:20px; margin-bottom:26px;}
+.printMes table{ width:100%;border-collapse: collapse;border-bottom:2px solid #000;}
+.printMes th,.printMes td{border-top:2px solid #000;}
+.printMes th{ background:#e7e7e7; }
+.printMes td{ padding:8px 0;}
+.orderInfo p{
+font-size: 16px;padding: 10px 0;
+}
+ul.orderCode li{
+	height: 20px;
+	padding: 0 10px;
+	float: left;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>订单管理 》取货单列表》 取货单信息</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em> <a href="javascript:;">取货单信息</a></li>
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="systemBar">
+						<div class="p10Box">
+							<div class="gift">
+								 <div class="printMes ">
+								    	    	<div class="orderInfo">
+								    		    	<p>订单编号</P>
+								    		    	<ul class="orderCode">
+								    		    	  #foreach($!carrierNoteLine in $!group.carrierNoteLineList)
+								    		    	  <li><a href="orderDetail.htm?orderMainID=$!{carrierNoteLine.salesOrderID}" target="_blank">$!carrierNoteLine.salesOrderID</a></li>
+								    		    	  #end
+								    		    	</ul>
+								    		    	<div style="clear:both;"></div>
+								    	    	</div>
+								        <table style="margin-top: 34px;">
+								          <tr>
+								            <th width="40">序号</th>
+								            <th align="left" width="490">商品名称</th>
+								            <th>单价（元）</th>
+								            <th>数量</th>
+								            <th>小计</th>
+								          </tr>
+								          #set($index = 1)
+								          #foreach($!line in $!group.groupLineList)
+								          <tr>
+								            <td align="center">$!index</td>
+								            <td>$!{line.itemName}</td>
+								            <td align="center">￥$!NumberTool.format("#0.00",$!{line.salesPrice})</td>
+								            <td align="center">$!{line.itemTotalCount}</td>
+								            <td align="center">￥$!NumberTool.format("#0.00",$!{line.itemTotalAmount})</td>
+								          </tr>
+								          #set($index = $index + 1)
+								          #end
+								          <tr>
+								            <td></td>
+								            <td colspan="3"><strong>合计</strong></td>
+								            <td align="center"><strong>￥$!NumberTool.format("#0.00",$!{group.totalAmount})</strong></td>
+								          </tr>
+								        </table>
+								    </div>
+								
+							</div>
+						</div>
+					</div>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

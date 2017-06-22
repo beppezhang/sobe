@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.partscategory.dao.VehicletypePartscategoryDAO">
+	<cache readOnly="true"></cache>
+	
+	<select id="findByPartscategorysByVehicletype" resultType="vehicletypePartscategoryEntity" parameterType="vehicletypePartscategoryEntity">
+		select * from vehicletype_partscategory vp 
+		where vp.isDelete=0 and vp.vehicletypeId = #{vehicletypeId} and vp.fLevel = #{flevel}
+		<if test="ancestorID != null">
+			and vp.ancestorID = #{ancestorID}
+		</if>
+		order by vp.code 
+	</select>
+
+	
+</mapper>

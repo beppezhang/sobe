@@ -1,0 +1,314 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>购物车</title>
+<link rel="stylesheet" type="text/css" href="css/global.css">
+<link rel="stylesheet" type="text/css" href="css/shopcart.css">
+</head>
+
+<body>
+<!--顶部信息-->
+<div id="topbar">
+	<div class="layout txt_r clearfix">
+    	<div class="lt welbox">欢迎来到中邮普泰<a href="#">请登录</a><a href="#">免费注册</a></div>
+        <div class="shortcut_bar">
+        	<span class="linkbox"><a href="#">我的主页</a></span>
+            <span class="linkbox"><a href="#">我的订单</a></span>
+            <span class="linkbox"><a href="#" class="phone"><i></i>手机版</a></span>
+            <span class="linkbox"><a href="#">我是供应商</a></span>
+            <span class="linkbox serviceLink"><a href="#">客服服务<i class="down"></i></a></span>
+            <span class="linkbox"><a href="#" class="listLink">网站导航<i class="down"></i></a></span>
+        </div>
+    </div>
+</div>
+<div id="processBar">
+	<div class="layout clearfix">
+    	<div class="logo lt">
+        	<a href="#"><img src="images/logo.png"></a>
+        </div>
+        <div class="probar">
+        	<span id="p1" class="on"></span>
+            <span id="p2"></span>
+            <span id="p3"></span>
+            <span id="p4"></span>
+        </div>
+    </div>
+</div>
+
+<div class="layout">
+	<h1 class="cp mt15">我的购物车</h1>
+    <p class="col02">查看购物车清单，增加减少商品数量，并选择需要的商品进行下一步操作。</p>
+    <div class="shopcartList mt15" id="productList">
+    	<table cellspacing="0" cellpadding="0">
+          <tr>
+            <th><label for="sel_all"><input name="allCk" id="sel_all" class="allCk" type="checkbox" value="">全选</label></th>
+            <th>商品</th>
+            <th>单价（元）</th>
+            <th>数量</th>
+            <th>小计（元）</th>
+            <th>操作</th>
+          </tr>
+          <tr>
+            <td colspan="6" class="origin">
+            	店铺：平台自营
+            </td>
+          </tr>
+          <tr>
+            <td colspan="6" class="advices">
+            	<p class="txt_r clearfix">
+                	<span class="lt">已购满2000元，再加上99元，点击<a href="#">换购商品</a>！</span>
+                	<a href="#" target="_blank">更多活动商品</a>
+                </p>
+            </td>
+          </tr>
+          <tr class="tdUnit">
+            <td class="ckBox"><input class="ck" name="ck" type="checkbox" value=""></td>
+            <td class="pInfo">
+            	<a href="#" target="_blank">
+                    <img src="pic/p1.jpg" class="pimg">
+                    TCL m2u么么哒3N联通版 移动联通4G 5.5寸大屏双卡双待安卓智能手机
+                </a>
+            </td>
+            <td align="center"><span class="unitPrice">3888.00</span></td>
+            <td align="center"><span class="countMan">
+                		<a href="javascript:;" class="subbtn" title="减少"></a><em class="unitNum" data="5">1</em><!--data表示是库存或是最大购买数量--><a href="javascript:;" class="addbtn" title="增加"></a>
+                	</span></td>
+            <td align="center"><span class="subTotal">3888.00</span></td>
+            <td align="center">
+            	<p><a href="javascript:;">收藏</a></p>
+                <p><a href="javascript:;">删除</a></p>
+            </td>
+          </tr>
+          
+          <tr class="tdUnit">
+            <td class="ckBox"><input class="ck" name="ck" type="checkbox" value=""></td>
+            <td class="pInfo">
+            	<a href="#" target="_blank">
+                    <img src="pic/p2.jpg" class="pimg">
+                    TCL m2u么么哒3N联通版 移动联通4G 5.5寸大屏双卡双待安卓智能手机
+                </a>
+            </td>
+            <td align="center"><span class="unitPrice">1080.00</span></td>
+            <td align="center"><span class="countMan">
+                		<a href="javascript:;" class="subbtn" title="减少"></a><em class="unitNum" data="2">1</em><!--data表示是库存或是最大购买数量--><a href="javascript:;" class="addbtn" title="增加"></a>
+                	</span></td>
+            <td align="center"><span class="subTotal">1080.00</span></td>
+            <td align="center">
+            	<p><a href="javascript:;">收藏</a></p>
+                <p><a href="javascript:;">删除</a></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="6" class="settleBar">
+            	商品总价（不含运费）：<span id="totalPrices">0.00</span>元
+            </td>
+          </tr>
+        </table>
+    </div>
+    <p class="txt_r mt15">
+    	<a href="shopcart02.html" class="goEditLink">下一步，填写核对购物信息</a>
+    </p>
+    <div class="guessbox mt15">
+    	<div class="ttbar"><strong class="f14">猜您喜欢的宝贝</strong></div>
+        <div class="hotPic">
+        	<div class="slide-nav"><a class="prev" href="javascript:">&#8249;</a><a class="next" href="javascript:">&#8250;</a></div>
+            <div class="slide-wrap">
+                <ul class="img_list01 pos_ab slide-content clearfix">
+                    <li>
+                      <p class="ct"><a href="#" target="_blank"><img src="pic/p1.jpg" class="pimg imgMove"></a></p>
+                      <h4><a href="#" target="_blank">首发 Sugar SS136时尚手机 夜拍自拍美颜双4G 白/金同步上市</a></h4>
+                      <p>价格：<strong class="col03 f14">￥3500</strong></p>
+                    </li>
+                    <li>
+                      <p class="ct"><a href="#" target="_blank"><img src="pic/p3.jpg" class="pimg imgMove"></a></p>
+                      <h4><a href="#" target="_blank">首发 Sugar SS136时尚手机 夜拍自拍美颜双4G 白/金同步上市</a></h4>
+                      <p>价格：<strong class="col03 f14">￥3500</strong></p>
+                    </li>
+                    <li>
+                      <p class="ct"><a href="#" target="_blank"><img src="pic/p2.jpg" class="pimg imgMove"></a></p>
+                      <h4><a href="#" target="_blank">首发 Sugar SS136时尚手机 夜拍自拍美颜双4G 白/金同步上市</a></h4>
+                      <p>价格：<strong class="col03 f14">￥3500</strong></p>
+                    </li>
+                    <li>
+                      <p class="ct"><a href="#" target="_blank"><img src="pic/p1.jpg" class="pimg imgMove"></a></p>
+                      <h4><a href="#" target="_blank">首发 Sugar SS136时尚手机 夜拍自拍美颜双4G 白/金同步上市</a></h4>
+                      <p>价格：<strong class="col03 f14">￥3500</strong></p>
+                    </li>
+                    <li>
+                      <p class="ct"><a href="#" target="_blank"><img src="pic/p3.jpg" class="pimg imgMove"></a></p>
+                      <h4><a href="#" target="_blank">首发 Sugar SS136时尚手机 夜拍自拍美颜双4G 白/金同步上市</a></h4>
+                      <p>价格：<strong class="col03 f14">￥3500</strong></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 公用底部开始 -->
+<div id="footer">
+	<div class="layout clearfix">
+    	<div class="slogen clearfix">
+        	<dl>
+            	<dt><img src="images/gw1_ico.jpg"></dt>
+                <dd><h2>正品保障</h2><p>正品保障 提供发票</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="images/gw2_ico.jpg"></dt>
+                <dd><h2>极速物流</h2><p>极速物流 极速送达</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="images/gw3_ico.jpg"></dt>
+                <dd><h2>无忧售后</h2><p>15天无理由退货</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="images/gw4_ico.jpg"></dt>
+                <dd><h2>特色服务</h2><p>自助维修包养预约</p></dd>
+            </dl>
+            <dl>
+            	<dt><img src="images/gw5_ico.jpg"></dt>
+                <dd><h2>帮助中心</h2><p>您的购物指南</p></dd>
+            </dl>
+        </div>
+   	  <div class="root_ser">
+        	<dl>
+            	<dt>购物指南</dt>
+                <dd><a href="#" target="_blank">导购显示</a></dd>
+                <dd><a href="#" target="_blank">免费注册</a></dd>
+                <dd><a href="#" target="_blank">会员等级</a></dd>
+                <dd><a href="#" target="_blank">常见问题</a></dd>
+            </dl>
+            <dl>
+           	  <dt>支付方式</dt>
+                <dd><a href="#" target="_blank">易付宝支付</a></dd>
+                <dd><a href="#" target="_blank">网银支付</a></dd>
+                <dd><a href="#" target="_blank">快捷支付</a></dd>
+                <dd><a href="#" target="_blank">分期付款</a></dd>
+                <dd><a href="#" target="_blank">货到付款</a></dd>
+                <dd><a href="#" target="_blank">门店支付</a></dd>
+            </dl>
+            <dl>
+           	  <dt>物流配送</dt>
+                <dd><a href="#" target="_blank">面运费政策</a></dd>
+                <dd><a href="#" target="_blank">配送服务承诺</a></dd>
+                <dd><a href="#" target="_blank">牵手验货</a></dd>
+                <dd><a href="#" target="_blank">物流查询</a></dd>
+            </dl>
+            <dl>
+           	  <dt>售后服务</dt>
+                <dd><a href="#" target="_blank">退换货政策</a></dd>
+                <dd><a href="#" target="_blank">退换货流程</a></dd>
+                <dd><a href="#" target="_blank">购买延保服务</a></dd>
+                <dd><a href="#" target="_blank">退款说明</a></dd>
+                <dd><a href="#" target="_blank">退换货申请</a></dd>
+                <dd><a href="#" target="_blank">维修/包养</a></dd>
+            </dl>
+            <dl>
+           	  <dt>商家服务</dt>
+                <dd><a href="#" target="_blank">商家入住</a></dd>
+                <dd><a href="#" target="_blank">信息公告</a></dd>
+                <dd><a href="#" target="_blank">培训中心</a></dd>
+                <dd><a href="#" target="_blank">信息公告</a></dd>
+                <dd><a href="#" target="_blank">广告服务</a></dd>
+                <dd><a href="#" target="_blank">商家帮助</a></dd>
+                <dd><a href="#" target="_blank">服务市场</a></dd>
+            </dl>
+            <div class="weixin ct rt">
+                <p><strong class="f14">中邮普泰微信</strong></p>
+                <p><img src="images/weixin.jpg"></p>  
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div id="btmbar">
+    <div class="info">
+        <p><a href="#" target="_blank">关于中邮普泰</a> | <a href="#" target="_blank">我们的团队</a> | <a href="#" target="_blank">网站联盟</a> | <a href="#" target="_blank">热门搜索</a> | <a href="#" target="_blank">友情链接</a> | <a href="#" target="_blank">诚征人才</a></p>
+        <p>浙ICP备2121245号|台字B1.B2-2013004|营业执照|互联网药品信息服务资格证|互联网药品交易服务资格证</p>
+        <p>Copyright &copy;中邮普泰 2007-2015 ，All Right Reserved</p>
+        <p class="mt10">
+            <img src="images/pic-flink.jpg"/>
+        </p>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="js/public.js"></script>
+<script type="text/javascript" src="js/slide.js"></script>
+<script>
+$(function(){
+	$(".allCk").click(function(){
+		$("#productList").find(':checkbox').attr("checked",this.checked);
+		getAmount();
+	})
+	$('input[name="ck"]').click(function(){
+		$("input[name='ck']").each(function(){
+			  var ck = $(this).prop("checked");
+			  if(ck==true){
+				  $(".allCk").attr("checked",true);
+			  }else{
+				  $(".allCk").removeAttr("checked");
+				  return false;
+			  }
+		})
+		getAmount();
+	})
+	//选择数量
+	$(".countMan").find(".addbtn").click(function(){
+		var imtNum = $(this).prev(".unitNum").attr("data");//最大购买数量(库存)
+		var getNum = $(this).closest(".countMan").find(".unitNum").html(); //获取本商品数量
+		var addNum = parseInt(getNum) + 1;//数量增加
+		var getPrice = $(this).closest(".tdUnit").find(".unitPrice").html();//获取单价
+		var subTotal = getPrice*addNum; //计算单品小计价格
+		if(imtNum>=addNum){
+			$(this).closest(".tdUnit").find(".subTotal").text(parseFloat(subTotal).toFixed(2))
+			$(this).closest(".countMan").find(".unitNum").text(addNum);
+			getAmount();
+		}
+		
+	})
+	$(".countMan").find(".subbtn").click(function(){
+		var getNum = $(this).closest(".countMan").find(".unitNum").html(); //获取本商品数量
+		var subNum = parseInt(getNum) - 1;//数量减少
+		var getPrice = $(this).closest(".tdUnit").find(".unitPrice").html();//获取单价
+		var subTotal = getPrice*subNum; //计算单品小计价格
+		if(subNum>0){
+			$(this).closest(".tdUnit").find(".subTotal").text(parseFloat(subTotal).toFixed(2))
+			$(this).closest(".countMan").find(".unitNum").text(subNum);
+			getAmount();
+		}
+	})
+	$(".guessbox").Slide({
+		effect:"scroolLoop",
+		autoPlay:false,
+		speed:"normal",
+		timer:1000,
+		steps:1
+	});
+	$(".hotPic").hover(function(){
+		var liNum = $(this).find("li").length;
+		if(liNum>4){
+			$(this).find(".slide-nav").show();
+		}
+	},function(){
+		$(this).find(".slide-nav").hide();
+	})
+})
+	//计算总价
+	function getAmount(){
+			var mainTotal = 0;
+			$(".tdUnit").find("input[name='ck']").each(function(){
+				var subTotal = parseFloat($(this).closest(".tdUnit").find(".subTotal").text()); //单价小计
+				var n = $(".tdUnit").find("input[name='ck']:checked").length;
+				var chk = $(this).is(':checked');
+				$(".cNum").text(n);
+				if(chk==true){
+					mainTotal = mainTotal + subTotal;//总价
+				}else{
+					subTotal ==0;
+				}
+				$("#totalPrices").html(mainTotal.toFixed(2))
+			})
+	}
+</script>
+</body>
+</html>

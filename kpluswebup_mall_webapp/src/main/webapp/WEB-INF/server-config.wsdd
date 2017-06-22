@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+<handler type="java:org.apache.axis.handlers.http.URLMapper" name="URLMapper" />
+<service name="salesOrderTrans" provider="java:RPC">
+	<parameter name="className" value="com.kpluswebup.wap.web.order.control.TransWS" />
+	<parameter name="allowedMethods" value="salesOrderTransSave" />
+</service>
+<transport name="http">
+<requestFlow>
+<handler type="URLMapper" />
+</requestFlow>
+</transport>
+</deployment> 

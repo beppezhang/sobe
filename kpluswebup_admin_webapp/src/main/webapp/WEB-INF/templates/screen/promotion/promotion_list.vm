@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>满送促销</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》满送促销</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/promotion/promotionList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!promotionDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!promotionDTO.pageSize">
+				<table class="searchTable">
+					<tbody>
+						<tr>
+							<td><span class="grayF">促销名称：</span><input type="text"
+								name="searchName" class="cText" value="$!promotionDTO.name" /></td>
+							<td><span class="grayF">促销类型：</span> <select class="select"
+								name="type">
+									<option value="">全部</option>
+									<option value="3" #if("$!promotionDTO.type"==
+										"3")selected="selected" #end>满额免邮</option>
+									<!-- <option value="7" #if("$!promotionDTO.type"==
+										"7")selected="selected" #end>满件送件</option> -->
+							</select></td>
+							<td><span class="grayF">活动时间：</span> <input type="text"
+								name="searchStartTime" class="cText"
+								placeholder="yyyy-MM-dd HH:mm:ss"
+								onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+								readonly="readonly"
+								value="$!date.format('yyyy-MM-dd HH:mm:ss',$!promotionDTO.fromDate)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+								<input type="text" name="searchEndTime" class="cText"
+								placeholder="yyyy-MM-dd HH:mm:ss"
+								onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+								readonly="readonly"
+								value="$!date.format('yyyy-MM-dd HH:mm:ss',$!promotionDTO.endDate)" /></td>
+							<td rowspan="3">
+								#if($!menuUtil.isExistMenu("/admin/promotion/promotionList.htm",$!menuAllList)
+								) <input class="searchBtn" type="submit" value="搜索" /> #end
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a>
+				#if($!menuUtil.isExistMenu("/admin/promotion/addPromotion.htm",$!menuAllList)
+				) <a href="javascript:;" title="删除" id="deletePromotionAll"><em
+					class="icon iconDel"></em></a> #end
+				#if($!menuUtil.isExistMenu("/admin/promotion/addPromotion.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/promotion/addPromotion.htm"
+					class="TableAddBtn" title="新增促销">+新增促销</a> #end
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="" id="all" /></label></td>
+						<td>促销名称</td>
+						<td>促销类型</td>
+						<td>开始时间</td>
+						<td>结束时间</td>
+						<td>创建时间</td>
+						<td>创建人</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!promotion in $!promotionList)
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="$!promotion.mainID" id="check_box_$!promotion.mainID" /></label></td>
+						<td>
+							#if($!menuUtil.isExistMenu("/admin/promotion/promotionInfo.htm",$!menuAllList)
+							) <a target="_blank"
+							href="$!{domain}/admin/promotion/promotionInfo.htm?mainId=$!promotion.mainID">$!promotion.name</a>
+							#end
+						</td>
+						<td>#if("$!promotion.type"=="3")满额免邮
+							#end</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!promotion.fromDate)</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!promotion.endDate)</td>
+						<td>$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!promotion.createTime)</td>
+						<td>$!promotion.createName</td>
+						<td>
+							#if($!menuUtil.isExistMenu("/admin/promotion/editPromotion.htm",$!menuAllList)
+							) <a
+							href="$!{domain}/admin/promotion/editPromotion.htm?mainId=$!promotion.mainID"
+							class="icon iconEdit" title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/promotion/deletePromotion.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconDel"
+							onclick="deletePromotion('$!promotion.mainID');" title="删除"></a>
+							#end
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!promotionDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

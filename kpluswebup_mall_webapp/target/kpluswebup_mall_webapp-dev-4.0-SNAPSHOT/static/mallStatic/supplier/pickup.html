@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="../css/supplier.css">
+<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+</head>
+
+<body>
+<div id="header">
+	<div class="layout clearfix">
+    	<h1 class="lt">中邮普泰</h1>
+        <span class="mintt lt">商家中心</span>
+        <span class="sipt lt">
+        	<input name="" type="text" class="ipt" placeholder="商城商品搜索"><input name="" type="button" class="sbtn">
+        </span>
+        <div class="iBox">
+            <img src="../pic/fz.jpg" class="pimg">
+            <div class="lt">
+                <p class="name">当前用户</p>
+                <p>跳大神</p>
+            </div>
+            <p class="tools"><a href="#"><img src="../images/ico-home2.gif"></a> <a href="#"><img src="../images/ico-tool.gif"></a> <a href="#"><img src="../images/ico-exit2.gif"></a></p>
+        </div>
+    </div>
+</div>
+<div class="layout clearfix">
+	<div id="leftNav">
+    	<div class="atp"><img src="../images/a2.png"></div>
+        <dl>
+        	<dt class="s1">商品管理</dt>
+            <dd><a href="#">商品选择</a></dd>
+            <dd><a href="#">出售中的商品</a></dd>
+            <dd><a href="#">等待中的商品</a></dd>
+            <dd><a href="#">下架的商品</a></dd>
+        </dl>
+        <dl>
+        	<dt class="s2">交易管理</dt>
+            <dd><a href="#">订单列表</a></dd>
+            <dd class="on"><a href="#">取货单列表</a></dd>
+        </dl>
+        <dl>
+        	<dt class="s3"><a href="#">财务管理</a></dt>
+        </dl>
+        <dl>
+        	<dt class="s4"><a href="#">销售统计</a></dt>
+        </dl>
+        <dl>
+        	<dt class="s5"><a href="#">店铺信息</a></dt>
+        </dl>    
+    </div>
+    <div id="rightMain">
+      <div class="crumbs">
+          商家管理中心 &gt; <a href="business_center.html">首页</a> &gt; 取货单列表
+      </div>
+       <div class="p15">
+            <div class="stitbar clearfix txt_r">
+                <strong class="lt">取货单列表</strong>
+                <a href="#" class="apLink">生成取货单</a>
+            </div>
+            <div class="selbar txt_r">
+            	<span>供应商 <select name="" class="sel"><option>请选择..</option></select></span>
+                <span class="ml10">本店分类 <select name="" class="sel"><option>请选择..</option></select>
+                <select name="" class="sel"><option>商品名称</option></select>
+                <input name="" type="text" class="ipt"> <input name="" type="button" class="sbtn" value="搜索"></span>
+            </div>
+            <table class="sellist">
+                <!---标头--->
+                	  <thead>
+                      	<tr>
+                      	 	<th width="450">订单编号</th>
+                            <th width="15%">生成时间</th>
+                            <th width="15%">取货数量</th>
+                            <th width="15%">打印状态</th>
+                            <th width="15%">操作</th>
+                        </tr>
+                      </thead>
+                      <tr>
+                       <td class="txt_r" colspan="5">
+                           <label for="sel_all" class="lt"><input name="allCk" id="sel_all" class="allCk" type="checkbox" value=""> 全选</label>
+                       </td>
+                      </tr>
+                  	  <!-- 列表循环 -->
+                      <tbody class="proUnit">
+                          <tr>
+                             <td colspan="5" class="bg">
+                             <input class="ck" name="ck" type="checkbox" value=""> 取货单编号：2099330
+                             </td>
+                          </tr>
+                          <tr>
+                              <td>
+								 <ul class="clearfix numUl">
+                                 	<li>&middot;29393848</li><li>&middot;29393848</li><li>&middot;29393848</li>
+                                    <li>&middot;29393848</li><li>&middot;29393848</li><li>&middot;29393848</li>
+                                    <li>&middot;29393848</li><li>&middot;29393848</li><li>&middot;29393848</li>
+                                 </ul>
+                              </td>
+                              <td class="ct">
+                                  2014-03-17
+                              </td>
+                              <td class="ct">
+                                  1
+                              </td>
+                              <td class="ct">未打印</td>
+                              <td class="ct"><a href="#" class="printBtn">打印</a><a href="#" class="viewBtn">查看</a></td>
+                          </tr>
+                      </tbody>
+                      <!-- 列表循环end -->
+                      <!-- 列表循环 -->
+                      <tbody class="proUnit">
+                          <tr>
+                             <td colspan="5" class="bg">
+                             <input class="ck" name="ck" type="checkbox" value=""> 取货单编号：2099330
+                             </td>
+                          </tr>
+                          <tr>
+                              <td>
+								 <ul class="clearfix numUl">
+                                 	<li>&middot;29393848</li><li>&middot;29393848</li><li>&middot;29393848</li>
+                                    <li>&middot;29393848</li><li>&middot;29393848</li><li>&middot;29393848</li>
+                                    <li>&middot;29393848</li><li>&middot;29393848</li><li>&middot;29393848</li>
+                                 </ul>
+                              </td>
+                              <td class="ct">
+                                  2014-03-17
+                              </td>
+                              <td class="ct">
+                                  1
+                              </td>
+                              <td class="ct">未打印</td>
+                              <td class="ct"><a href="#" class="printBtn">打印</a><a href="#" class="viewBtn">查看</a></td>
+                          </tr>
+                      </tbody>
+                      <!-- 列表循环end -->
+                      <tr>
+                       <td class="txt_r" colspan="5">
+                           <label for="sel_all_btm" class="lt"><input name="allCk" id="sel_all_btm" class="allCk" type="checkbox" value=""> 全选</label>
+                       </td>
+                      </tr>
+                </table>
+               <div class="pagerbar ct">
+                    <span class="clearfix">
+                        <a href="#">首页</a>
+                        <a href="#">上一页</a>
+                        <a href="#" class="cur">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">...</a>
+                        <a href="#">下一页</a>
+                        <a href="#">末页</a>
+                    </span>
+               </div> 
+      	</div>      
+    </div>
+</div>
+<div id="footer">
+	<div class="layout">
+    	<p><a href="#">关于中邮普泰</a> | <a href="#">我们的团队</a> | <a href="#">网站联盟</a> | <a href="#">热门搜索</a> | <a href="#">友情链接</a> | <a href="#">诚征英才</a></p>
+        <p>浙ICP备2121245号 | 合字B1.B2-20130004 | 营业执照 | 互联网药品交易服务资格证</p>
+        <p>Copyright© 中邮普泰 2007-2015，All Rights Reserved</p>
+    </div>
+</div>
+<script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/unify.js"></script>
+<script>
+$(function(){
+		$(".allCk").click(function(){
+			$(".sellist").find(':checkbox').attr("checked",this.checked);
+			getAmount();
+		})
+		$('input[name="ck"]').click(function(){
+			$("input[name='ck']").each(function(){
+				  var ck = $(this).prop("checked");
+				  if(ck==true){
+					  $(".allCk").attr("checked",true);
+				  }else{
+					  $(".allCk").removeAttr("checked");
+					  return false;
+				  }
+			})
+		})
+		
+	})
+	
+</script>
+</body>
+</html>

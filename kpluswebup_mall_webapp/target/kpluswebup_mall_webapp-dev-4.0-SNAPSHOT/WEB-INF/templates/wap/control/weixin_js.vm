@@ -1,0 +1,7 @@
+<link rel="stylesheet" href="$!{domain}/wap/css/base.css">
+<link rel="stylesheet" href="$!{domain}/wap/css/reset.css">
+<link rel="stylesheet" href="$!{domain}/wap/css/style.css">
+
+<script type="text/javascript" src="$!{domain}/wap/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{domain}/wap/js/swipe.js"></script>
+<script type="text/javascript" src="$!{domain}/wap/js/time.js"></script>

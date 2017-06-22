@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.content.dao.NoticeDAO">
+
+	<select id="findNoticeByPagination" parameterType="cmsContentDTO"
+		resultType="cmsContentVO">
+		select
+		co.mainID,
+		co.name,
+		ca.name as categoryName,
+		co.content,
+		co.createTime,
+		co.sortOrder
+		from
+		kplus_cms_content co left join
+		kplus_cms_category ca on
+		co.categoryID=ca.mainID where co.isDelete=0
+		and co.contentType=2 order
+		by
+		co.sortOrder desc limit #{startRow}
+		,#{pageSize}
+	</select>
+
+	<select id="findNoticeCount" parameterType="cmsContentDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_cms_content where
+		isDelete=0 and contentType=2
+	</select>
+
+	<update id="deleteNoticeByMainID" parameterType="cmsContentDTO">
+		update
+		kplus_cms_content set isDelete=1 where
+		mainID=#{mainID}
+	</update>
+
+	<insert id="insertNotice" parameterType="cmsContentDTO">
+		insert into
+		kplus_cms_content(
+		mainID,
+		contentType,
+		categoryID,
+		name,
+		picUrl,
+		content,
+		clickCount,
+		sortOrder,
+		isDelete,
+		creator,
+		createTime
+		)
+		values(
+		#{mainID},
+		2,
+		#{categoryID},
+		#{name},
+		#{picUrl},
+		#{content},
+		0,
+		#{sortOrder},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<select id="findNoticeByMainID" parameterType="cmsContentDTO"
+		resultType="cmsContentVO">
+		select * from kplus_cms_content where mainID=#{mainID} and
+		isDelete=0 and contentType=2
+	</select>
+
+	<update id="updateNoticeByMainID" parameterType="cmsContentDTO">
+		update kplus_cms_content
+		<set>
+			modifyTime=now()
+			<if test="name != null">
+				, name = #{name}
+			</if>
+			<if test="categoryID != null">
+				, categoryID = #{categoryID}
+			</if>
+			<if test="picUrl != null">
+				, picUrl = #{picUrl}
+			</if>
+			<if test="content != null">
+				, content = #{content}
+			</if>
+			<if test="sortOrder != null">
+				,sortOrder = #{sortOrder}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID =#{mainID}
+	</update>
+	<select id="findSupplierNotice" parameterType="java.lang.Integer" resultType="cmsContentVO">
+		SELECT
+			co.mainID,
+			co. NAME,
+			ca. NAME AS categoryName,
+			co.createTime,
+			co.sortOrder
+		FROM
+			kplus_cms_content co
+		LEFT JOIN kplus_cms_category ca ON co.categoryID = ca.mainID
+		WHERE
+			co.isDelete = 0
+		AND co.contentType = 2
+		AND ca.`name` = '商家公告'
+		ORDER BY
+			co.createTime DESC
+		LIMIT #{size}
+	</select>
+</mapper>

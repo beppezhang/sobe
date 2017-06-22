@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>售后列表</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/jquery-ui.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+</head>
+
+<body>
+<!-- top bar -->
+	#parse("layout/head_top.vm")
+<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+<!-- 主导航 -->
+	#parse("layout/menu.vm")
+<!-- body头部 -->
+	#parse("layout/customercenter/header.vm")
+
+<div class="layout clearfix">
+	<!-- 左边菜单 -->
+	#parse("layout/customercenter/leftmenu.vm")
+    	
+    <div class="mainbody">
+    	<div class="tittab">
+       	  <span class="cur">售后列表</span>
+        </div>
+        <form action="$!{domain}/mall/buyer/afterSalesList.htm" id="serachform" method="post">
+        	<input type="hidden" id="pageNo" name="pageNo" value="$!salesOrderSalesApplyDTO.pageNo">
+        	<input type="hidden" id="pageSize" name="pageSize" value="$!salesOrderSalesApplyDTO.pageSize">
+        	<div class="pbar txt_r">
+            	<span class="col02 ml10">申请时间 <input name="fromDate" type="text" class="datepicker ipt" value="$!saleOrderDTO.fromDate"> - 
+            									<input name="endDate" type="text" class="ipt datepicker" value="$!saleOrderDTO.endDate"></span>
+            	<span class="col02 ml10">订单号 <input name="orderCode" type="text" class="ipt" value="$!saleOrderDTO.mainID">
+            									<input name="" type="button" onclick="$('form').submit();" class="btn" value="搜索"></span>
+        	</div>
+        </form>
+         <table class="odTable">
+                <!---标头--->
+                	  <thead>
+                      	<tr>
+                      	 	<th class="w395 ct">商品</th>
+                            <th class="w80 ct">售后类型</th>
+                            <th class="w80 ct">商家反馈</th>
+                            <!-- <th class="w110 ct">手机串号</th> -->
+                            <th class="w95 ct">状态</th>
+                            <th class="w150 ct">操作</th>
+                        </tr>
+                      </thead>
+                	  <tr>
+                          <td class="hr" colspan="7"></td>
+                      </tr>
+                  <!---列表--->
+                  #foreach($!afterSale in $!salesOrderSalesApplyList) 
+                     <tbody class="odlist"> 
+                      <tr>
+                        <th colspan="7">
+                            <div class="txt_r clearfix">
+                                <div class="lt">
+                                    <span>订单号：$!afterSale.mainID</span>
+                                    <span class="ml35">下单时间：$!date.format('yyyy-MM-dd HH:mm:ss',$!afterSale.createTime)</span>
+                                </div>
+                            </div>
+                        </th>
+                      </tr>
+                      <tr>
+                        <td class="bl">
+                            <a href="javaScript:seeItem('$!{afterSale.productID}','$!{afterSale.itemID}');" class="col01">
+                                <img src="$!{domainImg}$!{afterSale.itemPicURL}" class="pimg lt">
+                                $!afterSale.itemName
+                            </a>
+                        </td>
+                        <td class="ct bl">#if("$!afterSale.salesType"=="1")退货#end
+                            #if("$!afterSale.salesType"=="2")换货 #end</td>
+                       <!--  <td class="ct bl">
+                            $!afterSale.numberIMEI
+                        </td> -->
+                        <td class="bl">
+                             $!afterSale.memo
+                        </td>
+                        <td class="ct bl">
+							#if("$!afterSale.status"=="0")申请 #end
+                            #if("$!afterSale.status"=="1")拒绝 #end
+                            #if("$!afterSale.status"=="2")处理中 #end
+                            #if("$!afterSale.status"=="3")完成 #end
+                            #if("$!afterSale.status"=="4")已取消 #end
+                        </td>
+                        <td class="ct bl br">
+                        	#if("$!afterSale.status"=="0")
+                            <a href="javascript:;" class="btnLink" onclick="cancelAfterSale('$!afterSale.mainID')">取消售后</a>#end
+                            #if("$!afterSale.status"=="2")
+                            <a href="javascript:;" class="btnLink" onclick="affirmAfterSale('$!afterSale.mainID')">确认售后</a>#end
+                        </td>
+                      </tr>
+                     </tbody>
+                    #end 
+                 <!---列表end--->    
+                </table>
+                #if("$!salesOrderSalesApplyList"!="" && $salesOrderSalesApplyList.size()>0)
+                <div class="pagerbar clearfix ct">#pagination($!salesOrderSalesApplyDTO)</div>#end
+                #if("$!salesOrderSalesApplyList"=="" || $salesOrderSalesApplyList.size()==0)
+                <div class="noMes"><img src="$!{mallStatic}/images/ico-exc.png"> 暂无符合条件的数据记录 </div>#end
+    </div>	
+</div>
+<!-- footer -->
+	#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery("#afterSales").addClass("cur").siblings(".leve10").removeClass("cur");
+})
+function seeItem(productID,itemID){
+    if(productID != null && itemID != null){
+	    var data = {
+				productID : productID,
+			itemID : itemID
+		}
+	   jQuery.ajax({
+				url : "productDetailBuy.do",
+				type : "POST",
+				data : data,
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 0) {
+						window.open('$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID,"_blank");
+					} else {
+						alert("该商品已下架！");
+					}
+				},
+				error : function() {
+					alert("操作失败");
+				}
+		});
+    }else{
+       alert("商品已下架！");
+    }
+	
+}
+
+/** 取消售后* */
+function cancelAfterSale(mainID) {
+	jQuery.ajax({
+		url : "cancelAfterSale.do",
+		data : {
+			"mainID" : mainID
+		},
+		type : "POST",
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 0) {
+				alert("取消成功！");
+				location.reload();
+			} else {
+				alert("取消失败！");
+			}
+		},
+		error : function() {
+			alert("系统出错！");
+		}
+	});
+}
+
+/** 确认售后* */
+function affirmAfterSale(mainID) {
+	jQuery.ajax({
+		url : "affirmAfterSale.do",
+		data : {
+			"mainID" : mainID
+		},
+		type : "POST",
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 0) {
+				alert("售后成功！");
+				location.reload();
+			} else {
+				alert("售后失败！");
+			}
+		},
+		error : function() {
+			alert("系统出错！");
+		}
+	});
+}
+/** 上传头像 * */
+function ajaxFileUpload() {
+	jQuery.ajaxFileUpload({
+		url : '/file/fileUpload.do',
+		secureuri : false,// 是否启用安全提交,默认为false
+		fileElementId : 'myBlogImage',// 文件选择框的id属性
+		dataType : 'text',// 服务器返回的格式,可以是json或xml等
+		success : function(data, status) {
+			data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+			data = data.replace("</PRE>", '');
+			data = data.replace("<pre>", '');
+			data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+			if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+				jQuery("img[id='uploadImage']").attr("src",
+						data.substring(2));
+				jQuery("#picURL").val(data.substring(2));
+				var mainID = jQuery("#mainID").val();
+				var picURL = jQuery("#picURL").val();
+				jQuery.ajax({
+					url : '/mall/buyer/saveAvatar.do',
+					data : {
+						'mainID' : mainID,
+						'picURL' : picURL
+					},
+					secureuri : false,// 是否启用安全提交,默认为false
+					fileElementId : 'myBlogImage',// 文件选择框的id属性
+					dataType : 'text',// 服务器返回的格式,可以是json或xml等
+					success : function() {
+					}
+				});
+			} else {
+				jQuery('#result').html('图片上传失败，请重试！！');
+			}
+		},
+		error : function(data, status, e) { // 服务器响应失败时的处理函数
+			jQuery('#result').html('图片上传失败，请重试！！');
+		}
+	});
+}
+$(function() { 
+	$(".datepicker").datepicker(); 
+}); 
+</script>
+</body>
+</html>

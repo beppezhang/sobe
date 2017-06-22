@@ -1,0 +1,16 @@
+<div class="contentLf tabList">
+	<ul>
+		#if($!menuUtil.isExistMenu("/admin/system/interfaceConfigList.htm",$!menuAllList)
+		)
+		<li class="interfaceconfig_menu_1"><a
+			href="$!{domain}/admin/system/interfaceConfigList.htm">支付接口</a></li> #end
+		#if($!menuUtil.isExistMenu("/admin/system/emailConfigList.htm",$!menuAllList)
+		)
+		<li class="interfaceconfig_menu_2"><a
+			href="$!{domain}/admin/system/emailConfigList.htm">邮件接口</a></li> #end
+		#if($!menuUtil.isExistMenu("/admin/system/wechatConfigList.htm",$!menuAllList)
+		)
+		<li class="interfaceconfig_menu_3"><a
+			href="$!{domain}/admin/system/wechatConfigList.htm">微信接口</a></li> #end
+	</ul>
+</div>

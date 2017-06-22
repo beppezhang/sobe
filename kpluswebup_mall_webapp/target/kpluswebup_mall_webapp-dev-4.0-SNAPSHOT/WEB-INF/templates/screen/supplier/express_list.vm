@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/base.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user1.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/jquery-ui.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+<script type="text/javascript" src="${adminStatic}/script/admin.js"></script>
+<script type="text/javascript" src="$!{domain}/kindeditor/kindeditor-min.js"></script>
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	#parse("layout/suppliercenter/leftmenu.vm")
+	 <div id="rightMain">
+      <div class="crumbs">
+          商家管理中心 &gt; <a href="supplierCenter.htm">首页</a> &gt; 运费管理
+      </div>
+       <div class="p15">
+            <div class="stitbar">
+                <strong>物流公司</strong>
+   			<span class="rt">
+				<a id="exportSupplierSalesOrder" class="icon iconExport areabut" title="+新增物流公司" href="addExpressPage.htm" style="border-color: #cd4121;color: #cd4121 !important;">+新增物流公司</a>
+			</span>
+            </div>
+
+            <table class="smpTable">
+              <tr>
+                <th>名称</th>
+                <th>业务联系人</th>
+                <th>联系电话</th>
+                <th>默认</th>
+                <th>操作</th>
+									#foreach($!expressVO in $!list)
+									<tr>
+										<td>$!expressVO.name</td>
+										<td>$!expressVO.contactPerson</td>
+										<td>$!expressVO.mobile</td>
+										<td>#if("$!expressVO.def"=="0") 否 #else 是 #end</td>
+										<td>
+											<a class="editBtn"
+											href="editExpressPage.htm?mainID=$!expressVO.mainID"
+											title="编辑"></a>  &nbsp;
+											<a href="javascript:;" class="delBtn"
+											onclick="deleteExpress('$!{expressVO.mainID}')" title="删除"></a>
+										</td>
+									</tr>
+									#end
+
+            </table>
+            <form id="serachform" name="serachform" method="get" action="expressList.htm">
+                  <input type="hidden" id="pageNo" name="pageNO"
+                  value="$!expressDTO.pageNo">
+                 <input type="hidden" id="pageSize" name="pageSize" 
+                      value="$!expressDTO.pageSize">
+            </form>
+           #if($!list.size() != 0)
+            <div class="pagerbar clearfix ct">
+              #pagination($!expressDTO)
+            </div>
+          #end
+        </div>      
+    </div>
+               
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-ui.min.js"></script>
+<script type="text/javascript">
+  $("dd:eq(10)").addClass("on");
+  $(".datepicker").datepicker();  
+  
+jQuery(function() {
+jQuery(".pagerbar").pager({
+    pagenumber : $expressDTO.pageNo,
+    pagecount : $expressDTO.pageCount,
+    buttonClickCallback : PageClick
+  });
+})
+PageClick = function(pageclickednumber) {
+  jQuery(".pagerbar").pager({
+    pagenumber : pageclickednumber,
+    pagecount : $expressDTO.pageCount,
+    buttonClickCallback : PageClick
+  })
+  jQuery("#pageNo").val(pageclickednumber);
+  jQuery("#serachform").submit();
+}
+</script>
+</body>
+</html>

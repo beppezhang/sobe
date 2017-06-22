@@ -1,0 +1,18 @@
+<div class="contentLf tabList">
+	<ul>
+		#if($!menuUtil.isExistMenu("/admin/system/expressList.htm",$!menuAllList)
+		)
+		<li class="express_menu_1"><a
+			href="$!{domain}/admin/system/expressList.htm">物流公司</a></li>#end
+		<li class="express_menu_4"><a
+			href="$!{domain}/admin/system/expressFormat.htm">物流模板</a></li>
+		<!-- #if($!menuUtil.isExistMenu("/admin/system/freightTemplateList.htm",$!menuAllList)
+		)
+		<li class="express_menu_2"><a
+			href="$!{domain}/admin/system/freightTemplateList.htm">运费模版</a></li>#end -->
+		#if($!menuUtil.isExistMenu("/admin/system/shippingAddressList.htm",$!menuAllList)
+		)
+		<li class="express_menu_3"><a
+			href="$!{domain}/admin/system/shippingAddressList.htm">发货地址</a></li>#end
+	</ul>
+</div>

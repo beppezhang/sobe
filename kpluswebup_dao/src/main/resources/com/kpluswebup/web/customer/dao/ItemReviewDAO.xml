@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.ItemReviewDAO">
+
+	<sql id="Base_Column_List">
+		mainID, customerID,salesOrderID,productID,
+		itemID,score,title,content,status,reply,replier,
+		replyTime,creator,createTime,modifier,modifyTime
+	</sql>
+
+
+	<select id="findReviews" parameterType="itemReviewDTO"
+		resultType="ItemReviewVO">
+		SELECT
+		A.*,B.`name` as customerName,B.avatar as customerPicurl,C.`name` as gradeName
+		from kplus_item_review A
+		LEFT JOIN kplus_customer B ON
+		A.customerID=B.mainID
+		LEFT JOIN kplus_customer_grade C ON
+		B.gradeID=C.mainID
+		where 1=1
+		<if test="mainID!=null">
+			AND A.mainID=#{mainID}
+		</if>
+		<if test="customerID!=null">
+			AND A.customerID=#{customerID}
+		</if>
+		<if test="productID!=null">
+			AND A.productID=#{productID}
+		</if>
+		<if test="customerID!=null">
+			AND A.itemID=#{itemID}
+		</if>
+		<if test="status!=null">
+			and A.status=#{status}
+		</if>
+		order by A.id desc
+	</select>
+
+	<insert id="insertReview" parameterType="itemReviewDTO">
+		INSERT INTO
+		kplus_item_review(
+		mainID,
+		productID,
+		itemID,
+		customerID,
+		score,
+		title,
+		content,
+		status,
+		createTime
+		)
+		VALUES
+		(
+		#{mainID},
+		#{productID},
+		#{itemID},
+		#{customerID},
+		#{score},
+		#{title},
+		#{content},
+		#{status},
+		now()
+		)
+	</insert>
+
+
+
+</mapper>

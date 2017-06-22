@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.content.dao.CmsWechatReplySetDAO">
+
+	<select id="findWechatReplyByPagination" parameterType="cmsWechatReplySetDTO"
+		resultType="cmsWechatReplySetVO">
+		select
+		w.*,
+		i.name as wechatName
+		from
+		kplus_cms_wechatreplyset
+		w
+		left join kplus_interfaceconfig
+		i
+		on
+		w.interfaceConfigID=i.mainID where w.isDelete=0
+		<if test="setType!=null">
+			and w.setType=#{setType}
+		</if>
+		<if test="interfaceConfigID!=null">
+			and w.interfaceConfigID=#{interfaceConfigID}
+		</if>
+		<if test="keyword!=null">
+			and w.keyword like '%${_parameter}%'
+		</if>
+		order
+		by w.id desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findWechatReplyCount" parameterType="cmsWechatReplySetDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_cms_wechatreplyset where
+		isDelete=0
+		<if test="setType!=null">
+			and setType=#{setType}
+		</if>
+		<if test="interfaceConfigID!=null">
+			and interfaceConfigID=#{interfaceConfigID}
+		</if>
+		<if test="keyword!=null">
+			and keyword like '%${_parameter}%'
+		</if>
+	</select>
+
+	<update id="deleteWechatReplyByMainID" parameterType="java.lang.String">
+		update
+		kplus_cms_wechatreplyset set isDelete=1 where
+		mainID=#{mainID}
+	</update>
+
+	<insert id="insertWechatReply" parameterType="cmsWechatReplySetDTO">
+		insert into
+		kplus_cms_wechatreplyset(
+		mainID,
+		setType,
+		keyword,
+		interfaceConfigID,
+		replyType,
+		title,
+		content,
+		picURL,
+		linkType,
+		replyLink,
+		sortOrder,
+		isDelete,
+		creator,
+		createTime
+		)
+		values(
+		#{mainID},
+		#{setType},
+		#{keyword},
+		#{interfaceConfigID},
+		#{replyType},
+		#{title},
+		#{content},
+		#{picURL},
+		#{linkType},
+		#{replyLink},
+		#{sortOrder},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<select id="findWechatReplyByMainID" parameterType="java.lang.String"
+		resultType="cmsWechatReplySetVO">
+		select * from kplus_cms_wechatreplyset where
+		mainID=#{mainID} and
+		isDelete=0
+	</select>
+
+	<update id="updateWechatReplyByMainID" parameterType="cmsWechatReplySetDTO">
+		update kplus_cms_wechatreplyset
+		<set>
+			modifyTime=now()
+			<if test="setType != null">
+				, setType = #{setType}
+			</if>
+			<if test="interfaceConfigID != null">
+				, interfaceConfigID = #{interfaceConfigID}
+			</if>
+			<if test="replyType != null">
+				, replyType = #{replyType}
+			</if>
+			<if test="title != null">
+				, title = #{title}
+			</if>
+			<if test="keyword != null">
+				, keyword = #{keyword}
+			</if>
+			<if test="content != null">
+				, content = #{content}
+			</if>
+			<if test="picURL != null">
+				, picURL = #{picURL}
+			</if>
+			<if test="linkType != null">
+				, linkType = #{linkType}
+			</if>
+			<if test="replyLink != null">
+				, replyLink = #{replyLink}
+			</if>
+			<if test="sortOrder != null">
+				,sortOrder = #{sortOrder}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID =#{mainID}
+	</update>
+	
+	<select id="findWechatByKeyword" parameterType="java.lang.String" resultType="cmsWechatReplySetVO">
+		SELECT A.* 
+		FROM kplus_cms_wechatreplyset A
+		WHERE A.keyword LIKE '%${_parameter}%'
+		AND A.setType=2
+		AND A.isDelete=0
+	</select>
+
+</mapper>

@@ -1,0 +1,500 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/base.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user1.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/jquery-ui.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	#parse("layout/suppliercenter/leftmenu.vm")
+	<div id="rightMain">
+      <div class="crumbs">
+          商家管理中心 &gt; <a href="supplierCenter.htm">交易管理</a> &gt; 订单列表
+      </div>
+       <div class="p15">
+            <div class="stitbar">
+                <strong>所有订单</strong>
+            </div>
+            <div class="selbar txt_r">
+              <form id="serach" action="order.htm">
+                <input type="hidden" id="pageNo" name="pageNO" value="$!saleOrderDTO.pageNo">
+                <span class="ml10"></span>
+                <span class="lt">
+                   <a href="javascript:;" title="导出订单" id="exportSupplierSalesOrder" class="icon iconExport areabut">导出订单</a>
+                <!-- <input name="" type="checkbox" value=""> 不显示已关闭的商品 --></span>
+                <span class="ml10">下单时间 <input name="fromDate" id="fromDate" type="text" class="datepicker ipt" value="$!saleOrderDTO.fromDate"> - <input name="endDate" id="endDate" type="text" class="ipt datepicker" value="$!saleOrderDTO.endDate"></span>
+                <span class="ml10">订单状态
+                  <select name="orderStatus" id="orderStatus">
+                  <option value="">全部</option>
+                     <option value="0" #if("$!saleOrderDTO.orderStatus" != "" && "$!saleOrderDTO.orderStatus" == "0") selected="selected" #end>取消</option>
+                     <option value="1" #if("$!saleOrderDTO.orderStatus" != "" && "$!saleOrderDTO.orderStatus" == "1") selected="selected" #end>待确认</option>
+                     <option value="2" #if("$!saleOrderDTO.orderStatus" != "" && "$!saleOrderDTO.orderStatus" == "1" && "$!saleOrderDTO.paymentStatus"=="1" ) selected="selected" #end>已支付</option>
+                     <option value="3" #if("$!saleOrderDTO.orderStatus" != "" && "$!saleOrderDTO.orderStatus" == "3") selected="selected" #end>待发货</option>
+                     <option value="4" #if("$!saleOrderDTO.orderStatus" != "" && "$!saleOrderDTO.orderStatus" == "4") selected="selected" #end>已发货</option>
+                     <option value="5" #if("$!saleOrderDTO.orderStatus" != "" && "$!saleOrderDTO.orderStatus" == "5") selected="selected" #end>已收货</option>
+                     <option value="6" #if("$!saleOrderDTO.orderStatus" != "" && "$!saleOrderDTO.orderStatus" == "6") selected="selected" #end>已完成</option>
+                  </select>
+                 </span>
+                <span class="ml10">买家 <input name="customerName" id="customerName" type="text" class="ipt short" value="$!saleOrderDTO.customerUserName"> </span>
+                <!--<span class="ml10">订单编号 <input name="orderCode" id="orderCode" type="text" class="ipt" value="$!saleOrderDTO.mainID" > <input name="" type="button" class="sbtn" onclick="$('#serach').submit();" value="搜索"></span>-->
+                <span class="ml10">订单编号 <input name="orderCode" id="orderCode" type="text" class="ipt" value="$!saleOrderDTO.mainID" > <input name="" type="button" class="sbtn" onclick="onSearch();" value="搜索"></span>
+
+              </form>
+            </div>
+            #if($!orderList.size() == 0)
+            <div style="height: 100px;padding: 49px 0;font-size: 20px;text-align:center; line-height: 100px;">暂无匹配的条目！</div>
+            #else
+                <table class="prolist mt25 busin_table">
+	                <tbody>
+	                    <tr>
+	                    <th style="width:450px;">订单商品</th>
+	                    <th style="width:250px;">单价(元)</th>
+	                    <th style="width:200px;">数量</th>
+	                    <!-- <th style="width:200px;">售后操作</th> -->
+	                    <th style="width:200px;">状态</th>
+	                    <th style="width:200px;">实付款(元)</th>
+	                    <!-- <th style="width:200px;">返还银币</th> -->
+	                    <th style="width:200px;">操作</th>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="5" class="hr"></td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	            #foreach($!order in $!orderList)
+	            <div class="alone_table">
+	                            <div class="alone_tools">订单编号<span>$!order.mainID</span>成交日期<span>$!date.format('yyyy/MM/dd',$!order.createTime)</span>收货人<span>$!order.customerUserName</span>
+	                            <!--发货方式<span>
+								#if("$!{order.paymentType}"=="1")
+								<font color="blue">款到发货</font>
+								#elseif("$!{order.paymentType}"=="2")
+								<font color="green">货到付款</font>
+								#else
+								<font color="gray">自提</font>
+								#end
+								</span>-->
+	<!--span style="color:blue;">#if("$!order.proofURL" != "")<a href="$!domain$!order.proofURL" style="color:red;" target="_blank">点击查看交易凭证</a> #else 未上传凭证#end</span>-->
+								</div>
+	                            <table>
+	                                <tbody>
+	                                   #foreach($!salesOrderLine in $!order.salesOrderLineList)
+	                                    <tr>
+		                                    <td class="product">
+		                                        <a href="javaScript:seeItem('$!{salesOrderLine.productID}','$!{salesOrderLine.itemID}');"><img src="$!{domainImg}$!salesOrderLine.itemPicUrl" alt=""></a>
+		                                        <p class="name"><a href="javaScript:seeItem('$!{salesOrderLine.productID}','$!{salesOrderLine.itemID}');">$!salesOrderLine.itemName</a></p>
+		                                        <!-- <p class="remark">(包邮)</p> -->
+		                                    </td>
+		                                    <td class="price">$!NumberTool.format("#0.00",$!salesOrderLine.salesPrice)</td>
+		                                    <td class="number">$!salesOrderLine.itemCount</td>
+		                                    <!-- <td><a class="btnLink" onclick="" style="display: inline-block;  padding: 0 10px; line-height: 28px; background: #41a8f7;color: #fff; font-size: 14px;">
+                                                                                                                                                                            确认售后</a></td> -->
+		                                    #if("$!{velocityCount}"=="1")
+			                                    <td rowspan="3" class="actualstatus">
+			                                       #if("$!order.orderStatus"=="0")
+								                   <p>交易结束</p>
+								                   #elseif("$!order.orderStatus"=="1")
+								                      #if("$!order.paymentStatus" =="1")
+								                        <p>买家已支付</p>
+								                      #else
+								                  	   <p>待确认</p>
+								                      #end
+								                   #elseif("$!order.orderStatus"=="2")
+								                     <p>带出库</p>
+								                   #elseif("$!order.orderStatus"=="3")
+								                    <p>待发货</p>
+								                   #elseif("$!order.orderStatus"=="4")
+								                    <p>已发货</p>
+								                   #elseif("$!order.orderStatus"=="5")
+								                    <p>已收货</p>
+								                   #elseif("$!order.orderStatus"=="6")
+								                    <p>已完成</p>
+								                   #elseif("$!order.orderStatus"=="7")
+								                    <p>售后申请中</p>
+								                   #elseif("$!order.orderStatus"=="8")
+								                    <p>售后处理中</p>
+								                   #elseif("$!order.orderStatus"=="9")
+								                    <p>已售后</p>
+								                   #elseif("$!order.orderStatus"=="10")
+								                    <p>售后已取消</p>
+								                   #elseif("$!order.orderStatus"=="11")
+								                    <p>售后申请被拒绝</p>
+								                   #end
+			                                       <a href="orderDetail.htm?orderMainID=$!{order.mainID}">订单详情</a></td>
+			                                    <td rowspan="3" class="actualpay">￥<em class="em1">$!order.totalAmount</em></td>
+			                                    <!-- <td rowspan="4" class="actualget">100</td> -->
+			                                    <td rowspan="3" class="actualoption">
+			                                        #if("$!order.orderStatus"=="4")
+			                                           #if("$!order.sendOutURL"=="")
+				                                        <!-- <a class="areabut">上传发货凭证</a> -->
+				                                            <img id="uploadImage$!order.id" src="$!domain$!order.proofURL" style="width: 100px; height: 100px; display: none;">
+															<input type="hidden" value="" name="picURL$!order.id" id="picURL$!order.id"> 
+															<a style="width:80px;overflow:hidden;position: relative;display:inline-table;" class="areabut">
+															  上传发货凭证
+															  <input name="myfiles" type="file" accept="image/*" id="myBlogImage$!order.id" class="up_file"
+																	onchange="ajaxFileUploads($!order.id);" style="position: absolute;top:0;left:0;  -webkit-opacity: 0;-moz-opacity: 0;-khtml-opacity: 0;opacity: .0;height:30px;"/>
+															</a>
+			                                           #else
+												         <a href="$!domain$!order.sendOutURL" target="_blank">查看发货凭证</a>
+			                                           #end
+			                                        #end
+			                                    
+				                                    #if("$!order.orderStatus"=="0")
+			                                       <!--  <a class="areabut" href="#">订单取消</a> -->
+			                                        #else
+			                                           #if("$!order.paymentType" == "2" )
+			                                             #if($!order.orderStatus < 3)
+			                                              <a class="areabut" href="javascript:void(0);" onclick="changeOrderStatus('$!order.mainID','3')">确认</a><br>
+			                                               <a href="javascript:void(0);" onclick="editOrderBySupplier('$!order.mainID')" id="editAreabut" class="areabut">编辑</a>
+			                                             #elseif("$!order.orderStatus"=="3")
+			                                              <a class="areabut" href="javascript:void(0);" onclick="changeOrderStatus('$!order.mainID','4','$!{order.paymentType}')">发货</a><br>
+			                                              <div style="display: none;" class="div logis2$!order.mainID">
+					                                         <em>物流单号($!order.mainID)：</em> <input type="text" value="" id="logiss" class="logis2$!order.mainID">
+		                                                        <a class="editLogis" data-id="$!order.mainID">确认</a>
+		                                                      <a class="close">X</a>
+					                                       </div>
+			                                             #end
+			                                           #else
+			                                              #if("$!order.paymentStatus" =="1" )
+			                                                 #if($!order.orderStatus < 3)
+				                                              <a class="areabut" href="javascript:void(0);" onclick="changeOrderStatus('$!order.mainID','3')">确认</a><br>
+					                                             #elseif("$!order.orderStatus"=="3")
+					                                              <a class="areabut" href="javascript:void(0);" onclick="changeOrderStatus('$!order.mainID','4','$!{order.paymentType}')">发货</a><br>
+					                                              <div style="display: none;" class="div logis2$!order.mainID">
+							                                         <em>物流单号($!order.mainID)：</em> <input type="text" value="" id="logiss" class="logis2$!order.mainID">
+							                                           <a class="editLogis" data-id="$!order.mainID">确认</a>
+				                                                      <a class="close">X</a>
+							                                      </div>
+					                                             #end
+				                                          #else
+				                                             <a href="javascript:void(0);" onclick="editOrderBySupplier('$!order.mainID')" id="editAreabut" class="areabut">编辑</a>
+			                                              #end
+			                                           #end
+			                                        <!-- <a class="areabut" href="#">正常订单</a> -->
+				                                    #end
+				                                     #if("$!order.orderStatus"!="0"&&"$!order.paymentStatus" !="1")
+			                                       <div style="display: none;" class="div div$!order.mainID">
+			                                         <em>编辑价格($!order.mainID)：</em> <input type="text" value="" id="em2" class="em2$!order.mainID">
+                                                      <a class="editAmount" data-id="$!order.mainID">确认</a>
+                                                      <a class="close">X</a>
+			                                       </div>
+			                                       #end
+			                                    </td>
+		                                    #end
+	                                     </tr>
+	                                   #end 
+	                            </tbody></table>
+	            </div>
+	            #end
+            #end
+               <!--<form id="serachform" name="serachform" method="get" action="order.htm">
+                  <input type="hidden" id="pageNo" name="pageNO"
+                  value="$!saleOrderDTO.pageNo">
+                 <input type="hidden" id="pageSize" name="pageSize" 
+                      value="$!saleOrderDTO.pageSize">
+                 <input type="hidden" id="orderStatusInTurnPage" name="orderStatus" 
+                      value="$!saleOrderDTO.orderStatus">
+				 <input name="fromDate" type="hidden" value="$!saleOrderDTO.fromDate"> 
+				 <input name="endDate" type="hidden" value="$!saleOrderDTO.endDate">
+                 <input name="customerName" type="hidden" value="$!saleOrderDTO.customerUserName">
+                 <input name="orderCode" type="hidden" value="$!saleOrderDTO.mainID" > 
+              </form>-->
+               #if($!orderList.size() != 0)
+               <div class="pagerbar clearfix ct">
+                #pagination($!saleOrderDTO)
+               </div>
+              #end
+        </div>      
+    </div>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+  $("dd:eq(5)").addClass("on");
+  $(".datepicker").datepicker();  
+</script>
+<script type="text/javascript">
+jQuery("#exportSupplierSalesOrder").click(function() {
+	var fromDate = jQuery("#fromDate").val();
+	var endDate = jQuery("#endDate").val();
+	var orderStatus = jQuery("#orderStatus").val();
+	var customerName = jQuery("#customerName").val();
+	var orderCode = jQuery("#orderCode").val();
+	if (confirm("确定要导出数据吗？")) {
+		window.location.href = "exportSupplierSalesOrder.do?fromDate="
+				+fromDate+"&endDate="+endDate+"&orderStatus="+orderStatus+"&customerName="+customerName+"&orderCode="+orderCode;
+	} else {
+		return false;
+	}
+});
+
+function onSearch(){
+	jQuery("#pageNo").val(1);
+	$("#serach").submit();
+}
+
+jQuery(function() {
+jQuery(".pagerbar").pager({
+    pagenumber : $saleOrderDTO.pageNo,
+    pagecount : $saleOrderDTO.pageCount,
+    buttonClickCallback : PageClick
+  });
+})
+PageClick = function(pageclickednumber) {
+  jQuery(".pagerbar").pager({
+    pagenumber : pageclickednumber,
+    pagecount : $saleOrderDTO.pageCount,
+    buttonClickCallback : PageClick
+  })
+  jQuery("#pageNo").val(pageclickednumber);
+  jQuery("#serach").submit();
+  //jQuery("#orderStatusInTurnPage").val(jQuery("#orderStatus").val());
+  //jQuery("#serachform").submit();
+}
+
+$(function(){
+  $(".cancel").click(function(){
+    if(!confirm("确认取消吗")){
+      return;
+    }
+    var _this = this;
+    var orderID = $(_this).attr("data-id");
+    jQuery.ajax({
+      url: '$!{domain}/confirmCancelOrder.do',
+      type: 'POST',
+      dataType:'text',
+      data: {
+        orderID: orderID
+      },
+      success: function(data){
+        if (data == 0) {
+          $(_this).parents("tbody").find(".status").text("订单已确认取消");
+          $(_this).remove();
+        }
+      }
+    })
+  })
+})
+</script>
+<script type="text/javascript">
+
+
+function changeOrderStatus(orderIDs, status,paymentStatus) {
+	if(paymentStatus==1||paymentStatus==2){
+		jQuery(".logis2"+orderIDs).css("display","block");
+		jQuery(".editLogis").click(function(){
+			var orderID = jQuery(this).attr("data-id");
+			var expressNumber = jQuery(this).prev(".logis2"+orderID).val();
+			var data = {
+					orderIDs : orderID,
+					orderStatus : status,
+					expressNumber:expressNumber
+				}
+			if(confirm("确定要操作吗？")){
+				var url = "$!{domain}/mall/seller/changeOrderStatus.do";
+				jQuery.ajax({
+					url : url,
+					type : "POST",
+					data : data,
+					dataType : "json",
+					success : function(data) {
+						if (data.code == 0) {
+							alert("操作成功");
+							location.reload();
+						} else {
+							alert(data.errorMsg);
+						}
+					},
+					error : function() {
+						alert("操作失败");
+					}
+				});
+			}else{
+				return;
+			}
+		});
+		
+	}else{
+		var data = {
+				orderIDs : orderIDs,
+				orderStatus : status
+			}
+		 if (confirm("确定要操作吗？")) {
+				var url = "$!{domain}/mall/seller/changeOrderStatus.do";
+				jQuery.ajax({
+					url : url,
+					type : "POST",
+					data : data,
+					dataType : "json",
+					success : function(data) {
+						if (data.code == 0) {
+							alert("操作成功");
+							location.reload();
+						} else {
+							alert(data.errorMsg);
+						}
+					},
+					error : function() {
+						alert("操作失败");
+					}
+				});
+			}  
+	}
+	
+	
+}
+
+//编辑订单价格
+/* function editOrderBySupplier(orderID){
+	jQuery(".div"+orderID).css("display","block");
+} */ 
+
+function editOrderBySupplier(orderID){
+    $(".actualoption .div").hide();
+$(".div"+orderID).show();
+} 
+
+$(".actualoption .div .close").click(function(){
+	$(this).parent().hide()
+})
+/* jQuery("#editAreabut").click(function(){
+	jQuery(this).next("div").css("display","block");
+	
+}) */
+
+
+jQuery(".editAmount").click(function(){
+	var orderID = jQuery(this).attr("data-id");
+	var totalAmount = jQuery(".em2"+orderID).val();
+	var data = {
+		    orderID : orderID,
+		    totalAmount : totalAmount
+		}
+	if(totalAmount<=0){
+		if (confirm("订单金额小于零要操作吗？")) {
+			comfirmEdit(data,orderID);
+		}{
+			jQuery(".div"+orderID).css("display","none");
+			return;}
+	}
+	comfirmEdit(data,orderID);
+})
+
+function comfirmEdit(data,orderID){
+	if (confirm("确定要操作吗？")) {
+		jQuery(".div"+orderID).css("display","none");
+		var url = "$!{domain}/mall/seller/editOrderAmount.do";
+		jQuery.ajax({
+			url : url,
+			type : "POST",
+			data : data,
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 0) {
+					alert("操作成功");
+					location.reload();
+				} else {
+					alert(data.errorMsg);
+				}
+			},
+			error : function() {
+				alert("操作失败");
+			}
+		});
+	} else {
+		jQuery(".div"+orderID).css("display","none");
+		return false;
+	}
+}
+
+function seeItem(productID,itemID){
+    if(productID != null && itemID != null){
+	    var data = {
+				productID : productID,
+			itemID : itemID
+		}
+	   jQuery.ajax({
+				url : "$!{domain}/mall/seller/seeItem.do",
+				type : "POST",
+				data : data,
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 0) {
+						var tempwindow=window.open('_blank');
+						tempwindow.location='$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID;
+						//window.open('$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID);
+					} else {
+						alert("该商品已下架！");
+					}
+				},
+				error : function() {
+					alert("操作失败");
+				}
+		});
+    }else{
+       alert("商品已下架！");
+    }
+	
+}
+
+function ajaxFileUploads(type) {
+	jQuery.ajaxFileUpload({
+		url : '/file/fileUpload.do',
+		secureuri : false,// 是否启用安全提交,默认为false
+		fileElementId : 'myBlogImage' + type,// 文件选择框的id属性
+		dataType : 'text',// 服务器返回的格式,可以是json或xml等
+		success : function(data, status) {
+			data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+			data = data.replace("</PRE>", '');
+			data = data.replace("<pre>", '');
+			data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+
+			if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+				$("img[id='uploadImage" + type + "']").attr("src",data.substring(2));
+				$("#picURL"+ type).val(data.substring(2));
+				$("#uploadImage"+ type).show();
+				$("#picURL" + type).val(data.substring(2));
+				$('#result').html("图片上传成功<br/>");
+				if(confirm("确定要上传发票吗？确定后不可修改发票！")){
+				    var sendOutURL= data.substring(2);
+					jQuery.ajax({
+						url : "/mall/seller/uploadSalesOrderProofURL.do",
+						type : "POST",
+						data : {'id':type,'sendOutURL':sendOutURL},
+						dataType : "json",
+						success : function(data) {
+							if (data.code == 0) {
+								location.reload();
+							}
+						},
+						error : function() {
+							alert("操作失败");
+						}
+				   });
+				}else{
+					$("#uploadImage"+ type).hide();
+					location.reload();
+				}
+			} else {
+				$('#result').html('图片上传失败，请重试！！');
+			}
+		},
+		error : function(data, status, e) { // 服务器响应失败时的处理函数
+			$('#result').html('图片上传失败，请重试！！');
+		}
+	});
+}
+</script>
+</body>
+</html>

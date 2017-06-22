@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>销售明细</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>财务中心 》销售明细</span>
+		</div>
+		<div class="tableListBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/account/salesList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!salesOrderDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!salesOrderDTO.pageSize">
+				<div class="tableTool" style="height: 80px;">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">产品名称：</span><input type="text"
+									name="searchName" class="cText"
+									value="$!salesOrderDTO.itemName" /></td>
+								<td><span class="grayF">申请时间：</span> <input type="text"
+									name="searchStartTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderDTO.startTime)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+									<input type="text" name="searchEndTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderDTO.endTime)" /></td>
+								<td><span class="grayF">操作时间：</span> <input type="text"
+									name="searchStartModifyTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderDTO.startModifyTime)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+									<input type="text" name="searchEndModifyTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderDTO.endModifyTime)" /></td>
+
+							</tr>
+							<tr>
+								<td><span class="grayF">会员：</span><input type="text"
+									name="searchCustomerName" class="cText"
+									value="$!salesOrderDTO.customerName" /></td>
+								<td><span class="grayF">状态：</span> <select class="select"
+									name="searchStatus">
+										<option value="">全部</option>
+										<option #if("$!salesOrderDTO.status"==
+											"0")selected="selected" #end value="0">未退款</option>
+										<option #if("$!salesOrderDTO.status"==
+											"1")selected="selected" #end value="1">已退款</option>
+								</select></td>
+								<td rowspan="3">
+									#if($!menuUtil.isExistMenu("/admin/account/salesList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div class="tableListBar">
+				<div class="tableTool">
+					<a href="javascript:;" title="全选" id="selectAll"><em
+						class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+						id="unSelect"><em class="icon iconInverse"></em></a>
+					#if($!menuUtil.isExistMenu("/admin/account/changeAccountDetailStatus.do",$!menuAllList)
+					) <a href="javascript:;" id="confirmRefundleAll"  title="退款"><em class="icon iconRefund"></em></a>
+					#end 
+				</div>
+				<table class="tableList grid">
+					<thead>
+						<tr>
+							<td><label class="label"> <input type="checkbox"
+									value="" id="all" /></label></td>
+							<td>退货单编号</td>
+							<td>收款金额</td>
+							<td>创建时间</td>
+							<td>收款时间</td>
+							<td>状态</td>
+						</tr>
+					</thead>
+					<tbody id="list">
+						#foreach($!sales in $!salesList)
+						<tr>
+						<td><label class="label"> <input type="checkbox"
+										value="$!payment.mainID" id="check_box_$!payment.mainID" /></label></td>
+							<td>$!sales.mainID</td>
+							<td class="price"><p>$!NumberTool.format("#0.00",$!sales.totalAmount)</p></td>
+							<td><span
+								title="$!date.format('yyyy-MM-dd HH:mm:ss',$!sales.createTime)"
+								class="dealtime">$!date.format('yyyy-MM-dd
+									HH:mm:ss',$!sales.createTime)</span></td>
+							<td><span
+								title="$!date.format('yyyy-MM-dd HH:mm:ss',$!sales.modifyTime)"
+								class="dealtime">$!date.format('yyyy-MM-dd
+									HH:mm:ss',$!sales.modifyTime)</span></td>
+							<td>#if($!sales.paymentStatus==0) 未结算 #elseif($!sales.paymentStatus==1)
+								已结算 #end</td>
+						</tr>
+						#end
+					</tbody>
+					#pagination($!accountDetailDTO)
+				</table>
+			</div>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

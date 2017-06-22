@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<title>商品分类</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="css/global.css">
+<link rel="stylesheet" type="text/css" href="css/product.css">
+</head>
+
+<body>
+<div id="serbox">
+	<div class="sbox">
+   	  <em>请输入商品名称</em>
+      <input name="" type="text" class="ipt">
+  </div> 
+</div>
+<div class="clist">
+	<ul class="clearfix">
+    	<li><a href="#"><img src="img/m1.jpg"></a></li>
+        <li><a href="#"><img src="img/m2.jpg"></a></li>
+        <li><a href="#"><img src="img/m3.jpg"></a></li>
+        <li><a href="#"><img src="img/m4.jpg"></a></li>
+        <li><a href="#"><img src="img/m5.jpg"></a></li>
+        <li><a href="#"><img src="img/m6.jpg"></a></li>
+        <li><a href="#"><img src="img/m7.jpg"></a></li>
+        <li><a href="#"><img src="img/m8.jpg"></a></li>
+        <li><a href="#"><img src="img/m9.jpg"></a></li>
+        <li><a href="#"><img src="img/m10.jpg"></a></li>
+        <li><a href="#"><img src="img/m11.jpg"></a></li>
+        <li><a href="#"><img src="img/m12.jpg"></a></li>
+    </ul>
+</div>
+<div id="mainnav">
+	<div class="tb">
+    	<a class="cell n1 " href="index.html">首页</a>
+        <a class="cell n2 on" href="category.html">搜索</a>
+        <a class="cell n3" href="shopcart.html">购物车</a>
+        <a class="cell n4" href="user_center.html">我的</a>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script> 
+<script>
+	$(function(){
+		$(".sbox").hover(function(){
+			$(this).addClass("on")
+		},function(){
+			var getVal = $("#serbox").find(".ipt").val();
+			if(getVal==""){
+				$(this).removeClass("on")
+			}
+		})
+	})
+</script>
+</body>
+</html>

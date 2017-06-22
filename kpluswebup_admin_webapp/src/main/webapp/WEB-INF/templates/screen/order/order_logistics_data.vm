@@ -1,0 +1,343 @@
+	<div class="tabs">
+		<span>基本信息</span> <span class="hover">订单明细</span> <span>收货信息</span> <span>发票/附加</span>
+		<span>发货信息</span>
+	</div>
+	<div class="tab_child" data="1">
+		<form id="salesOrderForm"
+			action="$!{domain}/admin/order/editSalesOrderInfo.htm" method="post">
+			<input type="hidden" name="mainID" value="$!salesOrder.mainID">
+			<div class="form">
+				<dl>
+					<dt>订单编号：</dt>
+					<dd>$!salesOrder.mainID</dd>
+				</dl>
+				<dl>
+					<dt>用户名：</dt>
+					<dd>$!salesOrder.customerUserName</dd>
+				</dl>
+				<dl>
+					<dt>物流公司：</dt>
+					<dd>
+						<select name="expressId" class="select">
+							#foreach($!express in $!expressList)
+							<option #if("$!salesOrder.expressID"==
+								"$!express.mainID") selected="selected"
+								#elseif("$!express.default"== "1")selected="selected" #end
+								value="$!express.mainID">$!express.name</option> #end
+						</select>
+						<!-- <input type="text" class="longText" placsholder="物流单号"
+							value="$!salesOrder.expressNumber" name="expressNumber" /> -->
+					</dd>
+				</dl>
+				<dl>
+					<dt></dt>
+					<dd></dd>
+				</dl>
+				<dl>
+					<dt>商品数量：</dt>
+					<dd>$!salesOrder.itemCount</dd>
+				</dl>
+				<dl>
+					<dt>商品总金额：</dt>
+					<dd>￥$!NumberTool.format("#0.00",$!salesOrder.productAmount)</dd>
+				</dl>
+				<dl>
+					<dt>运费：</dt>
+					<dd>
+						<input type="text" name="expressFee"
+							value="$!salesOrder.expressFee" />免运费
+					</dd>
+				</dl>
+				<dl>
+					<dt>订单金额：</dt>
+					<dd>￥$!NumberTool.format("#0.00",$!salesOrder.totalAmount)</dd>
+				</dl>
+				<dl>
+					<dt>应付金额：</dt>
+					<dd>￥$!NumberTool.format("#0.00", $!salesOrder.payableAmount)</dd>
+				</dl>
+				<dl>
+					<dt>支付方式：</dt>
+					<dd>#if("$!salesOrder.paymentType"=="1") 支付宝
+						#elseif("$!salesOrder.paymentType"=="2") 货到付款#end</dd>
+				</dl>
+				<dl>
+					<dt>支付状态：</dt>
+					<dd>#if("$!salesOrder.paymentStatus"=="0")未支付#elseif("$!salesOrder.paymentStatus"==1)已支付
+						#elseif("$!salesOrder.paymentStatus"=="2") 部分支付 #end</dd>
+				</dl>
+				<dl>
+					<dt>订单状态：</dt>
+					<dd>#if("$!salesOrder.orderStatus"=="0") 已取消
+						#elseif("$!salesOrder.orderStatus"=="1") 待确认
+						#elseif("$!salesOrder.orderStatus"=="2") 待出库
+						#elseif("$!salesOrder.orderStatus"=="3") 待发货
+						#elseif("$!salesOrder.orderStatus"=="4") 已发货
+						#elseif("$!salesOrder.orderStatus"=="5") 已收货
+						#elseif("$!salesOrder.orderStatus"=="6") 已完成
+						#elseif("$!salesOrder.orderStatus"=="7") 已退换货 #end</dd>
+				</dl>
+				<dl class="clearBoth">
+					<dt>买家备注：</dt>
+					<dd>$!salesOrder.memo</dd>
+				</dl>
+			</div>
+			<div class="btn left">
+				<a href="javascript:;" onclick="submitSalesOrder();" class="sub">提交</a>
+				<!-- <a href="javascript:;" class="res">取消</a> -->
+			</div>
+		</form>
+	</div>
+	<div class="tab_child" data="2" style="display: block;">
+		<form id="lineForm"
+			action="$!{domain}/admin/order/editSalesOrderLine.htm" method="post">
+			<div class="tableListHead">
+				<div>商品编号</div>
+				<div>商品名称</div>
+				<div>销售价格</div>
+				<div>数量</div>
+				<div>合计</div>
+			</div>
+			<div class="tableListBD">
+				<table class="tableList grid">
+					<tbody>
+						#foreach($!salesOrderLine in $!salesOrder.salesOrderLineList)
+						<tr>
+							<td width="20%">$!salesOrderLine.itemID</td>
+							<td width="20%">$!salesOrderLine.itemName</td>
+							<td width="20%"><em>￥$!NumberTool.format("#0.00",$!salesOrderLine.salesPrice)</em><input
+								type="text" name="transactionPrice" class="cText cTextMin"
+								value="$!NumberTool.format('#0.00',$!salesOrderLine.transactionPrice)" /></td>
+							<input type="hidden" name="salesOrderLineID"
+								value="$!salesOrderLine.id">
+							<td width="20%"><input type="text" name="itemCount"
+								value="$!salesOrderLine.itemCount" class="cText cTextMin" /></td>
+							<td width="20%"><strong>$!NumberTool.format("#0.00",$!salesOrderLine.productPrice)</strong></td>
+						</tr>
+						#end
+					</tbody>
+				</table>
+			</div>
+			<div class="btn">
+				<a href="javascript:;" onclick="submitSalesOrderLine();" class="sub">提交</a>
+				<!-- <a href="#" class="res">取消</a> -->
+			</div>
+		</form>
+	</div>
+	<div class="tab_child" data="3">
+		<form id="deliveryAddressForm"
+			action="$!{domain}/admin/order/editSalesOrderDeliveryAddress.htm"
+			method="post">
+			<input type="hidden" name="orderID" value="$!salesOrder.mainID">
+			<div class="form">
+				<dl>
+					<dt>收件人：</dt>
+					<dd>
+						<input type="text" class="longText" name="name"
+							value="$!salesOrder.salesOrderDeliveryAddressVO.name" />
+					</dd>
+				</dl>
+				<dl>
+					<dt>电话：</dt>
+					<dd>
+						<input type="text" class="longText" name="telephone"
+							value="$!salesOrder.salesOrderDeliveryAddressVO.telephone" />
+					</dd>
+				</dl>
+				<dl>
+					<dt>手机：</dt>
+					<dd>
+						<input type="text" class="longText" name="mobile"
+							value="$!salesOrder.salesOrderDeliveryAddressVO.mobile" />
+					</dd>
+				</dl>
+				<dl class="clearBoth">
+					<dt>收货地址：</dt>
+					<dd>
+						<select name="provinceId" class="select"
+							onchange="changeProvinceID(this.value)">
+							#foreach($!province in $!provinceList)
+							<option
+								#if("$!salesOrder.salesOrderDeliveryAddressVO.provinceID"==
+								"$!province.mainID")selected="selected" #end
+								value="$!province.mainID">$!province.name</option> #end
+						</select> &nbsp; <select name="cityId" id="cityid" class="select"
+							onchange="changeCity(this.value)"> #foreach($!city in
+							$!dcityList)
+							<option #if("$!salesOrder.salesOrderDeliveryAddressVO.cityID"==
+								"$!city.mainID")selected="selected" #end value="$!city.mainID">$!city.name</option>
+							#end
+						</select> &nbsp; <select name="districtId" id="districtid" class="select">
+							#foreach($!district in $!ddistrictList)
+							<option
+								#if("$!salesOrder.salesOrderDeliveryAddressVO.districtID"==
+								"$!district.mainID")selected="selected" #end
+								value="$!district.mainID">$!district.name</option> #end
+						</select><input type="text" class="longText" name="address"
+							value="$!salesOrder.salesOrderDeliveryAddressVO.address" />
+					</dd>
+				</dl>
+				<dl class="clearBoth">
+					<dt>邮编：</dt>
+					<dd>
+						<input type="text" class="longText" name="zip"
+							value="$!salesOrder.salesOrderDeliveryAddressVO.zip" />
+					</dd>
+				</dl>
+			</div>
+			<div class="btn left">
+				<a href="javascript:;" onclick="submitDeliveryAddress()" class="sub">提交</a>
+				<!-- <a href="javascript:;" class="res">取消</a> -->
+			</div>
+		</form>
+	</div>
+	<div class="tab_child" data="4">
+		<form id="salesOrderInvoiceForm"
+			action="$!{domain}/admin/order/editSalesOrderInfo.htm" method="post">
+			<input type="hidden" name="mainID" value="$!salesOrder.mainID">
+			<div class="form form1">
+				<dl>
+					<dt>发票：</dt>
+					<dd>
+						<select name="invoiceType" class="select"
+							onchange="changeInvoiceType(this.value)">
+							<option #if("$!salesOrder.invoiceType"== "0")selected="selected"
+								#end value="0">不需要</option>
+							<option #if("$!salesOrder.invoiceType"== "1")selected="selected"
+								#end value="1">个人</option>
+							<option #if("$!salesOrder.invoiceType"== "2")selected="selected"
+								#end value="2">公司</option>
+						</select>
+					</dd>
+				</dl>
+				<dl id="invoicetitle">
+					<dt>抬头：</dt>
+					<dd>
+						<input type="text" id="invoiceTitle" class="longText"
+							name="invoiceTitle" value="$!salesOrder.invoiceTitle" />
+					</dd>
+				</dl>
+				<dl class="clearBoth">
+					<dt>买家备注：</dt>
+					<dd>
+						<textarea cols="32" rows="3" name="memo">$!salesOrder.memo</textarea>
+					</dd>
+				</dl>
+				<dl>
+					<dt>后台备注：</dt>
+					<dd>
+						<textarea cols="32" rows="3" name="description">$!salesOrder.description</textarea>
+					</dd>
+				</dl>
+			</div>
+			<div class="btn left">
+				<a href="javascript:;" onclick="submitSalesOrderInvoice();"
+					class="sub">提交</a>
+				<!-- <a href="javascript:;" class="res">取消</a> -->
+			</div>
+		</form>
+	</div>
+	<div class="tab_child" data="5">
+		<form id="shippingAddressForm"
+			action="$!{domain}/admin/order/editSalesOrderShippingAddress.htm"
+			method="post">
+			<input type="hidden" name="orderID" value="$!salesOrder.mainID">
+			<div class="form form2">
+				<dl>
+					<dt>物流单：</dt>
+					<dd>
+						<select name="expressId" class="select">
+							#foreach($!express in $!expressList)
+							<option #if("$!salesOrder.expressID"==
+								"$!express.mainID") selected="selected"
+								#elseif("$!express.default"== "1")selected="selected" #end
+								value="$!express.mainID">$!express.name</option> #end
+						</select><input type="text" placsholder="物流单号" class="longText"
+							name="expressNumber" value="$!salesOrder.expressNumber" />
+					</dd>
+				</dl>
+				<dl>
+					<dt>发件人：</dt>
+					<dd>
+						<input type="text" class="longText" name="name"
+							value="$!salesOrder.salesOrderShippingAddressVO.name" />
+					</dd>
+				</dl>
+				<dl class="clearBoth">
+					<dt>电话：</dt>
+					<dd>
+						<input type="text" class="longText" name="telephone"
+							value="$!salesOrder.salesOrderShippingAddressVO.telephone" />
+					</dd>
+				</dl>
+				<dl>
+					<dt>手机：</dt>
+					<dd>
+						<input type="text" class="longText" name="mobile"
+							value="$!salesOrder.salesOrderShippingAddressVO.mobile" />
+					</dd>
+				</dl>
+				<dl class="clearBoth">
+					<dt>发货地址：</dt>
+					<dd>
+						<select name="provinceId" class="select"
+							onchange="changeProvinceIDs(this.value)">
+							#foreach($!province in $!provinceList)
+							<option
+								#if("$!salesOrder.salesOrderShippingAddressVO.provinceID"==
+								"$!province.mainID")selected="selected" #end
+								value="$!province.mainID">$!province.name</option> #end
+						</select> &nbsp; <select name="cityId" id="cityids" class="select"
+							onchange="changeCitys(this.value)"> #foreach($!city in
+							$!scityList)
+							<option #if("$!salesOrder.salesOrderShippingAddressVO.cityID"==
+								"$!city.mainID")selected="selected" #end value="$!city.mainID">$!city.name</option>
+							#end
+						</select> &nbsp; <select name="districtId" id="districtids" class="select">
+							#foreach($!district in $!sdistrictList)
+							<option
+								#if("$!salesOrder.salesOrderShippingAddressVO.districtID"==
+								"$!district.mainID")selected="selected" #end
+								value="$!district.mainID">$!district.name</option> #end
+						</select> <input type="text" class="longText" name="address"
+							value="$!salesOrder.salesOrderShippingAddressVO.address" />
+					</dd>
+				</dl>
+				<dl class="clearBoth">
+					<dt>邮编：</dt>
+					<dd>
+						<input type="text" class="longText" name="zip"
+							value="$!salesOrder.salesOrderShippingAddressVO.zip" />
+					</dd>
+				</dl>
+			</div>
+			<div class="btn left">
+				<a href="javascript:;" onclick="submitShippingAddress()" class="sub">提交</a>
+				<!-- <a href="javascript:;" class="res">取消</a> -->
+			</div>
+		</form>
+	</div>
+<script type="text/javascript">
+	jQuery(function() {
+
+		function tableBodyHeight() {
+			if (jQuery("#close").hasClass("up")) {
+				jQuery("#tableBody").height(jQuery("body").height() - 310)
+			} else {
+				jQuery("#tableBody").height(jQuery("body").height() - 515)
+			}
+		}
+		tableBodyHeight()
+		jQuery(window).resize(function() {
+			tableBodyHeight()
+		});
+
+		var invoiceType = "$!salesOrder.invoiceType";
+		if (invoiceType == 0) {
+			$("#invoicetitle").hide();
+			$("#invoiceTitle").val("");
+		} else {
+			$("#invoicetitle").show();
+		}
+	})
+</script>

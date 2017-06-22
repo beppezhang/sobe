@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.promotion.dao.PromotionDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID, name, type, description, fromDate, endDate,
+		promotionCondition, promotionValue,
+		customerGrade,
+		customerGroup,
+		isDelete, creator, createTime, modifier, modifyTime
+	</sql>
+
+	<select id="selectByPrimaryKey" resultType="promotionVO"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_promotion
+		where id = #{id}
+	</select>
+
+	<select id="findPromotionByMainID" resultType="promotionVO"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_promotion
+		where isDelete=0 and mainID = #{mainID}
+	</select>
+
+	<select id="findPromotionByPagination" resultType="promotionVO"
+		parameterType="promotionDTO">
+		SELECT
+			p.id,
+			p.mainID,
+			p.`name`,
+			p.promotionCondition,
+			p.type,
+			p.fromDate,
+			p.endDate,
+			p.createTime,
+			o.username AS createName
+		FROM
+			kplus_promotion p
+		LEFT JOIN kplus_operator o ON p.creator = o.mainID
+		WHERE
+			p.isDelete = 0
+		<if test="type != null">
+			and type = #{type}
+		</if>
+		<if test="name != null">
+			and p.name like '%${name}%'
+		</if>
+		<if test="fromDate != null">
+			and p.fromDate&gt;=#{fromDate}
+		</if>
+		<if test="endDate!=null">
+			and p.endDate&lt;=#{endDate}
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findPromotionCount" resultType="java.lang.Long"
+		parameterType="promotionDTO">
+		select
+		count(p.id)
+		from kplus_promotion p
+		left join kplus_operator o on
+		p.creator=o.mainID
+		where p.isDelete=0
+		<if test="type != null">
+			and type = #{type}
+		</if>
+		<if test="name != null">
+			and p.name like '%${name}%'
+		</if>
+		<if test="fromDate != null">
+			and p.fromDate&gt;=#{fromDate}
+		</if>
+		<if test="endDate!=null">
+			and p.endDate&lt;=#{endDate}
+		</if>
+	</select>
+
+	<select id="findAllPromotionType" resultType="java.lang.Integer">
+		select
+		p.type
+		from
+		kplus_promotion p
+		where p.isDelete=0
+		GROUP BY p.type
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		kplus_promotion
+		where id = #{id}
+	</delete>
+
+	<insert id="addPromotionSelective" parameterType="promotionDTO">
+		insert into kplus_promotion
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="mainID != null">
+				mainID,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="fromDate != null">
+				fromDate,
+			</if>
+			<if test="endDate != null">
+				endDate,
+			</if>
+			<if test="promotionCondition != null">
+				promotionCondition,
+			</if>
+			<if test="promotionValue != null">
+				promotionValue,
+			</if>
+			<if test="customerGrade != null">
+				customerGrade,
+			</if>
+			<if test="customerGroup != null">
+				customerGroup,
+			</if>
+			<if test="isDelete != null">
+				isDelete,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				createTime
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="mainID != null">
+				#{mainID},
+			</if>
+			<if test="name != null">
+				#{name},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="description != null">
+				#{description},
+			</if>
+			<if test="fromDate != null">
+				#{fromDate},
+			</if>
+			<if test="endDate != null">
+				#{endDate},
+			</if>
+			<if test="promotionCondition != null">
+				#{promotionCondition},
+			</if>
+			<if test="promotionValue != null">
+				#{promotionValue},
+			</if>
+			<if test="customerGrade != null">
+				#{customerGrade},
+			</if>
+			<if test="customerGroup != null">
+				#{customerGroup},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete},
+			</if>
+			<if test="creator != null">
+				#{creator},
+			</if>
+			<if test="createTime != null">
+				#{createTime}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updatePromotionSelective" parameterType="promotionDTO">
+		update kplus_promotion
+		<set>
+			modifyTime=now()
+			<if test="name != null">
+				,name = #{name}
+			</if>
+			<if test="type != null">
+				,type = #{type}
+			</if>
+			<if test="description != null">
+				,description = #{description}
+			</if>
+			<if test="fromDate != null">
+				,fromDate = #{fromDate}
+			</if>
+			<if test="endDate != null">
+				,endDate = #{endDate}
+			</if>
+			<if test="promotionCondition != null">
+				,promotionCondition = #{promotionCondition}
+			</if>
+			<if test="promotionValue != null">
+				,promotionValue = #{promotionValue}
+			</if>
+			<if test="customerGrade != null">
+				,customerGrade = #{customerGrade}
+			</if>
+			<if test="customerGroup != null">
+				,customerGroup = #{customerGroup}
+			</if>
+			<if test="isDelete != null">
+				,isDelete = #{isDelete}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+	<update id="deletePromotionByMainID" parameterType="java.lang.String">
+		update
+		kplus_promotion set isDelete=1 where mainID = #{mainID}
+	</update>
+
+	<select id="findAllProduct" resultType="productItemVO">
+		select * from
+		kplus_product where isDelete=0
+	</select>
+
+	<select id="findItemByProductID" parameterType="java.lang.String"
+		resultType="productItemVO">
+		select * from kplus_item where isDelete=0 and
+		productID=#{productID}
+	</select>
+
+	<insert id="insertPromotionItem" parameterType="promotionItemDTO">
+		insert into
+		kplus_promotion_item(
+		promotionID,
+		productID,
+		itemID,
+		creator,
+		createTime
+		)
+		values(
+		#{promotionID},
+		#{productID},
+		#{itemID},
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updatePromotionItem" parameterType="promotionItemDTO">
+		update kplus_promotion_item
+		<set>
+			modifyTime=now()
+			<if test="productID!=null">
+				,productID=#{productID}
+			</if>
+			<if test="itemID!=null">
+				,itemID=#{itemID}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="findPromotionItemByPromotionMainID" parameterType="java.lang.String"
+		resultType="promotionItemVO">
+		select * from kplus_promotion_item where
+		promotionID=#{promotionID}
+	</select>
+
+	<select id="findPromotionSetTypeByPromotionID" parameterType="java.lang.String"
+		resultType="promotionSetVO">
+		select p.id,t.name from kplus_promotionset p
+		left join
+		kplus_producttype t on p.objID=t.mainID
+		where t.isDelete=0 and
+		p.setType=1 and p.promotionID=#{promotionID}
+	</select>
+	<select id="findPromotionSetCategoryByPromotionID"
+		parameterType="java.lang.String" resultType="promotionSetVO">
+		select p.id,c.name from
+		kplus_promotionset p
+		left join kplus_product_category c on
+		p.objID=c.mainID
+		where c.isDelete=0 and p.setType=2 and
+		p.promotionID=#{promotionID}
+	</select>
+	<select id="findPromotionSetProductByPromotionID" parameterType="java.lang.String"
+		resultType="promotionSetVO">
+		select p.id,t.name from
+		kplus_promotionset p
+		left join
+		kplus_product t
+		on
+		p.objID=t.mainID
+		where t.isDelete=0 and p.setType=3
+		and
+		p.promotionID=#{promotionID}
+	</select>
+	<select id="findPromotionSetItemByPromotionID" parameterType="java.lang.String"
+		resultType="promotionSetVO">
+		select p.id,i.name from
+		kplus_promotionset p
+		left join
+		kplus_item i on
+		p.objID=i.mainID
+		where i.isDelete=0 and p.setType=4 and
+		p.promotionID=#{promotionID}
+	</select>
+
+	<delete id="deletePromotionSetByID" parameterType="java.lang.Long">
+		delete from
+		kplus_promotionset where id=#{id}
+	</delete>
+
+	<insert id="insertPromotionSet" parameterType="promotionSetDTO">
+		insert into
+		kplus_promotionset(
+		promotionID,
+		setType,
+		objID,
+		creator,
+		createTime
+		)values(
+		#{promotionID},
+		#{setType},
+		#{objID},
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<select id="findPromotionSetByPTO" parameterType="promotionSetDTO"
+		resultType="promotionSetVO">
+		select * from kplus_promotionset where
+		promotionID=#{promotionID} and
+		setType=#{setType} and objID=#{objID}
+	</select>
+	
+	<select id="findPromotionSetByPID" parameterType="java.lang.String"
+	resultType="promotionSetVO">
+	select * from kplus_promotionset where
+	promotionID=#{promotionID}
+	</select>
+	
+	<select id="findProductItemByPromotionIDAndItemID" resultType="productItemVO">
+		SELECT
+			item.mainID as mainID
+		FROM
+			kplus_promotionset ps,
+			kplus_product_category cat,
+			kplus_product product,
+			kplus_item item
+		WHERE
+			ps.promotionID = #{promotionID}
+		AND cat.mainID = ps.objID
+		AND product.productTypeID = cat.productTypeID
+		AND item.productID = product.mainID
+		AND item.mainID = #{itemID}
+	</select>
+	<select id="findPromotionSetByPromotionID" parameterType="java.lang.String" resultType="promotionSetVO">
+		SELECT
+			*
+		FROM
+			kplus_promotionset
+		WHERE
+			promotionID = #{promotionID}
+	</select>
+	<select id="findItemByItemIDAndCategoryID" resultType="itemVO">
+		SELECT
+			item.mainID
+		FROM
+			kplus_item item,
+			kplus_product p,
+			kplus_product_category c,
+			kplus_product_category cp,
+			kplus_product_category cps
+		WHERE
+			item.mainID = #{itemID}
+		AND item.productID = p.mainID
+		AND c.productTypeID = p.productTypeID
+		AND cp.mainID = c.parentID
+		AND cps.mainID = cp.parentID
+		AND c.isDelete = 0
+		AND cp.isDelete = 0
+		AND cps.isDelete = 0
+		AND (
+			c.mainID = #{categoryID}
+			OR cp.mainID = #{categoryID}
+			OR cps.mainID = #{categoryID}
+		)
+		group by item.mainID
+	</select>
+</mapper>

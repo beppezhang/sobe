@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>确认退货</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+.qm {
+	padding-top: 3px;
+	margin-bottom: 20px;
+}
+
+.qm button {
+	padding: 3px 30px;
+	font-size: 12px;
+	color: #424242;
+	margin-right: 20px;
+}
+
+.qm  .dy {
+	margin-left: 100px;
+}
+
+.qm  .ck {
+	margin-left: 150px;
+}
+
+.ddanInfo dl dd table td {
+	padding: 5px 0;
+}
+
+.ddanInfo dd tr td span {
+	display: inline-block;
+	width: 60px;
+	font-size: 12px;
+}
+
+.ddanInfo dd tr td .sh {
+	float: left;
+}
+
+.cTextLen {
+	height: 25px;
+	border-radius: 3px;
+}
+
+.ddanInfo dd tr td span {
+	height: 25px;
+}
+
+.ddanInfo dd tr td span.sh {
+	line-height: 25px;
+}
+
+.formRow {
+	height: 25px;
+}
+
+.listFunBtn .linkDemo {
+	width: 110px;
+}
+
+.listFunBtn {
+	width: 146px;
+}
+
+.cTextBrn {
+	margin-left: 60px;
+	width: 450px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>确认退货</span>
+		</div>
+		<div class="ddanInfo">
+			<dl class="">
+				<dt>
+					<em class="bold"></em>
+				</dt>
+				<dd>
+					<table>
+						<tbody>
+							<tr>
+								<td>申请编号：$!salesOrderReturnApply.mainID</td>
+								<td>订单编号：$!salesOrderReturnApply.salesOrderID</td>
+								<td>会员：$!salesOrderReturnApply.customerName</td>
+							</tr>
+							<tr>
+								<td>产品：$!salesOrderReturnApply.productName</td>
+								<td>商品：$!salesOrderReturnApply.itemName</td>
+							</tr>
+							<tr>
+								<td>购买数量：$!salesOrderReturnApply.itemCount</td>
+								<td>购买金额：$!NumberTool.format("#0.00",$!salesOrderReturnApply.salesPrice)元
+								</td>
+							</tr>
+							<tr>
+								<td>申请类型： #if("$!salesOrderReturnApply.returnType"=="1") 退货
+									#elseif("$!salesOrderReturnApply.returnType"=="2") 换货 #end</td>
+								<td>申请数量：$!salesOrderReturnApply.count</td>
+							</tr>
+							<tr>
+								<td colspan="4">备注：$!salesOrderReturnApply.memo</td>
+							</tr>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+		</div>
+		<form id="updateReturnApplyInfo"
+			action="$!{domain}/admin/order/updateReturnApplyInfo.htm"
+			method="post" enctype="multipart/form-data">
+			<input type="hidden" name="mainID"
+				value="$!salesOrderReturnApply.mainID" /> <input type="hidden"
+				name="returnID" value="$!salesOrderReturnApply.returnID" /> <input
+				type="hidden" name="customerID"
+				value="$!salesOrderReturnApply.customerID" /> <input type="hidden"
+				name="salesOrderID" value="$!salesOrderReturnApply.salesOrderID" />
+			<input type="hidden" name="productID"
+				value="$!salesOrderReturnApply.productID" /> <input type="hidden"
+				name="itemID" value="$!salesOrderReturnApply.itemID" />
+			<div class="ddanInfo">
+				<dl class="">
+					<dt>
+						<em class="bold"></em>
+					</dt>
+					<dd>
+						<table>
+							<tbody>
+								<tr>
+									<td><span>类型：</span>
+										#if("$!salesOrderReturnApply.confirmReturnType"=="") <select
+										name="returnType">
+											<option value="1" #if("$!salesOrderReturnApply.returnType"==
+												"1")selected="selected" #end>退货</option>
+											<option value="2" #if("$!salesOrderReturnApply.returnType"==
+												"2")selected="selected" #end>换货</option>
+									</select> #else <select name="returnType">
+											<option value="1"
+												#if("$!salesOrderReturnApply.confirmReturnType"==
+												"1")selected="selected" #end>退货</option>
+											<option value="2"
+												#if("$!salesOrderReturnApply.confirmReturnType"==
+												"2")selected="selected" #end>换货</option>
+									</select> #end</td>
+								</tr>
+								<tr>
+									<td><span>数量：</span>
+										#if("$!salesOrderReturnApply.confirmCount"=="") <input
+										class="cText" type="text" name="count"
+										value="$!salesOrderReturnApply.count" /> #else <input
+										class="cText" type="text" name="count"
+										value="$!salesOrderReturnApply.confirmCount" /> #end
+										&nbsp;&nbsp;&nbsp;金额： 
+										#if("$!salesOrderReturnApply.confirmReturnAmount"=="") <input
+										class="cText" type="text" name="returnAmount"
+										value="$!NumberTool.format('#0.00',$!salesOrderReturnApply.returnAmount)">
+										#else <input class="cText" type="text"
+										name="confirmReturnAmount"
+										value="$!NumberTool.format('#0.00',$!salesOrderReturnApply.confirmReturnAmount)" />
+										#end 元</td>
+								</tr>
+								<tr>
+									<td><span>收件人：</span>
+										#if("$!salesOrderReturnApply.returnAddressVO"=="") <input
+										class="cText cTextLen" type="text" name="returnAddressVO.name"
+										value="$!salesOrderReturnApply.shippingAddressVO.name" />
+										#else <input class="cText cTextLen" type="text"
+										name="returnAddressVO.name"
+										value="$!salesOrderReturnApply.returnAddressVO.name" /> #end</td>
+								</tr>
+								<tr>
+									<td><span>电话：</span>
+										#if("$!salesOrderReturnApply.returnAddressVO"=="") <input
+										class="cText cTextLen" type="text"
+										name="returnAddressVO.telephone"
+										value="$!salesOrderReturnApply.shippingAddressVO.telephone" />
+										#else <input class="cText cTextLen" type="text"
+										name="returnAddressVO.telephone"
+										value="$!salesOrderReturnApply.returnAddressVO.telephone" />
+										#end</td>
+								</tr>
+								<tr>
+									<td><span>手机：</span>
+										#if("$!salesOrderReturnApply.returnAddressVO"=="") <input
+										class="cText cTextLen" type="text"
+										name="returnAddressVO.mobile"
+										value="$!salesOrderReturnApply.shippingAddressVO.mobile" />
+										#else <input class="cText cTextLen" type="text"
+										name="returnAddressVO.mobile"
+										value="$!salesOrderReturnApply.returnAddressVO.mobile" />
+										#end</td>
+								</tr>
+								<tr>
+									<td><span class="sh">收货地址：</span>
+										<div class="formRow clearfix">
+											<select name="returnAddressVO.provinceID" class="select"
+												onchange="changeProvinceID(this.value)">
+												#foreach($!province in $!provinceList)
+												<option
+													#if("$!salesOrderReturnApply.returnAddressVO.provinceID"==
+													"$!province.mainID")selected="selected" #end
+													value="$!province.mainID">$!province.name</option> #end
+											</select> &nbsp; <select name="returnAddressVO.cityID" id="cityid"
+												class="select" onchange="changeCity(this.value)">
+												#foreach($!city in $!cityList)
+												<option
+													#if("$!salesOrderReturnApply.returnAddressVO.cityID"==
+													"$!city.mainID")selected="selected" #end
+													value="$!city.mainID">$!city.name</option> #end
+											</select> &nbsp; <select name="returnAddressVO.disctrictID"
+												id="districtid" class="select"> #foreach($!district
+												in $!districtList)
+												<option
+													#if("$!salesOrderReturnApply.returnAddressVO.districtID"==
+													"$!district.mainID")selected="selected" #end
+													value="$!district.mainID">$!district.name</option> #end
+											</select>
+										</div></td>
+								</tr>
+								<tr>
+									<td>#if("$!salesOrderReturnApply.returnAddressVO"=="") <input
+										class="cText cTextLen cTextBrn" type="text"
+										name="returnAddressVO.address"
+										value="$!salesOrderReturnApply.shippingAddressVO.address" />
+										#else <input class="cText cTextLen cTextBrn" type="text"
+										name="returnAddressVO.address"
+										value="$!salesOrderReturnApply.returnAddressVO.address" />
+										#end
+									</td>
+								<tr>
+									<td><span>邮编：</span>
+										#if("$!salesOrderReturnApply.returnAddressVO"=="") <input
+										class="cText cTextLen" type="text" name="returnAddressVO.zip"
+										value="$!salesOrderReturnApply.shippingAddressVO.zip" />
+										#else <input class="cText cTextLen" type="text"
+										name="returnAddressVO.zip"
+										value="$!salesOrderReturnApply.returnAddressVO.zip" /> #end</td>
+								</tr>
+								<tr>
+									<td><span>说明：</span> <textarea rows="5" cols="75"
+											name="description">$!salesOrderReturnApply.description</textarea></td>
+								</tr>
+							</tbody>
+						</table>
+					</dd>
+				</dl>
+			</div>
+		</form>
+		<div class="qm">
+			<button type="button" class="ck" onclick="modifyForm();">编辑</button>
+			<button type="button" class="ck"
+				onclick="changeApplyStatus('$!salesOrderReturnApply.mainID','2')">确认</button>
+			<button type="button" class="ck"
+				onclick="changeApplyStatus('$!salesOrderReturnApply.mainID','1')">拒绝</button>
+			<button type="reset" class="dy">取消</button>
+		</div>
+		<div class="clear"></div>
+
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	$(".listFunBtnScroll").on(
+			"click",
+			".listFunBtnDown li",
+			function() {
+				$(this).addClass('c').siblings().removeClass('c').closest(
+						'.listFunBtn').find('.linkDemo').html($(this).html());
+				$(this).addClass('c').siblings().removeClass('c').closest(
+						'.listFunBtn').find('input[type="hidden"]').val(
+						$(this).find("a").attr("rel"));
+				$(this).closest('.down').hide();
+			});
+</script>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	#parse("layout/suppliercenter/leftmenu.vm")
+  <div id="rightMain">
+    <div class="crumbs">
+        商家管理中心 &gt; <a href="supplierCenter.htm">首页</a> &gt; 财务管理
+    </div>
+     <div class="p15">
+          <div class="stitbar">
+              <strong>财务管理</strong>
+          </div>
+          <table class="odTable">
+              
+                  <thead>
+                      <tr>
+                        <th width="400">商品</th>
+                          <th width="10%">单价(元)</th>
+                          <th width="10%">数量</th>
+                          <th width="10%">买家</th>
+                          <th width="10%">订单金额</th>
+                          <th width="10%">交易状态</th>
+                      </tr>
+                    </thead>
+                  <tr>
+                      <td class="hr" colspan="7"></td>
+                  </tr>
+                   #foreach($!order in $!finalstatement.salesOrderList)
+                   <tbody class="odlist"> 
+                    <tr>
+                      <th colspan="6">
+                          <div class="clearfix">
+                            <div class="lt">
+                                <span>订单号：$!order.mainID</span>
+                                <span class="ml35">下单时间：$!date.format("yyyy-MM-dd HH:mm:ss", $!order.createTime)</span>  
+                              </div>                             
+                          </div>
+                      </th>
+                    </tr>
+                    #foreach($!orderLine in $!order.salesOrderLineList)
+                    <tr>
+                      <td class="bl">
+                          <a href="#" class="col01" target="_blank">
+                              <img src="$!{domainImg}$!orderLine.itemPicUrl" class="pimg lt">
+                              $!orderLine.itemName
+                          </a>
+                      </td>
+                      <td class="ct">$!NumberTool.format("#0.00",$!orderLine.salesPrice)</td>
+                      <td class="ct">$!orderLine.itemCount</td>
+                      <td class="ct">$!order.customerUserName</td>
+                      <td class="ct bl">
+                          <p><strong class="col03">￥$!NumberTool.format("#0.00",$!orderLine.totalAmount)</strong></p>
+                         <!--  <p>
+                              #if($!order.expressFee)
+                              运费：￥$!NumberTool.format("#0.00",$!order.expressFe)
+                              #else
+                              (免运费)
+                              #end
+                          </p> -->
+                          <p>
+                              #if($!order.paymentType == 1)
+                              在线支付
+                              #elseif($!order.paymentType == 2)
+                              货到付款
+                              #end
+                          </p>
+                      </td>
+                      <td class="ct bl">
+                          <p>
+                            #if("$!order.orderStatus"=="0") 已取消
+                            #elseif("$!order.orderStatus"=="1") 待确认
+                            #elseif("$!order.orderStatus"=="2") 待出库
+                            #elseif("$!order.orderStatus"=="3") 待发货
+                            #elseif("$!order.orderStatus"=="4") 已发货
+                            #elseif("$!order.orderStatus"=="5") 已收货
+                            #elseif("$!order.orderStatus"=="6") 已完成
+                            #elseif("$!order.orderStatus"=="7") 退换货申请中
+                            #elseif("$!order.orderStatus"=="8") 已退货
+                            #elseif("$!order.orderStatus"=="9") 拒绝申请
+                            #elseif("$!order.orderStatus"=="10") 已换货 #end    
+                          </p>
+                          <p><a href="orderDetail.htm?orderMainID=$!order.mainID" class="col01" target="_blank">订单详情</a></p>
+                      </td>
+                    </tr>
+                    #end
+                   </tbody> 
+                   #end
+              </table>
+      </div>      
+  </div>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+<script type="text/javascript">
+  $("dt:eq(2)").addClass("on");
+ 
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/task 
+    http://www.springframework.org/schema/task/spring-task-3.2.xsd 
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+
+
+	<!-- 扫描文件（自动将servicec/dao层注入） -->
+	<context:component-scan base-package="bz.sunlight.web" />
+	<context:component-scan base-package="com.kpluswebup.web" />
+ 	<context:component-scan base-package="com.kpluswebup.mall" />
+	<context:component-scan base-package="com.kpluswebup.wap" />
+	<context:component-scan base-package="com.kpuswebup.comom.util" />
+	<!--
+	<context:component-scan base-package="com.kpluswebup.mall.web.common.task" />
+	-->
+	<!--
+	<bean class="com.kpluswebup.wap.web.order.control.TransWS" />
+	-->
+	<!-- 默认的MVC注解映射的支持 -->
+	<mvc:annotation-driven />
+
+	<!-- 激活spring的注解. -->
+	<context:annotation-config />
+
+	<!-- 避免IE在ajax请求时，返回json出现下载 -->
+	<bean id="jacksonMessageConverter"
+		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/html;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<import resource="classpath:spring-mysql-db.xml" />
+
+	<import resource="classpath:spring-context-adminsystem.xml" />
+
+	<import resource="classpath:spring-exception.xml" />
+ 
+	<import resource="classpath:dispatcher-servlet.xml" />
+
+	<import resource="classpath:rest-servlet.xml" />
+
+
+	<!-- 加载lucene实例 确保jvm中单一实例-->
+	<bean id="luceneWriter" class="com.kpuswebup.common.lucene.LuceneWriter"
+	         factory-method="getInstance"></bean>
+
+</beans>

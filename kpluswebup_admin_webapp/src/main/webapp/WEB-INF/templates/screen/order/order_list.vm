@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订单列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+<link rel="stylesheet"
+	href="$!{adminStatic}/theme/default/jquery.rollbar.css" />
+<script src="$!{adminStatic}/script/jquery.mousewheel.js"
+	language="javascript"></script>
+<script src="$!{adminStatic}/script/jquery.rollbar.min.js"
+	language="javascript"></script>
+<style type="text/css">
+#itemID {
+	width: 1000px;
+	margin-left: 107px;
+}
+
+#itemID thead {
+	font-weight: bold;
+}
+
+#itemID td {
+	height: 34px;
+}
+
+.tableHeader div {
+	padding: 0 5px;
+}
+</style>
+</head>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>订单管理》订单列表</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/order/orderList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!salesOrderDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!salesOrderDTO.pageSize">
+				<input type="hidden" id="orderTime" name="orderTime"
+					class="orderTime" value="">
+				<table class="searchTable">
+					<tbody>
+						<tr>
+							<td><span class="grayF">订单编号：</span><input type="text"
+								name="searchOrderID" id="searchOrderID" class="cText"
+								value="$!salesOrderDTO.mainID" /></td>
+							<td><span class="grayF">商品编号：</span><input type="text"
+								name="searchItemID" id="searchItemID" class="cText"
+								value="$!salesOrderDTO.itemID" /></td>
+							<td><span class="grayF">商品名称：</span><input type="text"
+								name="searchItemName" id="searchItemName" class="cText"
+								value="$!salesOrderDTO.itemName" /></td>
+							<td><span class="grayF">用户名：</span><input type="text"
+								name="searchUsername" id="searchUsername" class="cText"
+								value="$!salesOrderDTO.customerUserName" /></td>
+						</tr>
+						<tr>
+							<td><span class="grayF">商家名称：</span><input type="text"
+								name="searchSupplierName" id="searchSupplierName" class="cText"
+								value="$!salesOrderDTO.supplierName" /></td>
+							<td><span class="grayF">支付方式：</span> <select class="select"
+								name="searchPaymentType" id="searchPaymentType">
+									<option value="">全部</option>
+									<option #if("$!salesOrderDTO.paymentType"==
+										"1")selected="selected" #end value="1">款到发货</option>
+									<option #if("$!salesOrderDTO.paymentType"==
+										"2")selected="selected" #end value="2">货到付款</option>
+										<option #if("$!salesOrderDTO.paymentType"==
+										"3")selected="selected" #end value="3">自提</option>
+							</select></td>
+							<td><span class="grayF">支付状态：</span> <select class="select"
+								name="searchPaymentStatus" id="searchPaymentStatus">
+									<option value="">全部</option>
+									<option #if("$!salesOrderDTO.paymentStatus"==
+										"0")selected="selected" #end value="0">未支付</option>
+									<option #if("$!salesOrderDTO.paymentStatus"==
+										"1")selected="selected" #end value="1">已支付</option>
+									<option #if("$!salesOrderDTO.paymentStatus"==
+										"2")selected="selected" #end value="2">部分支付</option>
+							</select></td>
+							<td><span class="grayF">订单状态：</span> <select class="select"
+								name="searchOrderStatus" id="searchOrderStatus">
+									<option value="">全部</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"0")selected="selected" #end value="0">订单已取消</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"1")selected="selected" #end value="1">待确认</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"3")selected="selected" #end value="3">待发货</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"4")selected="selected" #end value="4">已发货</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"5")selected="selected" #end value="5">已收货</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"6")selected="selected" #end value="6">已完成</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"7")selected="selected" #end value="7">售后申请中</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"8")selected="selected" #end value="8">售后处理中</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"9")selected="selected" #end value="9">已售后</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"10")selected="selected" #end value="10">售后已取消</option>
+									<option #if("$!salesOrderDTO.orderStatus"==
+										"11")selected="selected" #end value="11">售后申请被拒绝</option>
+							</select></td>
+							<td rowspan="3">
+								#if($!menuUtil.isExistMenu("/admin/order/orderList.htm",$!menuAllList)
+								) <input class="searchBtn" type="button" value="搜索"
+								onclick="userSearch(1)" /> #end
+							</td>
+						</tr>
+						<tr>
+							<td colspan="5"><span class="grayF">地区：</span> <select
+								class="select" id="provinceID" name="provinceID"
+								onchange="changeProvinceIDs(this.value)">
+									<option value="0">全部</option> #foreach($!province in
+									$!provinceList)
+									<option #if("$!provinceID"==
+										"$!province.mainID") selected="selected" #end
+										value="$!province.mainID">$!province.name</option> #end
+							</select> <select class="select" id="cityID"
+								onchange="changeCity(this.value)" name="cityID">
+									<option value="0">全部</option> #foreach($!city in $!cityList)
+									<option #if("$!cityID" == "$!city.mainID") selected="selected"
+										#end value="$!city.mainID">$!city.name</option> #end
+							</select> <select class="select" id="districtID" name="districtID">
+									<option value="0">全部</option> #foreach($!district in
+									$!districtList)
+									<option #if("$!districtID" ==
+										"$!district.mainID") selected="selected" #end
+										value="$!district.mainID">$!district.name</option> #end
+							</select></td>
+						</tr>
+						<tr>
+							<td colspan="5"><span class="grayF">发货时间：</span> <input
+								type="text" name="searchStartModifyTime"
+								id="searchStartModifyTime" class="cText"
+								placeholder="yyyy-MM-dd HH:mm:ss"
+								onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+								readonly="readonly"
+								value="$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderDTO.startModifyTime)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+								<input type="text" name="searchEndModifyTime"
+								id="searchEndModifyTime" class="cText"
+								placeholder="yyyy-MM-dd HH:mm:ss"
+								onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+								readonly="readonly"
+								value="$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderDTO.endModifyTime)" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a>
+				#if($!menuUtil.isExistMenu("/admin/order/exportSalesOrder.do",$!menuAllList)
+				) <a href="javascript:;" title="导出" id="exportSalesOrder"><em
+					class="icon iconExport"></em></a> #end
+					
+				  <span class="grayF">统计时间：</span> <input
+								type="text" name="fromDate"
+								id="fromDate" class="cText"
+								placeholder="yyyy-MM-dd HH:mm:ss"
+								onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+								readonly="readonly"
+								value="$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderDTO.startTime)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+								<input type="text" name="endDate"
+								id="endDate" class="cText"
+								placeholder="yyyy-MM-dd HH:mm:ss"
+								onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+								readonly="readonly"
+								value="$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderDTO.endTime)" />
+				  <span>订单状态：</span>
+				  <select class="select"
+								name="searchOrderStatus" id="orderStatus">
+									<option value="">全部</option>
+									<option value="0">订单已取消</option>
+									<option value="1">待确认</option>
+									<option value="3">待发货</option>
+									<option value="4">已发货</option>
+									<option value="5">已收货</option>
+									<option value="6">已完成</option>
+									<option value="7">售后申请中</option>
+									<option value="8">售后处理中</option>
+									<option value="9">已售后</option>
+									<option value="10">售后已取消</option>
+									<option value="11">售后申请被拒绝</option>
+							</select>
+				 <input type="text" id="countAmount" class="countAmount" readonly="readonly"> <input type="button" class="countAllAmount" value="统计" style="siz:10px;18px;">
+					<input type="button" class="cleanbtn" value="清空">
+			</div>
+			<div class="tableHeader">
+				<div style="width: 60px;">
+					<label class="label"></label>
+				</div>
+				<div style="width: 132px;">订单编号</div>
+				<div style="width: 90px;">用户名</div>
+				<div style="width: 20%">商品名称</div>
+				<div style="width: 10%">
+					<span class="elevators">下单时间 <a href="javascript:;"
+						class="top topOrderTime"></a> <a href="javascript:;"
+						class="bot botOrderTime"></a>
+					</span>
+				</div>
+				<div style="width: 10%;">
+					<span class="elevators">订单金额 <!--  <a href="javascript:;" class="top topOrderAmount"></a>
+					    <a href="javascript:;" class="bot botOrderAmount"></a> -->
+					</span>
+				</div>
+				<div style="width: 6%">地区</div>
+				<div style="width: 6%">支付方式</div>
+				<div style="width: 4%">支付状态</div>
+				<div style="width: 4%">订单状态</div>
+				<div style="width: 153px;">单据打印</div>
+			</div>
+			<div id="tableBody">
+				<table class="tableList grid" id="list">
+					<tbody id="orderList">
+						#if("$!salesOrderList"!="" && $salesOrderList.size()>0) #foreach
+						($salesOrder in $salesOrderList)
+						<tr>
+							<td style="width: 60px"><label class="label"><input
+									type="checkbox" value="$!salesOrder.mainID"
+									id="check_box_$!salesOrder.mainID" /></label></td>
+							<td><span class="orderId">$!salesOrder.mainID</span></td>
+							<td>$!salesOrder.customerUserName</td>
+							<td style="width: 15%">#foreach ($!salesOrderLine in
+								$!salesOrder.salesOrderLineList)
+								#if($!velocityCount<3)$!salesOrderLine.itemName<br>#end#end
+								#if($!salesOrder.salesOrderLineList.size()>2)...#end
+							</td>
+							<td>$!date.format('yyyy-MM-dd
+								HH:mm:ss',$!salesOrder.createTime)</td>
+							<td>￥ $!NumberTool.format("#0.00",$!salesOrder.totalAmount)
+							<!-- #if("$!salesOrder.paymentType"=="3")
+								$!NumberTool.format("#0",$!salesOrder.scoreTotal) #else
+								#if("$!salesOrder.totalAmount"!=""&&$!salesOrder.totalAmount!=0.0)
+								￥ $!NumberTool.format("#0.00",$!salesOrder.totalAmount) #end
+								#if("$!salesOrder.totalAmount"!=""&&$!salesOrder.totalAmount!=0.0&&"$!salesOrder.scoreTotal"!=""&&$!salesOrder.scoreTotal!=0.0)
+								+ #end
+								#if("$!salesOrder.scoreTotal"!=""&&$!salesOrder.scoreTotal!=0.0)
+								$!NumberTool.format("#0",$!salesOrder.scoreTotal) #end #end --></td>
+							<td>
+							#if("$!salesOrder.dvCityName$!salesOrder.dvDistrictName"=="")
+							<font color="red">自提无收货地址</font>
+							#else
+							$!salesOrder.dvCityName$!salesOrder.dvDistrictName
+							#end</td>
+							<td>#if("$!salesOrder.paymentType"=="1") 款到发货
+								#elseif("$!salesOrder.paymentType"=="2")货到付款
+								#elseif("$!salesOrder.paymentType"=="3")自提
+								#end</td>
+							<td>#if("$!salesOrder.paymentStatus"=="0") <em class="lock">未支付</em>
+								#elseif("$!salesOrder.paymentStatus"=="1") <em class="normalSta">已支付</em>
+								#elseif("$!salesOrder.paymentStatus"=="2") <em class="lock">部分支付</em>
+								#end
+							</td>
+							<td>#if("$!salesOrder.orderStatus"=="0") 订单已取消
+								#elseif("$!salesOrder.orderStatus"=="1") 待确认
+								#elseif("$!salesOrder.orderStatus"=="3") 待发货
+								#elseif("$!salesOrder.orderStatus"=="4") 已发货
+								#elseif("$!salesOrder.orderStatus"=="5") 已收货
+								#elseif("$!salesOrder.orderStatus"=="6") 已完成
+								#elseif("$!salesOrder.orderStatus"=="7") 售后申请中
+								#elseif("$!salesOrder.orderStatus"=="8") 售后处理中
+								#elseif("$!salesOrder.orderStatus"=="9") 已售后
+								#elseif("$!salesOrder.orderStatus"=="10") 售后已取消
+								#elseif("$!salesOrder.orderStatus"=="11") 售后申请被拒绝 #end</td>
+							<td><a
+								href="$!{domain}/admin/order/orderInfo.htm?mainIds=$!{salesOrder.mainID}">
+									订单($!salesOrder.printStatus次) </a> </td>
+						</tr>
+						#end #end
+					</tbody>
+					#pagination($!salesOrderDTO)
+				</table>
+			</div>
+		</div>
+	</div>
+	<input type="hidden" id="orderId" />
+	<div class="detailed_bottom_div"></div>
+	<script>
+		jQuery(function() {
+			var position = 0;
+			function getOrderId() {
+				var o_id = jQuery("#orderList tr").eq(position)
+						.find(".orderId").html();
+				if (o_id != undefined) {
+					jQuery("#orderId").val(o_id);
+				}
+			}
+			getOrderId();
+			var orderId = jQuery("#orderId").val();
+			jQuery.ajax({
+				url : "getSalesOrderDetail.do",
+				type : "POST",
+				data : {
+					orderId : orderId
+				},
+				dataType : "html",
+				success : function(data) {
+					jQuery(".detailed_bottom_div").html(data);
+				}
+			})
+			jQuery("#orderList tr").bind("click", function() {
+				position = jQuery(this).index();
+				getOrderId();
+				var orderId = jQuery("#orderId").val();
+				jQuery.ajax({
+					url : "getSalesOrderDetail.do",
+					type : "POST",
+					data : {
+						orderId : orderId
+					},
+					dataType : "html",
+					success : function(data) {
+						jQuery(".detailed_bottom_div").html(data);
+					}
+				})
+			})
+			//jQuery(".tableListBD").rollbar();
+			function tableBodyHeight() {
+				if (jQuery("#close").hasClass("up")) {
+					jQuery("#tableBody").height(jQuery("body").height() - 250)
+				} else {
+					jQuery("#tableBody").height(jQuery("body").height() - 475)
+				}
+			}
+			tableBodyHeight();
+			//jQuery("#tableBody").rollbar();
+			jQuery(window).resize(function() {
+				tableBodyHeight()
+			});
+
+			jQuery(".topOrderTime").click(function() {
+				jQuery(".orderTime").val("1");
+				jQuery("#serachform").submit();
+			});
+
+			jQuery(".botOrderTime").click(function() {
+				jQuery(".orderTime").val("2");
+				jQuery("#serachform").submit();
+			});
+
+		})
+	</script>
+	<script type="text/javascript">
+		function changeProvinceIDs(value) {
+			if (value != 0) {
+				jQuery.ajax({
+					url : "$!domain/admin/member/ajaxGetCityByParentID.do",
+					type : 'POST',
+					dataType : 'json',
+					data : {
+						'parentID' : value
+					},
+					success : function(data) {
+						if (data.code == 0) {
+							var areaAry = data.result;
+							jQuery("#cityID").empty();
+							jQuery('#cityID').append(
+									"<option value='0'>" + "全部" + "</option>");
+							for ( var id in areaAry) {
+								jQuery('#cityID').append(
+										"<option value=" + areaAry[id].mainID + ">"
+												+ areaAry[id].name
+												+ "</option>");
+							}
+							changeCity(areaAry[0].mainID);
+						}
+					}
+				});
+			} else {
+				jQuery("#cityID").empty();
+				jQuery('#cityID').append("<option value='0'>全部</option>");
+				jQuery("#districtID").empty();
+				jQuery('#districtID').append("<option value='0'>全部</option>");
+			}
+		}
+		function changeCity(value) {
+			if (value != 0) {
+				jQuery.ajax({
+					url : "$!domain/admin/member/ajaxGetCityByParentID.do",
+					type : 'POST',
+					dataType : 'json',
+					data : {
+						'parentID' : value
+					},
+					success : function(data) {
+						if (data.code == 0) {
+							var areaAry = data.result;
+							jQuery("#districtID").empty();
+							jQuery('#districtID').append(
+									"<option value='0'>" + "全部" + "</option>");
+							for ( var id in areaAry) {
+								jQuery('#districtID').append(
+										"<option value=" + areaAry[id].mainID + ">"
+												+ areaAry[id].name
+												+ "</option>");
+							}
+						}
+					}
+				});
+			} else {
+				jQuery("#districtID").empty();
+				jQuery('#districtID').append("<option value='0'>全部</option>");
+			}
+		}
+		
+		jQuery(".countAllAmount").click(function(){
+			var fromDate = jQuery("#fromDate").val();
+			var endDate = jQuery("#endDate").val();
+			var orderStatus = jQuery("#orderStatus").val();
+			if(fromDate != "" && endDate != ""){
+				   var arr1 = fromDate.split("-");//开始时间
+			       var arr2 = endDate.split("-");//结束时间
+			       var date1=new Date(parseInt(arr1[0]),parseInt(arr1[1])-1,parseInt(arr1[2]),0,0,0); 
+			       var date2=new Date(parseInt(arr2[0]),parseInt(arr2[1])-1,parseInt(arr2[2]),0,0,0);
+			       if(date1.getTime()>date2.getTime()) {                                
+		               alert('结束日期不能小于开始日期',this);
+		               return;
+			       }
+			}
+			jQuery.ajax({
+				url : "$!domain/admin/order/ajaxCountAllAmount.do",
+				type : 'POST',
+				dataType : 'json',
+				data : {
+					'fromDate' : fromDate,
+					'endDate' : endDate,
+					'orderStatus':orderStatus
+				},
+				success : function(data) {
+					if (data.code == 0) {
+						jQuery(".countAmount").val(data.result);
+					}
+				}
+			});
+		})
+		
+		jQuery(".cleanbtn").click(function(){
+			jQuery(".countAmount").val("");
+		})
+	</script>
+</body>
+</html>

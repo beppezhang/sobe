@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>用户中心</title>
+</head>
+<body>
+	<!-- top bar -->
+	#parse("layout/head_top.vm") 
+	#parse("layout/customercenter/header.vm")
+	<!-- crumb -->
+	<div id="crumb">
+		<div class="layout clearfix">
+			<a href="${domain}/index.htm">首页</a> &gt; <a href="${domain}/mall/buyer/userCenter.htm">用户中心</a>
+		</div>
+	</div>
+	<div class="layout mt10 clearfix">
+		#parse("layout/customercenter/leftmenu.vm")
+		 <div class="mainbody bg">
+	    	<div class="titbar_m mt10">
+	        	<strong>我的退换货</strong>
+	        </div>
+	        <div class="pro_unit">
+	            <form action="$!{domain}/mall/buyer/userExchange.htm"
+						id="seach" method="post">
+						<input type="hidden" id="pageNo" name="pageNo"
+							value="$!salesOrderReturnApplyDTO.pageNo"> 
+						<input type="hidden"
+							id="pageSize" name="pageSize" value="$!salesOrderReturnApplyDTO.pageSize">
+					</form>
+	           <table cellspacing="0" cellpadding="0" class="table02 mt10">
+	              <tr>
+	                <th width="255">退换货商品</th>
+	                <th width="255">原订单</th>
+	                <th width="120">申请时间</th>
+	                <th>状态</th>
+	              </tr>
+	              #foreach($!{orderapply} in $!{salesOrderReturnApplyList})
+		              <tr>
+		                <td colspan="4" class="minbar">
+		                	<span>退换货申请编号：<em class="col02">$!{orderapply.mainID}</em></span>
+		                </td>
+		              </tr>
+		              <tr>
+		                <td>
+		                	<a href="$!{domain}/mall/product/productDetail.htm?productID=$!orderapply.productID&itemID=$!orderapply.itemID" target="_blank"><img src="$!{imgurl}$!{orderapply.itemPicURL}" class="pimg" title="$!{orderapply.itemName}"></a>
+		                </td>
+		                <td><a href="$!{domain}/mall/buyer/orderDetail.htm?mainID=$!orderapply.salesOrderID" target="_blank">$!{orderapply.salesOrderID}</a></td>
+		                <td>$!date.format("yyyy-MM-dd  HH:mm:ss",$!orderapply.createTime)</td>
+		                 <!-- // 0：待确认1：已确认2：拒绝3：已退货4：已收货5：退款中6：换货中7：已退款8：已换货9：完成 -->
+		                <td><em class="col01">
+							#if($!{orderapply.status}==0)
+							待确认
+							#elseif($!{orderapply.status}==1)
+							<a href="$!{domain}/mall/buyer/addLogistics.htm?orderApplyID=$!{orderapply.mainID}">已确认</a>
+							#elseif($!{orderapply.status}==2)
+							拒绝
+							#elseif($!{orderapply.status}==3)
+							已退货
+							#elseif($!{orderapply.status}==4)
+							已收货
+							#elseif($!{orderapply.status}==5)
+							退款中
+							#elseif($!{orderapply.status}==5)
+							换货中
+							#elseif($!{orderapply.status}==7)
+							已退款
+							#elseif($!{orderapply.status}==8)
+							已换货
+							#elseif($!{orderapply.status}==9)
+							完成
+							#end
+							</em></td>
+		              </tr>
+	              #end
+	             
+	            </table>
+	            #pagination($!salesOrderReturnApplyDTO)
+	         </div>
+	    </div>	
+	</div>
+	<!-- footer -->
+	#parse("layout/footer.vm")
+	<script>
+		jQuery(document).ready(function(){
+			  jQuery("#user_exchange_cur").addClass("active cur").siblings(".level0").removeClass("cur");
+			});
+	</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>团购</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》团购</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/promotion/groupSaleList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!groupSaleDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!groupSaleDTO.pageSize">
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a>
+				#if($!menuUtil.isExistMenu("/admin/promotion/deleteGroupSale.do",$!menuAllList)
+				) <a href="javascript:;" title="删除" id="deleteGroupSaleAll"><em
+					class="icon iconDel"></em></a> #end
+				#if($!menuUtil.isExistMenu("/admin/promotion/addGroupSale.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/promotion/addGroupSale.htm" class="TableAddBtn" title="新增团购">+新增团购</a>
+				#end
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="" id="all" /></label></td>
+						<td>团购产品</td>
+						<td>团购商品</td>
+						<td>团购价格(元)</td>
+						<td>开始时间</td>
+						<td>结束时间</td>
+						<td>创建时间</td>
+						<td>创建人</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!groupSale in $!groupSaleList)
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="$!groupSale.mainID" id="check_box_$!groupSale.mainID" /></label></td>
+						<td>$!groupSale.productName</td>
+						<td>$!groupSale.itemName</td>
+						<td>$!NumberTool.format("#0.00",$!groupSale.salesPrice)</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!groupSale.fromDate)</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!groupSale.endDate)</td>
+						<td>$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!groupSale.createTime)</td>
+						<td>$!groupSale.createName</td>
+						<td>
+							#if($!menuUtil.isExistMenu("/admin/promotion/editGroupSale.htm",$!menuAllList)
+							) <a
+							href="$!{domain}/admin/promotion/editGroupSale.htm?mainId=$!groupSale.mainID"
+							class="icon iconEdit" title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/promotion/deleteGroupSale.do",$!menuAllList)
+							) <a href="javascript:;"
+							onclick="deleteGroupSale('$!groupSale.mainID');"
+							class="icon iconDel" title="删除"></a> #end
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!groupSaleDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>

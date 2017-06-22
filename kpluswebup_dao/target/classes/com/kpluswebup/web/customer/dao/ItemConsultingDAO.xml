@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.ItemConsultingDAO">
+
+	<sql id="Base_Column_List">
+		mainID, customerID,productID,
+		itemID,title,content,reply,replier,replyTime,
+		creator,createTime,modifier,modifyTime,isDelete
+	</sql>
+	
+
+	<select id="findConsults" parameterType="itemConsultingDTO"
+		resultType="ItemConsultingVO">
+		SELECT 
+		A.*,B.`name` as customerName,B.avatar as customerPicurl,C.`name` as gradeName 
+		from kplus_item_consulting A
+		LEFT JOIN kplus_customer B ON
+		A.customerID=B.mainID
+		LEFT JOIN kplus_customer_grade C ON
+		B.gradeID=C.mainID
+		WHERE A.isDelete=0
+		<if test="mainID!=null">
+			AND A.mainID=#{mainID}
+		</if>
+		<if test="customerID!=null">
+			AND A.customerID=#{customerID}
+		</if>
+		<if test="productID!=null">
+			AND A.productID=#{productID}
+		</if>
+		<if test="itemID!=null">
+			AND A.itemID=#{itemID}
+		</if>
+		order by A.id desc
+	</select>
+
+	<insert id="insertConsulting" parameterType="itemConsultingDTO">
+		INSERT INTO
+		kplus_item_consulting(
+		mainID,
+		productID,
+		customerID,
+		itemID,
+		title,
+		content,
+		reply,
+		replier,
+		replyTime,
+		createTime,
+		isDelete
+		)
+		VALUES
+		(
+		#{mainID},
+		#{productID},
+		#{customerID},
+		#{itemID},
+		#{title},
+		#{content},
+		#{reply},
+		#{replier},
+		#{replyTime},
+		now(),
+		0
+		)
+	</insert>
+
+</mapper>

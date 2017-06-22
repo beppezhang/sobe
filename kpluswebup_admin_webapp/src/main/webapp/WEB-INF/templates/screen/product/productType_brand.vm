@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>关联品牌</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>产品管理 》产品类型》关联品牌</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			#parse("layout/productType_menu.vm") <input id="productTypeMainID"
+				type="hidden" value="$!productTypeMainID">
+			<div class="contentRt">
+				<div class="contRt">
+					<!--form  S------->
+					<div class="systemBar">
+						<div class="p20Box">
+							<a href="javascript:;" class="blueBtn" onclick="ico1.show();">关联品牌</a>
+							<div class="clearfix">
+							    #if($!menuUtil.isExistMenu("/admin/product/deleteProductTypeBrand.do",$!menuAllList) ) 
+								#foreach ($!productTypeBrandVO in $!productTypeBrandList) <a
+									href="javascript:;" class="thisDel"
+									onclick="deleteProductTypeBrand('$!productTypeBrandVO.id')">$!productTypeBrandVO.brandName<em>x</em></a>
+								#end 
+								#else
+								
+								#foreach ($!productTypeBrandVO in $!productTypeBrandList) <a
+									href="javascript:;" class="thisDel"
+									>$!productTypeBrandVO.brandName</a>
+								#end 
+								#end
+							</div>
+							<div class="alertBox">
+								<a href="javascript:;" id="close" class="close"
+									onclick="ico1.hide();"></a>
+								<div class="alertBoxHead">
+									品牌名称：<span><input type="text" name="keyword"
+										id="keyword" onchange="serachBrand()" />
+									<button onclick="serachBrand()"></button></span>
+								</div>
+								<div class="alertTable">
+									<div class="tableHead">
+										<div style="width: 60px;">
+											<label class="label"><input type="checkbox"
+												id="checkAll" />全选</label>
+										</div>
+										<div style="width: 200px;">品牌名称</div>
+										<div style="width: 300px;">备注</div>
+									</div>
+									<div class="tableBody">
+										<table class="tableList grid">
+
+											<tbody id="serachList">
+												<tr>
+													<td class="first"></td>
+													<td></td>
+													<td></td>
+												</tr>
+												<tr>
+													<td class="first"></td>
+													<td></td>
+													<td></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="alertBtn">
+								
+									<a href="javascript:;" class="blueBtn" id="addProductTypeBrand">关联</a>
+									<a href="javascript:;" class="whiteBtn close"
+										onclick="ico1.hide();">取消</a>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+#parse("layout/footer.vm")
+	<script type="text/javascript">
+		var ico1 = $(".alertBox").divWin({
+			width : 605,
+			height : 500,
+			autoSize : false
+		});
+		function serachBrand() {
+			var keyword = jQuery("#keyword").val();
+			var data = {
+				name : keyword,
+				pageSize : 10000
+			}
+			var url = "serachBrand.do";
+			jQuery
+					.ajax({
+						url : url,
+						type : "POST",
+						data : data,
+						dataType : "json",
+						success : function(data) {
+							if (data.code == 0) {
+								var catAry = data.result;
+								$("#serachList").empty()
+								for ( var i in catAry) {
+									$("#serachList")
+											.append(
+													" <tr> <td class='first'><label class='label'><input type='checkbox' name='ony' value='"+catAry[i].mainID+"' id='bid_"+catAry[i].mainID+"' /></label></td> <td>"
+															+ catAry[i].name
+															+ "</td><td>"
+															+ catAry[i].name
+															+ "</td> </tr>  ");
+								}
+							} else {
+								alert("加载失败");
+							}
+						},
+						error : function() {
+							alert("加载失败");
+						}
+					});
+
+		}
+		jQuery(function() {
+			jQuery(function() {
+				jQuery("#checkAll").click(function() {
+					if (jQuery(this).prop("checked")) {
+						jQuery("input[name='ony']").prop("checked", true)
+					} else {
+						jQuery("input[name='ony']").prop("checked", false)
+					}
+				})
+				jQuery("#addProductTypeBrand").click(function() {
+					var str = "";
+					var productTypeMainID = jQuery("#productTypeMainID").val();
+					jQuery("input[name='ony']").each(function() {
+						if (jQuery(this).prop("checked")) {
+							str += jQuery(this).val() + ',';
+						}
+					})
+					var data = {
+						brandIDs : str,
+						productTypeMainID : productTypeMainID
+					}
+					var url = "addProductTypeBrand.do";
+					jQuery.ajax({
+						url : url,
+						type : "POST",
+						data : data,
+						dataType : "json",
+						success : function(data) {
+							if (data.code == 0) {
+								alert("操作成功");
+								location.reload();
+							} else {
+								alert("加载失败");
+							}
+						},
+						error : function() {
+							alert("加载失败");
+						}
+					});
+				})
+			})
+		})
+		$(function() {
+			$(".producttype_menu_4").append(
+					"<em class='icon arrowLfWeight'></em>").find("a").addClass(
+					"hover");
+		})
+	</script>
+</body>
+
+</html>

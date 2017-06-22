@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.ProductCategoryDAO">
+
+	<sql id="Base_Column_List">
+		id,mainID,name,parentID,productTypeID,description,sortOrder,title,metaKeywords,metaDescription,isDelete
+		,creator,createTime,modifier,modifyTime,isRecommend
+	</sql>
+
+
+	<insert id="insertProductCategory" parameterType="productCategoryDTO">
+		INSERT INTO
+		kplus_product_category
+		(
+		mainID,
+		NAME,
+		parentID,
+		productTypeID,
+		description,
+		sortOrder,
+		title,
+		metaKeywords,
+		metaDescription,
+		isDelete,
+		creator,
+		createTime,
+		picUrl,
+		isRecommend
+		)
+		values
+		(
+		#{mainID},
+		#{name},
+		#{parentID},
+		#{productTypeID},
+		#{description},
+		#{sortOrder},
+		#{title},
+		#{metaKeywords},
+		#{metaDescription},
+		0,
+		#{creator},
+		NOW(),
+		#{picUrl},
+		#{isRecommend}
+		)
+	</insert>
+
+	<select id="findALLProductCategory" parameterType="productCategoryDTO"
+		resultType="productCategoryVO">
+		SELECT
+		c.mainID AS mainID,
+		c. NAME AS NAME,
+		c.parentID AS
+		parentID,
+		c.productTypeID AS productTypeID,
+		t.`name` AS productName,
+		c.description AS description,
+		c.sortOrder AS sortOrder,
+		c.title AS
+		title,
+		c.metaKeywords AS metaKeywords,
+		c.metaDescription AS
+		metaDescription,
+		c.creator AS creator,
+		c.createTime AS createTime,
+		c.modifier AS modifier,
+		c.modifyTime AS modifyTime
+		FROM
+		kplus_product_category c
+		LEFT JOIN kplus_producttype t ON
+		c.productTypeID = t.mainID
+		where c.isDelete=0
+	</select>
+
+	<select id="findProductOneLevel" resultType="productCategoryVO">
+		SELECT
+		c.mainID AS
+		mainID,
+		c. NAME AS NAME,
+		c.parentID AS parentID,
+		c.productTypeID AS
+		productTypeID,
+		t.`name` AS productName,
+		c.description AS description,
+		c.sortOrder AS sortOrder,
+		c.title AS title,
+		c.metaKeywords AS
+		metaKeywords,
+		c.metaDescription AS metaDescription,
+		c.creator AS
+		creator,
+		c.createTime AS createTime,
+		c.modifier AS modifier,
+		c.modifyTime AS modifyTime,
+		c.picUrl
+		FROM
+		kplus_product_category c
+		LEFT
+		JOIN
+		kplus_producttype t ON c.productTypeID = t.mainID AND t.isDelete=0
+		where c.parentID='0'
+		AND
+		c.isDelete=0
+		order by c.sortOrder desc
+	</select>
+	<!-- sxc -->
+	<select id="findProductOneLevelTparts" resultType="productCategoryVO">
+		SELECT
+		c.mainID AS
+		mainID,
+		c. NAME AS NAME,
+		c.parentID AS parentID,
+		c.productTypeID AS
+		productTypeID,
+		c.description AS description,
+		c.sortOrder AS sortOrder,
+		c.title AS title,
+		c.metaKeywords AS
+		metaKeywords,
+		c.metaDescription AS metaDescription,
+		c.creator AS
+		creator,
+		c.createTime AS createTime,
+		c.modifier AS modifier,
+		c.modifyTime AS modifyTime,
+		c.picUrl,
+		c.code as code,
+		c.pinyin as pinyin,
+		c.id 
+		FROM
+		kplus_product_category c
+		where 
+		c.isDelete=0 and c.parentID in (select mainId from kplus_product_category where (code = '1001' or parentID='00000000-0000-0000-0000-000000000000'))
+		order by c.name,c.sortOrder desc
+	</select>	
+	<select id="findBrandPinyin" resultType="java.lang.String">
+		SELECT DISTINCT c.pinyin
+		FROM
+		kplus_product_category c
+		where 
+		c.isDelete=0 and c.parentID in (select mainId from kplus_product_category where (code = '1001' or parentID='00000000-0000-0000-0000-000000000000')) order by c.pinyin
+	</select>	
+	
+	<!-- sxc -->
+
+	<select id="findProductCatByParentID" resultType="productCategoryVO"
+		parameterType="java.lang.String">
+
+		SELECT
+		c.mainID AS mainID,
+		c. NAME AS NAME,
+		c.parentID AS
+		parentID,
+		c.productTypeID AS productTypeID,
+		t.`name` AS productName,
+		c.description AS description,
+		c.sortOrder AS sortOrder,
+		c.title AS
+		title,
+		c.metaKeywords AS metaKeywords,
+		c.metaDescription AS
+		metaDescription,
+		c.creator AS creator,
+		c.createTime AS createTime,
+		c.modifier AS modifier,
+		c.modifyTime AS modifyTime
+		FROM
+		kplus_product_category c
+		LEFT JOIN kplus_producttype t ON
+		c.productTypeID = t.mainID AND t.isDelete=0
+		where
+		c.isDelete=0 and
+		c.parentID=
+		#{mainID,jdbcType=VARCHAR}
+        order by c.sortOrder,c.`name` 
+	</select>
+	
+	
+	<!-- sxc -->
+	<select id="findProductCatByParentIDTparts" resultType="productCategoryVO"
+		parameterType="java.lang.String">
+
+		SELECT
+		c.mainID AS mainID,
+		c. NAME AS NAME,
+		c.parentID AS
+		parentID,
+		c.productTypeID AS productTypeID,
+		c.description AS description,
+		c.sortOrder AS sortOrder,
+		c.title AS
+		title,
+		c.metaKeywords AS metaKeywords,
+		c.metaDescription AS
+		metaDescription,
+		c.creator AS creator,
+		c.createTime AS createTime,
+		c.modifier AS modifier,
+		c.modifyTime AS modifyTime,
+		c.code as code,
+		c.pinyin as pinyin
+		FROM
+		kplus_product_category c
+		where
+		c.isDelete=0 and
+		c.parentID=
+		#{mainID,jdbcType=VARCHAR}
+        order by c.name, c.sortOrder desc
+	</select>
+	<!-- sxc -->	
+	
+	
+	<select id="findProductCatByParentIDForSupplier" resultType="productCategoryVO"
+		parameterType="java.lang.String">
+
+		SELECT
+		c.mainID AS mainID,
+		c.`name` AS name,
+		c.productTypeID AS productTypeID 
+		FROM
+		kplus_product_category c
+		where
+		c.isDelete=0 and
+		c.parentID=
+		#{mainID,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="findProductCategoryByMainID" resultType="productCategoryVO"
+		parameterType="java.lang.String">
+		SELECT
+		c.code as code,
+		c.mainID AS mainID,
+		c. NAME AS NAME,
+		c.parentID AS
+		parentID,
+		c.productTypeID AS productTypeID,
+		t.`name` AS productName,
+		c.description AS description,
+		c.sortOrder AS sortOrder,
+		c.title AS
+		title,
+		c.metaKeywords AS metaKeywords,
+		c.metaDescription AS
+		metaDescription,
+		c.creator AS creator,
+		c.createTime AS createTime,
+		c.modifier AS modifier,
+		c.modifyTime AS modifyTime,
+		c.isRecommend,
+		c.picURL as picURL
+		FROM
+		kplus_product_category c
+		LEFT JOIN kplus_producttype t ON
+		c.productTypeID = t.mainID AND t.isDelete=0
+		where
+		c.isDelete=0 and
+		c.mainID=
+		#{mainID,jdbcType=VARCHAR}
+
+	</select>
+	<select id="findFirtSecondThirdCategoryVOByProductID"
+		resultType="firstSecondThirdCategoryVO" parameterType="java.lang.String">
+		SELECT
+		c1.mainID
+		AS firstID,
+		c1.`name` AS fistName,
+		c2.mainID AS secondID,
+		c2.`name` AS
+		secondName,
+		c3.mainID AS thirdID,
+		c3.`name` AS thirdName
+		FROM
+		kplus_product_category c1,
+		kplus_product_category c2,
+		kplus_product_category c3,
+		kplus_product p
+		WHERE
+		p.mainID = #{productID,
+		jdbcType=VARCHAR}
+		AND c3.productTypeID =
+		p.productTypeID
+		AND c3.parentID
+		= c2.mainID
+		AND c2.parentID = c1.mainID
+	</select>
+
+
+	<update id="updateProductCategoryByMainID">
+		update kplus_product_category
+		set
+		modifyTime =now()
+		<if test="name != null">
+			,name = #{name}
+		</if>
+		<if test="description != null">
+			,description = #{description}
+		</if>
+		<if test="parentID != null">
+			,parentID = #{parentID}
+		</if>
+		<if test="productTypeID != null">
+			,productTypeID = #{productTypeID}
+		</if>
+		<if test="title != null">
+			,title = #{title}
+		</if>
+		<if test="metaKeywords != null">
+			,metaKeywords = #{metaKeywords}
+		</if>
+		<if test="productTypeID != null">
+			,productTypeID = #{productTypeID}
+		</if>
+		<if test="modifier != null">
+			,modifier = #{modifier}
+		</if>
+		<if test="picUrl!=null">
+			,picUrl=#{picUrl}
+		</if>
+		<if test="isRecommend!=null">
+			,isRecommend=#{isRecommend}
+		</if>
+		<if test="sortOrder!=null">
+			,sortOrder=#{sortOrder}
+		</if>
+		where mainID = #{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<update id="deleteProductCategoryByMainID">
+		update kplus_product_category
+		set isDelete=1
+		where
+		mainID =#{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<select id="findProductCatOneLevel" resultType="productCategoryVO">
+		select * from
+		kplus_product_category where isRecommend=1 and isDelete=0 and (parentID='0' or parentID='00000000-0000-0000-0000-000000000000')
+	</select>
+	
+	<select id="findProductCategoryById" resultType="productCategoryVO" parameterType="java.lang.String">
+		select * from kplus_product_category where mainID=#{mainID}
+	</select>	
+	
+	<!--zhangshangliang:移动端根据vehicleTypeId查找产品的类目信息-->
+	<select id="findProductCategoryByVehicleTypeId" resultType="productCategoryVO" parameterType="java.lang.String">
+		SELECT * 
+		FROM 
+		`kplus_product_category` pc 
+		WHERE 
+		pc.mainID IN 
+		(SELECT pc.parentID 
+		FROM  
+		`kplus_product_category` pc 
+		WHERE pc.mainID IN 
+		(SELECT vt.productCategoryId FROM vehicletype vt WHERE vt.mainID=#{mainID}))
+	</select>
+	
+	
+	
+</mapper>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>地址列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>采购商中心》地址列表</span>
+		</div>
+		<div class="tabBar clearfix">
+			<div class="contentRt">
+			        <div class="searchBar">
+						<form id="serachform" name="serachform" method="post" action="$!{domain}/admin/member/deliveryAddressList.htm">
+							<input type="hidden" id="pageNo" name="pageNo" value="$!customerDeliveryAddressDTO.pageNo"> 
+						    <input type="hidden" id="pageSize" name="pageSize" value="$!customerDeliveryAddressDTO.pageSize">
+							<table class="searchTable">
+								<tbody>
+									<tr>
+										<td><span class="grayF">会员名：</span>
+										<input type="text" name="searchUserName" class="cText"
+											value="$!customerDeliveryAddressDTO.name" /></td>
+										<td><span class="grayF">状态：</span> 
+											  <select class="select" name="searchStatus">
+													<option value="">全部</option>
+													<option #if("$!customerDeliveryAddressDTO.status" == "2")selected="selected"
+														#end value="2">未审核</option>
+													<option #if("$!customerDeliveryAddressDTO.status" == "3")selected="selected"
+														#end value="3">审核失败</option>
+											 </select></td>
+										<td rowspan="3">
+											#if($!menuUtil.isExistMenu("/admin/member/deliveryAddressList.htm",$!menuAllList)) 
+										    	<input class="searchBtn" type="button" value="搜索" onclick="userSearch(1)" />
+											#end
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+					<div class="tableListBar">
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td>会员名</td>
+									<td>姓名</td>
+									<td>电话</td>
+									<td>手机号</td>
+									<td>地区</td>
+									<td>地址</td>
+									<td>默认</td>
+									<td>状态</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!address in $!deliveryAddressList)
+								<tr>
+									<td>$!address.customerName</td>
+									<td>$!address.name</td>
+									<td>$!address.telephone</td>
+									<td>$!address.mobile</td>
+									<td>$!address.provinceName$!address.cityName$!address.districtName</td>
+									<td>$!address.address</td>
+									<td>#if("$!address.isDefault"== "1")是#end
+										#if("$!address.isDefault"== "0")否#end
+									</td>
+									<td>
+									  #if("$!address.status"=="2") 
+									               未审核
+									  #elseif("$!address.status"=="3")
+									              审核失败
+									  #elseif("$!address.status"=="1")
+									              审核通过
+									  #end
+									</td>
+									<td>
+									  #if("$!address.status"==2)
+									     <a href="javascript:;" onclick="changeDeliverAddress($!address.id,1)" title="确认通过">通过</a>&nbsp;&nbsp;
+									     <a href="javascript:;" onclick="changeDeliverAddress($!address.id,3)" title="不通过">不通过</a>
+									  #end
+									</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!customerDeliveryAddressDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		#parse("layout/footer.vm")
+</body>
+</html>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.CustomerGradeDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID, name, GradeAmount,
+		gradeSet,sortOrder,description,
+		isDelete,
+		creator,
+		modifier,
+		modifyTime,createTime
+	</sql>
+
+	<select id="findAllCustomerGrade" resultType="customerGradeVO">
+		select * from
+		kplus_customer_grade
+		where isDelete=0
+	</select>
+
+	<select id="findCustomerGradeCount" parameterType="customerGradeDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_customer_grade g where
+		g.isDelete=0
+		<if test="name != null  ">
+			AND g.name=#{name}
+		</if>
+		<if test="GradeAmount != null  ">
+			AND g.GradeAmount=#{GradeAmount}
+		</if>
+		<if test="gradeSet != null  ">
+			AND g.gradeSet=#{gradeSet}
+		</if>
+	</select>
+
+	<select id="findCustomerGradeByPagination" parameterType="customerGradeDTO"
+		resultType="customerGradeVO">
+		select
+		mainID,name,picURL,GradeAmount,gradeSet,sortOrder,description,startTime,endTime
+		from
+		kplus_customer_grade g where
+		g.isDelete=0
+		<if test="name != null  ">
+			AND g.name=#{name}
+		</if>
+		<if test="GradeAmount != null  ">
+			AND g.GradeAmount=#{GradeAmount}
+		</if>
+		<if test="gradeSet != null  ">
+			AND g.gradeSet=#{gradeSet}
+		</if>
+		order by gradeSet asc,GradeAmount asc
+		limit #{startRow} ,#{pageSize}
+	</select>
+	<update id="deleteCustomerGradeByMainID" parameterType="customerGradeDTO">
+		update
+		kplus_customer_grade set isDelete=1 where
+		mainID=#{mainID}
+	</update>
+
+	<insert id="insertCustomerGrade" parameterType="customerGradeDTO">
+		insert into
+		kplus_customer_grade(
+		mainID,
+		name,
+		picURL,
+		gradeSet,
+		GradeAmount,
+		sortOrder,
+		description,
+		isDelete,
+		creator,
+		createTime,
+		startTime,
+		endTime,
+		shoppingIntegral ,
+        lineShoppingIntegral 
+		)
+		values(
+		#{mainID},
+		#{name},
+		#{picURL},
+		#{gradeSet},
+		#{GradeAmount},
+		#{sortOrder},
+		#{description},
+		0,
+		#{creator},
+		now(),
+		#{startTime},
+		#{endTime},
+		#{shoppingIntegral},
+		#{lineShoppingIntegral}
+		)
+	</insert>
+
+	<select id="findCustomerGradeByMainID" parameterType="customerGradeDTO"
+		resultType="customerGradeVO">
+		select * from kplus_customer_grade where mainID=#{mainID}
+		and isDelete=0
+	</select>
+
+	<select id="findCustomerGradeTypedefault" resultType="customerGradeVO">
+		select *
+		from kplus_customer_grade where gradeSet=0
+		and isDelete=0
+	</select>
+	
+	<select id="findCustomerGradeTypeVIP" resultType="customerGradeVO">
+		select *
+		from kplus_customer_grade where gradeSet=4
+		and isDelete=0
+	</select>
+
+	<update id="updateCustomerGradeByMainID" parameterType="customerGradeDTO">
+		update kplus_customer_grade
+		<set>
+			modifyTime=now()
+			<if test="name != null">
+				,name = #{name}
+			</if>
+			<if test="picURL != null">
+				,picURL = #{picURL}
+			</if>
+			<if test="gradeSet != null">
+				,gradeSet = #{gradeSet}
+			</if>
+			<if test="GradeAmount != null">
+				,GradeAmount = #{GradeAmount}
+			</if>
+			<if test="sortOrder != null">
+				,sortOrder = #{sortOrder}
+			</if>
+			<if test="shoppingIntegral != null">
+			   ,shoppingIntegral = #{shoppingIntegral}
+			</if>
+			<if test="lineShoppingIntegral != null">
+			   ,lineShoppingIntegral=#{lineShoppingIntegral}
+			</if>
+			<if test="description != null">
+				,description = #{description}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="startTime!=null">
+				,startTime=#{startTime}
+			</if>
+			<if test="endTime!=null">
+				,endTime=#{endTime}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+</mapper>

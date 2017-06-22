@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.order.dao.SalesOrderAfterSalesDAO">
+
+	<sql id="Base_Column_List">
+		id,mainID, salesApplyID, customerID, salesOrderID,
+		productID, itemID,
+		salesType, count,
+		numberIMEI, memo,
+		status, expressID, expressNumber, isDelete,
+		creator,
+		createTime,
+		modifier, modifyTime, description
+	</sql>
+
+	<select id="findSalesOrderSalesBySalesApplyID" resultType="salesOrderAftersalesVO"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_zy_salesorder_aftersale
+		where salesApplyID = #{salesApplyID}
+	</select>
+	
+	<update id="updateBySalesApplyIDSelective" parameterType="salesOrderAftersalesVO">
+		update kplus_zy_salesorder_aftersale
+		<set>
+			<if test="mainID != null">
+				mainID = #{mainID},
+			</if>
+			<if test="salesApplyID != null">
+				salesApplyID = #{salesApplyID},
+			</if>
+			<if test="customerID != null">
+				customerID = #{customerID},
+			</if>
+			<if test="salesOrderID != null">
+				salesOrderID = #{salesOrderID},
+			</if>
+			<if test="productID != null">
+				productID = #{productID},
+			</if>
+			<if test="itemID != null">
+				itemID = #{itemID},
+			</if>
+			<if test="salesType != null">
+				salesType = #{salesType},
+			</if>
+			<if test="count != null">
+				count = #{count},
+			</if>
+			<if test="numberIMEI != null">
+				numberIMEI = #{numberIMEI},
+			</if>
+			<if test="memo != null">
+				memo = #{memo},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="expressID != null">
+				expressID = #{expressID},
+			</if>
+			<if test="expressNumber != null">
+				expressNumber = #{expressNumber},
+			</if>
+			<if test="isDelete != null">
+				isDelete = #{isDelete},
+			</if>
+			<if test="creator != null">
+				creator = #{creator},
+			</if>
+			<if test="createTime != null">
+				createTime = #{createTime},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime = #{modifyTime},
+			</if>
+			<if test="description != null">
+				description = #{description}
+			</if>
+		</set>
+		where salesApplyID = #{salesApplyID}
+	</update>
+	
+	<select id="findSalesOrderSalesApply" parameterType="java.lang.String"
+		resultType="salesOrderSalesApplyVO">
+		select * from kplus_salesorder_salesapply where isDelete=0
+		and
+		mainID=#{mainID}
+	</select>
+	
+	<insert id="addSalesOrderSalesSelective" parameterType="salesOrderAfterSalesDTO">
+		insert into kplus_zy_salesorder_aftersale
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="mainID != null">
+				mainID,
+			</if>
+			<if test="salesApplyID != null">
+				salesApplyID,
+			</if>
+			<if test="customerID != null">
+				customerID,
+			</if>
+			<if test="salesOrderID != null">
+				salesOrderID,
+			</if>
+			<if test="productID != null">
+				productID,
+			</if>
+			<if test="itemID != null">
+				itemID,
+			</if>
+			<if test="salesType != null">
+				salesType,
+			</if>
+			<if test="count != null">
+				count,
+			</if>
+			<if test="numberIMEI != null">
+				numberIMEI,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="expressID != null">
+				expressID,
+			</if>
+			<if test="expressNumber != null">
+				expressNumber,
+			</if>
+			<if test="isDelete != null">
+				isDelete,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				createTime,
+			</if>
+			<if test="description != null">
+				description
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="mainID != null">
+				#{mainID},
+			</if>
+			<if test="salesApplyID != null">
+				#{salesApplyID},
+			</if>
+			<if test="customerID != null">
+				#{customerID},
+			</if>
+			<if test="salesOrderID != null">
+				#{salesOrderID},
+			</if>
+			<if test="productID != null">
+				#{productID},
+			</if>
+			<if test="itemID != null">
+				#{itemID},
+			</if>
+			<if test="salesType != null">
+				#{salesType},
+			</if>
+			<if test="count != null">
+				#{count},
+			</if>
+			<if test="numberIMEI != null">
+				#{numberIMEI},
+			</if>
+			<if test="memo != null">
+				#{memo},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="expressID != null">
+				#{expressID},
+			</if>
+			<if test="expressNumber != null">
+				#{expressNumber},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete},
+			</if>
+			<if test="creator != null">
+				#{creator},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="description != null">
+				#{description}
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateSalesOrderStatus" parameterType="salesOrderDTO">
+		update kplus_salesorder
+		<set>
+			modifyTime=now()
+			<if test="customerID != null">
+				,customerID = #{customerID}
+			</if>
+			<if test="orderType != null">
+				,orderType = #{orderType}
+			</if>
+			<if test="changeOrderID != null">
+				,changeOrderID = #{changeOrderID}
+			</if>
+			<if test="paymentType != null">
+				,paymentType = #{paymentType}
+			</if>
+			<if test="interfaceConfigID != null">
+				,interfaceConfigID = #{interfaceConfigID}
+			</if>
+			<if test="productAmount != null">
+				,productAmount = #{productAmount}
+			</if>
+			<if test="expressFee != null">
+				,expressFee = #{expressFee}
+			</if>
+			<if test="totalAmount != null">
+				,totalAmount = #{totalAmount}
+			</if>
+			<if test="discountAmount != null">
+				,discountAmount = #{discountAmount}
+			</if>
+			<if test="payableAmount != null">
+				,payableAmount = #{payableAmount}
+			</if>
+			<if test="expressID != null">
+				,expressID = #{expressID}
+			</if>
+			<if test="expressNumber != null">
+				,expressNumber = #{expressNumber}
+			</if>
+			<if test="memo != null">
+				,memo = #{memo}
+			</if>
+			<if test="paymentStatus != null">
+				,paymentStatus = #{paymentStatus}
+			</if>
+			<if test="orderStatus != null">
+				,orderStatus = #{orderStatus}
+			</if>
+			<if test="printStatus != null">
+				,printStatus = #{printStatus}
+			</if>
+			<if test="invoiceStatus != null">
+				,invoiceStatus = #{invoiceStatus}
+			</if>
+			<if test="carriageStatus != null">
+				,carriageStatus = #{carriageStatus}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="invoiceType != null">
+				,invoiceType = #{invoiceType}
+			</if>
+			<if test="invoiceTitle != null">
+				,invoiceTitle = #{invoiceTitle}
+			</if>
+			<if test="description != null">
+				,description = #{description}
+			</if>
+			<if test="scoreTotal!=null">
+				,scoreTotal=#{scoreTotal}
+			</if>
+			<if test="weight!=null">
+				,weight=#{weight}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+</mapper>

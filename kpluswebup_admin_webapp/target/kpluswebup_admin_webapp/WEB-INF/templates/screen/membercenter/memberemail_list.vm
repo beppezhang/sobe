@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>邮件</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>会员中心》会员列表》邮件</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/member_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<form id="serachform" name="serachform" method="post"
+						action="$!{domain}/admin/member/memberemailList.htm?customerID=$!customerVO.mainID">
+						<input type="hidden" id="pageNo" name="pageNo"
+							value="$!emailDTO.pageNo"> <input type="hidden"
+							id="pageSize" name="pageSize" value="$!emailDTO.pageSize">
+					</form>
+					<div class="tableListBar">
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td>会员</td>
+									<td>邮箱</td>
+									<td>标题</td>
+									<td>内容</td>
+									<td>发送时间</td>
+									<td>状态</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!email in $!emailList)
+								<tr>
+									<td>$!email.customerName</td>
+									<td>$!email.email</td>
+									<td>$!email.title</td>
+									<td>$!email.content</td>
+									<td>$!date.format('yyyy-MM-dd',$!email.createTime)</td>
+									<td>#if("$!email.status"=="1")成功
+										#elseif("$!email.status"=="2")不成功 #end</td>
+									<td class="last">#if("$!email.status"=="2") <a
+										href="javascript:;" class="icon iconSendAg" onclick="sendEmail($!email.mainID)"
+										title="再次发送"></a> #end
+									</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!emailDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".member_menu_8").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+	</script>
+	#parse("layout/footer.vm")
+</body>
+</html>

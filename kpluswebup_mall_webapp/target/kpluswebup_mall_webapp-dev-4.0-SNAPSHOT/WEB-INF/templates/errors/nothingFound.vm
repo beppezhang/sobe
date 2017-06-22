@@ -1,0 +1,39 @@
+
+
+
+
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>搜贝</title>
+<link rel="stylesheet" href="/css/global.css">
+	<style>
+	#no_con{width: 1200px;margin: 200px auto 0;}
+	#no_con div{width: 520px;margin: 0 auto;}
+	#no_con img{width: 103px;float: left;}
+	#no_con p{float: left;padding: 5px 0 0 35px;line-height: 50px;font-size: 24px;}
+	</style>
+</head>
+
+<body>
+ 
+	<!-- top bar -->
+	#parse("layout/head_top_new.vm")
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider_new.vm")
+	<!--nav导航条-->
+	#parse("layout/menu_new.vm")
+	
+	
+<div id="no_con">
+	<div class="clearfix">
+		<img src="${mallStatic}/images/no.png" />
+		<p>啊哦~~,没有查到相关信息耶！<br/>根据输入框内的提示再尝试下吧。</p>
+	</div>
+</div>
+
+
+</body>
+</html>

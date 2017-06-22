@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增促销</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》买送促销》新增促销</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em><a href="javascript:;"
+						class="hover">基本信息</a></li>
+				</ul>
+			</div>
+
+			<div class="contentRt">
+				<div class="contRt">
+					<form id="addPromotionForm"
+						action="$!{domain}/admin/promotion/saveAddPromotion.htm"
+						method="post" enctype="multipart/form-data">
+						<input id="gradeIDs" type="hidden" name="gradeIds" /> <input
+							id="groupIDs" type="hidden" name="groupIds" />
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">名称：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="name" />
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">类型：</div>
+									<div class="formRow">
+										<!--下拉 S-->
+										<select class="select" name="type"
+											onchange="changePromotionType('$!{domain}');">
+										<!-- 	<option value="1">满额减额</option>
+											<option value="2">满额赠品</option> -->
+											<option value="3">满额免邮</option>
+											<!-- <option value="4">满额打折</option>
+											<option value="5">满额赠券</option>
+											<option value="6">注册赠券</option> -->
+											<!-- <option value="7">满件送件</option> -->
+											<!-- <option value="8">满件免邮</option>
+											<option value="9">买就减额</option>
+											<option value="10">买就赠品</option>
+											<option value="11">买就免邮</option>
+											<option value="12">买就打折</option>
+											<option value="13">买就赠券</option> -->
+										</select>
+										<!--下拉 E-->
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">有效期：</div>
+									<div class="formRow">
+										<input type="text" name="fromDateStr" class="cText"
+											onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+											readonly="readonly">&nbsp;至&nbsp; <input type="text"
+											name="endDateStr" class="cText"
+											onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+											readonly="readonly">
+									</div>
+								</dd>
+								<dd id="promotionCondition" class="clearfix">
+									<div class="formTt">满足金额：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionCondition" />
+									</div>
+								</dd>
+								<dd id="promotionValue" class="clearfix" style="display: none;">
+									<div class="formTt">扣减金额：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											name="promotionValue" />
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">促销介绍：</div>
+									<div class="formRow">
+										<textarea rows="7" cols="75" name="description"></textarea>
+									</div>
+								</dd>
+								<!-- <dd class="clearfix">
+									<div class="formTt">适合客户：</div>
+									<div class="formRow">
+										<span> <a href="javascript:;" title="全选"
+											id="selectGradeIDAll"><em class="icon iconAllSel"></em>全选</a>
+											<a href="javascript:;" title="反选" id="unSelectGradeID"><em
+												class="icon iconInverse"></em>反选</a>
+										</span> <br /> <span id="gradeID">按会员等级： #foreach($!grade in
+											$!customerGradeList) <input id="gradeId$!{grade.mainID}"
+											type="checkbox" value="$!{grade.mainID}" />$!{grade.name}
+											#end
+										</span> <br /> <span> <a href="javascript:;" title="全选"
+											id="selectGroupIDAll"><em class="icon iconAllSel"></em>全选</a>
+											<a href="javascript:;" title="" id="unSelectGroupID"><em
+												class="icon iconInverse"></em>反选</a>
+										</span> <br /> <span id="groupID">按会员分组： #foreach($!group in
+											$!customerGroupList) <input id="groupId$!{group.mainID}"
+											type="checkbox" value="$!{group.mainID}" />$!{group.name}
+											#end
+										</span>
+									</div>
+								</dd> -->
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/promotion/saveAddPromotion.htm",$!menuAllList)
+										) <input type="button" onclick="submitAddPromotionForm();"
+											class="save" value="提交"> #end <input type="reset"
+											name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

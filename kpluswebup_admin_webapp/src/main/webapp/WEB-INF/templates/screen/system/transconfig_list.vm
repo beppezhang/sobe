@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>业务参数</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置》业务参数</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<div class="contentLf tabList">
+					<ul class="member_menu">
+						#if($!menuUtil.isExistMenu("/admin/system/transconfigList.htm",$!menuAllList)
+						)
+						<li><em class="icon arrowLfWeight"></em> <a
+							href="$!{domain}/admin/system/transconfigList.htm" class="hover">业务参数</a></li>
+						#end
+						#if($!menuUtil.isExistMenu("/admin/system/systemcodeList.htm",$!menuAllList)
+						)
+						<li><a href="$!{domain}/admin/system/systemcodeList.htm">编码设置</a></li>
+						#end
+						#if($!menuUtil.isExistMenu("/admin/system/systemMessageFunctionList.htm",$!menuAllList)
+						)
+						<li><a
+							href="$!{domain}/admin/system/systemMessageFunctionList.htm">消息配置</a></li>
+						#end
+					</ul>
+				</div>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/system/addTransConfig.htm"
+						method="post">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<h2>商品设置</h2>
+								</dd>
+								<!-- <dd class="clearfix">
+									<div class="formTt" style="width: 200px;">商品价格默认小数点后几位：</div>
+									<div class="formRow">
+										<select name="decimalPlace" class="select">
+											<option #if("$!transConfigVO.decimalPlace"==
+												"0")selected="selected" #end value="0">0</option>
+											<option #if("$!transConfigVO.decimalPlace"==
+												"1")selected="selected" #end value="1">1</option>
+											<option #if("$!transConfigVO.decimalPlace"==
+												"2"||"$!transConfigVO.decimalPlace"== "")selected="selected"
+												#end value="2">2</option>
+											<option #if("$!transConfigVO.decimalPlace"==
+												"3")selected="selected" #end value="3">3</option>
+											<option #if("$!transConfigVO.decimalPlace"==
+												"4")selected="selected" #end value="4">4</option>
+										</select>
+									</div>
+								</dd> -->
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">产品/商品默认图片：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen"
+											name="productPicURL" value="$!transConfigVO.productPicURL"
+											id="picURL"> <img id="uploadImage"
+											style="width: 70px; height: 70px;"
+											#if("$!transConfigVO.productPicURL"!=""
+											)src="$!transConfigVO.productPicURL" #else
+											src="$!{domain}theme/default/images/default-img.png" #end>
+										  <input type="file" id="myBlogImage" name="myfiles"
+											onchange="ajaxFileUpload()" />
+									</div>
+								</dd>
+							</dl>
+							<dl class="formSet">
+								<dd class="clearfix">
+									<h2>订单设置</h2>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">显示几天内订单：</div>
+									<div class="formRow">
+										<input type="text" value="$!transConfigVO.orderShowDay"
+											name="orderShowDay" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">未付款几天自动关闭订单：</div>
+									<div class="formRow">
+										<input type="text" value="$!transConfigVO.orderCancelDay"
+											name="orderCancelDay" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">发货几天自动完成订单：</div>
+									<div class="formRow">
+										<input type="text" value="$!transConfigVO.orderCloseDay"
+											name="orderCloseDay" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">订单产品是否需要出库操作：</div>
+									<div class="formRow">
+										<label><input type="radio"
+											#if("$!transConfigVO.deliveryProcessActive"==
+											"1")checked="checked" #end value="1"
+											name="deliveryProcessActive" class="">是</label>&nbsp;&nbsp;&nbsp;&nbsp;
+										<label><input type="radio"
+											#if("$!transConfigVO.deliveryProcessActive"==
+											"0")checked="checked" #end value="0"
+											name="deliveryProcessActive" class="">否</label>
+									</div>
+								</dd>
+								<!-- <dd class="clearfix">
+								<div class="formTt" style="width: 200px;">是否限制IP访问：</div>
+								<div class="formRow">
+									<input type="radio"
+										#if("$!transConfigVO.ipLimitedActive"==
+										"1")checked="checked" #end value="1"
+										name="ipLimitedActive" class="select">是&nbsp;&nbsp;&nbsp;&nbsp;
+									<input type="radio"
+										#if("$!transConfigVO.ipLimitedActive"==
+										"0")checked="checked" #end value="0"
+										name="ipLimitedActive" class="select">否
+								</div>
+							</dd> -->
+							</dl>
+							<dl class="formSet">
+								<dd class="clearfix">
+									<h2>支付设置</h2>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">余额支付：</div>
+									<div class="formRow">
+										<label><input type="radio"
+											#if("$!transConfigVO.balancePaymentActive"==
+											"1")checked="checked" #end value="1"
+											name="balancePaymentActive" class="">启用</label>&nbsp;&nbsp;&nbsp;&nbsp;
+										<label><input type="radio"
+											#if("$!transConfigVO.balancePaymentActive"==
+											"0")checked="checked" #end value="0"
+											name="balancePaymentActive" class="">不启用</label>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">余额支付图标：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen"
+											name="balancePaymentURL"
+											value="$!transConfigVO.balancePaymentURL" id="picURL1">
+										<img id="uploadImage1"
+											#if("$!transConfigVO.balancePaymentURL"!=""
+											)src="$!transConfigVO.balancePaymentURL" #else src="" #end>
+										  <input type="file" id="myBlogImage1" name="myfiles"
+											onchange="ajaxFileUploads(1)" />
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">货到付款：</div>
+									<div class="formRow">
+										<label><input type="radio"
+											#if("$!transConfigVO.codActive"== "1")checked="checked" #end
+											value="1" name="codActive" class="">启用</label>&nbsp;&nbsp;&nbsp;&nbsp;
+										<label><input type="radio"
+											#if("$!transConfigVO.codActive"== "0")checked="checked" #end
+											value="0" name="codActive" class="">不启用</label>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">货到付款图标：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen" name="codURL"
+											value="$!transConfigVO.codURL" id="picURL2"> <img
+											id="uploadImage2" #if("$!transConfigVO.codURL"!=""
+											)src="$!transConfigVO.codURL" #else src="" #end>   <input
+											type="file" id="myBlogImage2" name="myfiles"
+											onchange="ajaxFileUploads(2)" />
+									</div>
+								</dd>
+							</dl>
+							<dl class="formSet">
+								<dd class="clearfix">
+									<h2>注册配置</h2>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">是否开放注册：</div>
+									<div class="formRow">
+										<input type="radio" #if("$!transConfigVO.isRegister"==
+											"0")checked="checked" #end value="0" name="isRegister">是&nbsp;&nbsp;
+										<input type="radio" #if("$!transConfigVO.isRegister"==
+											"1")checked="checked" #end value="1" name="isRegister">否
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt" style="width: 200px;">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/system/addTransConfig.htm",$!menuAllList)
+										) <input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+										#end
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+</body>
+</html>

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑模板元素</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+<script type="text/javascript" src="$!{adminStatic}/script/DragResize.js"></script>
+<script type="text/javascript"
+	src="$!{adminStatic}/script/jquery.colorpicker.js"></script>
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<style type="text/css">
+.dragresize {
+	position: absolute;
+	width: 5px;
+	height: 5px;
+	font-size: 1px;
+	background: #EEE;
+	border: 1px solid #333;
+}
+
+.dragresize-tl {
+	top: -8px;
+	left: -8px;
+	cursor: nw-resize;
+}
+
+.dragresize-tm {
+	top: -8px;
+	left: 50%;
+	margin-left: -4px;
+	cursor: n-resize;
+}
+
+.dragresize-tr {
+	top: -8px;
+	right: -8px;
+	cursor: ne-resize;
+}
+
+.dragresize-ml {
+	top: 50%;
+	margin-top: -4px;
+	left: -8px;
+	cursor: w-resize;
+}
+
+.dragresize-mr {
+	top: 50%;
+	margin-top: -4px;
+	right: -8px;
+	cursor: e-resize;
+}
+
+.dragresize-bl {
+	bottom: -8px;
+	left: -8px;
+	cursor: sw-resize;
+}
+
+.dragresize-bm {
+	bottom: -8px;
+	left: 50%;
+	margin-left: -4px;
+	cursor: s-resize;
+}
+
+.dragresize-br {
+	bottom: -8px;
+	right: -8px;
+	cursor: se-resize;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》物流模板》编辑模板元素</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			#parse("layout/express_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<!--form  S------->
+					<form id="formatItemForm"
+						action="$!{domain}/admin/system/editExpressFormatItem.htm"
+						method="post">
+						<input type="hidden" name="formatID"
+							value="$!expressFormatVO.mainID">
+						<div class="systemBar">
+							<div class="emsTextStyle">
+								<span>字体：</span><select id="font-family" class="changeSY"><option
+										value="宋体" data="1">宋体</option>
+									<option value="黑体" data="2">黑体</option>
+									<option value="微软雅黑" data="3">微软雅黑</option></select>
+								<!--<input name="font-family" value="1" type="hidden"/>-->
+								<span>字号：</span><select id="font-size" class="changePX"><option
+										value="12">12</option>
+									<option value="13">13</option>
+									<option value="14">14</option>
+									<option value="20">20</option>
+									<option value="25">25</option></select>
+								<!--<input name="font-size" value="12" type="hidden"/>-->
+								<span>颜色：</span><input type="button" class="font-color" />
+								<!--<input name="font-color" value="rgb(0,0,0)" type="hidden"/>-->
+								<span>行距：</span><input type="text" id="line-height"
+									class="changePX" value="18" />
+								<!--<input name="line-height" value="18" type="hidden"/>-->
+								<span>字间距：</span><input type="text" id="letter-spacing"
+									class="changePX" value="2" />
+								<!--<input name="letter-spacing" value="2" type="hidden"/>-->
+								<span>对齐方式：</span><select id="text-align" class="changeSY"><option
+										value="center">居中对齐</option>
+									<option value="left">左对齐</option>
+									<option value="right">右对齐</option></select>
+								<!--<input name="text-align" value="1" type="hidden"/>-->
+								<span>字体样式：</span>
+								<div class="font-style">
+									<span class="font-weight" val="700" data="font-weight">B</span>
+									<!--<input name="font-weight" value="0" type="hidden"/>-->
+									<span class="font-style" val="italic" data="font-style">I</span>
+									<!--<input name="font-style" value="0" type="hidden"/>-->
+									<span class="text-decoration" val="underline"
+										data="text-decoration">U</span>
+									<!--<input name="text-decoration" value="0" type="hidden"/>-->
+								</div>
+								<a href="javascript:;" class="del">删除</a>
+							</div>
+							<div class="printEms">
+								<div class="ems" id="ems">
+									<img src="$!expressFormatVO.picURL" alt="" />
+								</div>
+								<div class="addInputToEms">
+									<h2>收货人信息</h2>
+									<div class="bd" style="display: block;">
+										<ul>
+											<li><a href="javascript:;" data="1">收货人姓名</a></li>
+											<li><a href="javascript:;" data="3">收货人城市</a></li>
+											<li><a href="javascript:;" data="2">收货人地址</a></li>
+											<li><a href="javascript:;" data="6">收货人邮编</a></li>
+											<li><a href="javascript:;" data="4">收货人电话</a></li>
+											<li><a href="javascript:;" data="5">收货人手机</a></li>
+										</ul>
+									</div>
+									<h2>发货人信息</h2>
+									<div class="bd">
+										<ul>
+											<li><a href="javascript:;" data="7">发货人姓名</a></li>
+											<li><a href="javascript:;" data="9">发货人城市</a></li>
+											<li><a href="javascript:;" data="8">发货人地址</a></li>
+											<li><a href="javascript:;" data="12">发货人邮编</a></li>
+											<li><a href="javascript:;" data="10">发货人电话</a></li>
+											<li><a href="javascript:;" data="11">发货人手机</a></li>
+										</ul>
+									</div>
+									<h2 class="last">自定义信息</h2>
+									<div class="bd">
+										<ul>
+											<li><a href="javascript:;" data="16">店铺名称</a></li>
+											<li><a href="javascript:;" data="17">订单号</a></li>
+											<li><a href="javascript:;" data="18">订单产品</a></li>
+											<li><a href="javascript:;" data="19">产品数量</a></li>
+											<li><a href="javascript:;" data="13">当前年</a></li>
+											<li><a href="javascript:;" data="14">当前月</a></li>
+											<li><a href="javascript:;" data="15">当前日</a></li>
+											<!--<li><a href="javascript:;">当前时间</a></li>-->
+											<li><a href="javascript:;" data="20">√</a></li>
+											<li class="last"><input type="text" placeholder="自定义内容"
+												class="" data="21" />
+												<button type="button">添加</button></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="centerBtn">
+								<input type="button" name="save" class="save" value="提交">
+								<input type="reset" name="cencle" class="cencle" value="重置">
+							</div>
+						</div>
+						<div id="hidden">
+							#foreach($!expressformatItem in $!expressFormatItemList) <input
+								type="hidden"
+								value="$!expressformatItem.item|$!expressformatItem.xray|$!expressformatItem.yray|$!expressformatItem.width|$!expressformatItem.height|$!expressformatItem.wordsize|$!expressformatItem.font|$!expressformatItem.intervals|$!expressformatItem.linewidth|$!expressformatItem.bold|$!expressformatItem.italic|$!expressformatItem.position|$!expressformatItem.value">
+							#end
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".express_menu_4").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+		$(function() {
+			var box_id = 1;
+			addMoveBox()
+			function addMoveBox() {
+				var hid_inp = $("#hidden input")
+				if (hid_inp.length == 0) {
+					return;
+				}
+				hid_inp
+						.each(function() {
+							var str = $(this).val();
+							var arr;
+							//alert(str)
+							arr = str.split("|");
+							var family = [ '宋体', '黑体', '微软雅黑' ];
+							var alg = [ 'left', 'center', 'right' ];
+							var weight = [ '400', '700' ]
+							var style = [ 'normal', 'italic' ]
+							$("#ems")
+									.append(
+											"<div class='MoveBox'   style='left: "+arr[1]+"px; top: "+arr[2]+"px;width:"+arr[3]+"px;height:"+arr[4]+"px'><span bid='"+box_id+"' txt='"+arr[arr.length-1]+"' iid='"+arr[0]+"' style='font-family: "+family[arr[6]-1]+"; font-size:"+arr[5]+"px;line-height: "+arr[8]+"px; letter-spacing:"+arr[7]+"px; text-align: "+alg[arr[11]-1]+"; font-weight: "+weight[arr[9]]+"; font-style: "+style[arr[10]]+";'>"
+													+ arr[arr.length - 1]
+													+ "</span></div>")
+							box_id += 1;
+						})
+			}
+			$(".addInputToEms h2").bind("click", function() {
+				$(".addInputToEms .bd").hide();
+				$(this).next(".bd").fadeIn();
+			})
+			var inp_msg;
+			$(".addInputToEms a")
+					.bind(
+							"click",
+							function() {
+								inp_msg = $(this).html();
+								$("#ems")
+										.append(
+												"<div class='MoveBox'   style='left: 10px; top: 10px;'><span bid='"
+														+ box_id
+														+ "' txt='"
+														+ inp_msg
+														+ "' iid='"
+														+ $(this).attr("data")
+														+ "' style='font-family: 宋体; font-size: 12px;line-height: 18px; letter-spacing: 2px; text-align: center; font-weight: 400; font-style: normal;'>"
+														+ inp_msg
+														+ "</span></div>")
+								box_id += 1;
+							})
+			$(".addInputToEms button")
+					.bind(
+							"click",
+							function() {
+								$("#ems")
+										.append(
+												"<div class='MoveBox'   style='left: 10px; top: 10px;'><span bid='"
+														+ box_id
+														+ "' txt='"
+														+ $(
+																".addInputToEms input")
+																.val()
+														+ "' iid='21' style='font-family: 宋体; font-size: 12px;line-height: 18px; letter-spacing: 2px; text-align: center; font-weight: 400; font-style: normal;'>"
+														+ $(
+																".addInputToEms input")
+																.val()
+														+ "</span></div>")
+								box_id += 1;
+							})
+
+			var this_hover;
+			$("#ems")
+					.delegate(
+							".MoveBox",
+							"mouseup",
+							(function() {
+								$(this).addClass("hover").siblings()
+										.removeClass("hover");
+								this_hover = $(this).find("span");
+								var font_family = this_hover.css("font-family");
+								var font_size = this_hover.css("font-size");
+								var font_color = this_hover.css("color");
+								var line_height = this_hover.css("line-height");
+								var letter_spacing = this_hover
+										.css("letter-spacing");
+								var text_align = this_hover.css("text-align");
+								var font_weight = this_hover.css("font-weight");
+								var font_style = this_hover.css("font-style");
+								var text_decoration = this_hover
+										.css("text-decoration");
+								$("#font-family").val(font_family);
+								$("#font-size").val(
+										font_size.substring(0,
+												(line_height.length - 2)));
+								$(".font-color").css({
+									"background" : font_color,
+									"color" : font_color
+								});
+								$("#line-height").val(
+										line_height.substring(0,
+												(line_height.length - 2)));
+								$("#letter-spacing").val(
+										letter_spacing.substring(0,
+												(letter_spacing.length - 2)));
+								$("#text-align").val(text_align);
+								if (font_weight == 700) {
+									$(".font-weight").addClass("hover");
+								} else {
+									$(".font-weight").removeClass("hover");
+								}
+								if (font_style == "italic") {
+									$(".font-style").addClass("hover");
+								} else {
+									$(".font-style").removeClass("hover");
+								}
+								if (text_decoration == "underline") {
+									$(".text-decoration").addClass("hover");
+								} else {
+									$(".text-decoration").removeClass("hover");
+								}
+							}));
+			//改变字体//改变对齐方式
+			$(".changeSY").change(function() {
+				var t_css = $(this).attr("id");
+				var t_val = $(this).val();
+				this_hover.css(t_css, t_val)
+			})
+			//颜色选择器
+			$(".font-color").colorpicker({
+				fillcolor : true,
+				success : function(o, color) {
+					$(".font-color").css("background", color)
+					this_hover.css("color", color);
+				}
+			});
+			//改变字号//改变行距//改变字间距
+			$(".changePX").change(function() {
+				this_hover.css($(this).attr("id"), $(this).val() + "px")
+			})
+			//改变字体样式
+			$(".font-style span").bind("click", function() {
+				var t_css = $(this).attr("data");
+				var t_val = $(this).attr("val");
+				if (this_hover.css(t_css) != t_val) {
+					this_hover.css(t_css, t_val);
+				} else {
+					if (t_css == "font-weight") {
+						this_hover.css("font-weight", 400)
+					} else if (t_css == "font-style") {
+						this_hover.css("font-style", "normal")
+					} else {
+						this_hover.css("text-decoration", "none")
+					}
+					$(this).removeClass("hover");
+					return;
+				}
+				$(this).addClass("hover");
+			})
+			//删除
+			$(".emsTextStyle .del").bind("click", function() {
+				this_hover.parent().remove();
+			})
+
+			function createHidden() {
+				$("#hidden").empty();
+				$("#ems .MoveBox")
+						.each(
+								function() {
+									var c_child = $(this).find("span");
+									var _id = c_child.attr("bid");
+									var i_id = c_child.attr("iid");
+									var x = $(this).css("left").substring(0,
+											($(this).css("left").length - 2))
+									var y = $(this).css("top").substring(0,
+											($(this).css("top").length - 2))
+									var w = $(this).css("width").substring(0,
+											($(this).css("width").length - 2))
+									var h = $(this).css("height").substring(0,
+											($(this).css("height").length - 2))
+									var f_size = c_child
+											.css("font-size")
+											.substring(
+													0,
+													($(this).css("font-size").length - 2))
+									var f_family = c_child.css("font-family");
+									var f_family_id = 1;
+									if (f_family == "宋体") {
+										f_family_id = 1;
+									} else if (f_family == "黑体") {
+										f_family_id = 2;
+									} else {
+										f_family_id = 3;
+									}
+									var f_weight = c_child.css("font-weight");
+									var f_weight_id = 0;
+									if (f_weight == "700") {
+										f_weight_id = 1;
+									}
+									var f_style = c_child.css("font-style");
+									var f_style_id = 0;
+									if (f_style == "italic") {
+										f_style_id = 1;
+									}
+									var f_alg = c_child.css("text-align");
+									var f_alg_id = 2;
+									if (f_alg == "center") {
+										f_alg_id = 2;
+									} else if (f_alg == "left") {
+										f_alg_id = 1;
+									} else {
+										f_alg_id = 3;
+									}
+									var f_letter = c_child
+											.css("letter-spacing")
+											.substring(
+													0,
+													(c_child
+															.css("letter-spacing").length - 2))
+									var f_height = c_child
+											.css("line-height")
+											.substring(
+													0,
+													($(this).css("line-height").length - 2))
+									var str = c_child.html();
+									$("#hidden")
+											.append(
+													"<input type='hidden' name='formatItems' id='"+_id+"' value='"+i_id+"|"+x+"|"+y+"|"+w+"|"+h+"|"+f_size+"|"+f_family_id+"|"+f_letter+"|"+f_height+"|"+f_weight_id+"|"+f_style_id+"|"+f_alg_id+"|"+str+"'/>")
+								})
+			}
+
+			jQuery(".save").click(function() {
+				createHidden();
+				$("#formatItemForm").submit();
+			})
+		});
+		var dragresize = new DragResize('dragresize', {
+			minWidth : 50,
+			minHeight : 20,
+			minLeft : 0,
+			minTop : 0,
+			maxLeft : 10000,
+			maxTop : 10000
+		});
+		dragresize.isElement = function(elm) {
+			if (elm.className && elm.className.indexOf('MoveBox') > -1)
+				return true;
+		};
+		dragresize.isHandle = function(elm) {
+			if (elm.className && elm.className.indexOf('MoveBox') > -1)
+				return true;
+		};
+		dragresize.ondragfocus = function() {
+		};
+		dragresize.ondragstart = function(isResize) {
+		};
+		dragresize.ondragmove = function(isResize) {
+		};
+		dragresize.ondragend = function(isResize) {
+		};
+		dragresize.ondragblur = function() {
+		};
+		dragresize.apply(document);
+	</script>
+</body>
+</html>

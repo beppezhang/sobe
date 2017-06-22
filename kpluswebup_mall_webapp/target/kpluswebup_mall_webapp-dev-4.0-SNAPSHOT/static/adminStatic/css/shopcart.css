@@ -1,0 +1,106 @@
+/* CSS Document */
+#processBar{ border-bottom:1px solid #f2f2f2; height:83px; padding-top:23px;}
+.probar{ width:648px; height:63px; float:right;}
+.probar span{ float:left; width:25%; height:63px; background:url(../images/shopcart_bimg.png) no-repeat;}
+.probar span#p1{ background-position:0 0;}
+.probar span#p2{ background-position:-160px 0;}
+.probar span#p3{ background-position:-320px 0;}
+.probar span#p4{ background-position:-480px 0;}
+
+.probar span#p1.on{ background-position:0 -64px;}
+.probar span#p2.on{ background-position:-160px -64px;}
+.probar span#p3.on{ background-position:-320px -64px;}
+.probar span#p4.on{ background-position:-480px -64px;}
+
+.cp{ font-size:24px; line-height:28px; color:#555}
+
+.shopcartList table{ width:100%;border-collapse:collapse; border:1px solid #ddd; border-bottom:2px solid #aaa;border-top:2px solid #aaa;}
+.shopcartList th,.shopcartList td{border-bottom:1px solid #ddd;}
+.shopcartList th{ background:#f9f9f9; line-height:36px; text-align:center;}
+.shopcartList td.origin{ background:#daf0fe; padding:5px 8px; color:#333; font-weight:bold;}
+.shopcartList td.advices{ background:#fff; padding:5px 15px; color:#666}
+.shopcartList td.settleBar{ background:#f9f9f9; text-align:right; font-size:16px; padding:10px 20px; line-height:30px;}
+.shopcartList td.ckBox{ width:50px; text-align:center;}
+.tdUnit{ background:#fffdee}
+.tdUnit td,.orderTd td{ padding:10px 0;}
+.shopcartList td.pInfo{ width:525px;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;}
+.shopcartList td.pInfo .pimg{ width:40px; height:40px; border:1px solid #fffdee; margin:0 10px; vertical-align:middle;}
+.shopcartList a{ color:#333;}
+.shopcartList a.col01{ color:#41a8f7;}
+.shopcartList a:hover{ color:#ff500b}
+.shopcartList td.pInfo a:hover .pimg{ border:1px dashed #ff500b}
+#totalPrices{ font:24px/30px Arial, Helvetica, sans-serif; color:#d93600}
+
+.shopcartList td.advices .ipt{ height:30px; border:1px solid #eee; width:400px; padding:0 5px; line-height:30px;}
+
+a.subbtn,a.addbtn{overflow:hidden; height:16px; display:inline-block; text-align:center; width:16px; border:1px solid #ddd; vertical-align:middle}
+a.subbtn{ background:#fff url(../images/ico-sub.png) center center no-repeat;}
+a.addbtn{ background:#fff url(../images/ico-add.png) center center no-repeat;}
+.unitNum{ line-height:26px;color:#111; border:1px solid #ccc; height:26px; width:26px; display:inline-block; vertical-align:middle; margin:0 5px; background:#fff;}
+
+a.goEditLink,a.goLink,.saveLink,.skipLink{ background:#40a8f7; padding:0 25px; color:#fff; font:14px/40px Microsoft YaHei,SimSun; display:inline-block}
+a.goEditLink{background:#40a8f7 url(../images/ico-edit.png) 10px center no-repeat; padding:0 15px 0 30px;}
+a.saveLink{ background:#da4f49; color:#fff;}
+a.skipLink{ background:#f2f2f2; border:1px solid #d3d3d3; margin:0 10px; font-size:14px; color:#333;}
+a.skipLink:hover{ color:#ff500b}
+
+.guessbox{ border:1px solid #eee;}
+.guessbox .ttbar{ border-bottom:1px solid #eee; line-height:36px; padding:0 18px;}
+
+.hotPic{ width:100%; position:relative;}
+.slide-nav{ display:none;}
+.slide-nav a{ width:40px; height:40px;border-radius:50%; text-align:center; display:inline-block; color:#e2e2e3;position:absolute; z-index:3; top:40%; font:40px/40px Arial, Helvetica, sans-serif;}
+.slide-nav a.next{ right:10px;}
+.slide-nav a.prev{ left:10px;}
+.slide-wrap{overflow:hidden;position:relative; width:100%; height:290px;}
+
+.img_list01{ margin:20px;}
+.img_list01 li{ float:left;width:240px; padding:0 25px;}
+.img_list01 li .pimg{ width:180px; height:180px;}
+.img_list01 li h4{ width:100%; margin-top:10px;}
+.img_list01 li p{ margin-bottom:10px;}
+.img_list01 li del{ margin-left:10px;}
+
+.ordbox,.noAddr{ border:1px solid #eee; padding:15px 20px; color:#777}
+.ordbox.notop{ border-top:0;}
+.ordbox h2{ color:#333;}
+.phone{ padding-left:15px; background:url(../images/ico-phone2.png) left center no-repeat;}
+
+.noAddr{ border:3px solid #40a8f7; background:#fefcf2; color:#534535; display: none;}
+.noAddr dl{ padding:5px 0;}
+.noAddr dt{ text-align:right; width:150px;}
+.noAddr dt,.noAddr dd{ float:left;  line-height:26px;}
+.noAddr dt em{ font-family:Verdana, Geneva, sans-serif; vertical-align:middle}
+.noAddr select{height:24px; width:110px; border:1px solid #ccc; margin-right:10px;}
+
+.ipt,.ipt2,.ipt3{ height:24px; border:1px solid #ccc; background:#fff;}
+.ipt { width:108px;}
+.ipt2{ width:208px}
+.ipt3{ width:508px}
+
+#payway{ margin:10px 0;}
+#payway li{float:left; display:inline; margin-right:20px; cursor:pointer;}
+#payway li img{ border-radius:3px; border:1px solid #ddd; vertical-align:top}
+#payway li:hover img{opacity:.90;-moz-opacity:.90;filter:alpha(opacity = 90);border:1px dashed #fe7d29;}
+#payway li.cur img{ border:2px solid #fe7d29; margin-top:-1px;}
+
+.status{ width:700px; margin:0 auto;}
+.status .tt{ font:24px/48px Microsoft YaHei,SimSun; text-align:center;}
+.status .tt img{ margin-right:20px;}
+
+.status ul,.status dl{ padding:0 30px;}
+.status ul li{ line-height:30px;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;}
+.status dt .pimg{ width:75px; height:75px;}
+.status dt,.status dd{ float:left;}
+.status dd.name{ width:220px; margin:0 20px;}
+
+label.error{margin-left: 10px; color: red;}
+
+.paywayList li{ margin-top:18px; display:block}
+.paywayList li label,.paywayList li img,.paywayList li span{ vertical-align:middle;}
+.paywayList li label,.paywayList li span{display:inline-block; height:45px; padding:3px 20px; overflow:hidden;}
+.paywayList li label{ border:1px solid #d3d3d3;  margin-right:30px; font-size:24px; line-height:45px; color:#777}
+.paywayList li span{border:1px solid #bbe6ff; background:#daf0fe; line-height:45px; color:#777;}
+.paywayList li span em{ margin-right:20px;}
+.paywayList li span em b{ color:#333;}
+.paywayList li.cur label{ border:1px solid #27a9e3; color:#27a9e3}

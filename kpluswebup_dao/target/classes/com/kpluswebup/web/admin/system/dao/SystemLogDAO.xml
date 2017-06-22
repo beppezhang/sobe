@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.SystemLogDAO">
+
+	<select id="findSystemLogByPagination" parameterType="systemLogDTO"
+		resultType="systemLogVO">
+		select * from
+		kplus_system_log order by id desc limit
+		#{startRow},#{pageSize}
+	</select>
+
+	<select id="findSystemLogCount" parameterType="systemLogDTO"
+		resultType="java.lang.Long">
+		select count(id) from kplus_system_log
+	</select>
+
+	<insert id="insertSystemLog" parameterType="systemLogDTO">
+		INSERT INTO kplus_system_log(
+		operation,
+		IP,
+		USER,
+		memo,
+		STATUS,
+		logTime
+		)
+		VALUES
+		(
+		#{operation},
+		#{IP},
+		#{user},
+		#{memo},
+		#{status},
+		now()
+		)
+
+	</insert>
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.TransConfigDAO">
+
+	<select id="findTransConfig" resultType="transConfigVO">
+		select * from
+		kplus_transConfig
+	</select>
+
+	<insert id="insertTransConfig" parameterType="transConfigDTO">
+		insert into
+		kplus_transConfig(
+		mainID,
+		decimalPlace,
+		productPicURL,
+		orderShowDay,
+		orderCancelDay,
+		orderCloseDay,
+		deliveryProcessActive,
+		ipLimitedActive,
+		balancePaymentActive,
+		balancePaymentURL,
+		codActive,
+		codURL,
+		scorePrice,
+		isRegister,
+		createTime,
+		creator
+		)
+		values
+		(
+		#{mainID},
+		#{decimalPlace},
+		#{productPicURL},
+		#{orderShowDay},
+		#{orderCancelDay},
+		#{orderCloseDay},
+		#{deliveryProcessActive},
+		#{ipLimitedActive},
+		#{balancePaymentActive},
+		#{balancePaymentURL},
+		#{codActive},
+		#{codURL},
+		#{scorePrice},
+		#{isRegister},
+		now(),
+		#{creator}
+		)
+	</insert>
+
+	<update id="updateTransConfig" parameterType="transConfigDTO">
+		update kplus_transConfig
+		<set>
+			modifyTime=now()
+			<if test="decimalPlace!=null">
+				,decimalPlace=#{decimalPlace}
+			</if>
+			<if test="productPicURL!=null">
+				,productPicURL=#{productPicURL}
+			</if>
+			<if test="orderShowDay!=null">
+				,orderShowDay=#{orderShowDay}
+			</if>
+			<if test="orderCancelDay!=null">
+				,orderCancelDay=#{orderCancelDay}
+			</if>
+			<if test="orderCloseDay!=null">
+				,orderCloseDay=#{orderCloseDay}
+			</if>
+			<if test="deliveryProcessActive!=null">
+				,deliveryProcessActive=#{deliveryProcessActive}
+			</if>
+			<if test="ipLimitedActive!=null">
+				,ipLimitedActive=#{ipLimitedActive}
+			</if>
+			<if test="balancePaymentActive!=null">
+				,balancePaymentActive=#{balancePaymentActive}
+			</if>
+			<if test="balancePaymentURL!=null">
+				,balancePaymentURL=#{balancePaymentURL}
+			</if>
+			<if test="codActive!=null">
+				,codActive=#{codActive}
+			</if>
+			<if test="codURL!=null">
+				,codURL=#{codURL}
+			</if>
+			<if test="scorePrice!=null">
+				,scorePrice=#{scorePrice}
+			</if>
+			<if test="isRegister!=null">
+				,isRegister=#{isRegister}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+</mapper>

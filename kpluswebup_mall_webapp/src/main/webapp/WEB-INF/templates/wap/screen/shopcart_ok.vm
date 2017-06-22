@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+<title>购买成功</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+<div class="wrap">
+    <div class="shop-success">
+        <h2>恭喜你已经成功购买商品</h2>
+        <p>收货地址:  浙江省舟山市定海区定海上塘路268号西湖海创园3-4-202</p>
+        <p>预计 2014-12-30 送达 </p>
+        <div class="btn"><button>查看订单</button><button class="goback">返回首页</button></div>
+    </div>
+</div>
+</body>
+</html>

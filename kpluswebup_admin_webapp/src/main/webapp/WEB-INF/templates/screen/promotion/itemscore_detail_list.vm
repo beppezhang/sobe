@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品积分明细</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》商品积分》商品积分明细</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/promotion/itemScoreDetailList.htm?itemScoreID=$!itemScoreID">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!itemScoreDetailDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!itemScoreDetailDTO.pageSize">
+					<div class="tableTool">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">编号：</span><input type="text"
+								name="detailID" class="cText" value="$!itemScoreDetailDTO.mainID" /></td>
+								<td rowspan="3">
+									#if($!menuUtil.isExistMenu("/admin/promotion/itemScoreDetailList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+		<div>
+		</div>
+		<div class="tableListBar">
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td>编号</td>
+						<td>二维码</td>
+						<td>是否扫码</td>
+						<td>会员</td>
+						<td>扫码时间</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!itemscoredetail in $!itemScoreDetailList)
+					<tr>
+						<td>$!itemscoredetail.mainID</td>
+						<td><img alt="" style="width: 60px; height: 60px;"
+							src="$!{domain}/$!itemscoredetail.qrCodeUrl"></td>
+						<td>#if("$!itemscoredetail.isQrcode"=="0")否#else是#end</td>
+						<td>$!itemscoredetail.customerName</td>
+						<td>$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!itemscoredetail.modifyTime)</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!itemScoreDetailDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

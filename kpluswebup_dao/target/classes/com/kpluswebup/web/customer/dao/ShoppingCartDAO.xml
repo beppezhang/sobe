@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.ShoppingCartDAO">
+
+
+	<sql id="Base_Column_List">
+		id,customerID, productID,itemID,itemCount,
+		isPromotion,type,
+		creator, createTime, modifier, modifyTime,supplierID,supplierName
+	</sql>
+
+	<select id="findShoppingCart" parameterType="java.lang.String"
+		resultType="shoppingCartVO">
+		SELECT
+		s.id,
+		s.customerID,
+		s.productID,
+		s.supplierID,
+		su.companyName AS supplierName,
+		s.itemID,
+		s.itemCount,
+		s.type,
+		i.`name` AS itemName,
+		i.picURL AS itemPicUrl,
+		i.standrardPrice,
+		i.salesPrice,
+		i.salesScore,
+		i.score,
+		i.scorePrice,
+		i.stock
+		FROM
+		kplus_shoppingcart s
+		LEFT JOIN kplus_item i ON s.itemID =
+		i.mainID
+		LEFT JOIN kplus_zy_supplier su ON s.supplierID = 
+		su.mainID
+		WHERE
+		customerID = #{customerID}
+		AND i.isDelete = 0
+		ORDER
+		BY
+		s.modifyTime DESC,
+		s.createTime DESC
+	</select>
+
+	<insert id="insertShoppingCart" useGeneratedKeys="true" keyProperty="id"  parameterType="shoppingCartDTO">
+		insert into
+		kplus_shoppingcart(
+		customerID,
+		productID,
+		itemID,
+		itemCount,
+		isPromotion,
+		type,
+		supplierID,
+		createTime,
+		modifyTime,
+		supplierName
+		)values(
+		#{customerID},
+		#{productID},
+		#{itemID},
+		#{itemCount},
+		#{isPromotion},
+		#{type},
+		#{supplierID},
+		now(),
+		now(),
+		#{supplierName}
+		)
+	</insert>
+
+	<select id="findShoppingCartByCustomerItem" parameterType="shoppingCartDTO"
+		resultType="shoppingCartVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_shoppingcart s where s.itemID=#{itemID} and
+		s.customerID=#{customerID} and s.type=#{type}
+		and s.supplierID=#{supplierID}
+	</select>
+
+	<select id="findShoppingCartByID" parameterType="java.lang.Long"
+		resultType="shoppingCartVO">
+		SELECT
+			s.id,
+			s.customerID,
+			s.productID,
+			s.supplierID,
+			s.itemID,
+			s.itemCount,
+			s.type,
+			s.supplierName,
+			i.`name` AS itemName,
+			i.picURL AS itemPicUrl,
+			i.standrardPrice,
+			i.salesPrice,
+			i.salesScore,
+			i.score,
+			i.scorePrice,
+			i.stock
+		FROM
+			kplus_shoppingcart s
+		LEFT JOIN kplus_item i ON s.itemID = i.mainID
+	 	LEFT JOIN kplus_product p ON p.mainID = s.productID
+		WHERE
+			s.id = #{id}
+		AND p.isDelete = 0
+		AND p.`status` = 1
+		AND i.isDelete = 0
+		limit 1
+	</select>
+
+
+	<update id="updateShoppingCart" parameterType="shoppingCartDTO">
+		update kplus_shoppingcart
+		<set>
+			modifyTime=now()
+			<if test="itemCount!=null">
+				,itemCount=#{itemCount}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<delete id="delShoppingCartByID" parameterType="java.lang.Long">
+		delete from
+		kplus_shoppingcart where id=#{id}
+	</delete>
+
+	<delete id="delShoppingCartAll" parameterType="java.lang.String">
+		delete from
+		kplus_shoppingcart where customerID=#{customerID}
+	</delete>
+
+</mapper>

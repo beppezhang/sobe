@@ -1,0 +1,40 @@
+<div id="header">
+	<div class="layout clearfix">
+    	<!-- <h1 class="lt">黑虎网</h1>
+        <span class="mintt lt">商家中心</span> -->
+        <img style="padding-top:10px;" src="$!{mallStatic}/images/logoShop.png">
+        <!-- <span class="sipt lt">
+        	<input id="ppname" name="" type="text" class="ipt" placeholder="商城商品搜索"><input id="sear" name="" type="button" class="sbtn">
+        </span> -->
+        #if("$!{supplier.userName}" != "")
+        <div class="iBox">
+            <img src="$!{mallStatic}/images/s-default.png" class="pimg">
+            <div class="lt">
+                <p class="name">当前用户</p>
+                <p>$!{supplier.userName}</p>
+            </div>
+            <!--
+            <p class="tools"><a href="supplierCenter.htm"><img src="$!{mallStatic}/images/ico-home2.gif"></a> <a href="accountInfo.htm"><img src="$!{mallStatic}/images/ico-tool.gif"></a> <a href="$!domain/mall/supplier/logout.htm"><img src="$!{mallStatic}/images/ico-exit2.gif"></a></p>
+            -->
+            <p class="tools"><a href="supplierCenter.htm" ><img title="商家中心" src="$!{mallStatic}/images/ico-home2.gif" ></a> <a title="设置" href="accountInfo.htm" class="tooltip" class="tooltip"><img src="$!{mallStatic}/images/ico-tool.gif" class="tooltip"></a> <a href="$!domain/mall/supplier/logout.htm" class="tooltip"><img title="退出" src="$!{mallStatic}/images/ico-exit2.gif" class="tooltip" ></a></p> 
+        </div>
+        #end
+    </div>
+</div>
+<!--  <script src="${mallStatic}/js/jquery-1.9.1.js" type="text/javascript"></script> 
+<script type="text/javascript" src="${mallStatic}/js/jquery-1.8.3.min.js"></script> -->
+<!-- <script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script> -->
+<script>
+    // jQuery("#sear").click(
+    //     function(){
+    //        var productType = $("#productType").val();
+    //         if(undefined==productType){
+    //             productType='';
+    //         }
+    //         if(typeof(productType) == "undefined"){
+    //             productType='';
+    //         }
+    //         location.href="$!{domain}/mall/product/searchProductList.htm?productType="+productType+"&name="+$("#ppname").val();
+    //     }       
+    // )
+</script>

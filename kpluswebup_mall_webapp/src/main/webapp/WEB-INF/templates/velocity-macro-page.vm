@@ -1,0 +1,36 @@
+#macro( pagination $obejct )
+
+            
+         <div class="pagerbar">
+            	<a href="#">上一页</a>
+                <a href="#" class="cur">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">...</a>
+                <a href="#">下一页</a>
+                共10页 到<input name="" type="text" class="num">页 <input name="" type="button" value="确定" class="go">
+            </div>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>          
+<script type="text/javascript">
+
+jQuery(function() {
+jQuery(".pagerbar").pager({
+		pagenumber : $obejct.pageNo,
+		pagecount : $obejct.pageCount,
+		buttonClickCallback : PageClick
+	});
+})
+PageClick = function(pageclickednumber) {
+	jQuery(".pagerbar").pager({
+		pagenumber : pageclickednumber,
+		pagecount : $obejct.pageCount,
+		buttonClickCallback : PageClick
+	})
+	jQuery("#pageNo").val(pageclickednumber);
+	jQuery("#serachform").submit();
+	jQuery("#serach").submit();
+	jQuery("#seach").submit();
+}
+</script>
+#end

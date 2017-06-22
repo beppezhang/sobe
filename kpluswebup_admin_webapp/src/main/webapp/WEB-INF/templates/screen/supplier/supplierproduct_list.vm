@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+		        <em class="icon iconMenu2"></em><a href="productList.htm">产品管理</a> &gt; <span>商品列表</span>
+		</div>
+		<div class="searchBar">
+
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/product/itemListUnderProduct.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!productDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!productDTO.pageSize">
+				<input type="hidden" id="searchProductId" name="searchProductId"
+					value="$!searchProductId">
+				<table class="searchTable">
+					<tbody>
+						<tr>
+							<td><span class="grayF"> 商品编号：</span><input type="text"
+								name="searchItemCode" id="searchItemCode" class="cText" value="$!supplierItemDTO.itemCode" /></td>
+							<td><span class="grayF"> 商品名称：</span><input type="text"
+								name="searchItemName" id="searchItemName" class="cText" value="$!supplierItemDTO.itemName" /></td>
+							<td><span class="grayF">供应商名称：</span><input type="text"
+								name="supplierName" id="supplierName" class="cText" value="$!supplierItemDTO.supplierName" /></td>
+							<!-- <td><span class="grayF"> 产品编号：</span><input type="text"
+								name="searchProductId" class="cText" value="$!supplierItemDTO.productID" /></td>-->
+							<!--<td><span class="grayF">产品名称：</span><input type="text"
+								name="searchProductName" class="cText" value="$!supplierItemDTO.productName" /></td>--> 
+							<!-- <td><span class="grayF"> 状态：</span> <select  class="select"
+								name="status" id="status">
+									<option value="">全部</option>
+									<option value="1" #if("$!supplierItemDTO.status"==
+										"1")  selected #end>审核通过</option>
+									<option value="0" #if("$!supplierItemDTO.status"==
+										"0")  selected #end>审核不通过</option>
+							</select></td> -->
+							<td rowspan="3">
+								#if($!menuUtil.isExistMenu("/admin/product/itemListUnderProduct.htm",$!menuAllList))
+								<input class="searchBtn" type="button" value="查询"
+								onclick="userSearch(1)" />#end 
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<div class="tableListBar">
+			<!--<div class="tableTool">
+			#if($!menuUtil.isExistMenu("/admin/product/updateSupplierItemStatus.do",$!menuAllList))
+				<a id="batchConfirm" title="审核通过" href="javascript:;"><em class="icon iconAffirm"></em></a>#end
+			#if($!menuUtil.isExistMenu("/admin/supplier/exportSupplierItem.do",$!menuAllList)
+					) <a href="javascript:;" title="导出" id="exportSupplierItem"><em
+					class="icon iconExport"></em></a> #end	
+			</div>-->
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<!--<td><label class="label"> <input type="checkbox"
+								value="" id="all" /></label></td>-->
+						<td>No.</td>
+						<td>商品编号</td>
+						<td style="width: 28%">商品名称</td>
+						<td>商品价格（元）</td>
+						<td style="width: 15%">供应商名称</td>
+						<!--<td>物流模板编号</td>-->
+						<!-- <td>产品名称</td>
+						<td>产品编号</td> -->
+						<!--<td>库存</td>-->
+						<!--<td>修改时间</td>-->
+						<!-- <td>审核状态</td> -->
+						<!-- <td>操作</td> -->
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach( $!supplierItemVO in $!supplierItemList)
+					<tr>
+						<!--<td><label class="label"> <input class="itemCheck" type="checkbox"
+								value="$!supplierItemVO.mainID" id="check_box_$!supplierItemVO.mainID" /></label></td>-->
+						 <td>$velocityCount</td>
+						<td>$!supplierItemVO.itemCode</td>
+						<td  style="width: 210px">$!supplierItemVO.itemName</td>
+						<td>￥$!supplierItemVO.salesPrice</td>
+						 <td>$!supplierItemVO.supplierName</td>
+						<!--<td  style="width: 210px">#if($!menuUtil.isExistMenu("/admin/product/productDetail.htm",$!menuAllList))
+							<a
+							href="$!{domain}/admin/product/productDetail.htm?mainID=$!supplierItemVO.productID">$!supplierItemVO.productName</a>#end</td>
+						<td>
+							#if($!menuUtil.isExistMenu("/admin/product/productDetail.htm",$!menuAllList))
+							<a
+							href="$!{domain}/admin/product/productDetail.htm?mainID=$!supplierItemVO.productID">$!supplierItemVO.productID</a>
+							#end</td> -->
+						<!--<td>$!supplierItemVO.stock</td>-->
+						<!--<td>$!date.format('yyyy-MM-dd HH:mm:ss',$!supplierItemVO.modifyTime)</td>-->
+						<!-- <td>#if("$!supplierItemVO.status"=="1")审核通过 #end
+							#if("$!supplierItemVO.status"=="0") 未审核#end
+							#if("$!supplierItemVO.status"=="2") 审核未通过#end</td> -->
+						
+						<!--<td class="last">-->
+							<!-- #if($!menuUtil.isExistMenu("/admin/product/updateSupplierItemStatus.do",$!menuAllList)
+							) 
+							#if("$!supplierItemVO.status"=="0")
+							<a href="javascript:;"
+							onclick="updateSupplierItemStatus('$!supplierItemVO.mainID','1')"
+							title="审核通过">通过</a> 
+							 <a href="javascript:;"
+							onclick="updateSupplierItemStatus('$!supplierItemVO.mainID','2')"
+							title="审核不通过">拒绝</a>
+							#end
+							#if("$!supplierItemVO.status"=="2")
+							<a href="javascript:;"
+							onclick="updateSupplierItemStatus('$!supplierItemVO.mainID','1')"
+							title="审核通过">通过</a> 
+							#end
+							#if("$!supplierItemVO.status"=="1")
+							 <a href="javascript:;"
+							onclick="updateSupplierItemStatus('$!supplierItemVO.mainID','2')"
+							title="审核不通过">拒绝</a>
+							#end
+							#end -->
+							<!-- #if($!menuUtil.isExistMenu("/admin/product/deleteSupplierItem.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconDel"
+							onclick="deleteSupplierItem('$!{supplierItemVO.mainID}')" title="删除"></a> #end -->
+						<!--</td>-->
+						
+					</tr>
+					#end 
+					#pagination($!supplierItemDTO)
+				</tbody>
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+<script type="text/javascript">
+	$(function(){
+		$("#batchConfirm").click(function(){
+			if (!confirm("确认要批量审核选中商品吗")) {
+				return;
+			}
+			var arr = [];
+			$(".itemCheck:checked").each(function(){
+				arr.push(this.value);
+			})
+			if(arr.length == 0){
+				alert("请选择");
+				return;
+			}
+			jQuery.ajax({
+				url: 'ajaxBatchConfirmSupplierItem.do',
+				type: 'POST',
+				dataType: 'text',
+				data: {
+					ids: arr.join(",")
+				},
+				success: function(data){
+					if (data == 0) {
+						location.reload(true);
+					}
+				}
+			})
+
+		})
+	})
+</script>
+</body>
+</html>

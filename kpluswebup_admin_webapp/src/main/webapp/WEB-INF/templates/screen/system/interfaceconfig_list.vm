@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>支付接口</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》接口管理》支付接口</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/interfaceconfig_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+						<div class="tableTool">
+							<a href="javascript:;" title="全选" id="selectAll"><em
+								class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+								id="unSelect"><em class="icon iconInverse"></em></a>
+							#if($!menuUtil.isExistMenu("/admin/system/changeInterfaceConfigActive.do",$!menuAllList)
+							) <a href="javascript:;" title="启用" id="openInterfaceConfigAll"><em class="icon iconEnabled"></em></a>
+							#end
+							#if($!menuUtil.isExistMenu("/admin/system/changeInterfaceConfigActive.do",$!menuAllList)
+							) <a href="javascript:;" title="停用" id="closeInterfaceConfigAll"><em class="icon iconEnd"></em></a>
+							#end
+							#if($!menuUtil.isExistMenu("/admin/system/deleteInterfaceConfig.do",$!menuAllList)
+							) <a href="javascript:;" title="删除" id="deleteInterfaceConfigAll"><em
+								class="icon iconDel"></em></a> #end
+							#if($!menuUtil.isExistMenu("/admin/system/addInterfaceConfigPage.htm",$!menuAllList)
+							) <a href="$!{domain}/admin/system/addInterfaceConfigPage.htm" class="TableAddBtn" 
+								title="新增支付">+新增支付</a>#end
+						</div>
+						<form id="serachform" name="serachform" method="post"
+							action="$!{domain}/admin/system/interfaceconfigList.htm">
+							<input type="hidden" id="pageNo" name="pageNo"
+								value="$!interfaceConfigDTO.pageNo"> <input
+								type="hidden" id="pageSize" name="pageSize"
+								value="$!interfaceConfigDTO.pageSize">
+						</form>
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td><label class="label"><input type="checkbox"
+											value="" id="all" /></label></td>
+									<td>支付名称</td>
+									<td>系统接口</td>
+									<td>排序</td>
+									<td>状态</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!interfaceconfig in $!interfaceconfigList)
+								<tr>
+									<td><label class="label"><input type="checkbox"
+											value="$!interfaceconfig.mainID"
+											id="check_box_$!interfaceconfig.mainID" /></label></td>
+									<td>$!interfaceconfig.name</td>
+									<td>$!interfaceconfig.systemName</td>
+									<td>$!interfaceconfig.sortOrder</td>
+									<td>#if("$!interfaceconfig.active"=="0")未启用#elseif("$!interfaceconfig.active"=="1")已启用#end</td>
+									<td class="last">#if("$!interfaceconfig.active"=="0")
+										#if($!menuUtil.isExistMenu("/admin/system/changeInterfaceConfigActive.do",$!menuAllList)
+										) <a href="javascript:;" title="启用" class="icon iconEnabled"
+										onclick="changeInterfaceConfigActive('$!interfaceconfig.mainID','1')"></a>
+										#end &nbsp; #end #if("$!interfaceconfig.active"=="1")
+										#if($!menuUtil.isExistMenu("/admin/system/changeInterfaceConfigActive.do",$!menuAllList)
+										) <a href="javascript:;" title="停用" class="icon iconEnd"
+										onclick="changeInterfaceConfigActive('$!interfaceconfig.mainID','0')"></a>
+										#end #end
+										#if($!menuUtil.isExistMenu("/admin/system/editInterfaceConfigPage.htm",$!menuAllList)
+										) <a class="icon iconEdit"
+										href="$!{domain}/admin/system/editInterfaceConfigPage.htm?mainID=$!interfaceconfig.mainID"
+										title="编辑"></a> #end &nbsp;
+										#if($!menuUtil.isExistMenu("/admin/system/deleteInterfaceConfig.do",$!menuAllList)
+										) <a href="javascript:;" class="icon iconDel"
+										onclick="deleteInterfaceConfig('$!interfaceconfig.mainID')"
+										title="删除"></a>#end
+									</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!interfaceConfigDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".interfaceconfig_menu_1").append(
+					"<em class='icon arrowLfWeight'></em>").find("a").addClass(
+					"hover");
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!doctype html>
+<html>
+<head>
+<title>购物车</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+<style>
+.payway p input{ display:none;}
+</style>
+</head>
+<body>
+	#parse("wap/layout/head_sider.vm")
+	<div class="sc_body">
+	<div class="addrlist">
+    	<ul>
+        	<li class="sp">
+        		#if("$!address"!="")
+        		<a href="$!domain/weixin/userselectAddr.htm?ids=$!ids&itemID=$!itemID&type=$!type" class="all_link">
+	            	<img src="$!domain/wap/img/ico-addr.png" class="pimg">
+	            	<p class="txt_r"><strong class="lt f14">收件人：$!address.name</strong> $!address.mobile</p>
+	                <p>$!address.provinceName$!address.cityName$!address.districtName$!address.address</p>
+                </a>
+                #else
+                 <li class="sp">
+            		<a href="$!domain/weixin/userselectAddr.htm?ids=$!ids&itemID=$!itemID&type=$!type" class="ct f14 all_link" style="line-height:50px;display:block;">请添加收货地址</a>
+            	</li>
+                #end
+            </li>
+        </ul>
+       
+    </div>
+    #if("$!list"!="")
+    #foreach($!li in $!list)
+	    <div class="indent">
+	   	    <div class="goods_view">
+	        	<a href="javascript:;"><img src="$!imgurl/$!li.itemPicUrl" class="pimg"></a>
+	            <h1><a href="javascript:;">$!li.itemName</a></h1>
+	           <p class="txt_r"><em class="lt">数量：最多购买5件</em> 
+	           	<span class="number_control"><a class="prev" href="javascript:;">
+	           	</a>
+	           	<input class="nb" type="text" value="$!li.itemCount">
+	           	<a class="next" href="javascript:;"></a></span></p>
+	            <p class="txt_r"><input class="cartid" type="hidden" value="$!li.id">
+	            <em class="lt">库存：<em id="stock">$!li.stock</em>件</em>小计：
+	            #if("$!li.type"=="1")
+	            	￥<em class="price">$!NumberTool.format("#0.00",$!li.allamount)</em>
+	            	<input type="hidden" class="hprice" value="$!NumberTool.format('#0.00',$!li.salesPrice)">
+            		<input type="hidden" class="hjf" value="0">
+	            #elseif("$!li.type"=="2")
+	            	<em class="jf">$!li.allscore</em>
+	            	<input type="hidden" class="hprice" value="0.00">
+            		<input type="hidden" class="hjf" value="$!li.score">
+	            #else
+	            	￥<em class="price">$!NumberTool.format("#0.00",$!li.allamount)</em>+<em class="jf">$!li.allscore</em>
+	            	<input type="hidden" class="hprice" value="$!NumberTool.format('#0.00',$!li.scorePrice)">
+            		<input type="hidden" class="hjf" value="$!li.salesScore">
+	            #end
+	            
+	            </p>
+	        </div>
+	    </div>
+    #end
+    #else
+    	<div class="indent">
+   	    <div class="goods_view">
+        	<a href="javascript:;"><img src="$!imgurl/$!item.picURL" class="pimg"></a>
+            <h1><a href="#">$!item.name</a></h1>
+           <p class="txt_r"><em class="lt">数量：最多购买5件</em> 
+           	<span class="number_control"><a class="prev" href="javascript:;"></a><input class="nb" id="icount"  type="text" value="1"><a class="next" href="javascript:;"></a></span></p>
+            <p class="txt_r"><em class="lt">库存：<em id="stock">$!item.stock</em>件</em>小计：
+            	#if("$!item.type"=="1")
+            	￥<em class="price">$!NumberTool.format("#0.00",$!item.salesPrice)</em>
+            	<input type="hidden" class="hprice" value="$!NumberTool.format('#0.00',$!item.salesPrice)">
+            	<input type="hidden" class="hjf" value="0">
+            	#elseif("$!item.type"=="2")
+            	<em class="jf">$!item.score</em>
+            	<input type="hidden" class="hprice" value="0.00">
+            	<input type="hidden" class="hjf" value="$!item.score">
+            	#else
+            	￥<em class="price">$!NumberTool.format("#0.00",$!item.scorePrice)</em>+<em class="jf">$!item.salesScore</em>
+            	<input type="hidden" class="hprice" value="$!NumberTool.format('#0.00',$!item.scorePrice)">
+            	<input type="hidden" class="hjf" value="$!item.salesScore">
+            	#end
+            	</p>
+        </div>
+    </div>
+    #end
+  <div class="totalbar f14">
+    	总价<em class="double"> ： ￥<em class="col01">1929.00</em></em><em class="add">+</em><em class="jf"></em>
+    </div>
+    <div class="payway">
+    	<h3 class="titbar02">选择支付方式</h3>
+        <p class="cur" ><label for="pay1" class="clearfix"><span class="lt"><input checked="checked" name="payment" type="radio" value="1" id="pay1"><img src="$!domain/wap/img/ico-alipay.png">支付宝</span><i></i></label></p>
+        <p><label for="pay3" class="clearfix"><span class="lt"><input name="payment" type="radio" value="2" id="pay3"><img src="$!domain/wap/img/ico-unionpay.png">银联卡</span><i></i></label></p>
+        <p><label for="pay4" class="clearfix"><span class="lt"><input name="payment" type="radio" value="4" id="pay4"><img src="$!domain/wap/img/ico-wechatpay.png">微信支付</span><i></i></label></p>
+    </div>
+</div> 
+<div class="operation clearfix">
+	<span class="lt count">
+        <em class="f14"></em> 总金额<em class="double1">￥<em class="f14 col1">368.00</em></em><em class="add1">+</em><em class="jf"></em>
+    </span>
+	<a href="javascript:gobuy();" id="gobuy" class="gobuy rt">提交订单</a>
+</div>
+<input type="hidden" id="score" value="$!wxuser.score">
+<input type="hidden" id="domain" value="$!domain">
+<form action="$!domain/weixin/userSaveOrder.htm" method="post" class="orderForm">
+	<input id="addressID" type="hidden" value="$!address.id" name="addressID">
+	<input id="cartID" type="hidden" value="$!ids" name="cartIDs">
+	<input id="itemID" type="hidden" value="$!item.mainID" name="itemID">
+	<input id="itemType" type="hidden" value="$!item.type" name="itemType">
+	<input id="payment" type="hidden" name="paymentType" value="1">
+	<input id="orderAmount" type="hidden" name="orderAmount" value="0">
+	<input id="scoreAll" type="hidden" name="scoreAll" value="0">
+	<input id="memo" type="hidden" name="memo" value="xxxx">
+	<input id="itemCount" type="hidden" name="itemCount" value="1">
+</form>
+<script>
+		function gobuy(){
+			if (jQuery("#gobuy").hasClass("off")){
+				return;
+			}
+			var itemID = jQuery("#itemID").val();
+			var cartID = jQuery("#cartID").val();
+			var domain = jQuery("#domain").val();
+			var address = jQuery("#addressID").val();
+			if (address == ""){
+				window.location=domain+'/weixin/userselectAddr.htm?ids='+cartID+'&itemID='+itemID;
+				return;
+			}
+			var payment = jQuery("input[type='radio']:checked").val();
+			var orderAmount = jQuery(".operation .count .col1").text();
+			if ((parseFloat(orderAmount) <= 0) || orderAmount==""){
+				payment = "3";			//总金额为0则为积分支付
+			}
+			jQuery("#payment").val(payment);
+			jQuery("#orderAmount").val(orderAmount);
+			var scoreAll = jQuery(".operation .count .jf").text();
+			jQuery("#scoreAll").val(scoreAll);
+			var itemCount = jQuery("#icount").val();
+			jQuery("#itemCount").val(itemCount);
+			jQuery(".orderForm").submit();
+		}
+		
+		function getCount(){
+			var count = 0.00;
+			var scorecount = 0;
+			jQuery(".goods_view .txt_r .price").each(function (){
+				var price = jQuery(this).text();
+				count = parseFloat(count) + parseFloat(price);
+			});
+			jQuery(".goods_view .txt_r .jf").each(function (){
+				var score = jQuery(this).text();
+				scorecount = parseInt(score) + parseInt(scorecount);
+				jQuery(".operation .count .col1").text("");
+			});
+			if (parseFloat(count)<=0){
+				jQuery(".totalbar .col01").text(parseFloat(count).toFixed(2));
+				jQuery(".totalbar .jf").text(scorecount);
+				jQuery(".operation .count .col1").text(parseFloat(count).toFixed(2));
+				jQuery(".operation .count .jf").text(scorecount);
+				jQuery(".double").hide();
+				jQuery(".double1").hide();
+			}else {
+				jQuery(".totalbar .col01").text(parseFloat(count).toFixed(2));
+				jQuery(".totalbar .jf").text(scorecount);
+				jQuery(".operation .count .col1").text(parseFloat(count).toFixed(2));
+				jQuery(".operation .count .jf").text(scorecount);
+				jQuery(".double").show();
+				jQuery(".double1").show();
+			}
+			
+			if (parseInt(scorecount)==0){
+				jQuery(".totalbar .col01").text(parseFloat(count).toFixed(2));
+				jQuery(".totalbar .jf").text(scorecount);
+				jQuery(".operation .count .col1").text(parseFloat(count).toFixed(2));
+				jQuery(".operation .count .jf").text(scorecount);
+				jQuery(".totalbar .jf").hide();
+				jQuery(".operation .count .jf").hide();
+			}else {
+				jQuery(".totalbar .col01").text(parseFloat(count).toFixed(2));
+				jQuery(".totalbar .jf").text(scorecount);
+				jQuery(".operation .count .col1").text(parseFloat(count).toFixed(2));
+				jQuery(".operation .count .jf").text(scorecount);
+				jQuery(".totalbar .jf").show();
+				jQuery(".operation .count .jf").show();
+			}
+			if (parseInt(scorecount)!=0 && parseFloat(count)>0){
+				jQuery(".add").show();
+				jQuery(".add1").show();
+			}else {
+				jQuery(".add").hide();
+				jQuery(".add1").hide();
+			}
+			
+			var orderAmount = jQuery(".operation .count .col1").text();
+			if (parseFloat(orderAmount) <= 0 || orderAmount == ""){
+				jQuery(".payway").hide();
+			}else {
+				jQuery(".payway").show();
+			}
+		}
+		
+		jQuery(".nb").change(function(){
+			var nb = jQuery(this).val();
+			var jf = jQuery(this).closest("p").next().find(".hjf").val();
+			var price = jQuery(this).closest("p").next().find(".hprice").val();
+			jQuery(this).closest("p").next().find(".jf").text(parseInt(nb)*parseInt(jf));
+			jQuery(this).closest("p").next().find(".price").text((parseFloat(price)*parseFloat(nb)).toFixed(2));
+			getCount();
+			panduan();
+			var cartid = jQuery(this).closest("p").next().find(".cartid").val();
+			if (cartid != null && cartid != "" && cartid != undefined){
+				jQuery.ajax({
+					url : "updateShoppingCart.do",
+					data : {
+						id : cartid,
+						number : nb,
+					},
+					type : "POST",
+					dataType : "json",
+					success : function(data) {
+					},
+					error : function() {
+						alert("系统出错！");
+					}
+				});
+			}
+		}); 
+		
+		function panduan(){
+			var userscore = jQuery("#score").val();
+			var countscore = jQuery(".operation .count .jf").text();
+			if (parseInt(userscore) < parseInt(countscore)){
+				jQuery("#gobuy").addClass("off");
+			} else {
+				jQuery("#gobuy").removeClass("off");
+			}
+		}
+		
+		$(function(){
+			getCount();
+			panduan();
+			//counter
+			$(".number_control").on("click", "a", function(){
+					var _t = $(this);
+					var _v = _t.parent("span").find("input");
+					var _r = _t.hasClass("prev") ? $(this) : $(this).next();
+					if((_t.hasClass("prev") && _v.val() <= 1)||(_t.hasClass("next") && _v.val() >= 5)){ //5为最大购买数
+						return;
+					}
+					_v.val(_t.hasClass("prev") ? parseInt(_v.val()) - 1 : parseInt(_v.val()) + 1);
+					var nb = jQuery(this).closest("p").find(".nb").val();
+					var jf = jQuery(this).closest("p").next().find(".hjf").val();
+					var price = jQuery(this).closest("p").next().find(".hjf").val();
+					jQuery(this).closest("p").next().find(".jf").text(parseInt(nb)*parseInt(jf));
+					jQuery(this).closest("p").next().find(".price").text((parseFloat(price)*parseFloat(nb)).toFixed(2));
+					getCount();
+					panduan();
+					var cartid = jQuery(this).closest("p").next().find(".cartid").val();
+					if (cartid != null && cartid != "" && cartid != undefined){
+						jQuery.ajax({
+							url : "updateShoppingCart.do",
+							data : {
+								id : cartid,
+								number : nb,
+							},
+							type : "POST",
+							dataType : "json",
+							success : function(data) {
+							},
+							error : function() {
+								alert("系统出错！");
+							}
+						});
+					}
+			});	
+			
+		});
+		
+		jQuery(function(){
+			
+			jQuery(".payway p label").click(function(){
+				jQuery(this).closest("p").addClass("cur").siblings("p").removeClass("cur");
+			})	
+		});
+		
+		
+</script>     
+</body>
+</html>

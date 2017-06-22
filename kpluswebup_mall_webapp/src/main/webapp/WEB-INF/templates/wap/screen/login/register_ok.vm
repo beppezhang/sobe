@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>注册成功</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/user.css">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/style/register3.css">
+</head>
+
+<body>
+<!-- 内容 -->
+	<div class="content matter">
+		<div class="ct">
+			<div class="step">
+				<ul>
+					<li>登录名为：$!{username}</li>
+					<li>运营人员会对您的账户进行审核，通过后才能登录平台 请耐心等待</li>
+					<li>您的页面将于 <em id="tz" class="col01">5</em> 秒内自动转到首页...<a href="$!{domain}/weixin/index.htm">返回首页</a></li>
+				</ul>
+			</div>
+		</div>
+	</div> 
+<script type="text/javascript" src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script>
+<script>
+	jQuery(function () {            
+	   setTimeout("skip();", 1000);
+	});
+	function skip() {
+		var sec = $("#tz").text();
+		$("#tz").text(--sec);
+		if (sec > 0)
+			setTimeout("skip();", 1000);
+		else
+			window.location.href = "$!{domain}/weixin/index.htm";
+	}
+ 
+</script>
+</body>
+</html>

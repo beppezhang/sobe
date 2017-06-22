@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.account.dao.FinalstatementDAO">
+
+	<select id="findYesterdayFinalStatement" resultType="finalstatementVO">
+		SELECT
+			o.customerID AS customerID,
+			o.mainID AS orderID,
+			line.supplierID AS supplierID,
+			line.itemID,
+			SUM(o.totalAmount) AS totalAmount,
+			CONCAT(o.mainID, line.supplierID) AS goup
+		FROM
+			kplus_salesorder_line line
+		LEFT JOIN kplus_salesorder o ON line.orderID = o.mainID
+		WHERE
+			o.orderStatus &gt; 4
+		AND o.paymentStatus = 1
+		AND line.isFinalstatemented = 0
+		GROUP BY
+			goup
+	</select>
+	
+	<insert id="addFinalstatement" parameterType="finalstatementDTO">
+		INSERT INTO kplus_zy_finalstatement (
+			mainID,
+			customerID,
+			orderID,
+			totalAmount,
+			`status`,
+			creator,
+			createTime,
+			supplierID
+		)
+		VALUES
+			(
+				#{mainID},
+				#{customerID},
+				#{orderID},
+				#{totalAmount},
+				0,
+				#{creator},
+				NOW(),
+				#{supplierID}
+			)
+		
+	</insert>
+	<insert id="addRSOFFinalstatementAndSaleOrder" parameterType="rSOFFinalstatementAndSaleOrderDTO">
+		INSERT INTO kplus_zy_rs_finalstatement_saleorder (
+			finalstatementID,
+			orderID,
+			totalAmount
+		)
+		VALUES
+			(#{finalstatementID}, #{orderID}, #{totalAmount})
+		
+	</insert>
+	<update id="updateSalesOrderLineIsFinalstatemented" parameterType="finalstatementDTO">
+		UPDATE kplus_salesorder_line
+		SET isFinalstatemented = 1
+		WHERE
+			orderID = #{orderID}
+		AND supplierID = #{supplierID}
+	</update>
+	<select id="findFinalStatementListByPaginateion" parameterType="finalstatementDTO" 
+			resultType="finalstatementVO">
+			SELECT
+				f.mainID,
+				f.totalAmount,
+				f.`status`,
+				f.createTime,
+				f.modifyTime,
+				f.supplierID,
+				s.companyName AS supplierName,
+				o.`name` AS modifier
+			FROM
+				kplus_zy_finalstatement f
+			LEFT JOIN kplus_zy_supplier s ON f.supplierID = s.mainID
+			LEFT JOIN kplus_operator o ON f.modifier = o.mainID
+			WHERE
+				1 = 1
+			<if test="supplierID != null">
+				AND f.supplierID = #{supplierID}
+			</if>
+			<if test="status != null">
+				AND f.status= #{status}
+			</if>
+			<if test="mainID != null">
+				AND f.mainID = #{mainID}
+			</if>
+			<if test="supplierName != null">
+				AND s.companyName LIKE '%${supplierName}%'
+			</if>
+			<if test="modifier != null">
+				AND o.`name` LIKE '%${modifier}%'
+			</if>
+			ORDER BY
+				f.createTime DESC,
+				f.modifyTime DESC
+			LIMIT #{startRow},
+			 #{endRow}
+	</select>
+	<select id="findFinalStatementListCount" parameterType="finalstatementDTO" 
+			resultType="java.lang.Long">
+			SELECT
+				count(f.mainID)
+			FROM
+				kplus_zy_finalstatement f
+			LEFT JOIN kplus_zy_supplier s ON f.supplierID = s.mainID
+			LEFT JOIN kplus_operator o ON f.modifier = o.mainID
+			WHERE
+				1 = 1
+			<if test="supplierID != null">
+				AND f.supplierID = #{supplierID}
+			</if>
+			<if test="status != null">
+				AND f.status = #{status}
+			</if>
+			<if test="mainID != null">
+				AND f.mainID = #{mainID}
+			</if>
+			<if test="supplierName != null">
+				AND s.companyName LIKE '%${supplierName}%'
+			</if>
+			<if test="modifier != null">
+				AND o.`name` LIKE '%${modifier}%'
+			</if>
+	</select>
+	<select id="findFinalStatementByMainID" parameterType="java.lang.String" 
+			resultType="finalstatementVO">
+		SELECT
+			*
+		FROM
+			kplus_zy_finalstatement
+		WHERE
+			mainID = #{finalStatementID}
+	</select>
+	<update id="updateFinalstatementStatus" parameterType="java.lang.String">
+		UPDATE kplus_zy_finalstatement
+		SET `status` = 1,
+		 modifier = #{operatorID},
+		 modifyTime = NOW()
+		WHERE
+			mainID = #{mainID}
+	</update>
+	<select id="findFinalStatementList" parameterType="finalstatementDTO" 
+			resultType="finalstatementVO">
+			SELECT
+				f.mainID,
+				f.totalAmount,
+				f.`status`,
+				f.createTime,
+				f.modifyTime,
+				f.supplierID,
+				s.companyName AS supplierName,
+				o.`name` AS modifier
+			FROM
+				kplus_zy_finalstatement f
+			LEFT JOIN kplus_zy_supplier s ON f.supplierID = s.mainID
+			LEFT JOIN kplus_operator o ON f.modifier = o.mainID
+			WHERE
+				1 = 1
+			<if test="supplierID != null">
+				AND f.supplierID = #{supplierID}
+			</if>
+			<if test="status != null">
+				AND f.`status` = #{status}
+			</if>
+			<if test="mainID != null">
+				AND f.mainID = #{mainID}
+			</if>
+			<if test="supplierName != null">
+				AND s.companyName LIKE '%${supplierName}%'
+			</if>
+			<if test="modifier != null">
+				AND o.`name` LIKE '%${modifier}%'
+			</if>
+			ORDER BY
+				f.createTime DESC,
+				f.modifyTime DESC
+	</select>
+</mapper>

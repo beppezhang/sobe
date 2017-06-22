@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑收货地址</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>会员中心》会员列表》收货地址列表》编辑收货地址</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/member_menu.vm")
+
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/member/editAddress.htm" method="post">
+						<input type="hidden" value="$!{addressVO.id}" name="id"> <input
+							type="hidden" value="$!{addressVO.customerID}" name="customerId">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">姓名：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="name"
+											value="$!{addressVO.name}">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">手机：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="mobile"
+											value="$!{addressVO.mobile}">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">电话：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="telephone"
+											value="$!{addressVO.telephone}">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">地区：</div>
+									<div class="formRow">
+										<select name="provinceId" class="select"
+											onchange="changeProvinceID(this.value)">
+											#foreach($!province in $!provinceList)
+											<option #if("$!addressVO.provinceID"==
+												"$!province.mainID")selected="selected" #end
+												value="$!province.mainID">$!province.name</option> #end
+										</select> &nbsp; <select name="cityId" id="cityid" class="select"
+											onchange="changeCity(this.value)"> #foreach($!city
+											in $!cityList)
+											<option #if("$!addressVO.cityID"==
+												"$!city.mainID")selected="selected" #end
+												value="$!city.mainID">$!city.name</option> #end
+										</select> &nbsp; <select name="districtId" id="districtid"
+											class="select"> #foreach($!district in
+											$!districtList)
+											<option #if("$!addressVO.districtID"==
+												"$!district.mainID")selected="selected" #end
+												value="$!district.mainID">$!district.name</option> #end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">地址：</div>
+									<div class="formRow">
+										<input type="text" name="address"
+											value="$!{addressVO.address}" class="cText cTextLen"
+											style="width: 420%">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">邮编：</div>
+									<div class="formRow">
+										<input type="text" name="zip" value="$!{addressVO.zip}"
+											class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										<input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".member_menu_2").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+	</script>
+	#parse("layout/footer.vm")
+</body>
+</html>

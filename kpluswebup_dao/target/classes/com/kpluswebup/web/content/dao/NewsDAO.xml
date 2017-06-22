@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.content.dao.NewsDAO">
+
+	<select id="findNewsByPagination" parameterType="cmsContentDTO"
+		resultType="cmsContentVO">
+		select * from kplus_cms_content where isDelete=0 and
+		contentType=1 order by
+		sortOrder desc limit #{startRow} ,#{pageSize}
+	</select>
+	<select id="findIndexNewsByNum" resultType="cmsContentVO">
+		SELECT
+			mainID,
+			`name`,
+			publishTime,
+			author
+		FROM
+			kplus_cms_content
+		WHERE
+			isDelete = 0
+		AND contentType = 1
+		LIMIT 1, #{num}
+	</select>
+
+	<select id="findHotNews" parameterType="cmsContentDTO"
+		resultType="cmsContentVO">
+		select * from kplus_cms_content ORDER BY clickCount AND
+		createTime desc limit 0,3
+	</select>
+
+	<select id="findNewsCount" parameterType="cmsContentDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_cms_content where
+		isDelete=0 and contentType=1
+	</select>
+
+	<update id="deleteNewsByMainID" parameterType="cmsContentDTO">
+		update
+		kplus_cms_content set isDelete=1 where
+		mainID=#{mainID}
+	</update>
+
+	<insert id="insertNews" parameterType="cmsContentDTO">
+		insert into
+		kplus_cms_content(
+		mainID,
+		contentType,
+		categoryID,
+		name,
+		author,
+		publishTime,
+		sourceUrl,
+		picUrl,
+		content,
+		clickCount,
+		keyword,
+		sortOrder,
+		isDelete,
+		creator,
+		createTime,
+		subTitle
+		)
+		values(
+		#{mainID},
+		1,
+		#{categoryID},
+		#{name},
+		#{author},
+		#{publishTime},
+		#{sourceUrl},
+		#{picUrl},
+		#{content},
+		0,
+		#{keyword},
+		#{sortOrder},
+		0,
+		#{creator},
+		now(),
+		#{subTitle}
+		)
+	</insert>
+
+	<select id="findNewsByMainID" parameterType="cmsContentDTO"
+		resultType="cmsContentVO">
+		select * from kplus_cms_content where mainID=#{mainID} and
+		isDelete=0 
+	</select>
+
+	<update id="updateNewsByMainID" parameterType="cmsContentDTO">
+		update kplus_cms_content
+		<set>
+			modifyTime=now()
+			<if test="name != null">
+				, name = #{name}
+			</if>
+			<if test="categoryID != null">
+				, categoryID = #{categoryID}
+			</if>
+			<if test="author != null">
+				, author = #{author}
+			</if>
+			<if test="publishTime != null">
+				, publishTime = #{publishTime}
+			</if>
+			<if test="sourceUrl != null">
+				, sourceUrl = #{sourceUrl}
+			</if>
+			<if test="picUrl != null">
+				, picUrl = #{picUrl}
+			</if>
+			<if test="content != null">
+				, content = #{content}
+			</if>
+			<if test="keyword != null">
+				, keyword = #{keyword}
+			</if>
+			<if test="sortOrder != null">
+				,sortOrder = #{sortOrder}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="subTitle != null">
+				,subTitle = #{subTitle}
+			</if>
+		</set>
+		where mainID =#{mainID}
+	</update>
+
+	<select id="findNewsPrev" parameterType="java.lang.Long"
+		resultType="cmsContentVO">
+		select * from kplus_cms_content where isDelete=0 and id&lt;#{id} order by id DESC limit 0,1
+	</select>
+
+	<select id="findNewsNext" parameterType="java.lang.Long"
+		resultType="cmsContentVO">
+		select * from kplus_cms_content where isDelete=0 and id&gt;#{id} order by id ASC limit 0,1
+	</select>
+
+</mapper>

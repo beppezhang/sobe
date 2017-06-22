@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/jquery-ui.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	#parse("layout/suppliercenter/leftmenu.vm")
+	
+    <div id="rightMain">
+      <div class="crumbs">
+          商家管理中心 &gt; <a href="supplierCenter.htm">首页</a> &gt; 取货单列表
+      </div>
+       <div class="p15">
+            <div class="stitbar clearfix txt_r">
+                <strong class="lt">取货单列表</strong>
+            </div>
+            <div class="selbar txt_r">
+                  <span class="ml10">下单时间 <input id="from0" name="fromDate" type="text" class="datepicker ipt" value="$!carrierNoteDTO.fromDate"> - <input id="end0" name="endDate" type="text" class="ipt datepicker" value="$!carrierNoteDTO.endDate"></span>
+                  <a href="javascript:;" class="apLink">生成取货单</a>
+                <form action="carriernote.htm" method="POST">
+                  <input id="from1" type="hidden" name="fromDate"/>
+                  <input id="end1" type="hidden" name="endDate"/>
+                </form>
+            </div>
+            #if($!carrierNoteList.size() != 0)
+            <div class="selbar txt_r">
+              <a id="printMany" class="apLink" href="javascript:;">批量打印</a>
+            </div>
+            <table class="sellist">
+                <!---标头--->
+                      <thead>
+                        <tr>
+                            <th width="450">订单编号</th>
+                            <th width="15%">生成时间</th>
+                            <th width="15%">取货数量</th>
+                            <th width="15%">打印状态</th>
+                            <th width="15%">操作</th>
+                        </tr>
+                      </thead>
+                      <tr>
+                       <td class="txt_r" colspan="5">
+                           <label for="sel_all" class="lt"><input name="allCk" id="sel_all" class="allCk" type="checkbox" value=""> 全选</label>
+                       </td>
+                      </tr>
+                      <!-- 列表循环 -->
+                      #foreach($!carrierNote in $!carrierNoteList)
+                      <tbody class="proUnit">
+                          <tr>
+                             <td colspan="5" class="bg">
+                             <input class="ck" name="ck" type="checkbox" value="$!carrierNote.mainID"> 取货单编号：$!carrierNote.mainID
+                             </td>
+                          </tr>
+                          <tr>
+                              <td>
+                                 <ul class="clearfix numUl">
+                                  #foreach($!carrierNoteLine in $!{carrierNote.carrierNoteLineList})
+                                  <li>&middot;<a href="orderDetail.htm?orderMainID=$!{carrierNoteLine.salesOrderID}">$!{carrierNoteLine.salesOrderID}</a></li>
+                                  #end
+                                 </ul>
+                              </td>
+                              <td class="ct">
+                                  $date.format('yyyy-MM-dd HH:mm:ss', $!carrierNote.createTime)
+                              </td>
+                              <td class="ct">
+                                  $!{carrierNote.itemCount}
+                              </td>
+                              <td class="ct">
+                                #if($!carrierNote.status == 0)
+                                未打印
+                                #else
+                                已打印
+                                #end
+                              </td>
+                              <td class="ct"><a href="carriernote.htm?carriesNoteIDs=$!carrierNote.mainID" target="_blank" class="printBtn">打印</a></td>
+                          </tr>
+                      </tbody>
+                      #end
+                      <!-- 列表循环end -->
+                    
+                      <tr>
+                       <td class="txt_r" colspan="5">
+                           <label for="sel_all_btm" class="lt"><input name="allCk" id="sel_all_btm" class="allCk" type="checkbox" value=""> 全选</label>
+                       </td>
+                      </tr>
+                </table>
+                <form id="serachform" name="serachform" method="get" action="carrienotes.htm">
+                  <input type="hidden" id="pageNo" name="pageNo"
+                  value="$!carrierNoteDTO.pageNo">
+                 <input type="hidden" id="pageSize" name="pageSize" 
+                      value="$!carrierNoteDTO.pageSize">
+               </form>
+               <div class="pagerbar clearfix ct">
+                #pagination($!carrierNoteDTO)
+               </div>
+               #else
+               <div style="height: 100px;padding: 49px 0;font-size: 20px;text-align:center; line-height: 100px;">暂无匹配的条目！</div>
+               #end
+        </div>      
+    </div>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-ui.min.js"></script>
+ #if($!carrierNoteList.size() != 0)
+<script type="text/javascript">
+
+jQuery(function() {
+ 
+  jQuery(".pagerbar").pager({
+      pagenumber : $carrierNoteDTO.pageNo,
+      pagecount : $carrierNoteDTO.pageCount,
+      buttonClickCallback : PageClick
+    });
+  })
+
+  PageClick = function(pageclickednumber) {
+    jQuery(".pagerbar").pager({
+      pagenumber : pageclickednumber,
+      pagecount : $carrierNoteDTO.pageCount,
+      buttonClickCallback : PageClick
+    })
+    jQuery("#pageNo").val(pageclickednumber);
+    jQuery("#serachform").submit();
+}
+</script>
+#end
+<script type="text/javascript">
+  $("dd:eq(6)").addClass("on");
+  $(".datepicker").datepicker(); 
+  $(function(){
+    $(".apLink:eq(0)").click(function(){
+      var from = $("#from0").val();
+      var end = $("#end0").val();
+      if(from == '' || end == ''){
+
+        alert('请填写订单起始时间');
+        return;
+      }
+      $("#from1").val(from);
+      $("#end1").val(end);
+      $("form:eq(0)").submit();
+    });
+
+    $("#sel_all_btm, #sel_all").click(function(){
+      if(this.checked)
+        $(".ck").attr("checked", true);
+      else
+        $(".ck").attr("checked", false);
+    });
+    $("#printMany").on('click', function(){
+      if ($(".ck:checked").length == 0) {
+        alert("请选择取货单");
+        return;
+      };
+      var arr = [];
+      $(".ck:checked").each(function(index, ele){
+        arr.push(ele.value);
+      });
+      location.href="carriernote.htm?carriesNoteIDs="+arr.join(",");
+    });
+  }) 
+</script>
+</body>
+</html>

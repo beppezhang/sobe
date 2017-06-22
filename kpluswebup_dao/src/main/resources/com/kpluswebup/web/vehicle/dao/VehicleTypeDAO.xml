@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.vehicle.dao.VehicleTypeDAO">
+
+	
+
+	<select id="findVehiclePaginationByCategoryId" parameterType="vehicleTypeVO"
+		resultType="vehicleTypeVO">
+		select v.* from vehicletype v where v.isDelete=0 
+		<if test="productCategoryId != null">
+			and v.productCategoryId = #{productCategoryId, jdbcType=VARCHAR}
+		</if>
+		<if test="name != null and name!='' ">
+			and v.name like '%${name}%'
+		</if>
+		limit #{startRow} ,#{pageSize}		
+	</select>
+	
+	<select id="findVehicleByCategoryId" parameterType="vehicleTypeVO"
+		resultType="vehicleTypeVO">
+		select v.* from vehicletype v where v.isDelete=0 
+		<if test="productCategoryId != null">
+			and v.productCategoryId = #{productCategoryId, jdbcType=VARCHAR}
+		</if>
+		<if test="name != null and name!='' ">
+			and v.name like '%${name}%'
+		</if>
+	</select>
+
+	<select id="findVehicleByCategoryIdCount" resultType="java.lang.Long"
+		parameterType="vehicleTypeVO">
+		select count(*) from vehicletype v where v.isDelete=0
+		<if test="productCategoryId != null">
+			and v.productCategoryId = #{productCategoryId, jdbcType=VARCHAR}
+		</if>
+		<if test="name != null and name!='' ">
+			and v.name like '%${name}%'
+		</if>
+	</select>
+	
+
+	<select id="findByVin" resultType="vehicleTypeVO"
+		parameterType="java.lang.String">
+			select * from vehicletype vt where vt.isDelete=0 and vt.mainID in
+			(select v.vehicleTypeId from vehiclefileinfo v where vin = #{vin, jdbcType=VARCHAR})
+		
+	</select>	
+	
+	<select id="findByMainID" resultType="vehicleTypeVO"
+	parameterType="java.lang.String">
+		select * from vehicletype vt where vt.isDelete=0 and vt.mainID = #{mainID}
+	
+	</select>	
+	<select id="findProductIdsByOEM" resultType="java.lang.String"
+	parameterType="java.lang.String">
+		select p.partsId from partsoem p where p.oem = #{mainID}
+	</select>		
+	
+	<select id="findVehicleTypeByProductId" resultType="vehicleTypeVO"
+	parameterType="java.lang.String">
+		select pc.parentID as productCategoryParentId,vt.* from vehicletype vt,kplus_product_category pc where vt.mainID in
+		(
+		select v.vehicleTypeId from vehicletype_kplus_product v where v.productId=#{productId}
+		) and vt.productCategoryId = pc.mainID and vt.isDelete = 0
+	</select>		
+
+	<!--Mobile-->
+	<select id="findVehicleTypesCountForMobile" resultType="java.lang.Long"
+		parameterType="vehicleTypeVO">
+		SELECT COUNT(*) FROM vehicletype vt,kplus_product_category pc WHERE vt.mainID IN
+		(
+		SELECT v.vehicleTypeId FROM vehicletype_kplus_product v WHERE v.productId=#{productId}
+		) AND vt.productCategoryId = pc.mainID AND vt.isDelete = 0
+	</select>
+
+	<select id="findVehicleTypesForMobile" resultType="vehicleTypeVO"
+	parameterType="vehicleTypeVO">
+		select pc.parentID as productCategoryParentId,vt.* from vehicletype vt,kplus_product_category pc where vt.mainID in
+		(
+		select v.vehicleTypeId from vehicletype_kplus_product v where v.productId=#{productId}
+		) and vt.productCategoryId = pc.mainID and vt.isDelete = 0
+		limit #{startRow} ,#{pageSize}
+	</select>		
+
+</mapper>

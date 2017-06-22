@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="css/supplier.css">
+<link rel="stylesheet" type="text/css" href="css/base.css">
+<link rel="stylesheet" type="text/css" href="css/busin.css">
+<link rel="stylesheet" type="text/css" href="css/jquery.mcdropdown.min.css">
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery.mcdropdown.min.js"></script>
+<script type="text/javascript" src="js/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="js/kindeditor-4.1.5/kindeditor-min.js"></script>
+<script type="text/javascript" src="js/jquery.scrollto.js"></script>
+<script type="text/javascript" src="js/verify.js"></script>
+<script type="text/javascript" src="js/public.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+    editor = K.create("textarea.product_mark", {
+        allowFileManager : true
+    });
+});
+
+$(document).ready(function (){
+    $(".category1").mcDropdown(".menu1");
+    $(".category2").mcDropdown(".menu2");
+    
+    $(".select_product_color").on("click", "input:checkbox", function(){
+        var t = $(this).parent();
+        if(t.find("input:checkbox:checked").length){
+            var _ul = "";
+            $(".select_product_size input:checked").each(function(index, el){
+                _ul += "<ul data-name='" + $(el).parent().attr("for") + "'><li>" + $(el).parent().text() + "</li><li><input class='text' type='text'></li><li><input class='text' type='text'></li><li><input class='text size_hasnumber' type='text'></li><li><input class='text' type='text'></li></ul>";
+            });
+            $("table.size_table").append("<tr data-name='" + t.attr("for") + "'><td>" + t.text() + "</td><td colspan='5'>" + _ul + "</td></tr>");
+        }else{
+            $("table.size_table tr[data-name='" + t.attr("for") + "']").remove();
+        }
+        if($(".select_product_color input:checkbox:checked").length){
+            $("table.size_table").show();
+        }else{
+            $("table.size_table").hide();
+        }
+    });
+    
+    $(".select_product_size").on("click", "input:checkbox", function(){
+        var t = $(this).parent(), ta = $("table.size_table"), tr = ta.find("tr:has('td')");
+        if($(".select_product_color input:checkbox:checked").length == 0){
+            tr.find("td:last").html("");
+        }else{
+            if(t.find("input:checkbox:checked").length){
+                tr.find("td:last").append("<ul data-name='" + t.attr("for") + "'><li>" + t.text() + "</li><li><input class='text' type='text'></li><li><input class='text' type='text'></li><li><input class='text size_hasnumber' type='text'></li><li><input class='text' type='text'></li></ul>");
+            }else{
+                $("table.size_table ul[data-name='" + t.attr("for") + "']").remove();
+            }
+        }
+    });
+    
+    $(".size_table").on("keyup", "input.size_hasnumber", function(){
+        t = $(this);
+        if(!t.attr("data-temp-hasnumber") && t.attr("data-temp-hasnumber") == t.val()){
+            return;
+        }
+        t.attr("data-temp-hasnumber", t.val());
+        var _number = 0;
+        t.parents(".size_table").find("input.size_hasnumber").each(function(index, el){
+            if(parseInt($(el).val())){d
+                _number += parseInt($(el).val());
+            }
+        });
+        $(".porduct_hasnumber").val(_number);
+    });
+    
+    $(".page_submit").click(function(){
+        $(".verify_nonempty, .verify_isnan, .verify_textlength").blur();
+        $(".category").each(function(){
+            var _val = $(this).val();
+            if(!_val){
+                $(this).addClass("text_error");
+            }else{
+                $(this).removeClass("text_error");
+            }
+        });
+        if($(".text_error").length){
+            $($(".text_error")[0]).focus().ScrollTo();
+            return false;
+        }
+    });
+});
+</script>
+</head>
+
+<body>
+<div id="header">
+	<div class="layout clearfix">
+    	<h1 class="lt">中邮普泰</h1>
+        <span class="mintt lt">商家中心</span>
+        <span class="sipt lt">
+        	<input name="" type="text" class="ipt" placeholder="商城商品搜索"><input name="" type="button" class="sbtn">
+        </span>
+        <div class="iBox">
+            <img src="img/fz.jpg" class="pimg">
+            <div class="lt">
+                <p class="name">当前用户</p>
+                <p>跳大神</p>
+            </div>
+            <p class="tools"><a href="#"><img src="images/ico-home2.gif"></a> <a href="#"><img src="images/ico-tool.gif"></a> <a href="#"><img src="images/ico-exit2.gif"></a></p>
+        </div>
+    </div>
+</div>
+<div class="layout clearfix">
+	<div id="leftNav" class="busin_side">
+        <div class="atp"><img src="images/a1.png"></div>
+        <dl>
+            <dt class="s1"><a class="host" href="javascript:;">交易管理</a></dt>
+            <dd><a href="#">订单管理</a></dd>
+            <dd><a href="#">评价管理</a></dd>
+        </dl>
+        <dl>
+            <dt class="s2"><a class="host" href="javascript:;">商品管理</a></dt>
+            <dd><a href="#">发布商品</a></dd>
+            <dd><a href="#">商品列表</a></dd>
+            <dd><a href="#">分类管理</a></dd>
+            <dd><a href="#">资讯管理</a></dd>
+        </dl>
+        <dl>
+            <dt class="s3"><a class="host" href="javascript:;">店铺管理</a></dt>
+            <dd><a href="#">查看店铺</a></dd>
+            <dd><a href="#">店铺设置</a></dd>
+            <dd><a href="#">导航设置</a></dd>
+        </dl>
+        <dl>
+            <dt class="s4"><a class="host" href="javascript:;">邮费管理</a></dt>
+            <dd><a href="#">邮费模板</a></dd>
+        </dl>
+        <dl>
+            <dt class="s5"><a class="host" href="javascript:;">商家管理</a></dt>
+            <dd><a href="#">基本资料</a></dd>
+            <dd><a href="#">销售统计</a></dd>
+            <dd><a href="#">财务结算</a></dd>
+            <dd><a href="#">修改密码</a></dd>
+        </dl>    
+    </div>
+    <div id="rightMain">
+    	<div class="crumbs">
+        	商家管理中心 &gt; 商品管理 &gt; 发布商品
+        </div>
+        <div class="p15">
+            <div class="stitbar">
+                <strong>发布商品</strong>
+            </div>
+            <div class="accInfo mt25 shop_setting">
+                <dl class="clearfix verify">
+                    <dt>产品编号：</dt>
+                    <dd><input class="text langtext verify_textlength verify_nonempty" data-length="30" data-length-follow="true" data-nonempty-istrim="true" type="text"></dd>
+                    <span class="search"><a href="#">搜索</a></span>
+                </dl>
+            </div>
+            <p class="ct mt25"><a href="#" class="nextLink" style="background:#20638e;border-radius:4px;">提交</a></p>
+            <div class="Info_add mt25 shop_setting">
+                <p class="tl">所处产品：<span>睿卡九代汽车减震器缓冲胶减震弹簧避震胶减震胶专车专用 凯美瑞/卡罗拉/汉兰达 致炫/雷凌/RAV4 雅力士/威驰/花冠 </span></p>
+                <div class="msg">
+                	<img src="1.jpg">
+                	<div class="mg">
+                		<p>
+                			<span class="tt"><em class="red">*</em>店铺分类</span>
+                			<select>
+                				<option value="">1</option>
+                				<option value="">1</option>
+                			</select>
+                		</p>
+                		<p>
+                			<span class="tt"><em class="red">*</em>商品价格</span>
+                			<input type="text" class="text">
+                		</p>
+                		<p>
+                			<span class="tt"><em class="red">*</em>物流模板</span>
+                			<select class="small">
+                				<option value="">1</option>
+                				<option value="">1</option>
+                			</select>
+                		</p>
+                		<p class="last">
+                			<span class="tt"><em class="red">*</em>商品描述</span>
+                			<textarea></textarea>
+                		</p>
+                	</div>
+                </div>
+            </div>
+            <p class="ct mt25">
+            	<a href="javascript:;" id="publish" class="nextLink" style="background:#20638e;border-radius:4px;">发布</a>
+            	<a href="javascript:;" class="retnLink reset">重置</a>
+            </p>
+       </div>
+    </div>
+</div>
+<div class="info_sed">
+	<p class="tl">发布成功<span class="rt close">X</span></p>
+	<p class="sess">恭喜您，商品已发布成功</p>
+	<a href="javascript:;" class="sure">确认</a>
+</div>
+
+<div id="footer">
+	<div class="layout">
+    	<p><a href="#">关于中邮普泰</a> | <a href="#">我们的团队</a> | <a href="#">网站联盟</a> | <a href="#">热门搜索</a> | <a href="#">友情链接</a> | <a href="#">诚征英才</a></p>
+        <p>浙ICP备2121245号 | 合字B1.B2-20130004 | 营业执照 | 互联网药品交易服务资格证</p>
+        <p>Copyright© 中邮普泰 2007-2015，All Rights Reserved</p>
+    </div>
+</div>
+</ul>
+<script>
+	$("#publish").click(function(){
+		$(".info_sed").show();
+	})
+	$(".info_sed .close,.info_sed .sure").click(function(){
+		$(".info_sed").hide();
+	})
+</script>
+</body>
+</html>

@@ -1,0 +1,1379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.ItemDAO">
+
+	<sql id="Base_Column_List">
+		mainID, productID, name, oldNumber, picURL, costPrice,
+		standrardPrice,
+		distributionPrice,
+		retailPrice, salesPrice,
+		purchasePrice, minimumQty, weight, cubage, quantity,
+		stock,
+		saftyStock,
+		sortOrder, description, isDelete, creator, createTime, modifier,
+		modifyTime,score,
+		scorePrice,
+		salesScore
+	</sql>
+
+	<sql id="Base_Column_List_ItemDetail">
+		id, itemID, itemPropID, pTypeIPropID, itemPropValue,
+		creator, createTime,
+		modifier,
+		modifyTime,propTypeID
+	</sql>
+	<select id="findItem" parameterType="itemDTO" resultType="itemVO">
+		select i.* from kplus_item i
+		left join kplus_product p on
+		i.productID=p.mainID
+		where i.isDelete =0 and p.isDelete=0
+		<if test="status !=null">
+			and p.status = #{status}
+		</if>
+		<if test="productID !=null">
+			and i.productID = #{productID}
+		</if>
+		<if test="mainID !=null">
+			and i.mainID = #{mainID}
+		</if>
+		<if test="name !=null">
+			and i.name like '%${name}%'
+		</if>
+		<if test="catalog!=null">
+			and p.catalog=#{catalog}
+		</if>
+	</select>
+	<select id="findItemSupplieredByItemMainIDAndSupplierID"
+		resultType="itemVO">
+		SELECT
+		i.mainID,
+		i.productID,
+		i.`name`,
+		i.picURL,
+		i.standrardPrice,
+		i.costPrice,
+		i.distributionPrice,
+		i.retailPrice,
+		i.purchasePrice,
+		i.minimumQty,
+		i.weight,
+		i.quantity,
+		i.sortOrder,
+		i.salesPrice,
+		i.stock,
+		i.saftyStock
+		FROM
+		kplus_product p
+		LEFT JOIN
+		kplus_item i ON i.productID = p.mainID
+		LEFT JOIN
+		kplus_zy_supplier si ON si.mainID = p.supplierID
+		WHERE
+		i.isDelete = 0
+		AND p.isDelete = 0
+		AND i.mainID = #{itemMainID}
+		AND si.mainID =
+		#{supplierID}
+		AND si.isDelete = 0
+		group by i.mainID
+	</select>
+
+	<select id="searchItemByProduct" parameterType="productDTO"
+		resultType="itemVO">
+		SELECT
+		i.mainID,
+		i.productID,
+		i.NAME,
+		i.oldNumber,
+		i.picURL,
+		i.costPrice,
+		i.standrardPrice,
+		i.distributionPrice,
+		i.retailPrice,
+		i.salesPrice,
+		i.purchasePrice,
+		i.minimumQty,
+		i.weight,
+		i.cubage,
+		i.quantity,
+		i.stock,
+		i.saftyStock,
+		i.sortOrder,
+		i.description,
+		i.isDelete,
+		i.creator,
+		i.createTime,
+		i.modifier,
+		i.modifyTime
+		FROM
+		kplus_item i
+		LEFT JOIN
+		kplus_product p ON p.mainID = i.productID
+		WHERE
+		<if test="name !=null">
+			p.name like '%${name}%'
+		</if>
+		<if test="catalog!=null">
+			and p.catalog=#{catalog}
+		</if>
+		<if test="status !=null">
+			and p.status = #{status}
+		</if>
+		AND p.isDelete = 0
+		AND i.isDelete = 0
+	</select>
+
+
+
+
+	<update id="deleteItemByMainID">
+		update kplus_item
+		set isDelete=1
+		where mainID =
+		#{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<update id="deleteItemByProductID">
+		update kplus_item
+		set isDelete=1
+		where productID =
+		#{productID,jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insertItem" parameterType="itemDTO">
+		INSERT INTO kplus_item(
+		mainID,
+		productID,
+		name,
+		oldNumber,
+		picURL,
+		costPrice,
+		standrardPrice,
+		distributionPrice,
+		retailPrice,
+		salesPrice,
+		purchasePrice,
+		minimumQty,
+		weight,
+		cubage,
+		quantity,
+		stock,
+		saftyStock,
+		sortOrder,
+		description,
+		isDelete,
+		creator,
+		createTime,
+		score,
+		scorePrice,
+		salesScore,
+		salesVolume,
+		skuCode
+		)
+		VALUES
+		(
+		#{mainID},
+		#{productID},
+		#{name},
+		#{oldNumber},
+		#{picURL},
+		#{costPrice},
+		#{standrardPrice},
+		#{distributionPrice},
+		#{retailPrice},
+		#{salesPrice},
+		#{purchasePrice},
+		#{minimumQty},
+		#{weight},
+		#{cubage},
+		#{quantity},
+		#{stock},
+		#{saftyStock},
+		#{sortOrder},
+		#{description},
+		0,
+		#{creator},
+		now(),
+		#{score},
+		#{scorePrice},
+		#{salesScore},
+		0,
+		#{skuCode}
+		)
+	</insert>
+
+	<update id="updateItemByMainID" parameterType="itemDTO">
+		update kplus_item
+		set modifyTime=now()
+		<if test="name != null">
+			, name = #{name}
+		</if>
+		<if test="oldNumber != null">
+			, oldNumber = #{oldNumber}
+		</if>
+		<if test="picURL != null">
+			, picURL = #{picURL}
+		</if>
+		<if test="costPrice != null">
+			, costPrice = #{costPrice}
+		</if>
+		<if test="standrardPrice != null">
+			, standrardPrice = #{standrardPrice}
+		</if>
+		<if test="distributionPrice != null">
+			, distributionPrice = #{distributionPrice}
+		</if>
+		<if test="retailPrice != null">
+			, retailPrice = #{retailPrice}
+		</if>
+		<if test="salesPrice != null">
+			, salesPrice = #{salesPrice}
+		</if>
+		<if test="purchasePrice != null">
+			, purchasePrice = #{purchasePrice}
+		</if>
+		<if test="minimumQty != null">
+			, minimumQty = #{minimumQty}
+		</if>
+		<if test="weight != null">
+			, weight = #{weight}
+		</if>
+		<if test="cubage != null">
+			, cubage = #{cubage}
+		</if>
+		<if test="quantity != null">
+			, quantity = #{quantity}
+		</if>
+		<if test="stock != null">
+			, stock = #{stock}
+		</if>
+		<if test="saftyStock != null">
+			, saftyStock = #{saftyStock}
+		</if>
+		<if test="description != null">
+			, description = #{description}
+		</if>
+		<if test="sortOrder != null">
+			, sortOrder = #{sortOrder}
+		</if>
+		<if test="modifier != null">
+			, modifier = #{modifier}
+		</if>
+		<if test="score!=null">
+			,score=#{score}
+		</if>
+		<if test="scorePrice!=null">
+			,scorePrice=#{scorePrice}
+		</if>
+		<if test="salesScore!=null">
+			,salesScore=#{salesScore}
+		</if>
+		<if test="salesVolume!=null">
+			,salesVolume=#{salesVolume}
+		</if>
+		where mainID = #{mainID} and isDelete=0
+	</update>
+
+	<delete id="deleteItemDetailByID" parameterType="java.lang.Long">
+		delete from
+		kplus_item_detail
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<delete id="deleteItemDetailByItemID" parameterType="java.lang.String">
+		delete from
+		kplus_item_detail
+		where itemID = #{itemID,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="addItemDetail" parameterType="itemDetailDTO">
+		INSERT INTO
+		kplus_item_detail(
+		itemID,
+		itemPropID,
+		pTypeIPropID,
+		itemPropValue,
+		creator,
+		createTime,
+		propTypeID
+		)
+		VALUES
+		(
+		#{itemID},
+		#{itemPropID},
+		#{pTypeIPropID},
+		#{itemPropValue},
+		#{creator},
+		now(),
+		#{propTypeID}
+		)
+	</insert>
+
+
+	<select id="findItemDetail" parameterType="itemDetailDTO"
+		resultType="itemDetailVO">
+		select
+		<include refid="Base_Column_List_ItemDetail" />
+		from kplus_item_detail
+		where 1=1
+		<if test="id != null">
+			and id=#{id}
+		</if>
+		<if test="itemID != null">
+			and itemID=#{itemID}
+		</if>
+	</select>
+
+	<select id="findItemDetailByItemID" parameterType="java.lang.String"
+		resultType="itemDetailVO">
+		select d.*,p.name as itemPropName from kplus_item_detail d
+		left join kplus_itemprop p on d.itemPropID=p.mainID
+		where p.isDelete=0
+		and d.itemID=#{itemID}
+	</select>
+	
+	<select id="findItemDetailSByItemID" parameterType="java.lang.String"
+		resultType="itemDetailVO">
+		select d.id, d.itemID, d.itemPropID, d.pTypeIPropID, d.itemPropValue,
+		d.creator, d.createTime,
+		d.modifier,
+		d.modifyTime,i.salesPrice,i.stock,i.name ,i.skuCode
+		from kplus_item_detail d ,kplus_item i where i.mainID=d.itemID
+		and  d.itemID=#{itemID}  and i.isDelete=0
+	</select>
+	
+	<select id="findItemDetailSByItemID1" parameterType="java.lang.String"
+		resultType="itemDetailVO">
+		select d.id, d.itemID, d.itemPropID, d.pTypeIPropID, d.itemPropValue,
+		d.creator, d.createTime,
+		d.modifier,
+		d.propTypeID,
+		d.modifyTime,i.salesPrice,i.stock,i.name ,i.skuCode
+		from kplus_item_detail d ,kplus_item i where i.mainID=d.itemID
+		and  d.itemID=#{itemID}  and i.isDelete=0 group by d.propTypeID
+	</select>
+	
+	<select id="findItemByProductMainID" parameterType="java.lang.String"
+		resultType="itemVO">
+		select *
+		from kplus_item item
+		where item.isDelete=0
+		and item.productID=#{productID}
+	
+	</select>
+
+	<select id="findItemProps" parameterType="java.lang.String"
+		resultType="itemDetailVO">
+		SELECT A.*,B.`name` as itemPropName
+		FROM kplus_item_detail A
+		LEFT JOIN kplus_producttype_itemprop B ON
+		A.pTypeIPropID=B.mainID
+		where
+		A.itemID=#{itemID}
+	</select>
+
+	<select id="findproductProps" parameterType="java.lang.String"
+		resultType="itemDetailVO">
+		SELECT
+		DISTINCT(A.`name`) as itemPropName ,
+		A.itemPropValue
+		as itemPropValue,
+		A.mainID as
+		pTypeIPropID
+		FROM
+		kplus_producttype_itemprop A
+		JOIN kplus_item_detail B
+		ON
+		A.mainID=B.pTypeIPropID
+		WHERE A.mainID IN
+		(
+		SELECT C.pTypeIPropID
+		FROM
+		kplus_item A
+		JOIN kplus_product B ON
+		A.productID=B.mainID
+		JOIN
+		kplus_item_detail C ON
+		A.mainID=C.itemID
+		WHERE A.productID=#{productID}
+		)
+	</select>
+
+	<select id="finditems" parameterType="java.lang.String"
+		resultType="itemVO">
+		SELECT * FROM kplus_item
+		WHERE productID IN
+		(
+		SELECT mainID
+		FROM kplus_product
+		WHERE productTypeID=
+		(
+		SELECT A.productTypeID FROM
+		kplus_product A
+		left JOIN kplus_producttype B ON
+		A.productTypeID=B.mainID
+		WHERE A.mainID=#{productID} group by
+		A.productTypeID
+		)
+		AND mainID!=#{productID}
+		AND status=1
+		AND isDelete=0
+		)
+		AND isDelete=0 group by productID
+		limit 0 ,4
+	</select>
+
+	 <select id="finditemsByProductID" parameterType="java.lang.String"
+		resultType="itemVO">
+		SELECT A.standrardPrice,
+		A.`name`,A.productID,A.picURL,A.purchasePrice,A.minimumQty,A.stock,A.salesPrice,A.mainID,B.supplierID,s.companyName
+		as supplierName
+		FROM 
+		kplus_item A,kplus_product B
+		LEFT JOIN kplus_zy_supplier s on B.supplierID=s.mainID
+		WHERE A.isDelete=0 and
+		s.isDelete=0 and
+		A.productID=B.mainID
+		and
+		A.status=1 and A.isDelete=0
+		and
+		B.mainID=#{productID}
+	</select> 
+	
+	 <select id="findItemDetailByProductID" parameterType="java.lang.String"
+		resultType="itemVO">
+		SELECT B.standPrice as standrardPrice,
+		A.`name`,A.productID,A.picURL,A.purchasePrice,A.minimumQty,A.stock,A.salesPrice,A.mainID,B.supplierID,s.companyName
+		as supplierName
+		FROM 
+		kplus_item A,kplus_product B
+		LEFT JOIN kplus_zy_supplier s on A.supplierID=s.mainID
+		WHERE A.isDelete=0 and
+		s.isDelete=0 and
+		A.productID=B.mainID
+		and
+		B.status=1 and A.isDelete=0
+		and
+		B.mainID=#{productID}
+		and
+		A.mainID=#{mainID}
+	</select> 
+
+	 <select id="findItemDetailByProductIDTparts" parameterType="java.lang.String"
+		resultType="itemVO">
+		SELECT A.standrardPrice as standrardPrice,
+		A.`name`,A.productID,A.picURL,A.purchasePrice,A.minimumQty,A.stock,A.salesPrice,A.mainID,B.supplierID,s.companyName
+		as supplierName,A.skuCode
+		FROM 
+		kplus_item A,kplus_product B,kplus_zy_supplier s
+		WHERE A.isDelete=0 and A.supplierID=s.mainID and
+		s.isDelete=0 and
+		A.productID=B.mainID
+		and
+		B.status=1 and A.isDelete=0
+		and
+		B.mainID=#{productID}
+		and
+		A.mainID=#{mainID}
+	</select> 
+
+	<select id="finItemsByItemDto" parameterType="itemDTO"
+		resultType="itemVO">
+		SELECT
+		c.*
+		from (
+		SELECT
+		a.standrardPrice,salesPrice,a.stock,e.supplierID,a.`name`,a.productID,a.modifyTime,a.picURL,a.salesVolume,a.purchasePrice,a.minimumQty,a.mainID,brand.mainID
+		as brandID
+		,e.`name` as productName,brand.`name` as brandName
+		,e.productType,e.productTypeID as productTypeID,
+		a.sortOrder
+		from kplus_item a
+		join
+		kplus_product e on e.mainID=a.productID and e.isDelete=0 and
+		e.status=1
+		join kplus_brand
+		brand on brand.mainID=e.brandID and brand.isDelete=0
+		where a.isDelete=0
+		<if test="supplierID != null">
+		  and a.supplierID=#{supplierID}
+		</if>
+		<if test="supplierCategoryID != null">
+		  and a.supplierCategoryID in (
+	    	select 
+	    	mainID 
+	    	from kplus_jlds_supplier_categroy
+	    	where  
+	    	parentID = #{supplierCategoryID} 
+	    	or mainID= #{supplierCategoryID}
+		  )
+		</if>
+		) c
+		where 1=1
+		<if test="brandName != null">
+			and c.brandName like '%${brandName}%'
+		</if>
+		<if test="brandID != null">
+			and c.brandID=#{brandID}
+		</if>
+		<if test="name != null">
+			and c.name like '%${name}%'
+		</if>
+		<if test="productType != null">
+			and c.productType=#{productType}
+		</if>
+		<if test="productTypeID != null">
+			and c.productTypeID in (
+			select DISTINCT pc.productTypeID
+               from   
+                kplus_product_category pc
+              where 
+             pc.mainID  in  
+              (select   mainID 	
+              from
+               kplus_product_category  where
+		     	  parentID = #{productTypeID}
+			      or 
+			    mainID =  #{productTypeID}
+			  ) 
+              or 
+            pc.parentID in
+             (select  mainID from kplus_product_category
+			 where 	
+			  parentID =  #{productTypeID}
+			 or 
+			 mainID = #{productTypeID})
+			)
+		
+		</if>
+		<if test="startSalePrice != null and startSalePrice!='' ">
+			and c.salesPrice&gt;=#{startSalePrice}
+		</if>
+		<if test="endSalePrice != null and endSalePrice!='' ">
+			and c.salesPrice&lt;= #{endSalePrice}
+		</if>
+		<!--group by c.productID-->
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+		<!-- limit 0,1 -->
+	</select>
+
+	<select id="finItemsByItemDtoCount" parameterType="itemDTO"
+		resultType="java.lang.Long">
+		select count(1) from (
+		  SELECT
+		c.*
+		from (
+		SELECT
+		a.standrardPrice,salesPrice,a.stock,e.supplierID,a.`name`,a.productID,a.modifyTime,a.picURL,a.salesVolume,a.purchasePrice,a.minimumQty,a.mainID,brand.mainID
+		as brandID
+		,e.`name` as productName,brand.`name` as brandName
+		,e.productType,e.productTypeID as productTypeID,
+		a.sortOrder
+		from kplus_item a
+		join
+		kplus_product e on e.mainID=a.productID and e.isDelete=0 and
+		e.status=1
+		join kplus_brand
+		brand on brand.mainID=e.brandID and brand.isDelete=0
+		where a.isDelete=0
+		<if test="supplierID != null">
+		  and a.supplierID=#{supplierID}
+		</if>
+		<if test="supplierCategoryID != null">
+		  and a.supplierCategoryID in (
+	    	select 
+	    	mainID 
+	    	from kplus_jlds_supplier_categroy
+	    	where  
+	    	parentID = #{supplierCategoryID} 
+	    	or mainID= #{supplierCategoryID}
+		  )
+		</if>
+		) c
+		where 1=1
+		<if test="brandName != null">
+			and c.brandName like '%${brandName}%'
+		</if>
+		<if test="brandID != null">
+			and c.brandID=#{brandID}
+		</if>
+		<if test="name != null">
+			and c.name like '%${name}%'
+		</if>
+		<if test="productType != null">
+			and c.productType=#{productType}
+		</if>
+		<if test="productTypeID != null">
+			and c.productTypeID in (
+			select DISTINCT pc.productTypeID
+               from   
+                kplus_product_category pc
+              where 
+             pc.mainID  in  
+              (select   mainID 	
+              from
+               kplus_product_category  where
+		     	  parentID = #{productTypeID}
+			      or 
+			    mainID =  #{productTypeID}
+			  ) 
+              or 
+            pc.parentID in
+             (select  mainID from kplus_product_category
+			 where 	
+			  parentID =  #{productTypeID}
+			 or 
+			 mainID = #{productTypeID})
+			)
+		
+		</if>
+		<if test="startSalePrice != null and startSalePrice!='' ">
+			and c.salesPrice&gt;=#{startSalePrice}
+		</if>
+		<if test="endSalePrice != null and endSalePrice!='' ">
+			and c.salesPrice&lt;= #{endSalePrice}
+		</if>
+		group by c.productID
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		)g
+		
+		<!-- select count(1) from (
+		SELECT
+		a.standrardPrice,a.salesPrice,a.stock,e.supplierID,a.salesVolume,a.modifyTime,a.`name`,a.productID,a.picURL,a.purchasePrice,a.minimumQty,a.mainID,brand.mainID
+		as brandID
+		,e.`name` as productName,brand.`name` as brandName
+		,e.productType,e.productTypeID as productTypeID,
+		a.sortOrder
+		from kplus_item a
+		join kplus_product e on e.mainID=a.productID and e.isDelete=0 and
+		e.status=1
+		join kplus_brand brand on brand.mainID=e.brandID and brand.isDelete=0
+		where a.isDelete=0 
+		<if test="supplierID!=null">
+		 and e.supplierID=#{supplierID}
+		</if>
+		<if test="supplierCategoryID!=null">
+		 and e.supplierCategoryID=#{supplierCategoryID}
+		</if>
+		) c
+        where 1=1
+		<if test="brandName != null">
+			and c.brandName like '%${brandName}%'
+		</if>
+		<if test="brandID != null">
+			and c.brandID=#{brandID}
+		</if>
+		<if test="name != null">
+			and c.name like '%${name}%'
+		</if>
+		<if test="productType != null">
+			and c.productType=#{productType}
+		</if>
+		<if test="productTypeID != null">
+			and c.productTypeID in ( 
+			select DISTINCT pc.productTypeID
+               from   
+                kplus_product_category pc
+              where 
+             pc.mainID  in  
+              (select   mainID 	
+              from
+               kplus_product_category  where
+		     	  parentID = #{productTypeID}
+			      or 
+			    mainID =  #{productTypeID}
+			  ) 
+              or 
+            pc.parentID in
+             (select  mainID from kplus_product_category
+			 where 	
+			  parentID =  #{productTypeID}
+			 or 
+			 mainID = #{productTypeID})
+			)
+			
+		</if>
+		<if test="startSalePrice != null and startSalePrice!='' ">
+			and c.salesPrice&gt;=#{startSalePrice}
+		</if>
+		<if test="endSalePrice != null and endSalePrice!='' ">
+			and c.salesPrice&lt;= #{endSalePrice}
+		</if>
+		group by c.productID -->
+	</select>
+	<select id="findItemByValues" parameterType="itemDetailDTO"
+		resultType="itemVO">
+
+		select uniItem.* from (
+		SELECT A.standrardPrice,
+		A.`name`,A.productID,A.picURL,A.purchasePrice,A.minimumQty,A.stock,A.salesPrice,A.mainID,A.modifyTime
+		FROM kplus_item A
+		WHERE A.productID =
+		#{productID}
+		AND A.isDelete=0
+		
+		AND A.mainID IN
+		(
+		SELECT C.itemID
+		FROM
+		kplus_item_detail C,
+		kplus_item_detail B
+		WHERE C.itemID=B.itemID
+		<if test="value1 != null">
+			AND C.itemPropValue=#{value1}
+		</if>
+		<if test="value2 != null">
+			AND B.itemPropValue=#{value2}
+		</if>
+		)
+
+		) uniItem where 1=1 ORDER BY uniItem.salesPrice
+		asc,uniItem.modifyTime
+		asc limit 0,1
+
+		<!-- SELECT A.standrardPrice, A.`name`,A.productID,A.picURL,A.purchasePrice,A.minimumQty,item.stock,item.salesPrice,A.mainID,item.supplierID 
+			FROM kplus_item A,kplus_zy_supplier_item item WHERE A.productID = #{productID} 
+			AND A.isDelete=0 and item.status=1 and item.isDelete=0 and item.itemID = 
+			A.mainID and item.salesPrice = ( select min(salesPrice) as price from kplus_zy_supplier_item 
+			where productID =#{productID} and stock>=2 and status = 1 and isDelete=0 
+			order by modifyTime asc ) AND item.stock>=2 AND A.mainID IN ( SELECT C.itemID 
+			FROM kplus_item_detail C, kplus_item_detail B WHERE C.itemID=B.itemID <if 
+			test="value1 != null"> AND C.itemPropValue=#{value1} </if> <if test="value2 
+			!= null"> AND B.itemPropValue=#{value2} </if> ) -->
+	</select>
+
+	<select id="findItemById" parameterType="java.lang.String"
+		resultType="itemVO">
+		SELECT * FROM kplus_item WHERE mainID=#{mainID}
+	</select>
+
+	<select id="finditemsByProductIDs" parameterType="java.lang.String"
+		resultType="itemVO">
+		select * from kplus_item k where k.productID in (select
+		p.mainID from kplus_product p where p.brandID=#{brandID} and
+		p.isDelete=0) and k.isDelete=0
+	</select>
+
+	<select id="findPreSaleList" parameterType="preSaleDTO"
+		resultType="preSaleVO">
+		SELECT
+		p.`name` as productName,
+		i.`name` as itemName,
+		ps.mainID,ps.itemID,ps.salesPrice,ps.maxmumQty,ps.fromDate,ps.endDate,ps.createTime,
+		i.standrardPrice,
+		i.picURL,ps.peopleBuy
+		FROM kplus_preSale ps
+		LEFT JOIN
+		kplus_product p ON ps.productID = p.mainID
+		LEFT JOIN kplus_item i ON
+		ps.itemID = i.mainID
+		WHERE ps.isDelete = 0
+		AND p.isDelete = 0
+		AND
+		i.isDelete = 0
+		<if test="productStatus != null">
+			and p.status = #{productStatus}
+		</if>
+		and CURDATE() BETWEEN ps.fromDate and
+		ps.endDate
+		GROUP BY ps.mainID
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findOrderItemByOrderID" parameterType="java.lang.String"
+		resultType="salesOrderLineVO">
+		select ksl.*,
+		ki.picURL as itemPicUrl,
+		ki.`name` as itemName
+		from kplus_salesorder_line ksl
+		LEFT JOIN kplus_item ki on
+		ksl.itemID=ki.mainID
+		where
+		ksl.orderID=#{orderID}
+	</select>
+
+	<select id="findItemByPagination" parameterType="itemDTO"
+		resultType="itemVO">
+		select * from kplus_item where isDelete=0
+		<if test="mainID!=null">
+			and mainID like '%${mainID}%'
+		</if>
+		<if test="name!=null">
+			and name like '%${name}%'
+		</if>
+		<if test="startTime!=null">
+			and modifyTime&gt;=#{startTime}
+		</if>
+		<if test="endTime!=null">
+			and modifyTime&lt;=#{endTime}
+		</if>
+		order by
+		salesVolume desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findItemCount" parameterType="itemDTO" resultType="java.lang.Long">
+		select count(mainID) from kplus_item where
+		isDelete=0
+		<if test="mainID!=null">
+			and mainID like '%${mainID}%'
+		</if>
+		<if test="name!=null">
+			and name like '%${name}%'
+		</if>
+		<if test="startTime!=null">
+			and modifyTime&gt;=#{startTime}
+		</if>
+		<if test="endTime!=null">
+			and modifyTime&lt;=#{endTime}
+		</if>
+	</select>
+
+	<select id="findItemByCategoryId" parameterType="itemDTO"
+		resultType="itemVO">
+		SELECT
+		item.*
+		FROM
+		kplus_item item,
+		kplus_product product,
+		kplus_product_category cat
+		WHERE
+		cat.mainID = #{categoryID}
+		AND
+		cat.productTypeID = product.productTypeID
+		AND
+		item.productID =
+		product.mainID
+		AND item.isDelete = 0
+		AND product.`status`=1
+		<if test="name != null">
+			AND product.name like '%${name}%'
+		</if>
+		GROUP BY product.mainID
+		ORDER BY item.createTime DESC
+		limit #{startRow} ,#{pageSize}
+	</select>
+	<select id="getItemCountByCategoryId" parameterType="itemDTO"
+		resultType="java.lang.Long">
+		select count(c.id) from (
+		SELECT
+		item.*
+		FROM
+		kplus_item item,
+		kplus_product product,
+		kplus_product_category cat
+		WHERE
+		cat.mainID = #{categoryID}
+		AND
+		cat.productTypeID = product.productTypeID
+		AND
+		item.productID =
+		product.mainID
+		AND product.`status`=1
+		
+		<if test="name != null">
+			AND item.name like '%${name}%'
+		</if>
+		group by productID
+		) c
+
+	</select>
+	<select id="findSupplierItemWaiting" parameterType="itemDTO"
+		resultType="itemVO">
+		SELECT
+		item.mainID,
+		p.supplierID AS sMainID,
+		item.productID,
+		item.`name`,
+		item.picURL,
+		item.standrardPrice,
+		item.salesPrice AS sSalesPrice,
+		item.salesPrice,
+		item.purchasePrice,
+		item.minimumQty,
+		item.weight,
+		item.stock,
+		p.supplierID,
+		item.createTime
+		FROM
+		kplus_item item,
+		kplus_product p
+		WHERE
+		p.supplierID = #{supplierID}
+		AND p.mainID=item.productID
+		AND
+		p.`status` = 0
+		AND p.isDelete = 0
+		AND item.isDelete = 0
+		<if test="name != null">
+			AND item.name like '%${name}%'
+		</if>
+		ORDER BY item.modifyTime DESC
+		limit #{startRow} ,#{pageSize}
+	</select>
+	<select id="getSupplierItemWaititngCount" parameterType="itemDTO"
+		resultType="java.lang.Long">
+		SELECT
+		count(item.mainID)
+		FROM
+		kplus_item item,
+		kplus_product p
+		WHERE
+		p.supplierID = #{supplierID}
+		AND
+		p.`status` = 0
+		AND p.isDelete = 0
+		AND item.isDelete = 0
+		AND item.productID =
+		p.mainID
+		AND p.`status` = 1
+		AND p.isDelete = 0
+		<if test="name != null">
+			AND item.name like '%${name}%'
+		</if>
+
+	</select>
+	<select id="findSupplierItemPass" parameterType="itemDTO"
+		resultType="itemVO">
+		SELECT
+		item.mainID,
+		p.supplierID AS sMainID,
+		item.productID,
+		item.`name`,
+		item.picURL,
+		p.standPrice as standrardPrice,
+		item.salesPrice AS sSalesPrice,
+		item.salesPrice,
+		item.purchasePrice,
+		item.minimumQty,
+		item.weight,
+		item.stock,
+		p.supplierID,
+		item.createTime,
+		item.modifyTime as modifyTime
+		FROM
+		kplus_item item,
+		kplus_product p
+		WHERE
+		p.supplierID = #{supplierID}
+		AND p.isDelete = 0
+		AND item.isDelete = 0
+		AND item.productID = p.mainID
+		AND p.`status` = #{status}
+		<if test="name != null">
+			AND p.name like '%${name}%'
+		</if>
+		group by p.mainID
+		ORDER BY
+		item.createTime desc ,
+		item.modifyTime DESC
+		limit #{startRow} ,#{pageSize}
+	</select>
+	<select id="getSupplierItemPassCount" parameterType="itemDTO"
+		resultType="java.lang.Long">
+		select count(c.id) from (
+		SELECT
+		item.*
+		FROM
+		kplus_item item,
+		kplus_product p
+		WHERE
+		p.supplierID = #{supplierID}
+		AND item.isDelete = 0
+		AND item.productID = p.mainID
+		AND p.`status` =
+		#{status}
+		AND p.isDelete = 0
+		<if test="name != null">
+			AND item.name like '%${name}%'
+		</if>
+		group by p.mainID
+		
+		) c
+
+	</select>
+
+	<select id="findItemsByProductID" parameterType="itemDTO"
+		resultType="itemVO">
+		SELECT A.standrardPrice,
+		A.`name`,A.productID,A.picURL,A.purchasePrice,A.minimumQty,A.stock,A.salesPrice,A.mainID,B.supplierID,s.companyName
+		as supplierName
+		FROM 
+		kplus_item A,kplus_product B
+		LEFT JOIN kplus_zy_supplier s on B.supplierID=s.mainID
+		WHERE A.isDelete=0 and
+		s.isDelete=0 and
+		A.productID=B.mainID
+		and
+		A.status=1 and A.isDelete=0
+		and
+		B.mainID=#{productID}
+		<if test="name != null">
+			AND A.name like '%${name}%'
+		</if>
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findSupplierItemById" parameterType="java.lang.String"
+		resultType="itemVO">
+		SELECT item.salesPrice as salesPrice FROM kplus_item
+		i,kplus_zy_supplier_item item
+		where item.itemID=i.mainID and
+		item.stock>=2 and item.status=1 and item.isDelete=0
+		and
+		item.salesPrice = (
+		select min(salesPrice) as price from
+		kplus_zy_supplier_item where
+		productID
+		=i.productID and stock>=2 and
+		status = 1 and isDelete=0 order
+		by modifyTime asc
+		) and
+		i.mainID=#{mainID}
+		limit 0,1
+	</select>
+
+	<select id="findItemDetailPropValue" parameterType="itemDetailDTO"
+		resultType="itemDetailVO">
+		select d.* from kplus_item_detail d
+		left join kplus_item i
+		on d.itemID=i.mainID
+		left join kplus_product p on i.productID=p.mainID
+		where i.isDelete=0 and d.pTypeIPropID=#{pTypeIPropID} and
+		p.mainID=#{itemID}
+		group by
+		d.itempropValue
+	</select>
+
+	<select id="findItemByIds" parameterType="java.lang.String"
+		resultType="itemVO">
+		SELECT
+		A.mainID,A.name,A.productID,A.picURL,A.standrardPrice,item.salesPrice
+		as salesPrice FROM kplus_item A
+		left join kplus_zy_supplier_item item
+		on item.itemID=A.mainID
+		WHERE A.isDelete=0 and item.stock>=2 and
+		item.status=1 and
+		item.isDelete=0
+		and
+		item.salesPrice = (
+		select
+		min(salesPrice) as price
+		from
+		kplus_zy_supplier_item where productID
+		=A.productID and stock>=2 and
+		status = 1 and
+		isDelete=0 order by
+		modifyTime asc
+		) and A.mainID=#{mainID}
+	</select>
+	
+	<select id="findAllItem" parameterType="itemDTO"
+		resultType="itemVO">
+		select * from kplus_item where isDelete=0
+		<if test="mainID!=null">
+			and mainID like '%${mainID}%'
+		</if>
+		<if test="name!=null">
+			and name like '%${name}%'
+		</if>
+		order by
+		salesVolume desc
+	</select>
+	
+	<!-- tparts -->
+	<select id="findItemsByProductIDNew" parameterType="itemDTO" resultType="itemVO">
+		SELECT 
+		s.companyName AS supplierName,
+		i.*
+		FROM 
+		kplus_item i,kplus_product p,kplus_zy_supplier s
+		WHERE i.productID = p.mainID
+		AND i.supplierID = s.mainID
+		AND p.isDelete=0
+		AND i.isDelete=0
+		AND i.status=1
+		AND i.supplierid NOT IN (SELECT mainID FROM kplus_zy_supplier WHERE isdelete=1)
+		AND i.productID = #{productID}
+		ORDER BY
+		salesPrice ASC
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findItemsCountByProductID" parameterType="itemDTO" resultType="java.lang.Long">
+		select count(i.id) 
+		from kplus_item i,kplus_product p,kplus_zy_supplier s
+		where i.isDelete=0
+		and p.isDelete=0
+		and i.status=1
+		and i.productID=p.mainID
+		and i.supplierID = s.mainID
+		and i.supplierid NOT IN (SELECT mainID FROM kplus_zy_supplier WHERE isdelete=1)
+		and i.productID = #{productID}
+	</select>		
+	
+
+	<insert id="insertItemNew" parameterType="itemDTO">
+		INSERT INTO kplus_item(
+		mainID,
+		productID,
+		name,
+		oldNumber,
+		picURL,
+		costPrice,
+		standrardPrice,
+		distributionPrice,
+		retailPrice,
+		salesPrice,
+		purchasePrice,
+		minimumQty,
+		weight,
+		cubage,
+		quantity,
+		stock,
+		saftyStock,
+		sortOrder,
+		description,
+		isDelete,
+		creator,
+		createTime,
+		modifyTime,
+		score,
+		scorePrice,
+		salesScore,
+		salesVolume,
+		status,
+		skuCode,
+		supplierCategoryID,
+		supplierID,
+		supplierName,
+		freightTemplateID
+		)
+		VALUES
+		(
+		#{mainID},
+		#{productID},
+		#{name},
+		#{oldNumber},
+		#{picURL},
+		#{costPrice},
+		#{standrardPrice},
+		#{distributionPrice},
+		#{retailPrice},
+		#{salesPrice},
+		#{purchasePrice},
+		#{minimumQty},
+		#{weight},
+		#{cubage},
+		#{quantity},
+		#{stock},
+		#{saftyStock},
+		#{sortOrder},
+		#{description},
+		#{isDelete},
+		#{creator},
+		now(),
+		now(),
+		#{score},
+		#{scorePrice},
+		#{salesScore},
+		#{salesVolume},
+		#{status},
+		#{skuCode},
+		#{supplierCategoryID},
+		#{supplierID},
+		#{supplierName},
+		#{freightTemplateID}
+		)
+	</insert>
+
+	<!--下面的select可在适当的时候删除-->
+	<insert id="insertSupplierItem" parameterType="supplierItemDTO">
+		INSERT INTO kplus_zy_supplier_item(
+		mainID,
+		supplierName,
+		supplierID,
+		productID,
+		itemID,
+		salesPrice,
+		quantity,
+		stock,
+		saftyStock,
+		status,
+		refusedDescription,
+		isDelete,
+		creator,
+		createTime,
+		modifier,
+		modifyTime,
+		saleCount
+		)
+		VALUES
+		(
+		#{mainID},
+		#{supplierName},
+		#{supplierID},
+		#{productID},
+		#{itemID},
+		#{salesPrice},
+		#{quantity},
+		#{stock},
+		#{saftyStock},
+		#{status},
+		#{refusedDescription},
+		#{isDelete},
+		#{creator},
+		now(),
+		#{modifier},
+		now(),
+		#{saleCount}
+		)
+	</insert>
+
+	<select id="getSupplierPassItemsCount" parameterType="itemDTO"
+		resultType="java.lang.Long">
+		select count(c.id) from (
+		SELECT
+		item.*
+		FROM
+		kplus_item item
+		WHERE
+		item.supplierID = #{supplierID}
+		AND item.isDelete = 0
+		AND item.status = #{status}
+		AND item.productID = #{productID}
+		<if test="skuCode != null">
+			AND item.skuCode = #{skuCode}
+		</if>
+		) c
+	</select>
+	
+	<select id="findSupplierPassItems" parameterType="itemDTO"
+		resultType="itemVO">
+		SELECT
+		item.*,
+		item.salesPrice AS sSalesPrice,
+		item.supplierID AS sMainID
+		FROM
+		kplus_item item
+		WHERE
+		item.supplierID = #{supplierID}
+		AND item.isDelete = 0
+		AND item.status = #{status}
+		AND item.productID = #{productID}
+		<if test="skuCode != null">
+			AND item.skuCode = #{skuCode}
+		</if>
+		ORDER BY
+		item.modifyTime DESC
+		<!--limit #{startRow} ,#{pageSize}-->
+	</select>
+	
+	
+	<update id="updateItemByMainIDNew" parameterType="itemDTO">
+		update kplus_item
+		set modifyTime=now()
+		<if test="name != null">
+			, name = #{name}
+		</if>
+		<if test="productID != null">
+			, productID = #{productID}
+		</if>
+		<if test="oldNumber != null">
+			, oldNumber = #{oldNumber}
+		</if>
+		<if test="picURL != null">
+			, picURL = #{picURL}
+		</if>
+		<if test="costPrice != null">
+			, costPrice = #{costPrice}
+		</if>
+		<if test="standrardPrice != null">
+			, standrardPrice = #{standrardPrice}
+		</if>
+		<if test="distributionPrice != null">
+			, distributionPrice = #{distributionPrice}
+		</if>
+		<if test="retailPrice != null">
+			, retailPrice = #{retailPrice}
+		</if>
+		<if test="salesPrice != null">
+			, salesPrice = #{salesPrice}
+		</if>
+		<if test="purchasePrice != null">
+			, purchasePrice = #{purchasePrice}
+		</if>
+		<if test="minimumQty != null">
+			, minimumQty = #{minimumQty}
+		</if>
+		<if test="weight != null">
+			, weight = #{weight}
+		</if>
+		<if test="cubage != null">
+			, cubage = #{cubage}
+		</if>
+		<if test="quantity != null">
+			, quantity = #{quantity}
+		</if>
+		<if test="stock != null">
+			, stock = #{stock}
+		</if>
+		<if test="saftyStock != null">
+			, saftyStock = #{saftyStock}
+		</if>
+		<if test="description != null">
+			, description = #{description}
+		</if>
+		<if test="sortOrder != null">
+			, sortOrder = #{sortOrder}
+		</if>
+		<if test="modifier != null">
+			, modifier = #{modifier}
+		</if>
+		<if test="score!=null">
+			,score=#{score}
+		</if>
+		<if test="scorePrice!=null">
+			,scorePrice=#{scorePrice}
+		</if>
+		<if test="salesScore!=null">
+			,salesScore=#{salesScore}
+		</if>
+		<if test="salesVolume!=null">
+			,salesVolume=#{salesVolume}
+		</if>
+		<if test="status!=null">
+			,status=#{status}
+		</if>
+		<if test="supplierCategoryID!=null">
+			,supplierCategoryID=#{supplierCategoryID}
+		</if>
+		<if test="freightTemplateID!=null">
+			,freightTemplateID=#{freightTemplateID}
+		</if>
+		where mainID = #{mainID} and isDelete=0
+	</update>
+	
+	
+	<update id="editItemTest" parameterType="itemVO">
+		update kplus_item
+		set modifyTime=now()
+		<if test="picURL != null">
+			, picURL = #{picURL}
+		</if>
+		where mainID = #{mainID}
+	</update>	
+	
+	
+</mapper>

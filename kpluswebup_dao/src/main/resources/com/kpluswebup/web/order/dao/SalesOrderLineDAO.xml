@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.order.dao.SalesOrderLineDAO">
+
+	<sql id="Base_Column_List">
+		id, orderID, productID, itemID, standrardPrice, salesPrice,
+		transactionPrice, itemCount,
+		isPromotion, status, returnApplyID,
+		creator,
+		createTime, modifier, modifyTime,objID
+	</sql>
+
+	<select id="selectByPrimaryKey" resultType="salesOrderLineVO"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_salesorder_line
+		where id = #{id}
+	</select>
+
+	<select id="findSalesOrderLine" parameterType="java.lang.String"
+		resultType="salesOrderLineVO">
+		select
+		sl.*,
+		sp.companyName AS supplierName,
+		p.name as productName,
+		i.name as itemName,
+		i.picURL as itemPicUrl,
+		c.nick
+		FROM
+		kplus_salesorder_line sl
+		LEFT JOIN
+		kplus_salesorder s ON
+		sl.orderID=s.mainID
+		LEFT JOIN kplus_customer c ON
+		s.customerID=c.mainID
+		LEFT JOIN kplus_product p ON
+		sl.productID=p.mainID
+		LEFT JOIN kplus_item
+		i ON sl.itemID=i.mainID
+		LEFT JOIN kplus_zy_supplier sp ON sp.mainID = sl.supplierID
+		where
+		sl.orderID = #{orderID} <!-- and
+		s.isDelete=0
+		and
+		c.isDelete=0 and
+		p.isDelete=0 and
+		i.isDelete=0 -->
+	</select>
+
+	<select id="findSalesOrderLineBySearch" parameterType="salesOrderLineDTO"
+		resultType="salesOrderLineVO">
+		select
+		sl.*,
+		p.name as productName,
+		i.name as itemName,
+		i.picURL as
+		itemPicUrl,
+		c.nick
+		FROM
+		kplus_salesorder_line sl
+		LEFT JOIN
+		kplus_salesorder s ON
+		sl.orderID=s.mainID
+		LEFT JOIN kplus_customer c ON
+		s.customerID=c.mainID
+		LEFT JOIN kplus_product p ON
+		sl.productID=p.mainID
+		LEFT JOIN kplus_item
+		i ON sl.itemID=i.mainID
+		where
+		sl.orderID = #{orderID} and
+		s.isDelete=0
+		and
+		c.isDelete=0
+		<if test="itemID!=null">
+			and sl.itemID like '%${itemID}%'
+		</if>
+		<if test="itemName!=null">
+			and i.name like '%${itemName}%'
+		</if>
+	</select>
+	
+	<select id="findDeleteOrderLineBySearch" parameterType="salesOrderLineDTO"
+		resultType="salesOrderLineVO">
+		select
+		sl.*,
+		p.name as productName,
+		i.name as itemName,
+		i.picURL as
+		itemPicUrl,
+		c.nick
+		FROM
+		kplus_salesorder_line sl
+		LEFT JOIN
+		kplus_salesorder s ON
+		sl.orderID=s.mainID
+		LEFT JOIN kplus_customer c ON
+		s.customerID=c.mainID
+		LEFT JOIN kplus_product p ON
+		sl.productID=p.mainID
+		LEFT JOIN kplus_item
+		i ON sl.itemID=i.mainID
+		where
+		sl.orderID = #{orderID} and
+		s.isDelete=1
+		and
+		c.isDelete=0
+		<if test="itemID!=null">
+			and sl.itemID like '%${itemID}%'
+		</if>
+		<if test="itemName!=null">
+			and i.name like '%${itemName}%'
+		</if>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		kplus_salesorder_line
+		where id = #{id}
+	</delete>
+
+	<insert id="addSalesOrderLine" parameterType="salesOrderLineDTO">
+		insert into
+		kplus_salesorder_line(
+		mainID,
+		orderID,
+		productID,
+		itemID,
+		standrardPrice,
+		salesPrice,
+		transactionPrice,
+		itemCount,
+		isPromotion,
+		status,
+		returnApplyID,
+		createTime,
+		type,
+		salesScore,
+		objID,
+		supplierID,
+		iscarriered,
+		totalAmount
+		)
+		values(
+		#{mainID},
+		#{orderID},
+		#{productID},
+		#{itemID},
+		#{standrardPrice},
+		#{salesPrice},
+		#{transactionPrice},
+		#{itemCount},
+		#{isPromotion},
+		#{status},
+		#{returnApplyID},
+		now(),
+		#{type},
+		#{salesScore},
+		#{objID},
+		#{supplierID},
+		0,
+		#{totalAmount}
+		)
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="salesOrderLineDTO">
+		update kplus_salesorder_line
+		<set>
+			modifyTime=now()
+			<if test="orderID != null">
+				,orderID = #{orderID}
+			</if>
+			<if test="productID != null">
+				,productID = #{productID}
+			</if>
+			<if test="itemID != null">
+				,itemID = #{itemID}
+			</if>
+			<if test="standrardPrice != null">
+				,standrardPrice = #{standrardPrice}
+			</if>
+			<if test="salesPrice != null">
+				,salesPrice = #{salesPrice}
+			</if>
+			<if test="transactionPrice != null">
+				,transactionPrice = #{transactionPrice}
+			</if>
+			<if test="itemCount != null">
+				,itemCount = #{itemCount}
+			</if>
+			<if test="isPromotion != null">
+				,isPromotion = #{isPromotion}
+			</if>
+			<if test="status != null">
+				,status = #{status}
+			</if>
+			<if test="returnApplyID != null">
+				,returnApplyID = #{returnApplyID}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="updateByParameters" parameterType="salesOrderLineDTO">
+		update kplus_salesorder_line
+		<set>
+			<if test="orderID != null">
+				orderID = #{orderID},
+			</if>
+			<if test="productID != null">
+				productID = #{productID},
+			</if>
+			<if test="itemID != null">
+				itemID = #{itemID},
+			</if>
+			<if test="standrardPrice != null">
+				standrardPrice = #{standrardPrice},
+			</if>
+			<if test="salesPrice != null">
+				salesPrice = #{salesPrice},
+			</if>
+			<if test="transactionPrice != null">
+				transactionPrice = #{transactionPrice},
+			</if>
+			<if test="itemCount != null">
+				itemCount = #{itemCount},
+			</if>
+			<if test="isPromotion != null">
+				isPromotion = #{isPromotion},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="returnApplyID != null">
+				returnApplyID = #{returnApplyID},
+			</if>
+			<if test="creator != null">
+				creator = #{creator},
+			</if>
+			<if test="createTime != null">
+				createTime = #{createTime},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime = #{modifyTime}
+			</if>
+		</set>
+		where orderID = #{orderID}
+		AND productID = #{productID}
+		AND itemID =
+		#{itemID}
+	</update>
+
+	<update id="updateSalesOrderLineByID" parameterType="salesOrderLineDTO">
+		update kplus_salesorder_line
+		<set>
+			modifyTime=now()
+			<if test="transactionPrice!=null">
+				,transactionPrice=#{transactionPrice}
+			</if>
+			<if test="itemCount!=null">
+				,itemCount=#{itemCount}
+			</if>
+			<if test="salesScore!=null">
+				,salesScore=#{salesScore}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="status != null">
+				,status = #{status}
+			</if>
+			<if test="iscarriered != null">
+				,iscarriered = #{iscarriered}
+			</if>
+			<if test="totalAmount != null">
+				,totalAmount = #{totalAmount}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="findSalesOrderLineByID" parameterType="java.lang.Long"
+		resultType="salesOrderLineVO">
+		select * from kplus_salesorder_line where id=#{id}
+	</select>
+
+	<select id="findSalesOrderPresellLine" parameterType="java.lang.String"
+		resultType="salesOrderLineVO">
+		select
+		sl.*,
+		p.name as productName,
+		i.name as itemName,
+		i.salesPrice as salesPrice,
+		i.picURL as itemPicUrl,
+		c.nick,
+		ps.endDate as preEndDate
+		FROM
+		kplus_salesorder_line sl
+		LEFT JOIN kplus_salesorder s ON
+		sl.orderID=s.mainID
+		LEFT JOIN kplus_customer c ON s.customerID=c.mainID
+		LEFT JOIN kplus_product p ON sl.productID=p.mainID
+		LEFT JOIN kplus_item
+		i ON sl.itemID=i.mainID
+		LEFT JOIN kplus_preSale ps
+		ON sl.objID=ps.mainID
+		where
+		sl.orderID = #{orderID} and
+		s.isDelete=0
+		and s.orderType=1
+		and
+		c.isDelete=0 and
+		p.isDelete=0 and
+		i.isDelete=0
+	</select>
+	
+	<select id="findSalesOrderLineByItem" parameterType="java.lang.String" resultType="salesOrderLineVO">
+	  select * from kplus_salesorder_line l
+	  left join kplus_salesorder s on l.orderID=s.mainID
+	  left join kplus_item i on l.itemID=i.mainID
+	  where s.orderStatus&gt;=1 and s.paymentStatus=1
+	</select>
+	<select id="findSalesOrderLineByProductId" parameterType="java.lang.String"
+			resultType="salesOrderLineVO">
+			select * from kplus_salesorder_line 
+			LEFT JOIN 
+			kplus_product p on productID = p.mainID and p.isDelete = 0 and p.`status` = 1
+			LEFT JOIN kplus_salesorder so on  orderID = so.mainID and so.orderStatus !=0 
+			where productID=#{productID} 
+	</select>
+	
+	<!-- tparts -->
+	<select id="findSalesOrderLineByIDTparts" parameterType="java.lang.String"
+		resultType="salesOrderLineDTO">
+	   SELECT
+		sl.itemID,sl.salesPrice AS salesPrice,i.picURL AS itemPicUrl,i.name AS itemName
+		FROM
+		kplus_salesorder_line sl,kplus_item i
+		WHERE
+	  sl.itemID = i.mainID and sl.orderID = #{orderID}	
+	</select>
+	
+</mapper>

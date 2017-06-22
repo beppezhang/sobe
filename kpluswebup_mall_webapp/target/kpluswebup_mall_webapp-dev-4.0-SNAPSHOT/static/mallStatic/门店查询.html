@@ -1,0 +1,319 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<title>购物车</title>
+<link rel="stylesheet" type="text/css" href="css/global.css">
+<link rel="stylesheet" type="text/css" href="css/shopcart.css">
+<link rel="stylesheet" type="text/css" href="css/shopaddr.css">
+<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=A4749739227af1618f7b0d1b588c0e85"></script>
+    <!-- 加载百度地图样式信息窗口 -->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+
+</head>
+
+<body>
+<!--顶部信息-->
+<div id="topbar">
+    <div class="layout txt_r clearfix">
+        <div class="lt welbox">欢迎来到中邮普泰<a href="#">请登录</a><a href="#">免费注册</a></div>
+        <div class="shortcut_bar">
+            <span class="linkbox"><a href="#">我的主页</a></span>
+            <span class="linkbox"><a href="#">我的订单</a></span>
+            <span class="linkbox"><a href="#" class="phone"><i></i>手机版</a></span>
+            <span class="linkbox"><a href="#">我是供应商</a></span>
+            <span class="linkbox serviceLink"><a href="#">客服服务<i class="down"></i></a></span>
+            <span class="linkbox"><a href="#" class="listLink">网站导航<i class="down"></i></a></span>
+        </div>
+    </div>
+</div>
+<div class="shopAddr">
+    <div class="wrapper">
+        <h3 class="lt">当前位置：<a href="http://www.ch999.com">首页</a> &gt; <span>门店查询</span></h3>
+        <div class="addr_tit">
+                <span class="area" id="now_area" style="">昆明市区</span>共有<span class="num" id="shopCount">17</span>个店：
+        </div>
+        <div class="s_addr">
+            <div class="lt">选择您要查询的地区：</div>
+            <div id="ct_sheng" class="selectBox">
+                <span>云南省</span><i class="icon"></i>
+                <div class="sList">
+                    <a onclick="loadKcArea(53,this)" pname="云南省">云南省</a><a onclick="loadKcArea(52,this)" pname="贵州省">贵州省</a><a onclick="loadKcArea(51,this)" pname="四川省">四川省</a><a onclick="loadKcArea(50,this)" pname="重庆市">重庆市</a><a onclick="loadKcArea(21,this)" pname="辽宁省">辽宁省</a>
+                </div>
+            </div>
+            <div id="ct_shi" class="selectBox">
+                <span>昆明市</span><i class="icon"></i>
+                <div class="sList"><a onclick="loadxian(5301,this,event)" zname="昆明市">昆明市</a><a onclick="loadxian(5329,this,event)" zname="大理州">大理州</a><a onclick="loadxian(5303,this,event)" zname="曲靖市">曲靖市</a><a onclick="loadxian(5304,this,event)" zname="玉溪市">玉溪市</a><a onclick="loadxian(5308,this,event)" zname="普洱市">普洱市</a><a onclick="loadxian(5328,this,event)" zname="西双版纳">西双版纳</a><a onclick="loadxian(5323,this,event)" zname="楚雄州">楚雄州</a><a onclick="loadxian(5307,this,event)" zname="丽江市">丽江市</a><a onclick="loadxian(5325,this,event)" zname="红河州">红河州</a><a onclick="loadxian(5331,this,event)" zname="德宏州">德宏州</a><a onclick="loadxian(5326,this,event)" zname="文山州">文山州</a><a onclick="loadxian(5306,this,event)" zname="昭通市">昭通市</a><a onclick="loadxian(5305,this,event)" zname="保山市">保山市</a><a onclick="loadxian(5309,this,event)" zname="临沧市">临沧市</a><a onclick="loadxian(5334,this,event)" zname="迪庆州">迪庆州</a></div>
+            </div>
+            <div id="ct_xian" class="selectBox">
+                <span did="530102">昆明市区</span><i class="icon"></i>
+                <div class="sList"><a pid="53" zid="5301" did="530102" dname="昆明市区" onclick="xzxian(this,event)">昆明市区</a><a pid="53" zid="5301" did="530181" dname="安宁市" onclick="xzxian(this,event)">安宁市</a><a pid="53" zid="5301" did="530114" dname="呈贡区" onclick="xzxian(this,event)">呈贡区</a><a pid="53" zid="5301" did="530127" dname="嵩明县" onclick="xzxian(this,event)">嵩明县</a><a pid="53" zid="5301" did="530129" dname="寻甸县" onclick="xzxian(this,event)">寻甸县</a><a pid="53" zid="5301" did="530122" dname="晋宁县" onclick="xzxian(this,event)">晋宁县</a><a pid="53" zid="5301" did="530113" dname="东川区" onclick="xzxian(this,event)">东川区</a><a pid="53" zid="5301" did="530125" dname="宜良县" onclick="xzxian(this,event)">宜良县</a></div>
+            </div>
+            <div class="onlyRepair"><label><input id="onlyRepair" type="checkbox" value="1">维修服务</label></div><div id="onlyRepairTip"></div>
+        </div>
+         
+    </div>
+</div>
+<div class="map_wraper">
+    <div class="addr_list dianpu">
+        <div class="addr_con">
+            <ul id="shopList">
+                <li>
+                    <div style="cursor:pointer" onclick="MapCenter('102.704673,25.060077')">
+                        <h4>
+                            佰腾总店
+                            <i class="icon_sev">销售</i>
+                            <i class="icon_sev icon_hou">维修</i>
+                        </h4>
+                        <p>地址：昆明市圆通北路127号云大晟苑5楼</p>
+                        <p>销售热线：0871-68393939</p>
+                        <p>工作时间：周一至周日:9:00-21:30</p>    
+                    </div>
+                    
+                    <div class="btn-box">
+                        <a class="btn1" href="#">店铺详情</a>
+                        <a class="btn2" href="javascript:sendToPhone('佰腾总店地址：昆明市圆通北路127号云大晟苑5楼\n销售热线：0871-68393939\n工作时间：周一至周日:9:00-21:30',1,1);">发送到手机</a>
+                    </div>
+                </li>
+            </ul>
+            <div class="clr"></div>
+        </div>
+    </div>
+    <div class="map-box" id="map-box"></div>
+</div>
+
+
+<!-- 公用底部开始 -->
+<div id="footer">
+    <div class="layout clearfix">
+        <div class="slogen clearfix">
+            <dl>
+                <dt><img src="images/gw1_ico.jpg"></dt>
+                <dd><h2>正品保障</h2><p>正品保障 提供发票</p></dd>
+            </dl>
+            <dl>
+                <dt><img src="images/gw2_ico.jpg"></dt>
+                <dd><h2>极速物流</h2><p>极速物流 极速送达</p></dd>
+            </dl>
+            <dl>
+                <dt><img src="images/gw3_ico.jpg"></dt>
+                <dd><h2>无忧售后</h2><p>15天无理由退货</p></dd>
+            </dl>
+            <dl>
+                <dt><img src="images/gw4_ico.jpg"></dt>
+                <dd><h2>特色服务</h2><p>自助维修包养预约</p></dd>
+            </dl>
+            <dl>
+                <dt><img src="images/gw5_ico.jpg"></dt>
+                <dd><h2>帮助中心</h2><p>您的购物指南</p></dd>
+            </dl>
+        </div>
+      <div class="root_ser">
+            <dl>
+                <dt>购物指南</dt>
+                <dd><a href="#" target="_blank">导购显示</a></dd>
+                <dd><a href="#" target="_blank">免费注册</a></dd>
+                <dd><a href="#" target="_blank">会员等级</a></dd>
+                <dd><a href="#" target="_blank">常见问题</a></dd>
+            </dl>
+            <dl>
+              <dt>支付方式</dt>
+                <dd><a href="#" target="_blank">易付宝支付</a></dd>
+                <dd><a href="#" target="_blank">网银支付</a></dd>
+                <dd><a href="#" target="_blank">快捷支付</a></dd>
+                <dd><a href="#" target="_blank">分期付款</a></dd>
+                <dd><a href="#" target="_blank">货到付款</a></dd>
+                <dd><a href="#" target="_blank">门店支付</a></dd>
+            </dl>
+            <dl>
+              <dt>物流配送</dt>
+                <dd><a href="#" target="_blank">面运费政策</a></dd>
+                <dd><a href="#" target="_blank">配送服务承诺</a></dd>
+                <dd><a href="#" target="_blank">牵手验货</a></dd>
+                <dd><a href="#" target="_blank">物流查询</a></dd>
+            </dl>
+            <dl>
+              <dt>售后服务</dt>
+                <dd><a href="#" target="_blank">退换货政策</a></dd>
+                <dd><a href="#" target="_blank">退换货流程</a></dd>
+                <dd><a href="#" target="_blank">购买延保服务</a></dd>
+                <dd><a href="#" target="_blank">退款说明</a></dd>
+                <dd><a href="#" target="_blank">退换货申请</a></dd>
+                <dd><a href="#" target="_blank">维修/包养</a></dd>
+            </dl>
+            <dl>
+              <dt>商家服务</dt>
+                <dd><a href="#" target="_blank">商家入住</a></dd>
+                <dd><a href="#" target="_blank">信息公告</a></dd>
+                <dd><a href="#" target="_blank">培训中心</a></dd>
+                <dd><a href="#" target="_blank">信息公告</a></dd>
+                <dd><a href="#" target="_blank">广告服务</a></dd>
+                <dd><a href="#" target="_blank">商家帮助</a></dd>
+                <dd><a href="#" target="_blank">服务市场</a></dd>
+            </dl>
+            <div class="weixin ct rt">
+                <p><strong class="f14">中邮普泰微信</strong></p>
+                <p><img src="images/weixin.jpg"></p>  
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div id="btmbar">
+    <div class="info">
+        <p><a href="#" target="_blank">关于中邮普泰</a> | <a href="#" target="_blank">我们的团队</a> | <a href="#" target="_blank">网站联盟</a> | <a href="#" target="_blank">热门搜索</a> | <a href="#" target="_blank">友情链接</a> | <a href="#" target="_blank">诚征人才</a></p>
+        <p>浙ICP备2121245号|台字B1.B2-2013004|营业执照|互联网药品信息服务资格证|互联网药品交易服务资格证</p>
+        <p>Copyright &copy;中邮普泰 2007-2015 ，All Right Reserved</p>
+        <p class="mt10">
+            <img src="images/pic-flink.jpg"/>
+        </p>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+
+
+ 
+<script>
+    /* 省市区点击效果 */
+    $(function () {
+        var mapTimer;
+        $(".selectBox span").hover(function () {
+            clearInterval(mapTimer);
+            $(this).parent().addClass("cur").siblings().removeClass("cur");
+        }, function () {
+            mapTimer = setInterval(function () {
+                $(".selectBox").removeClass("cur");
+            }, 200)
+        });
+        $(".sList").hover(function () {
+            clearInterval(mapTimer);
+        }, function () {
+            $(this).parent().removeClass("cur");
+        })
+    });
+    function loadKcArea(pid, the) {
+        $(the).parents(".selectBox").find("span").html($(the).text());
+        $("#ct_shi span").html("请选择");
+        $("#ct_xian span").html("请选择");
+        IsHideSList($(the));
+        $("#ct_xian .sList").html("");
+    }
+    function loadxian(sid, the, event) {
+        $("#ct_shi span").html($(the).attr("zname"));
+        $("#ct_xian span").html("请选择");
+        IsHideSList($(the));
+
+        event.stopPropagation && event.stopPropagation();
+    }
+    function xzxian(the, event) {
+        $("#ct_xian").removeClass("cur");
+        $(the).parents(".selectBox").find("span").attr("did", $(the).attr("did")).html($(the).attr("dname"));
+        SetMap($(the).attr("did"));
+        $("#now_area").show().html($(the).attr("dname"));
+        event.stopPropagation && event.stopPropagation();
+    }
+
+    function IsHideSList(obj) {
+        if (obj.parents(".selectBox").hasClass("cur")) {
+            obj.parents(".selectBox").removeClass("cur");
+        }
+    }
+
+    /*var map = new BMap.Map("map-box");          
+    map.centerAndZoom(new BMap.Point(102.704673,25.060077), 11);
+    map.enableScrollWheelZoom();
+    map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+    var local = new BMap.LocalSearch(map, {
+        renderOptions:{map: map}
+    });
+    local.search("九牛"); */
+
+
+    function SetMap(area)
+    {
+         area = area || 39;
+         var myIcon = new BMap.Icon("http://www.ch999.com/images/shopimg.png?v=1", new BMap.Size(50, 64)); //设置图标
+         var sev = ($("#onlyRepair").is(":checked"))?"s":""
+        $.get("/ShopAddress.aspx?act=GetShops&zid=" + area+"&sev="+sev, {}, function (shops) {
+            var gpsPoint;
+            listShop(shops);
+            for (var i = 0; i < shops.length; i++) {
+                var shop = shops[i];
+                var position = shop.position.split(",");
+                if (position == "") return;
+                var xx = parseFloat(position[0]);
+                var yy = parseFloat(position[1]);
+                
+                if (i == 0) {
+                    gpsPoint = new BMap.Point(xx + 0.007, yy + 0.0035);
+
+                    //地图初始化
+                    bm = new BMap.Map("map-box");
+                    bm.centerAndZoom(gpsPoint, 14);
+                    mapWforGPS = new BMapLib.MapWrapper(bm, BMapLib.COORD_TYPE_GPS);
+                    bm.addControl(new BMap.NavigationControl());
+                    bm.enableScrollWheelZoom(true);
+                }
+                gpsMkr[i] = new BMap.Marker(new BMap.Point(xx, yy), { icon: myIcon });
+                mapWforGPS.addOverlay(gpsMkr[i]);
+
+
+                infoText[i] = "<div style='font-size:12px;line-height:20px;'><div><span style='font-weight:700;color:#666;'>店名：</span>" + shop.AreaName + "</div><div><span style='font-weight:700;color:#666;'>地址：</span>" + shop.Address + "</div><div><span style='font-weight:700;color:#666;'>电话：</span>" + shop.Tel + " [<a style='color:#39f;' href='" + shop.Url + "' >查看详细信息</a>]</div></div>";
+                gpsMkr[i].index = i;
+                gpsMkr[i].addEventListener("click", function () {
+                    var infoWin = new BMap.InfoWindow(infoText[this.index]);
+                    infoWin.redraw();
+                    this.openInfoWindow(infoWin);
+                });
+
+            }
+        }, "json");
+
+        function listShop(shops)
+        {
+            var shopHtml = [];
+            $("#shopCount").text(shops.length);
+            if (shops.length > 0) {
+                for (var i = 0; i < shops.length; i++) {
+                    var shop = shops[i];
+                    shopHtml.push("<li><div style='cursor:pointer' onclick='MapCenter(\"", shop.position, "\")'><h4>", shop.AreaName);
+                    if (shop.kind2 == "0") {
+                        shopHtml.push("<i class='icon_sev'>销售</i><i class='icon_sev icon_hou'>维修</i>");
+                    } else if (shop.kind2 == "1") {
+                        shopHtml.push("<i class='icon_sev'>销售</i>");
+                    } else {
+                        shopHtml.push("<i class='icon_sev icon_hou'>维修</i>");
+                    }
+                    shopHtml.push("</h4><p>地址：" + shop.Address + "</p>");
+                    shopHtml.push("<p>销售热线：", shop.Tel, "</p>");
+                    shopHtml.push("<p>工作时间：", shop.Hours, "</p></div>");
+                    shopHtml.push("<div class=\"btn-box\"><a class=\"btn1\" href=\"", shop.Url, "\">店铺详情</a>");
+                    shopHtml.push("<a class=\"btn2\" href=\"javascript:sendToPhone('",
+                    shop.AreaName, "地址：", shop.Address, "\\n销售热线：", shop.Tel, "\\n工作时间：", shop.Hours, "',", shop.Id, ",1);\" >发送到手机</a>");
+                    shopHtml.push("</div></li>");
+                }
+                $("#shopList").html(shopHtml.join(""));
+            } else {
+                $("#shopList").html('<li style="color:#666;line-height:30px;border:0;font-size:14px;"><span>“' + $("#ct_xian a[did=" + area + "]").text() + '</span>”内可进行门店送修，暂无法进行店内维修。</li>');
+            }
+        }
+     }
+
+
+
+    /* 店铺点击跳到指定地图位置 */
+    function MapCenter(posi){
+         var position = posi.split(",");
+         if (position == "") return;
+         var xx = parseFloat(position[0]);
+         var yy = parseFloat(position[1]);
+         var point = new BMap.Point(xx + 0.007, yy + 0.0035);
+         map.centerAndZoom(point, 17);
+    }
+</script>
+</body>
+</html>

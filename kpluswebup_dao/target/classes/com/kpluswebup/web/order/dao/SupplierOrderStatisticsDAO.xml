@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.order.dao.SupplierOrderStatisticsDAO">
+
+	<insert id="generateYesterdaySupplierOrderStatistics" >
+		INSERT INTO kplus_zy_statistics_supplier_order (
+			mainID,
+			supplierID,
+			orderCount,
+			totalAmount,
+			date
+		) SELECT
+			CONCAT(DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'),ROUND(RAND()*10000)) AS mainID,
+			statistics.supplierID AS supplierID,
+			COUNT(statistics.orderID) AS orderCount,
+			SUM(statistics.totalAmount) AS totalAmount,
+			SUBDATE(CURDATE(), INTERVAL 1 DAY) AS date
+		FROM
+			(
+				SELECT
+					o.customerID AS customerID,
+					o.mainID AS orderID,
+					line.supplierID AS supplierID,
+					line.itemID,
+					SUM(line.totalAmount) AS totalAmount,
+					CONCAT(o.mainID, line.supplierID) AS goup
+				FROM
+					kplus_salesorder_line line
+				LEFT JOIN kplus_salesorder o ON line.orderID = o.mainID
+				WHERE
+					o.orderStatus > 1
+				AND o.createTime > DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+				GROUP BY
+					goup
+			) AS statistics
+		GROUP BY
+			statistics.supplierID
+	</insert>
+	<select id="findYesterdayStatistics" parameterType="java.lang.String" 
+			resultType="supplierSalesOrderStatisticsVO">
+		SELECT
+			*
+		FROM
+			kplus_zy_statistics_supplier_order
+		WHERE
+			supplierID = #{supplierID}
+		AND date = SUBDATE(CURDATE(), INTERVAL 1 DAY)
+		limit 1
+	</select>
+	<select id="findStatisticsByMonth" resultType="supplierSalesOrderStatisticsVO">
+		SELECT
+			supplierID,
+			SUM(orderCount) AS orderCount,
+			SUM(totalAmount) AS totalAmount
+		FROM
+			kplus_zy_statistics_supplier_order
+		WHERE
+			supplierID = #{supplierID}
+		AND DATE_FORMAT(date, '%Y%m') = DATE_FORMAT(
+			SUBDATE(CURDATE(), INTERVAL #{month} MONTH),
+			'%Y%m'
+		)
+	</select>
+</mapper>

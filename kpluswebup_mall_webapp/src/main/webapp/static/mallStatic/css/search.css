@@ -1,0 +1,40 @@
+/*搜索结果页*/
+#nav .layout{position: relative;}
+#nav .searchR{position: absolute; right: 0; top: 10px;}
+.search_main{width: 1200px; margin: 35px auto 0;padding-bottom: 100px;padding:10px 20px;}
+.search_main .title{height: 30px; line-height: 30px; margin-top: 5px; font-family: "Arial";}
+.search_main .title h2{font-size: 16px; float: left;}
+.search_main .title h2 a{color:#0000ff; /*text-decoration: underline;*//*letter-spacing: 2px;*/}
+.search_main .title .typeR{float: left; margin-left: 40px;}
+.search_main .search_info{overflow: hidden; margin-top: 10px; border-bottom: 1px dotted #ccc; padding-bottom:10px;}
+.search_main .search_info .sear_img{float: left;}
+.search_main .search_info .infoR{float: left; margin-left: 20px;width: 90%;}
+.search_main .search_info .infoR strong{width: 80px; text-align: right; display: inline-block;}
+.search_main .search_info .infoR .applytype strong{float:left;}
+.search_main .search_info .infoR .applytype span{float:left;width: 90%;}
+/*搜索首页*/
+.link_wrap{width: 800px;margin: 20px auto;}
+.link_wrap .tab_head{background: #f8f8f8; overflow: hidden; height: 30px; line-height: 30px; border-bottom: 1px dotted #ccc;}
+.link_wrap .tab_head li{float: left; font-size: 16px; margin: 0 30px; cursor: pointer;}
+.link_wrap .tab_head li.current{color: #009DD9; font-weight: bold;}
+.link_wrap .tab_link{margin-top: 30px; display: none;}
+.link_wrap .tab_link.current{display: block;}
+.link_wrap .brand a{text-align: center; margin: 0 30px; display: inline-block;}
+.link_wrap .brand img{display: block; margin-bottom: 10px;}
+.link_wrap .tab_link a.more{float: right; color: #009DD9; margin-top: 40px;}
+.link_wrap .full_vehicle a{width: 80px; float: left;}
+.link_wrap .maintenance li{width: 146px; height: 48px; line-height: 48px; border: 1px solid #ccc; border-radius: 5px; float: left; margin-bottom: 20px; margin-right: 10px;}
+.link_wrap .maintenance li.li1 i{width:19px; height:34px; display: inline-block; background: url(../images/i_bg1.png) no-repeat; margin-left: 14px; margin-right: 20px;}
+.link_wrap .parts a{margin-right: 18px;}
+/*搜索首页-我的关注 */
+.link_wrap .myFocus div{width: 31%;margin:0 9px;}
+.link_wrap .myFocus div h4{padding-left:45px;color: #3366ff;font-size: 14px;margin-bottom: 10px;}
+.link_wrap .myFocus .model_seach h4{padding-left:55px;background: url(../images/icon_model.gif) 20px center no-repeat;}
+.link_wrap .myFocus .VIN_seach h4{padding-left:55px;background: url(../images/icon_Vin.gif) 20px center no-repeat;}
+.link_wrap .myFocus .OEM_seach h4{background: url(../images/icon_Oem.gif) 20px center no-repeat;}
+.link_wrap .myFocus div ul{padding-left:20px;border-left: 1px dashed #41a8f7;height:280px;}
+.link_wrap .myFocus .OEM_seach ul{border-right: 1px dashed #41a8f7;}
+.link_wrap .myFocus li{line-height: 16px;padding: 5px 0;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
+.link_wrap .myFocus li i{margin-right: 5px;font-style: normal;width: 16px;height: 16px;display: inline-block;background: #999;color: #fff;text-align: center;line-height: 16px;border-radius:50%;}
+.link_wrap .myFocus li i.cur{background: #f2533e;}
+.link_wrap .myFocus .model_seach,.link_wrap .myFocus .VIN_seach,.link_wrap .myFocus .OEM_seach{float: left;}

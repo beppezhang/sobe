@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.order.dao.SalesOrderReturnApplyDAO">
+
+	<sql id="Base_Column_List">
+		id,mainID, customerID, salesOrderID, productID, itemID,
+		returnType, count,
+		returnAmount,
+		memo, status, description, isDelete,
+		creator, createTime, modifier,
+		modifyTime
+	</sql>
+
+	<select id="findSalesOrderReturnApplyByPagination"
+		parameterType="salesOrderReturnApplyDTO" resultType="salesOrderReturnApplyVO">
+		SELECT
+		sra.*,p.name as productName,c.username as customerName,i.name as itemName,sr.returnType as
+		confirmReturnType
+		FROM
+		kplus_salesorder_returnapply sra
+		LEFT JOIN
+		kplus_product p ON sra.productID = p.mainID
+		LEFT JOIN
+		kplus_customer c ON sra.customerID = c.mainID
+		LEFT JOIN kplus_item i ON
+		sra.itemID = i.mainID
+		LEFT JOIN
+		(
+		SELECT
+		*
+		FROM
+		kplus_salesorder_return
+		WHERE
+		isDelete = 0
+		) sr ON sra.mainID
+		= sr.retrunApplyID
+		WHERE
+		sra.isDelete = 0
+		AND p.isDelete = 0
+		AND c.isDelete = 0
+		AND i.isDelete = 0
+		<if test="returnType != null">
+			and sr.returnType=#{returnType} and sr.status=#{status}
+		</if>
+		<if test="status != null">
+			and sra.status=#{status}
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findSalesOrderReturnApplyCount" parameterType="salesOrderReturnApplyDTO"
+		resultType="java.lang.Long">
+		SELECT
+		count(sra.id)
+		FROM
+		kplus_salesorder_returnapply sra
+		LEFT JOIN kplus_product p ON sra.productID = p.mainID
+		LEFT JOIN
+		kplus_item i ON sra.itemID = i.mainID
+		LEFT JOIN
+		(
+		SELECT
+		*
+		FROM
+		kplus_salesorder_return
+		WHERE
+		isDelete = 0
+		) sr ON sra.mainID
+		=
+		sr.retrunApplyID
+		WHERE
+		sra.isDelete = 0
+		AND p.isDelete = 0
+		AND i.isDelete
+		= 0 
+		<if test="customerID != null">
+		 and sra.customerID=#{customerID}
+		</if>
+	</select>
+
+	<select id="selectByPrimaryKey" resultType="salesOrderReturnApplyVO"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_salesorder_returnapply
+		where id = #{id}
+	</select>
+
+	<select id="findSalesOrderReturnApplyByMainID" resultType="salesOrderReturnApplyVO"
+		parameterType="java.lang.String">
+		SELECT
+		sra.*,
+		sr.mainID AS returnID,
+		sr.count AS
+		confirmCount,
+		sr.returnAmount AS confirmReturnAmount,
+		sr.returnType AS
+		confirmReturnType,
+		sr.memo as confirmDescription,
+		sr.status as
+		confirmStatus,
+		c. NAME AS customerName,
+		p. NAME AS productName,
+		i. NAME
+		AS itemName,
+		sl.transactionPrice,sl.itemCount,
+		s.mainID as
+		returnSalesOrderID,s.orderStatus,
+		ad.mainID as
+		accountMainID,ad.amount,ad.status as accountStatus
+		FROM
+		kplus_salesorder_returnapply sra
+		RIGHT JOIN kplus_salesorder_line sl ON
+		sra.salesOrderID = sl.orderID
+		AND sra.productID = sl.productID
+		AND
+		sra.itemID = sl.itemID
+		LEFT JOIN (
+		SELECT * FROM kplus_customer WHERE
+		isDelete = 0
+		) c ON sra.customerID =
+		c.mainID
+		LEFT JOIN (
+		SELECT * FROM
+		kplus_product WHERE isDelete = 0
+		) p ON sra.productID =
+		p.mainID
+		LEFT
+		JOIN (
+		SELECT * FROM kplus_item WHERE isDelete = 0
+		) i ON sra.itemID =
+		i.mainID
+		LEFT
+		JOIN (
+		SELECT * FROM kplus_salesorder_return WHERE isDelete
+		= 0
+		) sr ON sra.mainID =
+		sr.retrunApplyID
+		LEFT JOIN (
+		SELECT * FROM
+		kplus_salesorder WHERE isDelete = 0 AND orderType = 5
+		) s ON
+		sr.mainID=s.changeOrderID
+		LEFT JOIN kplus_account_detail ad ON
+		sr.mainID=ad.objID AND ad.detailType = 3
+		WHERE
+		sra.isDelete = 0
+		AND
+		sra.mainID = #{mainID}
+		group by sra.mainID
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		kplus_salesorder_returnapply
+		where id = #{id}
+	</delete>
+
+	<insert id="insertSelective" parameterType="salesOrderReturnApplyDTO">
+		insert into kplus_salesorder_returnapply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="mainID != null">
+				mainID,
+			</if>
+			<if test="customerID != null">
+				customerID,
+			</if>
+			<if test="salesOrderID != null">
+				salesOrderID,
+			</if>
+			<if test="productID != null">
+				productID,
+			</if>
+			<if test="itemID != null">
+				itemID,
+			</if>
+			<if test="returnType != null">
+				returnType,
+			</if>
+			<if test="count != null">
+				count,
+			</if>
+			<if test="returnAmount != null">
+				returnAmount,
+			</if>
+			<if test="returnScore != null">
+				returnScore,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="isDelete != null">
+				isDelete,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				createTime,
+			</if>
+			<if test="modifier != null">
+				modifier,
+			</if>
+			<if test="modifyTime != null">
+				modifyTime
+			</if>
+			<if test="type != null">
+				type
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="mainID != null">
+				#{mainID},
+			</if>
+			<if test="customerID != null">
+				#{customerID},
+			</if>
+			<if test="salesOrderID != null">
+				#{salesOrderID},
+			</if>
+			<if test="productID != null">
+				#{productID},
+			</if>
+			<if test="itemID != null">
+				#{itemID},
+			</if>
+			<if test="returnType != null">
+				#{returnType},
+			</if>
+			<if test="count != null">
+				#{count},
+			</if>
+			<if test="returnAmount != null">
+				#{returnAmount},
+			</if>
+			<if test="returnScore != null">
+				#{returnScore},
+			</if>
+			<if test="memo != null">
+				#{memo},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="description != null">
+				#{description},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete},
+			</if>
+			<if test="creator != null">
+				#{creator},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="modifier != null">
+				#{modifier},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime}
+			</if>
+			<if test="type != null">
+				#{type}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="salesOrderReturnApplyDTO">
+		update kplus_salesorder_returnapply
+		<set>
+			<if test="mainID != null">
+				mainID = #{mainID},
+			</if>
+			<if test="customerID != null">
+				customerID = #{customerID},
+			</if>
+			<if test="salesOrderID != null">
+				salesOrderID = #{salesOrderID},
+			</if>
+			<if test="productID != null">
+				productID = #{productID},
+			</if>
+			<if test="itemID != null">
+				itemID = #{itemID},
+			</if>
+			<if test="returnType != null">
+				returnType = #{returnType},
+			</if>
+			<if test="count != null">
+				count = #{count},
+			</if>
+			<if test="returnAmount != null">
+				returnAmount = #{returnAmount},
+			</if>
+			<if test="returnScore != null">
+				returnScore = #{returnScore},
+			</if>
+			<if test="memo != null">
+				memo = #{memo},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="description != null">
+				description = #{description},
+			</if>
+			<if test="isDelete != null">
+				isDelete = #{isDelete},
+			</if>
+			<if test="creator != null">
+				creator = #{creator},
+			</if>
+			<if test="createTime != null">
+				createTime = #{createTime},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime = #{modifyTime}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+	<update id="updateByMainIDSelective" parameterType="salesOrderReturnApplyDTO">
+		update kplus_salesorder_returnapply
+		<set>
+			<if test="mainID != null">
+				mainID = #{mainID},
+			</if>
+			<if test="customerID != null">
+				customerID = #{customerID},
+			</if>
+			<if test="salesOrderID != null">
+				salesOrderID = #{salesOrderID},
+			</if>
+			<if test="productID != null">
+				productID = #{productID},
+			</if>
+			<if test="itemID != null">
+				itemID = #{itemID},
+			</if>
+			<if test="returnType != null">
+				returnType = #{returnType},
+			</if>
+			<if test="count != null">
+				count = #{count},
+			</if>
+			<if test="returnAmount != null">
+				returnAmount = #{returnAmount},
+			</if>
+			<if test="memo != null">
+				memo = #{memo},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="description != null">
+				description = #{description},
+			</if>
+			<if test="isDelete != null">
+				isDelete = #{isDelete},
+			</if>
+			<if test="creator != null">
+				creator = #{creator},
+			</if>
+			<if test="createTime != null">
+				createTime = #{createTime},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime = #{modifyTime}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+	
+
+	<select id="findOrderReturnApplyByMainID" resultType="salesOrderReturnApplyVO"
+		parameterType="java.lang.String">
+		SELECT sra.*,sl.itemCount,sl.salesPrice,sl.salesScore,
+		p.name as productName,i.name as itemName,c.username as customerName
+		FROM
+		kplus_salesorder_returnapply sra
+		left join kplus_salesorder_line sl
+		on
+		sl.itemID=sra.itemID
+		left join kplus_product p on
+		sra.productID=p.mainID
+		left join kplus_item i on sra.itemID=i.mainID
+		left join kplus_customer c on sra.customerID=c.mainID
+		where
+		sra.isDelete=0 and sra.type=sl.type and sl.orderID=sra.salesOrderID and
+		sra.mainID
+		= #{mainID}
+	</select>
+    
+    <select id="findSalesOrderReturnApply" resultType="salesOrderReturnApplyVO" parameterType="salesOrderReturnApplyDTO">
+	select ksr.*,ki.`name` as itemName,ki.picURL as
+	itemPicURL,item.salesPrice as salesPrice
+	from kplus_salesorder_returnapply ksr
+	LEFT JOIN kplus_item ki on ksr.itemID=ki.mainID
+	left join kplus_zy_supplier_item item on item.itemID=ki.mainID
+	where ksr.isDelete=0 and item.isDelete=0 and
+	item.itemID = ki.mainID and item.salesPrice = (
+	select min(salesPrice) as price from kplus_zy_supplier_item where productID
+	=ki.productID and stock>=2 and status=1 and isDelete=0 order by modifyTime asc
+	)
+		<if test="customerID != null">
+		  and ksr.customerID=#{customerID}
+		</if>
+		<if test="salesOrderID != null">
+	      and ksr.salesOrderID=#{salesOrderID}
+	 	</if>
+		<if test="itemID != null">
+		  and ksr.itemID=#{itemID}
+		</if>
+		<if test="status != null">
+		  and  ksr.status=#{status}
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+    </select>
+    
+    <select id="findSalesOrderReturnByApplyID" resultType="salesOrderReturnVO" parameterType="java.lang.String">
+        SELECT ksr.*
+        from kplus_salesorder_return ksr 
+        where 1=1
+        and  ksr.retrunApplyID=#{retrunApplyID}
+    </select>
+    
+    <update id="updateReturnOrder" parameterType="salesOrderReturnDTO">
+		update kplus_salesorder_return ksr
+		<set>
+			<if test="mainID != null">
+				ksr.mainID = #{mainID},
+			</if>
+			<if test="retrunApplyID !=null">
+			   ksr.retrunApplyID=#{retrunApplyID},
+			</if>
+			<if test="customerID != null">
+				ksr.customerID = #{customerID},
+			</if>
+			<if test="salesOrderID != null">
+				ksr.salesOrderID = #{salesOrderID},
+			</if>
+			<if test="productID != null">
+				ksr.productID = #{productID},
+			</if>
+			<if test="itemID != null">
+				ksr.itemID = #{itemID},
+			</if>
+			<if test="returnType != null">
+				ksr.returnType = #{returnType},
+			</if>
+			<if test="count != null">
+				ksr.count = #{count},
+			</if>
+			<if test="returnAmount != null">
+				ksr.returnAmount = #{returnAmount},
+			</if>
+			<if test="memo != null">
+				ksr.memo = #{memo},
+			</if>
+			<if test="status != null">
+				ksr.status = #{status},
+			</if>
+			<if test="paymentStatus">
+			   ksr.paymentStatus=#{paymentStatus},
+			</if>
+			<if test="expressID">
+			  ksr.expressID = #{expressID},
+			</if>
+			<if test="expressNumber">
+			  ksr.expressNumber =  #{expressNumber},
+			</if>
+			<if test="description != null">
+				ksr.description = #{description},
+			</if>
+			<if test="isDelete != null">
+				ksr.isDelete = #{isDelete},
+			</if>
+			<if test="creator != null">
+				ksr.creator = #{creator},
+			</if>
+			<if test="createTime != null">
+				ksr.createTime = #{createTime},
+			</if>
+			<if test="modifier != null">
+				ksr.modifier = #{modifier},
+			</if>
+			<if test="modifyTime != null">
+				ksr.modifyTime = #{modifyTime}
+			</if>
+		</set>
+		where ksr.mainID = #{mainID}
+	</update>
+    
+</mapper>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑关注回复</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>内容管理 》微信内容 》关注回复》编辑关注回复</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			#parse("layout/wechat_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/content/editWechatReply.htm"
+						method="post">
+						<input type="hidden" name="mainID"
+							value="$!cmsWechatReplySetVO.mainID">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">微信名称：</div>
+									<div class="formRow">
+										<select name="interfaceConfigID" class="select">
+											#foreach($!interfaceConfig in $!interfaceConfigList)
+											<option #if("$!cmsWechatReplySetVO.interfaceConfigID"==
+												"$!interfaceConfig.mainID")selected="selected" #end
+												value="$!interfaceConfig.mainID">$!interfaceConfig.name</option>
+											#end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">回复类型：</div>
+									<div class="formRow">
+										<input type="radio" name="replyType"
+											#if("$!cmsWechatReplySetVO.replyType"== "1")checked="checked"
+											#end onclick="changeReplyType(1);" checked="checked"
+											value="1">文字模式，用户关注公众号时会以文字模式向用户发送一条信息！ <br> <input
+											type="radio" name="replyType"
+											#if("$!cmsWechatReplySetVO.replyType"== "2")checked="checked"
+											#end onclick="changeReplyType(2);" value="2">图文模式，用户关注公众号时会以图文模式向用户发送一条信息！
+									</div>
+								</dd>
+								<dd class="clearfix" id="replyContent">
+									<div class="formTt">回复内容：</div>
+									<div class="formRow">
+										<textarea rows="5" cols="80" name="replyContent">$!cmsWechatReplySetVO.content</textarea>
+									</div>
+								</dd>
+								<div id="replyType">
+									<dd class="clearfix">
+										<div class="formTt">标题：</div>
+										<div class="formRow">
+											<input type="text" class="cText cTextLen" name="title"
+												value="$!cmsWechatReplySetVO.title">
+										</div>
+									</dd>
+									<dd class="clearfix">
+										<div class="formTt">简介：</div>
+										<div class="formRow">
+											<textarea rows="5" cols="80" name="content">$!cmsWechatReplySetVO.content</textarea>
+										</div>
+									</dd>
+									<dd class="clearfix">
+										<div class="formTt">图文封面：</div>
+										<div class="formRow">
+											<input type="hidden" class="cText cTextLen" name="picURL"
+												id="picURL"> <img id="uploadImage"
+												#if("$!cmsWechatReplySetVO.picURL"!=""
+												)src="$!cmsWechatReplySetVO.picURL" #else src="" #end>
+											  <input type="file" id="myBlogImage" name="myfiles"
+												onchange="ajaxFileUpload()" />
+										</div>
+									</dd>
+									<dd class="clearfix">
+										<div class="formTt">链接类型：</div>
+										<div class="formRow">
+											<select name="linkType" id="linkType"
+												onchange="changeWechatLinkType(this.value);" class="select">
+												<option #if("$!cmsWechatReplySetVO.linkType"==
+													"1")selected="selected" #end value="1">链接</option>
+												<option #if("$!cmsWechatReplySetVO.linkType"==
+													"2")selected="selected" #end value="2">商品</option>
+												<!-- <option #if("$!cmsWechatReplySetVO.linkType"==
+													"3")selected="selected" #end value="3">品牌</option>
+												<option #if("$!cmsWechatReplySetVO.linkType"==
+													"4")selected="selected" #end value="4">产品类型</option> -->
+											</select>
+										</div>
+									</dd>
+									<dd class="clearfix" id="replyLink">
+										<div class="formTt">链接：</div>
+										<div class="formRow" id="linkRow">
+											<input type="text" id="replyLink" class="cText cTextLen"
+												name="replyLink" value="$!cmsWechatReplySetVO.replyLink">
+										</div>
+									</dd>
+									#parse("layout/searchitem.vm")
+								</div>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/content/editWechatReply.htm",$!menuAllList)
+										) <input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+										#end
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+	<script type="text/javascript">
+		$(function() {
+			$(".wechat_menu_2").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+
+			var type = "$!cmsWechatReplySetVO.replyType";
+			if (type == "1") {
+				$("#replyContent").show();
+				$("#replyType").hide();
+			} else {
+				$("#replyType").show();
+				$("#replyContent").hide();
+
+				var linkType = "$!cmsWechatReplySetVO.linkType";
+				if (linkType == "" || linkType == "1") {
+					$("#replyLink").show();
+					$("#itemID").hide();
+				} else {
+					$("#replyLink").hide();
+					$("#itemID").show();
+				}
+			}
+
+		})
+
+		function changeWechatLinkType(value) {
+			if (value == "1") {
+				$("#replyLink").show();
+				$("#itemID").hide();
+				$("#replyLinkID").val("");
+			} else {
+				$("#replyLink").hide();
+				$("#itemID").show();
+			}
+		}
+	</script>
+</body>
+</html>

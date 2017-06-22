@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.RoleDAO">
+
+	<select id="findRoleByPagination" parameterType="roleDTO"
+		resultType="roleVO">
+		select * from
+		kplus_role where isDelete=0 order by id
+		desc
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findRoleCount" parameterType="roleDTO" resultType="java.lang.Long">
+		select count(mainID) from kplus_role where isDelete=0
+	</select>
+
+	<insert id="insertRole" parameterType="roleDTO">
+		insert into
+		kplus_role(
+		mainID,
+		name,
+		description,
+		isDelete,
+		createTime,
+		creator
+		)values(
+		#{mainID},
+		#{name},
+		#{description},
+		0,
+		now(),
+		#{creator}
+		)
+	</insert>
+
+	<select id="findRoleByMainID" parameterType="java.lang.String"
+		resultType="roleVO">
+		select * from kplus_role where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<update id="updateRole" parameterType="roleDTO">
+		update kplus_role
+		<set>
+			modifyTime=now()
+			<if test="name!=null">
+				,name=#{name}
+			</if>
+			<if test="description!=null">
+				,description=#{description}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="deleteRoleByMainID" parameterType="java.lang.String">
+		update
+		kplus_role
+		set isDelete=1 where mainID=#{mainID}
+	</update>
+
+	<select id="findRoleAll" resultType="roleVO">
+		select * from kplus_role
+		where isDelete=0
+	</select>
+
+	<select id="findSystemFunction" resultType="systemFunctionVO">
+		select * from
+		kplus_systemfunction where isDelete=0 and depth=1
+	</select>
+
+	<select id="findSystemFunctionChild" parameterType="systemFunctionDTO"
+		resultType="systemFunctionVO">
+		select * from kplus_systemfunction where isDelete=0 and
+		depth=#{depth} and parentID=#{parentID}
+	</select>
+
+	<select id="findRoleFunctionByRoleID" parameterType="java.lang.String"
+		resultType="roleFunctionVO">
+		SELECT
+		r.id,
+		r.functionID,
+		r.roleID,
+		s. NAME,
+		s.functionURL
+		FROM
+		kplus_rolefunction r
+		LEFT JOIN kplus_systemfunction s ON r.functionID =
+		s.mainID
+		WHERE
+		s.isDelete = 0
+		AND
+		r.roleID=#{roleID}
+	</select>
+
+	<insert id="insertRoleFunction" parameterType="roleFunctionDTO">
+		insert into
+		kplus_rolefunction(
+		roleID,
+		functionID,
+		creator,
+		createTime)values(
+		#{roleID},
+		#{functionID},
+		#{creator},
+		now())
+	</insert>
+
+	<delete id="deleteRoleFunctionByRoleID" parameterType="java.lang.String">
+		delete
+		from kplus_rolefunction where roleID=#{roleID}
+	</delete>
+
+	<select id="findRoleFunctionAll" parameterType="java.lang.String"
+		resultType="roleFunctionVO">
+		select r.id,r.functionID,s.name,s.functionURL from
+		kplus_rolefunction r
+		left join kplus_systemfunction s on
+		r.functionID=s.mainID
+		where
+		s.isDelete=0 and s.depth=1 and
+		r.roleID=#{roleID} and s.isMenu=1 order by s.sortOrder desc
+	</select>
+
+	<select id="findRoleFunctionChild" parameterType="roleFunctionDTO"
+		resultType="roleFunctionVO">
+		select r.id,r.functionID,s.name,s.functionURL from
+		kplus_rolefunction r
+		left join
+		kplus_systemfunction s on
+		r.functionID=s.mainID
+		where s.isDelete=0 and
+		s.depth=#{depth} and
+		s.parentID=#{parentID} and r.roleID=#{roleID} and s.isMenu=1 order by s.sortOrder desc
+	</select>
+</mapper>

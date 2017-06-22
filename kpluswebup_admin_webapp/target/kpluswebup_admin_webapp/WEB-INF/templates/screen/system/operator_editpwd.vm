@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>密码修改</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>后台用户》密码修改</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="javascript:;" class="hover">密码填写</a></li>
+				</ul>
+			</div>
+
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/system/saveOperatorPwd.htm"
+						method="post">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">原始密码：</div>
+									<div class="formRow">
+										<input type="password" name="password" class="cText cTextLen">
+										<input type="hidden" name="mainID" value="$!operatorVO.mainID">
+										<input type="hidden" name="password0"
+											value="$!operatorVO.password"> <span
+											style="color: red;">$!error1</span>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">新密码：</div>
+									<div class="formRow">
+										<input type="password" name="password1" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">确认密码：</div>
+									<div class="formRow">
+										<input type="password" name="password2" class="cText cTextLen">
+										<span style="color: red;">$!error2</span>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										<input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+</body>
+
+</html>

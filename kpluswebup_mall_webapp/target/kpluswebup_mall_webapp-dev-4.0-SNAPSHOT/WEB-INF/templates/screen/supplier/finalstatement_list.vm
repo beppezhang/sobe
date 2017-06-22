@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/jquery-ui.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	#parse("layout/suppliercenter/leftmenu.vm")
+	 <div id="rightMain">
+      <div class="crumbs">
+          商家管理中心 &gt; <a href="supplierCenter.htm">首页</a> &gt; 财务管理
+      </div>
+       <div class="p15">
+            <div class="stitbar">
+                <strong>财务管理</strong>
+            </div>
+            <form action="finalstatement.htm">
+            <div class="selbar txt_r">
+              <span>账单状态 
+                <select name="status">
+                  <option value="">请选择</option>
+                  <option 
+                  #if($!finalstatementDTO.status == 0)
+                  selected
+                  #end 
+                  value="0">未结算</option>
+                  <option 
+                  #if($!finalstatementDTO.status == 1)
+                  selected
+                  #end
+                  value="1">已结算</option>
+                </select></span>
+                <span class="ml10">结算单号 <input name="mainID" type="text" class="ipt" value="$!finalstatementDTO.mainID"> <input name="" type="button" class="sbtn" value="搜索" onclick="javascript:$('form').eq(0).submit();"></span>
+            </div>
+            </form>
+            <table class="smpTable">
+              <tr>
+                <th>结算单号</th>
+                <th>结算日期</th>
+                <th>结算人</th>
+                <th>本期应收</th>
+                <th>结算状态</th>
+                <th>操作</th>
+              </tr>
+              #foreach($!finalstatement in $!finalstatementList)
+              <tr>
+                <td>$!finalstatement.mainID</td>
+                <td>$!date.format('yyyy-MM-dd HH:mm:ss',$!finalstatement.createTime)</td>
+                <td>$!finalstatement.modifier</td>
+                <td>$!NumberTool.format("#0.00",$!finalstatement.totalAmount)</td>
+                <td>
+                  #if($!finalstatement.status == 0)
+                    已出账未结算
+                  #else
+                    已出账已结算
+                  #end
+                </td>
+                <td><a href="finalstatementDetail.htm?finalStatementID=$!finalstatement.mainID" class="viewBtn">查看明细</a></td>
+              </tr>
+              #end
+            </table>
+            <form id="serachform" name="serachform" method="get" action="finalstatement.htm">
+                  <input type="hidden" id="pageNo" name="pageNO"
+                  value="$!finalstatementDTO.pageNo">
+                 <input type="hidden" id="pageSize" name="pageSize" 
+                      value="$!finalstatementDTO.pageSize">
+            </form>
+            <div class="pagerbar clearfix ct">
+              #pagination($!finalstatementDTO)
+            </div>
+        </div>      
+    </div>
+               
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-ui.min.js"></script>
+<script type="text/javascript">
+  $("dt:eq(2)").addClass("on");
+  $(".datepicker").datepicker();  
+</script>
+</body>
+</html>

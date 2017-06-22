@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.content.dao.CmsCategoryDAO">
+
+	<select id="findCmsCategoryByPagination" parameterType="cmsCategoryDTO"
+		resultType="cmsCategoryVO">
+		select * from kplus_cms_category where isDelete=0 order by
+		sortOrder desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findCmsCategoryCount" parameterType="cmsCategoryDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_cms_category where
+		isDelete=0
+	</select>
+
+	<update id="deleteCmsCategoryByMainID" parameterType="cmsCategoryDTO">
+		update
+		kplus_cms_category set isDelete=1 where
+		mainID=#{mainID}
+	</update>
+
+
+	<insert id="insertCmsCategory" parameterType="cmsCategoryDTO">
+		insert into
+		kplus_cms_category(
+		mainID,
+		name,
+		categoryType,
+		sortOrder,
+		description,
+		isDelete,
+		creator,
+		createTime
+		)
+		values(
+		#{mainID},
+		#{name},
+		#{categoryType},
+		#{sortOrder},
+		#{description},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<select id="findCmsCategoryByMainID" parameterType="cmsCategoryDTO"
+		resultType="cmsCategoryVO">
+		select * from kplus_cms_category where mainID=#{mainID} and
+		isDelete=0
+	</select>
+
+	<update id="updateCmsCategoryByMainID" parameterType="cmsCategoryDTO">
+		update kplus_cms_category set modifyTime=now()
+		<if test="name != null">
+			, name = #{name}
+		</if>
+		<if test="categoryType != null">
+			, categoryType = #{categoryType}
+		</if>
+		<if test="sortOrder != null">
+			,sortOrder = #{sortOrder}
+		</if>
+		<if test="description != null">
+			, description = #{description}
+		</if>
+		<if test="modifier != null">
+			,modifier = #{modifier}
+		</if>
+		where mainID =#{mainID}
+	</update>
+
+	<select id="findCmsCategoryByType" parameterType="java.lang.Integer"
+		resultType="cmsCategoryVO">
+		select * from kplus_cms_category where isDelete=0 and
+		categoryType=#{categoryType} order by
+		sortOrder desc
+	</select>
+	
+	<select id="findAllSystemAdvertPosion" resultType="systemAdvertPosionVO">
+	select * from kplus_systemadvertposion
+	</select>
+	
+	<insert id="addSystemAdvertPosion" parameterType="systemAdvertPosionDTO">
+		insert into kplus_systemadvertposion(
+		mainID,
+		name,
+		description,
+		creator,
+		createTime
+		)
+		values(
+		#{mainID},
+		#{name},
+		#{description},
+		#{creator},
+		now()
+		)
+    </insert>
+    
+    <update id="updateSystemAdvertPosion" parameterType="systemAdvertPosionDTO">
+		update kplus_systemadvertposion set modifyTime=now()
+		<if test="name != null">
+			, name = #{name}
+		</if>
+		<if test="description != null">
+			, description = #{description}
+		</if>
+		<if test="modifier != null">
+			,modifier = #{modifier}
+		</if>
+		where mainID =#{mainID}
+    </update>
+</mapper>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑供应商</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+		        <em class="icon iconMenu1 "></em><a href="$!{domain}/admin/supplier/supplierList.htm">供应商管理</a> &gt; <a href="$!{domain}/admin/supplier/supplierList.htm">供应商列表</a> &gt; <span>编辑供应商</span>
+		</div>
+		<div class="tabBar clearfix">
+			<!-- #parse("layout/member_menu.vm") -->
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class='icon arrowLfWeight'></em><a class="hover"
+						href="$!{domain}/admin/supplier/editSupplierPage.htm?mainID=$!{supplierVO.mainID}">基本信息</a></li>
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/supplier/editSupplier.htm" method="post">
+						<input type="hidden" value="$!{supplierVO.mainID}" name="mainID"
+							id="mainId">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+							   <dd class="clearfix">
+									<div class="formTt">用户名：</div>
+									<div class="formRow">
+										<input type="text" disabled="disabled" value="$!{supplierVO.userName}" id="userName"
+											name="userName" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">密码：</div>
+									<div class="formRow">
+										<input type="passWord" disabled="disabled" value="$!{supplierVO.passWord}" id="passWord"
+											name="passWord" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">手机号码：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierVO.mobile}" id="mobile"
+											name="mobile" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">公司名称：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierVO.companyName}" id="companyName"
+											name="companyName" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">联系人姓名：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierVO.linkMan}" id="linkMan"
+											name="linkMan" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">保证金：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierVO.cashDep}" id="cashDep"
+											name="cashDep" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">开户行：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierVO.openingBank}" id="openingBank" 
+											name="openingBank" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">银行账号：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierVO.bankAccount}" id="bankAccount"
+											name="bankAccount" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">取件地址：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierVO.address}" id="address"
+											name="address" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										<input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

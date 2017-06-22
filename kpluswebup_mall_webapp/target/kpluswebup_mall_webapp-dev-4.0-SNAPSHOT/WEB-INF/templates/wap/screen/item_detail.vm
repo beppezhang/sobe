@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>$!item.name</title>
+<meta http-equiv="Content-Type"
+	content="application/vnd.wap.xhtml+xml; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/product.css">
+<style>
+body {
+	padding-bottom: 95px;
+}
+</style>
+</head>
+
+<body>
+
+	<div id="banner_box" class="box_swipe">
+		<ul class="pro">
+			<li><img src="$!imgurl$!item.picURL" /></li> #foreach($!picture in
+			$!pictures)
+			<li><img src="$!imgurl$!picture.picURL" /></li> #end
+		</ul>
+		<ol>
+			<li class="cur"></li> #foreach($!picture in $!pictures)
+			<li></li> #end
+		</ol>
+		<img src="$!{domain}/wap/img/share.png" class="share" />
+	</div>
+	<div id="dt_name">
+		<h1>$!item.name</h1>
+		<p class="mt10">
+			<b>￥</b>
+			<strong class="col01 f14">$!NumberTool.format("#0.00",$!item.salesPrice)</strong>
+						<del>￥$!NumberTool.format("#0.00",$!item.standrardPrice)</del>
+		</p>
+	</div>
+	<div id="dl_pm">
+	#foreach($!prop in $!itemProps)
+					<dl class="clearfix">
+						<dt>$!prop.itemPropName</dt>
+						<dd class="on">$!prop.itemPropValue</dd>
+					</dl>
+					#end
+		<dl class="mt10">
+			<dt>数量</dt>
+			<dd class="countman">
+				<p class="txt_r countbox">
+					<span class="lt">购买<em class="bNum" data="$!item.stock">1</em>份
+					</span> <span class="sub"></span> <span class="add"></span>
+				</p>
+			</dd>
+		</dl>
+	</div>
+	<div class="pm_article">
+		$!product.description
+		<p class="pm_more mt10 ct">
+			<a href="javascript:;">图文详情</a>
+		</p>
+		<div class="tb  tab">
+			<span class="cell cur"><a href="javascript:;">使用说明<i></i></a></span> <span
+				class="cell"><a href="javascript:;">购物须知<i></i></a></span> <span class="cell"><a
+				href="javascript:;">退换规则<i></i></a></span>
+		</div>
+		<div class="acrt">
+			<div class="cur">$!product.description</div>
+			<div>$!product.productProp</div>
+			<div>$!product.saleService</div>
+		</div>
+	</div>
+
+
+	<div id="mainnav">
+		<div class="opbar">
+			<span class="cell shopcart"><a href="$!{domain}/weixin/usershopcart1.htm"><em
+					class="amo">1</em></a></span> <span class="cell gobuy"><a href="javascript:;" onclick="gobuy();"
+				class="btns">立即购买</a></span> <span class="cell addcart"><a href="#"
+				class="btns" onClick="openprot(1)">加入购物车</a></span> <span
+				class="cell booking"><a href="javascript:;"></a></span>
+		</div>
+	</div>
+	<div id="agebox1" class="popbox">
+		<div class="get_result">
+			<h2 class="add_ok">已成功添加至购物车！</h2>
+		</div>
+	</div>
+	<input type="hidden" id="itemID" value="$!item.mainID">
+	<script type="text/javascript" src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="$!{domain}/wap/js/swipe.js"></script>
+	<script>
+		$(function() {
+			new Swipe(document.getElementById('banner_box'), {
+				speed : 500,
+				auto : 3000,
+				callback : function() {
+					var lis = $(this.element).next("ol").children();
+					lis.removeClass("cur").eq(this.index).addClass("cur");
+				}
+			})
+			$(".opbar").find(".booking").click(function() {
+				$(this).toggleClass("on")
+			})
+			$(".htbar").click(function() {
+				$(this).toggleClass("on").next(".tclist").toggle();
+
+			})
+			//选择商品
+			$("#dl_pm").find("dd").click(function() {
+				if ($(this).hasClass("countman")) {
+					return;
+				}
+				$(this).addClass("on").siblings().removeClass("on");
+			})
+			//选择更多商品
+			$(".tclist li").find(".tb").click(function() {
+				$(this).find(".ckbox").toggleClass("cur");
+				if ($(this).find(".ckbox").hasClass("cur")) {
+					$(this).next(".dt_hidden").slideDown(200);
+				} else {
+					$(this).next(".dt_hidden").slideUp(200);
+				}
+			})
+			$(".tclist li dl dd").find("span").click(function() {
+				$(this).addClass("on").siblings().removeClass("on");
+			})
+			//选择数量
+			$(".countbox").find(".add").click(
+					function() {
+						var imtNum = $(this).closest("p").find(".lt").find(
+								".bNum").attr("data");//最大购买数量(库存)
+						var getNum = $(this).closest("p").find(".lt").find(
+								".bNum").html(); //获取本商品数量
+						var addNum = parseInt(getNum) + 1;//数量增加
+						if (imtNum >= addNum) {
+							$(this).closest("p").find(".lt").find(".bNum")
+									.html(addNum);
+						}
+					})
+			$(".countbox").find(".sub").click(
+					function() {
+						var getNum = $(this).closest("p").find(".lt").find(
+								".bNum").html(); //获取本商品数量
+						var subNum = parseInt(getNum) - 1;//数量减少
+						if (subNum > 0) {
+							$(this).closest("p").find(".lt").find(".bNum")
+									.html(subNum);
+						}
+					})
+			$(".tab span").click(
+					function(e) {
+						e.preventDefault();
+						$(this).addClass('cur').siblings().removeClass('cur');
+						$(".acrt div").eq($(".tab span").index(this)).addClass(
+								"cur").siblings().removeClass("cur");
+					})
+
+		})
+		//弹出对话框
+		var isIE = (document.all) ? true : false;
+		var isIE6 = isIE
+				&& ([ /MSIE (\d)\.0/i.exec(navigator.userAgent) ][0][1] == 6);
+		var cwidth = $(window).width();
+		var cheight = $(window).height();
+		var dheight = $(document).height();
+		var i;
+		function openprot(i) {
+			var idname = document.getElementById("agebox" + i);
+			$("body").append("<div id='wrapbg' onClick='closeprot()'></div>");
+
+			$("#wrapbg").width(cwidth);
+			$("#wrapbg").height(dheight);
+
+			$(idname).fadeIn(300);
+			idname.style.left = (cwidth - idname.offsetWidth) / 2 + "px";
+			idname.style.top = (cheight - idname.offsetHeight) / 2.5 + "px";
+		}
+
+		function closeprot() {
+			$("div[id='wrapbg']").remove();
+			$(".popbox").fadeOut(200);
+		}
+		$(".share").click(function() {
+			$(this).hide();
+		})
+		
+		function gobuy(){
+			var stock = jQuery(".bNum").attr("data");
+			
+		var itemID = jQuery("#itemID").val();
+			if (stock == "0" || stock == "") {
+				alert("库存不足！");
+				return;
+			}
+			window.location = "/weixin/usershopcart2.htm?itemID=" + itemID;
+		}
+	</script>
+</body>
+</html>

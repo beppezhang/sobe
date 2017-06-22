@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+<title>选择地址</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/list.css">
+</head>
+<body>
+<a href="$!domain/weixin/useraddAddress.htm?ids=$!ids&itemID=$!itemID&itemType=$!type&paymentType=$!paymentType&itemCount=$!itemCount&supplierID=$!supplierID&generateType=$!generateType" class="increase">
+    	<span>添加收货地址</span>
+    </a>
+    #foreach($!address in $!addresses)
+    <input type="hidden" class="addreID" value="$!address.id">
+   <div class="addr_content">
+        <div class="addr_info clearfix">
+            <a href="$!domain/weixin/usershopcart2.htm?addreID=$!address.id&ids=$!ids&itemID=$!itemID&itemType=$!type&paymentType=$!paymentType&itemCount=$!itemCount&supplierID=$!supplierID&generateType=$!generateType" class="selected #if($!velocityCount==1&&$!address.status==1)on#end clearfix">
+                <span class="lt consignee">$!address.name</span>
+                <span class="rt  tele">$!address.mobile</span>
+                <p>$!address.provinceName$!address.cityName$!address.districtName$!address.address</p>
+            </a> 
+       </div>	
+        <ul class="operate_list">
+            <li>
+                <a href="$!domain/weixin/usereditAddress.htm?id=$!address.id">
+                    <span class="edit">编辑</span>
+                </a>
+            </li>
+            <li>
+                <a href="$!domain/weixin/userdeleteAddress.htm?id=$!address.id">
+                    <span class="del">删除</span>
+                </a>
+            </li>
+       </ul>
+    </div>
+    #end
+    <script type="text/javascript" src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script> 
+    <script>
+		$(function(){
+			$(".selected").click(function(){
+				$(this).addClass("on").closest(".addr_content").siblings(".addr_content").find(".selected").removeClass("on");
+			})
+			$(".del").click(function(){
+				$(this).closest(".addr_content").hide();
+			})
+		})
+    </script>
+<input type="hidden" value="$!domain" id="domain">
+<input type="hidden" value="$!itemID" id="itemID">
+<input type="hidden" value="$!ids" id="ids">
+<input type="hidden" value="$!type" id="type">
+<input type="hidden" value="$!paymentType" id="paymentType" name="paymentType">
+<input type="hidden" value="$!itemCount" id="itemCount">
+<script>
+	$(function(){
+		$(".addrlist").on("click","li p",function(){
+			$(this).closest("li").attr("class","cur").siblings("li").removeAttr("class")
+			var domain = jQuery("#domain").val();
+			var itemID = jQuery("#itemID").val();
+			var ids = jQuery("#ids").val();
+			var type = jQuery("#type").val();
+			var addreID = jQuery(this).closest("li").find(".addreID").val();
+			var paymentType = jQuery("#paymentType").val();
+			var itemCount = jQuery("#itemCount").val();
+			var supplierID = jQuery("#supplierID").val();
+			window.location= domain + '/weixin/usershopcart2.htm?ids='+ids+'&itemID='+itemID+'&addreID='+addreID+'&type='+type+'&paymentType='+paymentType+'&itemCount='+itemCount+"&supplierID="+supplierID;
+		})
+	})
+</script>
+	<script type="text/javascript">
+	    jQuery(function(){
+			jQuery(".shopcartLink").addClass("cur");
+		});
+    </script>
+</body>
+</html>

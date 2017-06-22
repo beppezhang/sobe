@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.BrandDAO">
+	<cache readOnly="true"></cache>
+	<sql id="Base_Column_List">
+		id, mainID, name, picURL, domain, description, sortOrder,
+		title,
+		metaKeywords, metaDescription,
+		isDelete, creator, createTime,
+		modifier, modifyTime
+	</sql>
+
+	<select id="findBrandByMainID" parameterType="brandDTO"
+		resultType="brandVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_brand
+		where mainID = #{mainID,jdbcType=VARCHAR} and
+		isDelete=0
+	</select>
+
+	<select id="findAllBrandList" resultType="brandVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_brand
+		where isDelete=0 order by sortOrder desc
+	</select>
+	
+	<select id="findAllBrandListBycatID" parameterType="java.lang.String" resultType="brandVO">
+		select  
+		 <include refid="Base_Column_List" />
+	    from kplus_brand kb
+          where kb.isDelete =0 and kb.mainID in
+             (select kpb.brandID  from kplus_producttype_brand kpb 
+                   where kpb.productTypeID in 
+                         (select kpc.productTypeID   from  kplus_product_category kpc
+                              where kpc.isDelete=0 and kpc.mainID=#{catID})) order by kb.sortOrder desc
+	</select>
+	
+	<select id="findAllBrandListByName" parameterType="java.lang.String" resultType="brandVO">
+		select  
+		 <include refid="Base_Column_List" />
+	    from kplus_brand kb
+          where kb.isDelete =0 and kb.name like CONCAT('%',#{bname},'%')
+             
+	</select>
+
+	<select id="findBrandByPagination" parameterType="brandDTO"
+		resultType="brandVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_brand
+		where isDelete=0
+		<if test="name != null">
+			AND name like CONCAT('%',#{name},'%')
+		</if>
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+
+	<select id="findBrandCount" parameterType="brandDTO" resultType="java.lang.Long">
+		select
+		count(*)
+		from kplus_brand
+		where isDelete=0
+		<if test="name != null">
+			AND name like CONCAT('%',#{name},'%')
+		</if>
+	</select>
+
+
+	<update id="deleteBrandByMainID" parameterType="brandDTO">
+		update
+		kplus_brand
+		set isDelete=1
+		where mainID =#{mainID,jdbcType=VARCHAR}
+	</update>
+
+
+	<update id="updateBrandByMainID" parameterType="brandDTO">
+		update kplus_brand
+		set modifyTime=now()
+		<if test="name != null">
+			, name = #{name}
+		</if>
+		<if test="picURL != null">
+			, picURL = #{picURL}
+		</if>
+		<if test="domain != null">
+			,domain = #{domain}
+		</if>
+		<if test="description != null">
+			, description = #{description}
+		</if>
+		<if test="sortOrder != null">
+			,sortOrder = #{sortOrder}
+		</if>
+		<if test="title != null">
+			,title = #{title}
+		</if>
+		<if test="metaKeywords != null">
+			,metaKeywords = #{metaKeywords}
+		</if>
+		<if test="metaDescription != null">
+			,metaDescription = #{metaDescription}
+		</if>
+		<if test="modifier != null">
+			,modifier = #{modifier}
+		</if>
+		where mainID =#{mainID}
+	</update>
+
+
+	<insert id="insertBrand" parameterType="brandDTO">
+		INSERT INTO kplus_brand(
+		mainID,
+		NAME,
+		picURL,
+		domain,
+		description,
+		sortOrder,
+		title,
+		metaKeywords,
+		metaDescription,
+		isDelete,
+		creator,
+		createTime
+		)
+		VALUES
+		(
+		#{mainID},
+		#{name},
+		#{picURL},
+		#{domain},
+		#{description},
+		#{sortOrder},
+		#{title},
+		#{metaKeywords},
+		#{metaDescription},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+	<!--sxc-->
+	<select id="findBrandParts" resultType="java.util.HashMap">
+		select * from kplus_brand b where b.mainID in
+		(
+		select DISTINCT b.mainID from kplus_brand b ,kplus_product p where b.mainID = p.brandID and b.isDelete=0
+		)
+	</select>	
+	
+
+</mapper>

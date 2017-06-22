@@ -1,0 +1,496 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="http://192.168.0.156:8080/static/mallStatic/css/global.css"/>
+	<link rel="stylesheet" type="text/css" href="http://192.168.0.156:8080/static/mallStatic/css/brand.css"/>
+	<link rel="stylesheet" type="text/css" href="http://192.168.0.156:8080/static/mallStatic/css/automobileBrand.css"/>
+
+	<script type="text/javascript" src="http://192.168.0.156:8080/static/mallStatic/js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="http://192.168.0.156:8080/static/mallStatic/js/auto_brand_lead.js"></script>
+</head>
+<body>
+	<!-- top bar -->
+	<div id="topbar">
+		<div class="layout txt_r clearfix">
+	    	<div class="welbox">您好M，<a href="/mall/buyer/userInfo.htm"></a> 欢迎来到搜贝<a href="http://192.168.0.156:8080/mall/member/toLogin.htm">请登录</a><a href="/mall/member/registerPage.htm">免费注册</a></div> 
+	    </div>
+	</div>
+	<!-- sider tool bar  -->
+	<div id="header">
+		<div class="layout clearfix">
+	    	<div class="logo lt">
+	        	<a href="#">
+	                <img style="  width: 200px;  height: 70px;" src="images/soubei.png."/>
+	                     	        		
+	        	</a>
+	        	
+	        </div>
+	        <div class="searchBox" id="searchBox">
+	         	<ul>
+	         		<!-- Original
+	                <li class="cur" data="输入产品名称" data1="sear">宝贝</li>
+	                <li data="输入店铺名称" data1="sear1">店铺</li>
+	                -->
+	                <li class="cur" data="输入产品名称" searchmodel="product"><a href="javascript:product_normal()">关键</a></li>
+		            <li data="请输入VIN" searchmodel="vin"><a href="javascript:vin()">VIN</a></li>
+		            <li data="请输入OEM" searchmodel="oem"><a href="javascript:oem()">OEM</a></li>                
+	                                                                
+	                
+	            </ul>
+	        	<div class="searchBar clearfix">
+	            	<input name="" id="ppname" type="text" class="ipt" value="" placeholder="输入产品名称" onkeydown="return disableEnter(event);"/><input name="" type="button" id="sear" class="btn" value="搜索"/>
+	            </div>
+	            <p class="hotLinks"><a></a><!-- <a href="#" class="hot">三星手机</a><a href="#">华为手机</a><a href="#">联想手机</a><a href="#">Nokia</a><a href="#">iPhone</a>--></p> 
+	        </div>
+	    </div>
+	</div>
+	<input type="hidden" value="oem" name="searchModel" id="searchModel">
+	<script>
+		//产品名称
+		function product_normal()
+		{
+			$("#searchModel").val("product");
+		}
+		function vin()
+		{
+			$("#searchModel").val("vin");
+		}
+		function oem()
+		{
+			$("#searchModel").val("oem");
+		}
+		function disableEnter(event){
+			var keyCode = event.keyCode?event.keyCode:event.which?event.which:event.charCode;
+			if (keyCode ==13){
+			// 此处处理回车动作
+				searchBar();
+			}
+		}
+
+		//宝贝店铺切换
+		$(".searchBox ul li").click(function(){
+		    $(this).addClass("cur").siblings().removeClass("cur");
+		    var data = $(this).attr("data");
+		    $(".searchBox .searchBar .ipt").attr("placeholder",data);
+		    $(".searchBox .searchBar .btn").attr("id",$(this).attr("data1"));
+		})	
+
+		function searchBar()
+		{
+			//_searchModel = $("#searchModel").val();
+						var _searchModelObj = $("#searchBox").find(".cur").each(function(){
+						    var _this = $(this);
+						    //判断data
+						    if(_this.attr("searchModel")){
+						   		console.debug(_this.attr("searchModel")); 
+						   		_searchModel = _this.attr("searchModel");  
+						    }
+						});
+						//_searchModel = _searchModelObj.attr("searchModel");
+						
+						var productType = $("#productType").val();
+						if(undefined==productType){
+							productType='';
+						};
+						if(typeof(productType) == "undefined"){
+							productType='';
+						};
+						var vehicleTypeId = $("#vehicleTypeId").val();
+						if(undefined==vehicleTypeId){
+							vehicleTypeId='';
+						};
+						if(typeof(vehicleTypeId) == "undefined"){
+							vehicleTypeId='';
+						};				
+						var brandID = $("#brandID").val();
+						if(typeof(brandID) == "undefined"){
+							brandID='';
+						};					
+
+						var partsCategoryId = $("#partsCategoryId").val();
+						if(typeof(partsCategoryId) == "undefined"){
+							partsCategoryId='';
+						};	
+						var partsCategoryFLevel = $("#partsCategoryFLevel").val();
+						if(typeof(partsCategoryFLevel) == "undefined"){
+							partsCategoryFLevel='';
+						};									
+						
+						if('vin'==_searchModel)
+						{
+							brandID='';
+							partsCategoryId='';
+							partsCategoryFLevel='';
+						}
+		 	
+						
+					//	location.href="http://192.168.0.156:8080/mall/product/searchProductList.htm?productType="+productType+"&name="+$("#ppname").val();
+						location.href="http://192.168.0.156:8080/mall/product/searchProductList.htm?productType="+productType+"&name="+$("#ppname").val()+"&searchModel="+_searchModel+"&vehicleTypeId="+vehicleTypeId
+						+"&brandID="+brandID+"&partsCategoryId="+partsCategoryId+"&partsCategoryFLevel="+partsCategoryFLevel;	
+		}
+		  
+			$(".searchBox .searchBar .btn").click(
+				function(){
+					var idV = $(this).attr("id");
+					if(idV=="sear"){
+						
+						searchBar();
+					
+					}else if(idV=="sear1"){
+						location.href="http://192.168.0.156:8080/mall/product/searchShopList.htm?name="+$("#ppname").val();
+					}
+				}		
+			);
+			/* jQuery("#sear1").click(
+				function(){
+					alert('店铺')
+					location.href="/mall/product/searchShopList.htm?name="+$("#ppname").val();
+				}		
+			) */
+	</script>
+	<!--nav导航条-->
+	<div id="nav">
+		<div class="layout clearfix">
+			<div id="allCategory">
+				
+				<!-- <h2>全部商品分类</h2>
+				<div id="category">
+				    <ul>
+				                          </ul>
+				</div>
+				-->
+				<!-- item-sub1
+				<div class="dorpdown-layer"> 
+	               
+	              		 </div>
+			 -->
+				<ul id="navbar">
+					<li><a href="#" class="cur">汽车品牌</a></li>
+					<li><a href="#">保养件</a></li>
+					<li><a href="#">全车件</a></li>
+					<li><a href="#">配件品牌</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div id="mainContainer">
+		<p class="local">
+			<a href="#">首页</a> > <a href="#">汽车品牌</a>
+	    </p>
+	    <div class="box clearfix">
+
+	    	<!--汽车品牌引导页右侧-->
+
+	    	<div class="left">
+	    		<div class="auto_logo">
+	    			<img src="http://192.168.0.156:8080/static/mallStatic/images/u57.png" alt="" />
+	    		</div>
+	    		<div id="auto_all">
+	    			<div id="u2_state0" class="panel_state" data-label="选择汽车车系">
+	    				<div class="auto_name">
+	    					<h3>奥迪</h3>
+	    				</div>
+	    				<div class="chexi">
+	    					<ul>
+	    						<li><span><a href="javascript:;">A6L</a></span></li>
+	    						<li><span><a href="javascript:;">A6</a></span></li>
+	    						<li><span><a href="javascript:;">A4L</a></span></li>
+	    						<li><span><a href="javascript:;">A4</a></span></li>
+	    						<li><span><a href="javascript:;">Q5</a></span></li>
+	    						<li><span><a href="javascript:;">Q3</a></span></li>
+	    						<li><span><a href="javascript:;">200</a></span></li>
+	    						<li><span><a href="javascript:;">100</a></span></li>
+	    					</ul>
+	    				</div>
+	    			</div>
+	    			<div  id="u2_state1" class="panel_state display" data-label="选择汽车车型">
+	    				<div class="auto_name">
+	    					<h3>A6L</h3>
+	    				</div>
+	    				<div class="chexi">
+	    					<ul>
+	    						<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.0T AT</a></span></li>
+	    						<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.4T AT</a></span></li>
+	    						<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.8T AT</a></span></li>
+	    						<li><span><a href="javascript:;">一汽奥迪A6L C6 2005款 2.0T AT</a></span></li>
+	    						<li><span><a href="javascript:;">一汽奥迪A6L C6 2006款 2.0T AT</a></span></li>
+	    						<li><span><a href="javascript:;">一汽奥迪A6L C6 2007款 2.0T AT</a></span></li>
+	    						<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.0T AT</a></span></li>
+	    						<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.0T AT</a></span></li>
+	    						<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.0T AT</a></span></li>
+	    					</ul>
+	    				</div>
+	    			</div>
+	    			<div id="u2_state2" class="panel_state display" data-label="选择配件大类">
+	    				<div class="auto_name">
+	    					<h3>奥迪A6L C6 2011款 2.0T AT</h3>
+	    				</div>
+	    				<div class="chexi">
+	    					<ul>
+	    						<li><span><a href="javascript:;">保养和维修范围</a></span></li>
+	    						<li><span><a href="javascript:;">发动机</a></span></li>
+	    						<li><span><a href="javascript:;">发动机电气系统</a></span></li>
+	    						<li><span><a href="javascript:;">混合气制备</a></span></li>
+	    						<li><span><a href="javascript:;">燃油供应</a></span></li>
+	    						<li><span><a href="javascript:;">燃油供应</a></span></li>
+	    						<li><span><a href="javascript:;">冷却装置</a></span></li>
+
+	    					</ul>
+	    				</div>
+	    			</div>
+	    			<div id="u2_state3" class="panel_state display" data-label="选择配件小类1层">
+	    				<div class="auto_name">
+	    					<h3>保养和维修范围</h3>
+	    				</div>
+	    				<div class="chexi">
+	    					<ul>
+	    						<li><span><a href="javascript:;">保养和维修范围1</a></span></li>
+	    						<li><span><a href="javascript:;">保养和维修范围2</a></span></li>
+	    						<li><span><a href="javascript:;">保养和维修范围3</a></span></li>
+	    						<li><span><a href="javascript:;">保养和维修范围4</a></span></li>
+	    						<li><span><a href="javascript:;">保养和维修范围5</a></span></li>
+	    						<li><span><a href="javascript:;">保养和维修范围6</a></span></li>
+	    						<li><span><a href="javascript:;">保养和维修范围7</a></span></li>
+	    						<li><span><a href="javascript:;">保养和维修范围8</a></span></li>
+	    					</ul>
+	    				</div>
+	    			</div>
+	    			<div id="u2_state4" class="panel_state display" data-label="选择配件小类2层">
+	    				<div class="auto_name">
+	    					<h3>保养和维修范围1</h3>
+	    				</div>
+	    				<div class="chexi">
+	    					<ul>
+	    						<li><span><a href="javascript:;">冷凝器</a></span></li>
+	    						<li><span><a href="javascript:;">空气滤清器</a></span></li>
+	    						<li><span><a href="javascript:;">车外温度传感器</a></span></li>
+	    						<li><span><a href="javascript:;">鼓风马达</a></span></li>
+	    						<li><span><a href="javascript:;">空气滤清器</a></span></li>
+	    						<li><span><a href="javascript:;">鼓风马达</a></span></li>
+	    					</ul>
+	    				</div>
+	    			</div>
+	    		</div>
+	    	</div>
+
+			<!--汽车品牌引导页右侧-->
+
+	    	<div class="right">
+	    		<div class="top">
+	    			<!--关键字查询-->
+	    			<div class="search">
+	    				<span>关键字：</span>
+	    				<input type="text" placeholder="在当前条件下查询"/>
+	    				<button>搜索</button>
+	    			</div>
+	    			
+	    			
+	    			<!--车型信息-->
+	    			<div class="auto_infor type clearfix">
+	    				<h4>车型信息：</h4>
+	    				<ul>
+	    					<li class="lianjie nobg"><span style="margin-left:0;">奥迪</span><i class="icon-close"></i></li>
+	    				</ul>
+	    				<a class="review_type" href="javascript:;" style="display:none;">查看车型信息</a>
+	    			</div>
+	  
+	    			<!--配件信息-->
+	    			<div class="auto_infor parts clearfix">
+	    				<h4>配件信息：</h4>
+	    				<ul>
+	    					
+	    				</ul>
+	    				
+	    			</div>
+	    		</div>
+	    		<!--隐藏的车型信息-->
+	    		<div class="center cur">
+	    			<div class="box">
+						<div class="top1">
+							<h3 style="float:left;">车型详情</h3>
+							<span class="close"></span>
+						</div>
+						<div class="bottom1">
+							<dl class="clearfix">
+								<dt><img src="http://192.168.0.156:8080/static/mallStatic/images/u622.jpg" alt="" /></dt>
+								<dd>
+									<div class="nav">
+										<span class="cur">基本信息</span><span class="noborder">车身信息</span><span>技术数据</span>
+									</div>
+									<div class="content">
+										<div class="cur">
+											<p><span class="font14">品牌：</span>BMW</p>
+											<p><span class="font14">车型：</span>2’ F22 双门轿跑车 218d ECE</p>
+											<p><span class="font14">生产开始年月：</span>2012/07</p>
+											<p><span class="font14">生产结束年月：</span>2015/07</p>
+										</div>
+										<div>
+											<p><span class="font14">车身类型：</span>Couple</p>
+											<p><span class="font14">驱动方式：</span>Front Where Drive</p>
+										</div>
+										<div>
+											<ul class="jishu">
+												<li><span class="font14">功率（千瓦）：</span>51</li>
+												<li><span class="font14">功率（马力）：</span>70</li>
+												<li><span class="font14">气缸：</span>4</li>
+												<li><span class="font14">制动系统：</span>51</li>
+												<li><span class="font14">发动机类型：</span>Patrol Engine</li>
+												<li><span class="font14">燃料种类：</span>Patrol</li>
+												<li><span class="font14">每个燃烧室中的气门：</span>2</li>
+												<li><span class="font14">技术排量（毫升）：</span>1471</li>
+												<li><span class="font14">ABS：</span>without ABS</li>
+												<li><span class="font14">ASR：</span>without ASR</li>
+											</ul>
+										</div>
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</div>
+	    		</div>
+	    		<!--5个div，汽车车系，汽车车型，配件类型，配件类型，配件分类-->
+	    		<div class="bottom">
+	    			<dl class="panel_state clearfix">
+	    				<dt>汽车车系：</dt>
+	    				<dd>
+	    					<div class="chexi leftfix">
+		    					<ul>
+		    						<li><span><a href="javascript:;">A6L</a></span></li>
+		    						<li><span><a href="javascript:;">A6</a></span></li>
+		    						<li><span><a href="javascript:;">A4L</a></span></li>
+		    						<li><span><a href="javascript:;">A4</a></span></li>
+		    						<li><span><a href="javascript:;">Q5</a></span></li>
+		    						<li><span><a href="javascript:;">Q3</a></span></li>
+		    						<li><span><a href="javascript:;">200</a></span></li>
+		    						<li><span><a href="javascript:;">100</a></span></li>
+		    					</ul>
+	    					</div>
+	    				</dd>
+	    			</dl>
+	    			<dl class="panel_state clearfix display">
+	    				<dt>汽车车型：</dt>
+	    				<dd>
+	    					<div class="chexi leftfix">
+		    					<ul>
+		    						<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.0T AT</a></span></li>
+	    						 	<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.4T AT</a></span></li>
+	    							<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.8T AT</a></span></li>
+	    							<li><span><a href="javascript:;">一汽奥迪A6L C6 2005款 2.0T AT</a></span></li>
+	    							<li><span><a href="javascript:;">一汽奥迪A6L C6 2006款 2.0T AT</a></span></li>
+	    							<li><span><a href="javascript:;">一汽奥迪A6L C6 2007款 2.0T AT</a></span></li>
+	    							<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.0T AT</a></span></li>
+	    							<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.0T AT</a></span></li>
+	    							<li><span><a href="javascript:;">一汽奥迪A6L C6 2011款 2.0T AT</a></span></li>
+		    					</ul>
+	    					</div>
+	    				</dd>
+	    			</dl>
+	    			<dl class="panel_state clearfix display">
+	    				<dt>配件类型：</dt>
+	    				<dd>
+	    					<div class="chexi leftfix">
+		    					<ul>
+		    						<li><span><a href="javascript:;">保养和维修范围</a></span></li>
+	    							<li><span><a href="javascript:;">发动机</a></span></li>
+	    							<li><span><a href="javascript:;">发动机电气系统</a></span></li>
+	    							<li><span><a href="javascript:;">混合气制备</a></span></li>
+	    							<li><span><a href="javascript:;">燃油供应</a></span></li>
+	    							<li><span><a href="javascript:;">燃油供应</a></span></li>
+	    							<li><span><a href="javascript:;">冷却装置</a></span></li>
+		    					</ul>
+	    					</div>
+	    				</dd>
+	    			</dl>
+	    			<dl class="panel_state clearfix display">
+	    				<dt>配件类型：</dt>
+	    				<dd>
+	    					<div class="chexi leftfix">
+		    					<ul>
+		    						<li><span><a href="javascript:;">保养和维修范围1</a></span></li>
+	    							<li><span><a href="javascript:;">保养和维修范围2</a></span></li>
+	    							<li><span><a href="javascript:;">保养和维修范围3</a></span></li>
+	    							<li><span><a href="javascript:;">保养和维修范围4</a></span></li>
+	    							<li><span><a href="javascript:;">保养和维修范围5</a></span></li>
+	    							<li><span><a href="javascript:;">保养和维修范围6</a></span></li>
+	    							<li><span><a href="javascript:;">保养和维修范围7</a></span></li>
+	    							<li><span><a href="javascript:;">保养和维修范围8</a></span></li>
+		    					</ul>
+	    					</div>
+	    				</dd>
+	    			</dl>
+	    			<dl class="panel_state clearfix display">
+	    				<dt>配件分类：</dt>
+	    				<dd>
+	    					<div class="chexi leftfix">
+		    					<ul>
+		    						<li><span><a href="javascript:;">冷凝器</a></span></li>
+	    							<li><span><a href="javascript:;">空气滤清器</a></span></li>
+	    							<li><span><a href="javascript:;">车外温度传感器</a></span></li>
+	    							<li><span><a href="javascript:;">鼓风马达</a></span></li>
+	    							<li><span><a href="javascript:;">空气滤清器</a></span></li>
+	    							<li><span><a href="javascript:;">鼓风马达</a></span></li>
+	    							<li><span><a href="javascript:;">冷却装置</a></span></li>
+		    					</ul>
+	    					</div>
+	    				</dd>
+	    			</dl>
+	    		</div>
+	    		<!--配件明细-->
+	    		<div class="parts_list">
+	    			<div class="main">
+						<div class="result">
+							<span class="count">配件明细：</span>
+						</div>
+						<div class="sales_list">
+							<table class="sales_pro">
+								<thead>
+									<tr>
+										<th>NO.</th>
+										<th>配件名称</th>
+										<th>OEM</th>
+										<th>操作</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="odd">
+										<td class="products">1</td>
+										<td class="stock">通用插头套壳&nbsp;未设码</td>
+										<td class="number">6113695526</td>
+										<td class="operation"><span>查看详情</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+			    	<div class="pagerbar">
+			    		<span class="clearfix">
+			    			<a href="javascript:;" class="pgNext pgEmpty">首页</a>
+			    			<a href="javascript:;" class="pgNext pgEmpty">上一页</a>
+			    			<a href="javascript:;" class="page-number cur">1</a>
+			    			<a href="javascript:;" class="page-number">2</a>
+			    			<a href="javascript:;" class="page-number">3</a>
+			    			<a href="javascript:;" class="page-number">4</a>
+			    			<a href="javascript:;" class="page-number">5</a>
+			    			<a href="javascript:;" class="page-number">6</a>
+			    			<a href="javascript:;" class="page-number">7</a>
+			    			<a href="javascript:;" class="page-number">8</a>
+			    			<a href="javascript:;" class="page-number">9</a>
+			    			<a href="javascript:;" class="pgNext">下一页</a>
+			    			<a href="javascript:;" class="pgNext">尾页</a>
+			    		</span>
+			    	</div>
+	    		</div>
+	    	</div>
+	    </div>    
+	</div>
+</body>
+</html>

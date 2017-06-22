@@ -1,0 +1,11 @@
+<link rel="stylesheet" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" href="$!{mallStatic}/css/pic.css">
+<link rel="stylesheet" href="$!{mallStatic}/css/products.css">
+<link rel="stylesheet" href="$!{mallStatic}/css/shopcart.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/time.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/slide_img.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-ui.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/slide.js"></script>

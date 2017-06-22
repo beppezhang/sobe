@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.SystemCodeDAO">
+
+	<select id="findSystemCode" parameterType="java.lang.String"
+		resultType="systemCodeVO">
+		select * from
+		kplus_systemcode where isDelete=0 and configActive=1
+		<if test="mainID!=null">
+			and mainID=#{mainID}
+		</if>
+	</select>
+
+	<insert id="insertCodeConfig" parameterType="codeConfigDTO">
+		insert into
+		kplus_code_config(
+		codeID,
+		codeEx,
+		creator,
+		createTime
+		)
+		values (
+		#{codeID},
+		#{codeEx},
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updateCodeConfig" parameterType="codeConfigDTO">
+		update kplus_code_config
+		<set>
+			modifyTime=now()
+			<if test="codeEx!=null">
+				,codeEx=#{codeEx}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="findCodeConfigByID" parameterType="java.lang.String"
+		resultType="codeConfigVO">
+		select * from kplus_code_config where codeID=#{codeID}
+	</select>
+
+	<select id="findAllCodeConfig" resultType="codeConfigVO">
+		SELECT
+		codeID,
+		codeEx,
+		FROM
+		kplus_code_config
+	</select>
+
+</mapper>

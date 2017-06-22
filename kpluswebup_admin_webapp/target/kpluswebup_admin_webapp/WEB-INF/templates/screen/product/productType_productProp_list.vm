@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>产品属性</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+.last{ width:70px;}
+.none{ display:none}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>产品管理 》产品类型》产品属性</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<input type="hidden" id="productTypeMainID"
+			value="$!{productTypeMainID}">
+		<div class="tabBar clearfix">
+			#parse("layout/productType_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="systemBar">
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td style="width: 200px">产品属性</td>
+									<td style="width: 200px">属性名称</td>
+									<td>属性值</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody>
+								#foreach ($!productTypeProductPropVO in
+								$!productTypeProductPropList)
+								<tr>
+									<td>$!productTypeProductPropVO.name</td>
+									<td><input type="text" id="propName_$!productTypeProductPropVO.mainID"
+										value="$!productTypeProductPropVO.name" class="cText cTextLen">
+									</td>
+									<td>
+									<span class="odData">$!productTypeProductPropVO.productPropValue</span>
+                                    	<span class="edData none">
+                                    	#foreach ( $!productPropVO in $!productTypeProductPropVO.productPropValueList) 
+                                           <label>
+                                           		<input name="propName_$!productTypeProductPropVO.mainID" type="checkbox" data="$!productPropVO.name:$!productPropVO.mainID" value="$!productPropVO.name" #if("$!productPropVO.flag"=="1")checked#end>$!productPropVO.name
+                                           </label>
+                                        #end
+                                        </span>
+									</td>
+									<td class="last">
+										#if($!menuUtil.isExistMenu("/admin/product/deleteProductTypeProductProp.do",$!menuAllList))
+										<a href="javascript:;" class="icon iconDel"
+										onclick="deleteProductTypeProductProp('$!{productTypeProductPropVO.mainID}')"
+										title="删除"></a>#end
+										<a href="javascript:;" class="icon iconEdit" title="编辑"></a><a class="icon iconSure none" href="javascript:;" onclick="editProductTypeProductProp('$!productTypeProductPropVO.mainID','$!productTypeProductPropVO.productPropID')" title="确认"></a>	
+									</td>
+								</tr>
+
+								#end
+								<tr id="addProductProp">
+									<td><select onchange="changeProductProp()"
+										id="changeProductProp">
+										<option>请选择</option>
+										 #foreach ( $!productProp in $!productPropList)
+											<option value="$!productProp.mainID">$!productProp.name</option> 
+										 #end
+									</select></td>
+									<td><input type="text" class="cText cTextLen" name="name"
+										id="productPropName"></td>
+									<td>#foreach ( $!productProp in $!productPropList) <input
+										type="hidden" class="cText cTextLen"
+										value="$!productProp.productPropValues" name="name"
+										id="productPropName_$!productProp.mainID" /> #end
+										<div id="productPropValue"></div>
+									</td>
+									<td class="last">
+										#if($!menuUtil.isExistMenu("/admin/product/addProductTypeProductProp.do",$!menuAllList)
+										) <input type="button" value="新增"
+										onclick="saveProductTypeProductProp()">#end
+
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	$(function() {
+		$(".producttype_menu_2").append("<em class='icon arrowLfWeight'></em>")
+				.find("a").addClass("hover");
+		
+		$(".tableList").on("click",".iconEdit",function(){
+			$(this).addClass("none");
+			$(this).next("a").removeClass("none");
+			$(this).closest("td").prev("td").find(".edData").removeClass("none");
+			$(this).closest("td").prev("td").find(".odData").addClass("none");	
+		})
+		$(".tableList").on("click",".iconSure",function(){
+			$(this).closest("td").prev("td").find(".odData").empty();
+			var a = $(this).closest("td").prev("td").find(".edData").find("input[type=checkbox]:checked");
+			$(a).each(function() {
+              	  $(this).closest(".edData").prev(".odData").append(this.value + ",");
+            });
+			$(this).addClass("none");
+			$(this).prev("a").removeClass("none");
+			$(this).closest("td").prev("td").find(".edData").addClass("none");
+			$(this).closest("td").prev("td").find(".odData").removeClass("none");
+			
+		})
+	})
+	//菜单
+	$(".navLi").bind("mouseenter", function() {
+		$(this).closest(".navLi").find(".navUiSe").show();
+	})
+	$(".navLi").bind("mouseleave", function() {
+		$(this).closest(".navLi").find(".navUiSe").hide();
+	});
+
+	//店面名称
+	$(".setInfoBar").bind("mouseenter", function() {
+		$(this).find(".setInfoList").show();
+	})
+	$(".setInfoBar").bind("mouseleave", function() {
+		$(this).find(".setInfoList").hide();
+	})
+	//显示头部消息
+	$("#sysInfo").bind("click", function() {
+		$("#headerInfo").show();
+	})
+	$("#headerInfo").bind("mouseleave", function() {
+		$("#headerInfo").hide();
+	})
+	//搜索商店
+	$("#searchShop").inputFocus();
+</script>
+</html>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.promotion.dao.FlashSaleDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID, productID, itemID, totality, salesPrice,
+		limitCount,
+		customerGrade, customerGroup,
+		description, fromDate,
+		endDate, isDelete, creator, createTime, modifier,
+		modifyTime,score,scorePrice,salesScore,picUrl,peopleRush
+	</sql>
+
+	<select id="findFlashSaleByPagination" parameterType="flashSaleDTO"
+		resultType="flashSaleVO">
+		select
+		f.mainID,
+		f.itemID,
+		f.totality,
+		f.salesPrice,
+		f.limitCount,
+		f.customerGrade,
+		f.customerGroup,
+		f.description,
+		f.fromDate,
+		f.endDate,
+		f.picUrl,
+		f.peopleRush,
+		p.name as productName,
+		i.name as itemName,
+		f.createTime,
+		o.username as
+		createName,
+		(f.salesPrice/i.salesPrice)*10.0
+		as discountValue
+		from kplus_flashsale f
+		left
+		join kplus_product p on
+		f.productID=p.mainID
+		left join kplus_item i on
+		f.itemID=i.mainID
+		left
+		join kplus_operator
+		o on
+		f.creator=o.mainID
+		where
+		f.isDelete=0
+		and
+		p.isDelete=0
+		and i.isDelete=0
+		<if test="itemID!=null">
+			and f.itemID like '%${itemID}%'
+		</if>
+		<if test="itemName!=null">
+			and i.name like '%${itemName}%'
+		</if>
+		<if test="fromDate!=null">
+			and f.fromDate &gt;=#{fromDate}
+		</if>
+		<if test="endDate!=null">
+			and f.endDate &lt;=#{endDate}
+		</if>
+		<if test="type==null">
+			and CURDATE() BETWEEN f.fromDate and f.endDate
+		</if>
+		order by
+		f.id desc limit
+		#{startRow}
+		,#{pageSize}
+	</select>
+
+	<select id="findFlashSaleCount" parameterType="flashSaleDTO"
+		resultType="java.lang.Long">
+		select count(f.mainID) from kplus_flashsale f left
+		join
+		kplus_product p
+		on f.productID=p.mainID
+		left join kplus_item i on
+		f.itemID=i.mainID
+		left
+		join kplus_operator
+		o on
+		f.creator=o.mainID where
+		f.isDelete=0
+		and
+		p.isDelete=0
+		and i.isDelete=0
+		<if test="itemID!=null">
+			and f.itemID like '%${itemID}%'
+		</if>
+		<if test="itemName!=null">
+			and i.name like '%${itemName}%'
+		</if>
+		<if test="fromDate!=null">
+			and f.fromDate &gt;=#{fromDate}
+		</if>
+		<if test="endDate!=null">
+			and f.endDate &lt;=#{endDate}
+		</if>
+	</select>
+
+	<insert id="insertFlashSale" parameterType="flashSaleDTO">
+		insert into
+		kplus_flashsale(
+		mainID,
+		productID,
+		itemID,
+		salesPrice,
+		totality,
+		limitCount,
+		customerGrade,
+		customerGroup,
+		fromDate,
+		endDate,
+		description,
+		creator,
+		createTime,
+		isDelete,
+		score,
+		scorePrice,
+		salesScore,
+		picUrl,
+		peopleRush
+		)
+		values(
+		#{mainID},
+		#{productID},
+		#{itemID},
+		#{salesPrice},
+		#{totality},
+		#{limitCount},
+		#{customerGrade},
+		#{customerGroup},
+		#{fromDate},
+		#{endDate},
+		#{description},
+		#{creator},
+		now(),
+		0,
+		#{score},
+		#{scorePrice},
+		#{salesScore},
+		#{picUrl},
+		0
+		)
+	</insert>
+
+	<update id="updateFlashSale" parameterType="flashSaleDTO">
+		update kplus_flashsale
+		<set>
+			modifyTime=now()
+			<if test="productID!=null">
+				,productID=#{productID}
+			</if>
+			<if test="itemID!=null">
+				,itemID=#{itemID}
+			</if>
+			<if test="salesPrice!=null">
+				,salesPrice=#{salesPrice}
+			</if>
+			<if test="totality!=null">
+				,totality=#{totality}
+			</if>
+			<if test="limitCount!=null">
+				,limitCount=#{limitCount}
+			</if>
+			<if test="customerGrade!=null">
+				,customerGrade=#{customerGrade}
+			</if>
+			<if test="customerGroup!=null">
+				,customerGroup=#{customerGroup}
+			</if>
+			<if test="fromDate!=null">
+				,fromDate=#{fromDate}
+			</if>
+			<if test="endDate!=null">
+				,endDate=#{endDate}
+			</if>
+			<if test="description!=null">
+				,description=#{description}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+			<if test="score != null">
+				,score=#{score}
+			</if>
+			<if test="scorePrice != null">
+				,scorePrice=#{scorePrice}
+			</if>
+			<if test="salesScore != null">
+				,salesScore=#{salesScore}
+			</if>
+			<if test="picUrl!=null">
+				,picUrl=#{picUrl}
+			</if>
+			<if test="peopleRush!=null">
+				,peopleRush=#{peopleRush}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<select id="findFlashSaleByMainID" parameterType="java.lang.String"
+		resultType="flashSaleVO">
+		select * from kplus_flashsale where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<update id="deleteFlashSale" parameterType="java.lang.String">
+		update
+		kplus_flashsale set isDelete=1 where mainID=#{mainID}
+	</update>
+</mapper>

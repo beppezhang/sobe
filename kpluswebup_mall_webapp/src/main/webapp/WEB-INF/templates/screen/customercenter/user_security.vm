@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>账户安全</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/jquery-ui.css">
+</head>
+<body>
+<!-- top bar -->
+	#parse("layout/head_top.vm")
+<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+<!-- 主导航 -->
+	#parse("layout/menu.vm")
+<!-- body头部 -->
+	#parse("layout/customercenter/header.vm")
+	
+<div class="layout clearfix">
+<!-- 左边菜单 -->
+	#parse("layout/customercenter/leftmenu.vm")
+    <div class="mainbody bg">
+    	<div class="tittab txt_r clearfix">
+        	<span class="cur lt">账户信息</span>
+        </div>
+        <div class="p10">
+        	<h2 class="f16">您的帐户信息</h2>
+            <div class="mainInfo mt15">
+            	<dl class="clearfix">
+                	<dt>#if("$!customerVO.avatar"!="")<img src="$!{domainImg}$!customerVO.avatar">#else
+                		<img src="$!{mallStatic}/images/header_inco.png">#end</dt>
+                    <dd>
+                    	<p>登录帐号：$!{customerVO.username}</p>
+                        <p>手机号码：$!{customerVO.mobile}</p>
+                    </dd>
+                </dl>
+            </div>
+        	<div class="sinfo mt25">
+            	<div class="tt">您的安全服务</div>
+                <div class="unit">
+                	<p>当前安全等级：<span class="col03 f26">低</span> <span class="col03">建议开启全部安全设置，以保证账户与资金安全。</span></p>
+                </div>
+                <div class="unit">
+                	<dl class="clearfix">
+                    	<dt class="psw">
+                        	<i class="ok"></i>
+                        	<p class="f16">登录密码</p>
+                            <p class="mt10"><span class="col04">已设置</span></p>
+                        </dt>
+                        <dd>
+                        	<span class="txt">
+                            	安全性高的密码可以使账号更加安全。建议您定期更换密码，且设置一个包含数字与字母，并长度超过6位以上的密码，为保证您的帐户安全，只有在您绑定手机后才可以修改密码。
+                            </span>
+                            <span class="btn">
+                            	<a href="$!{domain}/mall/member/forgetPasswd.htm?customID=$!{user.mainID}" class="saveLink sp">修改密码</a>
+                            </span>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="unit">
+                	<dl class="clearfix">
+                    	<dt class="tel">
+                    		<i class="ok"></i>
+                        	<p class="f16">手机绑定</p>
+                            <p class="mt10"><span class="col04">已绑定</span></p>
+                        </dt>
+                        <dd>
+                        	<span class="txt">
+                            	进行手机验证后，可用于接收敏感操作的身份验证信息，以及进行积分消费的验证确认，非常有助于保护您的账号和账户财产安全。
+                            </span>
+                            <span class="btn">
+                            	<a href="javascript:;" class="saveLink">已绑定</a>
+                            </span>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>	
+</div>
+<!-- footer -->
+	#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery("#Security").addClass("cur").siblings(".leve10").removeClass("cur");
+})
+/** 上传头像 * */
+function ajaxFileUpload() {
+	jQuery.ajaxFileUpload({
+		url : '/file/fileUpload.do',
+		secureuri : false,// 是否启用安全提交,默认为false
+		fileElementId : 'myBlogImage',// 文件选择框的id属性
+		dataType : 'text',// 服务器返回的格式,可以是json或xml等
+		success : function(data, status) {
+			data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+			data = data.replace("</PRE>", '');
+			data = data.replace("<pre>", '');
+			data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+			if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+				jQuery("img[id='uploadImage']").attr("src",
+						data.substring(2));
+				jQuery("#picURL").val(data.substring(2));
+				var mainID = jQuery("#mainID").val();
+				var picURL = jQuery("#picURL").val();
+				jQuery.ajax({
+					url : '/mall/buyer/saveAvatar.do',
+					data : {
+						'mainID' : mainID,
+						'picURL' : picURL
+					},
+					secureuri : false,// 是否启用安全提交,默认为false
+					fileElementId : 'myBlogImage',// 文件选择框的id属性
+					dataType : 'text',// 服务器返回的格式,可以是json或xml等
+					success : function() {
+					}
+				});
+			} else {
+				jQuery('#result').html('图片上传失败，请重试！！');
+			}
+		},
+		error : function(data, status, e) { // 服务器响应失败时的处理函数
+			jQuery('#result').html('图片上传失败，请重试！！');
+		}
+	});
+}
+</script>
+</body>
+</html>

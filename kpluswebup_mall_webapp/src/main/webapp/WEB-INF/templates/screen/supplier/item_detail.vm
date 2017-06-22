@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+    #parse("layout/suppliercenter/leftmenu.vm")
+    <div id="rightMain">
+      <div class="crumbs">
+          商家管理中心 &gt; <a href="supplierCenter.htm">首页</a> &gt; 商品基本信息
+        </div>
+        <div class="p15">
+            <div class="stitbar">
+                <strong>商品基本信息</strong>
+            </div>
+            <div class="editForm">
+                  <div class="tt"><strong>商品基本信息</strong></div>
+                  <dl class="clearfix">
+                        <dt>商品分类：</dt>
+                    <dd> #foreach($!firtSecondThirdCategoryVO in $!firtSecondThirdCategoryList)
+                      $!{firtSecondThirdCategoryVO.fistName} &gt; $!{firtSecondThirdCategoryVO.secondName} &gt; $!{firtSecondThirdCategoryVO.thirdName} &nbsp;&nbsp;
+
+                      #end</dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt>商品名称：</dt>
+                      <dd>$!{itemVO.name}</dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt>商品卖点：</dt>
+                        <dd>$!{productVO.subTitle}</dd>
+                    </dl>
+                    
+                    <dl class="clearfix">
+                        <dt><em>*</em>商品价格：</dt>
+                        <dd>
+                         <!--  <input id="saleprice" name="" type="hidden" class="ipt" value="$!{itemVO.salesPrice}" readonly="readonly"><span class="price">元</span> -->
+                          $!{itemVO.salesPrice}
+                          <p class="col02 mt10">价格需在0.01～999999.00直接的数字，切不能高于市场价。</p>
+                          <p class="col02">此价格为商品实际销售价格，如果商品存在规格，该价格显示最低价。</p>
+                        </dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt>市场价：</dt>
+                        <dd><input id="standrardPrice" type="hidden" value="$!{itemVO.standrardPrice}" readonly="readonly"/>$!{itemVO.standrardPrice}</dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt><em>*</em>商品库存：</dt>
+                        <dd>
+                            <input id="stock" name="" type="hidden" class="ipt" value="$!{itemVO.stock}" readonly="readonly">
+                            $!{itemVO.stock}
+                        </dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt>库存预警值：</dt>
+                        <dd>$!saftyStock</dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt>商品货号：</dt>
+                        <dd>$!{itemVO.mainID}</dd>
+                    </dl>
+                  <!-- <dl class="clearfix">
+                        <dt>商品条形码：</dt>
+                        <dd>726636300</dd>
+                    </dl> -->
+                    <dl class="clearfix">
+                        <dt>商品图片：</dt>
+                        <dd><span class="ml10"><img src="$!{domainImg}$!{itemVO.picURL}" class="pimg"></span></dd>
+                    </dl>
+                    <div class="tt"><strong>商品详情描述</strong></div>
+                    <dl class="clearfix">
+                        <dt>商品品牌：</dt>
+                        <dd>$!{productVO.brandName}</dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt>商品属性：</dt>
+                        <dd>
+                          #set ($i=0)
+                          #foreach($detail in $!productDetails)
+                          #if($i == 0)
+                          <span>$!{detail.productPropName} $!{detail.productPropValue}</span>
+                          #else
+                          <span  class="ml35">$!{detail.productPropName} $!{detail.productPropValue}</span>
+                          #end
+                          #set ($i=$i+1)
+                          #end
+                          </dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt>商品描述：</dt>
+                        <dd class="picbody">
+                            <p class="ct">$!{productVO.description}</p>
+                        </dd>
+                    </dl>
+                    
+            </div>
+            <!-- <p class="ct mt25"><a href="javascript:void(0);" class="nextLink">提交</a></p> -->
+        </div>
+    </div>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+<script>
+$(function(){
+        $(".allCk").click(function(){
+            $(".sellist").find(':checkbox').attr("checked",this.checked);
+            
+        })
+        $('input[name="ck"]').click(function(){
+            $("input[name='ck']").each(function(){
+                  var ck = $(this).prop("checked");
+                  if(ck==true){
+                      $(".allCk").attr("checked",true);
+                  }else{
+                      $(".allCk").removeAttr("checked");
+                      return false;
+                  }
+            })
+        })
+        //选择数量
+        $(".countMan").find(".addbtn").click(function(){
+            var imtNum = $(this).prev(".unitNum").attr("data");//最大购买数量(库存)
+            var getNum = $(this).closest(".countMan").find(".unitNum").val(); //获取本商品数量
+            var addNum = parseInt(getNum) + 1;//数量增加
+            if(imtNum>=addNum){
+                $(this).closest(".countMan").find(".unitNum").val(addNum);
+            }
+            
+        })
+        $(".countMan").find(".subbtn").click(function(){
+            var getNum = $(this).closest(".countMan").find(".unitNum").val(); //获取本商品数量
+            var subNum = parseInt(getNum) - 1;//数量减少
+            if(subNum>0){
+                $(this).closest(".countMan").find(".unitNum").val(subNum);
+            }
+        })
+        $("input[name='num']").change(function(){
+            var iptVal=$(this).val();
+            var nStock = $(this).attr("data");//最大购买数量(库存)
+            var inVAL = $(this).val();
+            if(parseInt(iptVal)<=1){
+               $(this).val(1);
+            }
+            if(parseInt(iptVal)>nStock){
+                $(this).val(nStock);
+            }
+            if(parseInt(iptVal)> 1){
+               n = $(this).val();
+               var intNum = parseInt(n);
+               $(this).val(intNum);
+            }
+            if(isNaN(iptVal) || iptVal=="" || iptVal.replace(/\s+/g,"")=="") {
+               $(this).val(1);           
+            }           
+        })
+        $(".nextLink").click(function(){
+          var itemMainID = "$!{itemVO.mainID}";
+          var salesPrice = $("#saleprice").val();
+          var standrardPrice = $("#standrardPrice").val();
+          var stock = $("#stock").val();
+          var numReg = /^([1-9])[0-9]+$/;
+          if (!numReg.test(stock)) {
+            alert("库存格式有误");
+            return;
+          };
+          if (parseFloat(salesPrice)) {
+            if (parseFloat(salesPrice) > parseFloat(standrardPrice)) {
+              alert("销售价不能高于市场价");
+            }else{
+                jQuery.ajax({
+                  url: "item.do",
+                  type: "POST",
+                  dataType: "text",
+                  data: {
+                    itemMainID: itemMainID,
+                    salePrice: salesPrice,
+                    stock: stock
+                  },
+                  success: function(data){
+                    if (data == 0) {
+                      location.href = "item.htm?type=wait";
+                    }
+                  }
+                })
+            }
+          }else{
+            alert("价格不合法");
+          }
+
+        });
+
+        $(".picbody img").each(function(index, ele){
+          var index = ele.src.indexOf("/file");
+          ele.src = "http://admin.9niuw.com"+ele.src.substring(index);
+        })
+    })
+    
+</script>
+</body>
+</html>

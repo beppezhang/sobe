@@ -1,0 +1,392 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--<title>上海晨阑数据技术有限公司-首页</title>-->
+<title>搜贝</title>
+<link rel="stylesheet" type="text/css"
+	href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css"
+	href="$!{mallStatic}/css/index.css">
+</head>
+
+<body>
+	<!-- top bar -->
+	#parse("layout/head_top.vm")
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+	<!-- 主导航 -->
+	#parse("layout/menu.vm")
+	<!-- banner -->
+	<!-- <div id="banner" class="clearfix">
+		<ul class="timg_img timgi">
+			#foreach($!cmsAdvertVO in $!cmsAdvertList)
+			<li #if($!velocityCount==1)class= "cur"#end
+				style="background: url($!{imgurl}$!cmsAdvertVO.picURL) center center no-repeat">
+				<div class="layout pos_r">
+					#if("$!cmsAdvertVO.advertLink"!="") <a
+						href="$!cmsAdvertVO.advertLink" class="bglink" target="_blank"></a>
+					#end
+					<dl>
+						#foreach($!child in $!cmsAdvertVO.childList)
+						<dd>
+							#if("$!child.advertLink"!="") <a href="$!child.advertLink"
+								target="_blank"><img src="$!{imgurl}$!child.picURL"></a>
+							#else <img src="$!{imgurl}$!child.picURL"> #end
+						</dd>
+						#end
+					</dl>
+				</div>
+			</li> #end
+		</ul>
+		<ul class="timg_num timgn">
+			#foreach($!cmsAdvertVO in $!cmsAdvertList)
+			<li #if($!velocityCount==1)class= "cur"#end>$!velocityCount</li> #end
+		</ul>
+	</div> -->
+	<div id="banner" class="clearfix">
+      <ul class="timg_img timgi">
+          #foreach($!cmsAdvertVO in $!cmsAdvertList)
+         	 <li #if($!velocityCount==1)class= "cur"#end  style="background:#f8f5ee url($!{domainImg}$!cmsAdvertVO.picURL) center center no-repeat">
+	              <div class="layout pos_r">
+	              #if("$!cmsAdvertVO.advertLink"!="") 
+	              <a href="$!cmsAdvertVO.advertLink" class="bglink" target="_blank" title=""></a>
+	              #end
+	              </div>
+         	 </li>
+          #end
+      </ul>
+      <ul class="timg_num timgn">
+			#foreach($!cmsAdvertVO in $!cmsAdvertList)
+			<li #if($!velocityCount==1)class= "cur"#end>$!velocityCount</li> #end
+	  </ul>
+	</div>
+	<!-- banner end -->
+	<div class="layout mt25 clearfix">
+		<ul class="shopping_guide">
+		   #foreach($!middle in $!middleList)
+			<li>
+			   <!-- <a href="#"><img src="$!{mallStatic}/img/1.jpg" alt=""></a> -->
+			   #if("$!middle.advertLink"!="")<a href="$!middle.advertLink"
+					target="_blank"><img src="$!{domainImg}$!middle.picURL"></a>#else<img
+					src="$!{imgurl}$!middle.picURL">#end
+			</li>
+		   #end
+		</ul>
+	</div>
+	<div class="layout">
+		<!-- <div class="titbar mt15">
+			<h3><img src="$!{mallStatic}/img/ico-pic01.jpg" alt="今日特卖"></h3>
+		</div> -->
+		<!--
+		<div class="fullList">
+			<ul class="clearfix">
+				#foreach($!product in $!productList)
+				<li>
+					<p class="ct">
+						<a href="$!{domain}/mall/product/productDetail.htm?productID=$!product.mainID&itemID=$!product.itemID">
+						   <img src="$!{domainImg}$!product.picURL" class="pimg imgMove"></a>
+					</p>
+					<h4>$!product.name</h4>
+					<p class="col03">
+						￥<strong class="f16">$!NumberTool.format("#0.00",$!product.minSalesPrice)</strong>
+					</p>
+				</li> #end
+			</ul>
+		</div>-->
+		<!-- <ul class="shopping_guide mt15 clearfix">
+			#foreach($!middle in $!middleList)
+				<li>#if("$!middle.advertLink"!="")<a href="$!middle.advertLink"
+					target="_blank"><img src="$!{imgurl}$!middle.picURL"></a>#else<img
+					src="$!{imgurl}$!middle.picURL">#end
+				</li>
+			#end
+		</ul>  -->
+	</div>
+   <!--	#foreach($!category in $!productCategoryList) -->
+	
+	<!--
+	<div class="layout mt25 clearfix">
+	    <div class="rProbox">
+	        <!-- <h3 class="tt">
+	          <img src="img/ico-pic02.jpg" alt="维修保养" class="lt">
+	          <a href="#" class="rt">更多商品 &gt;</a>
+	        </h3>   -->    
+	        <!--
+	        <h3 class="tt">$!{velocityCount}F $!category.name</h3>
+	        
+	        <div class="recommends rt">
+	          <div class="poster lt">
+	            <p>
+	              #foreach($!productAdvert in $!category.productAdvertList)
+						#if($!velocityCount==1) 
+							#if("$!productAdvert.advertLink"!="")
+							  <a href="$!productAdvert.advertLink" target="_blank">
+							   <img	src="$!{domainImg}$!productAdvert.picURL" class="pimg"></a> 
+							#else
+							  <img src="$!{domainImg}$!productAdvert.picURL" class="pimg">
+							#end
+						#end
+				  #end
+	              <!-- <a href="#" target="_blank"><img src="pic/poster01.jpg" class="pimg"></a> -->
+	              <!--
+	              </p>
+	          </div>
+	          <ul class="clearfix">
+	              #foreach($!productAdvert in $!category.productAdvertList)
+		              #if($!velocityCount!=1)
+						<li>
+							#if("$!productAdvert.advertLink"!="")
+							  <a href="$!productAdvert.advertLink" target="_blank">
+							  <img src="$!{domainImg}$!productAdvert.picURL" class="pimg"></a>
+						    #else
+						      <img src="$!{domainImg}$!productAdvert.picURL" class="pimg">
+						    #end
+						</li>
+					  #end 
+            	  #end
+	          </ul>
+	        </div> 
+	    </div>
+	</div>
+	-->
+	
+	<!-- <div class="layout mt15 clearfix">
+		<div class="w950 rProbox lt">
+			<h3 class="tt">$!{velocityCount}F $!category.name</h3>
+			<div class="poster lt">
+				<p>
+					#foreach($!productAdvert in $!category.productAdvertList)
+					#if($!velocityCount==1) #if("$!productAdvert.advertLink"!="") <a
+						href="$!productAdvert.advertLink" target="_blank"><img
+						src="$!{imgurl}$!productAdvert.picURL" class="pimg"></a> #else <img
+						src="$!{imgurl}$!productAdvert.picURL" class="pimg">#end
+					#end #end
+				</p>
+				<div class="short_type">
+					<h4>选择您的预算？</h4>
+					#if($!velocityCount==2) <a href="javascript:;"
+						onclick="searchsale(0,49,'$!category.mainID');">50元以下</a> <a
+						href="javascript:;"
+						onclick="searchsale(50,99,'$!category.mainID');">50-99元 </a> <a
+						href="javascript:;"
+						onclick="searchsale(100,199,'$!category.mainID');">100-199元</a> <a
+						href="javascript:;"
+						onclick="searchsale(200,299,'$!category.mainID');">200-299元</a> <a
+						href="javascript:;"
+						onclick="searchsale(300,10000000,'$!category.mainID');">300元以上</a>
+					#elseif($!velocityCount==4) <a href="javascript:;"
+						onclick="searchsale(0,19,'$!category.mainID');">20元以下</a> <a
+						href="javascript:;"
+						onclick="searchsale(20,49,'$!category.mainID');">20-49元 </a> <a
+						href="javascript:;"
+						onclick="searchsale(50,99,'$!category.mainID');">50-99元</a> <a
+						href="javascript:;"
+						onclick="searchsale(100,299,'$!category.mainID');">100-299元</a> <a
+						href="javascript:;"
+						onclick="searchsale(300,499,'$!category.mainID');">300-499元</a> <a
+						href="javascript:;"
+						onclick="searchsale(500,10000000,'$!category.mainID');">500元以上</a>
+					#else <a href="javascript:;"
+						onclick="searchsale(0,299,'$!category.mainID');">300元以下</a> <a
+						href="javascript:;"
+						onclick="searchsale(300,599,'$!category.mainID');">300-599元 </a> <a
+						href="javascript:;"
+						onclick="searchsale(600,1199,'$!category.mainID');">600-1199元</a>
+					<a href="javascript:;"
+						onclick="searchsale(1200,2099,'$!category.mainID');">1200-2099元</a>
+					<a href="javascript:;"
+						onclick="searchsale(2100,4099,'$!category.mainID');">2100-4099元</a>
+					<a href="javascript:;"
+						onclick="searchsale(4100,10000000,'$!category.mainID');">4100元以上</a>
+					#end
+				</div>
+			</div>
+			<div class="recommends rt">
+				<ul class="clearfix">
+					#foreach($!productAdvert in $!category.productAdvertList)
+					#if($!velocityCount!=1)
+					<li #if($!velocityCount>4)class="sp"#end >
+						#if("$!productAdvert.advertLink"!="") <a
+						href="$!productAdvert.advertLink" target="_blank"><img
+							src="$!{imgurl}$!productAdvert.picURL" class="pimg"></a> #else<img
+						src="$!{imgurl}$!productAdvert.picURL" class="pimg">#end
+					</li>#end #end
+				</ul>
+			</div>
+		</div>
+		<div class="w250 hotlist lt">
+			<h3 class="tt">人气排行</h3>
+			<ul>
+				#foreach($!product in $!category.products)
+				<li><em class="num #if($!velocityCount>3)lower#end">$!velocityCount</em>
+					<a
+					href="$!{domain}/mall/product/productDetail.htm?productID=$!product.mainID">
+						<img src="$!{imgurl}$!product.picURL" class="pimg">
+						<h4>$!product.name</h4>
+						<p>
+							<strong>￥$!NumberTool.format("#0.00",$!product.minSalesPrice)</strong>
+						</p>
+				</a></li> #end
+			</ul>
+		</div>
+	</div> -->
+	<!-- #end -->
+	<!-- div class="layout mt15 clearfix">
+		<div class="rProbox clearfix">
+			<h3 class="tt">$!{buyFlag}F 值得买</h3>
+			<div class="poster lt">
+				<p>
+					#foreach($!buy in $!buyList) #if("$!buy.advertLink"!="") <a
+						href="$!buy.advertLink" target="_blank"><img
+						src="$!{imgurl}$!buy.picURL" class="pimg"></a>#else<img
+						src="$!{imgurl}$!buy.picURL" class="pimg">#end #end
+				</p>
+			</div>
+			<div class="offer lt">
+				<ul class="clearfix">
+					#foreach($!product in $!productbuyList)
+					<li>
+						<p class="ct">
+							<a
+								href="$!{domain}/mall/product/productDetail.htm?productID=$!product.mainID&itemID=$!product.itemID"><img
+								src="$!{imgurl}$!product.picURL" class="pimg imgMove"></a>
+						</p>
+						<h4>$!product.name</h4>
+						<p class="col03 txt">
+							￥<strong class="f16">$!NumberTool.format("#0.00",$!product.minSalesPrice)</strong>
+							<del class="col02">￥$!NumberTool.format("#0.00",$!product.minStandrardPrice)</del>
+						</p>
+						<p class="txt mt10 txt_r">
+							<span class="lt col02">$!product.maxSalesVolume人购买</span><a
+								href="$!{domain}/mall/product/productDetail.htm?productID=$!product.mainID&itemID=$!product.itemID"
+								class="linksBtn">立即购买</a>
+						</p>
+					</li> #end
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="layout mt15 clearfix">
+		<div class="w845 sp_offer lt">
+			<div class="titbar">
+				<h3>天天低价</h3>
+			</div>
+			<ul class="clearfix mt10">
+				#foreach($!product in $!productlowList)
+				<li class="#if($!velocityCount==1) firLi #else secLi #end lt"><a
+					href="$!{domain}/mall/product/productDetail.htm?productID=$!product.mainID&itemID=$!product.itemID">
+						<div class="ct imgbox">
+							<img src="$!{imgurl}$!product.picURL" class="pimg">
+						</div>
+						<h4>$!product.name</h4>
+						<p class="col03">
+							￥<strong class="f16">$!NumberTool.format("#0.00",$!product.minSalesPrice)</strong>
+						</p>
+				</a></li> #end
+			</ul>
+		</div>
+		< <div class="newslist lt ml10">
+			<div class="titbar">
+				<h3>赛诺资讯</h3>
+			</div>
+			<ul>
+				#foreach($!news in $!newsList)
+				<li><a href="$!{domain}/newsDetail.htm?mainID=$!news.mainID"
+					target="_blank"><em class="lt">$!news.name</em>$!date.format("yyyy-MM-dd",$!news.publishTime)</a></li>
+				#end
+			</ul>
+		</div> >
+	</div-->
+	<form action="$!{domain}/mall/product/searchProductList.htm" id="seach"
+		method="get">
+		<input type="hidden" value="$!product.catID" name="catID" id="catID">
+		<input type="hidden" value="$!product.pageNo" name="pageNo"
+			id="pageNo"> <input type="hidden"
+			value="$!product.startSalePrice" name="startSalePrice"
+			id="startSalePrice"> <input type="hidden"
+			value="$!product.endSalePrice" name="endSalePrice" id="endSalePrice">
+	</form>
+	<!-- footer -->
+	#parse("layout/footer.vm")
+	<script type="text/javascript"
+		src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/rollimg.js"></script>
+	<script>
+	$(function(){       
+	        $(".shopping_guide li").hover(function(){
+	            $(this).removeClass("shadow").siblings().addClass("shadow");
+	        },function(){
+	            $(this).siblings().removeClass("shadow");
+	        })
+	        $(".recommends li,.offer li").hover(function(){
+	        	$(this).find(".sc").animate({"right":"0"},200).stop(true,true);
+	        	$(this).find(".shca").click(function(){
+	        		$(this).hide();
+	        		$(this).siblings(".shca_active").show();
+	        		$(this).parent().siblings(".sc_active").show();
+	        	})
+	        	$(this).find(".shca_active").click(function(){
+	        		$(this).hide();
+	        		$(this).siblings(".shca").show();
+	        		$(this).parent().siblings(".sc_active").hide();
+	        	})
+	        },function(){
+	        	$(".recommends li .sc,.offer li .sc").css({"right":"-29px"});
+	        })
+	})
+	/*二级分类*/
+	$(function(){
+	  $('.firMenu').hover(
+	    function(){
+	      var index=$(this).index();
+	      $('.item-sub').eq(index).show().siblings().hide();
+	    },function(){
+	      var index=$(this).index();
+	      $('.item-sub').eq(index).hide();
+	  })
+	
+	  $('.item-sub').hover(
+	    function(){
+	      var index=$(this).index();
+	      $(this).show();
+	      var a=$('.firLink');
+	      $('.firLink').eq(index).addClass('firLink_hover');
+	    },
+	    function(){
+	      var index=$(this).index();
+	      $(this).hide();
+	      $('.firLink').eq(index).removeClass('firLink_hover');
+	  })
+	
+	  $("#banner").timgroll();
+	  
+	})
+	</script>
+	<script>
+		$(".shopping_guide li").eq(3).addClass("sp");
+		$(function() {
+			$(".shopping_guide li").hover(function() {
+				$(this).removeClass("shadow").siblings().addClass("shadow");
+			}, function() {
+				$(this).siblings().removeClass("shadow");
+			})
+			$("#banner").timgroll();
+		})
+
+		function searchsale(ssale, esale, catID) {
+			if (ssale != "") {
+				jQuery("#startSalePrice").val(ssale);
+			}
+			if (esale != "") {
+				jQuery("#endSalePrice").val(esale);
+			}
+			jQuery("#pageNo").val(1);
+			jQuery("#catID").val(catID);
+			jQuery("#seach").submit();
+		}
+	</script>
+   
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+<title>购买成功</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+	#parse("wap/layout/head_sider.vm")
+	<div class="succeed">
+            <p>购买成功，订单编号<span>294834843</span></p>
+            <p>您可在记录中查看已购买的商品状态</p>
+</div>     
+ <script type="text/javascript">
+    jQuery(function(){
+		jQuery(".userLink").addClass("cur");
+	});
+    </script>  
+</body>
+</html>

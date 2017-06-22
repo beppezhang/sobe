@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>确认售后</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+.qm {
+	padding-top: 3px;
+	margin-bottom: 20px;
+}
+
+.qm button {
+	padding: 3px 30px;
+	font-size: 12px;
+	color: #424242;
+	margin-right: 20px;
+}
+
+.qm  .dy {
+	margin-left: 100px;
+}
+
+.qm  .ck {
+	margin-left: 150px;
+}
+
+.ddanInfo dl dd table td {
+	padding: 5px 0;
+}
+
+.ddanInfo dd tr td span {
+	display: inline-block;
+	width: 60px;
+	font-size: 12px;
+}
+
+.ddanInfo dd tr td .sh {
+	float: left;
+}
+
+.cTextLen {
+	height: 25px;
+	border-radius: 3px;
+}
+
+.ddanInfo dd tr td span {
+	height: 25px;
+}
+
+.ddanInfo dd tr td span.sh {
+	line-height: 25px;
+}
+
+.formRow {
+	height: 25px;
+}
+
+.listFunBtn .linkDemo {
+	width: 110px;
+}
+
+.listFunBtn {
+	width: 146px;
+}
+
+.cTextBrn {
+	margin-left: 60px;
+	width: 450px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>确认售后</span>
+		</div>
+		<div class="ddanInfo">
+			<dl class="">
+				<dt>
+					<em class="bold"></em>
+				</dt>
+				<dd>
+					<table>
+						<tbody>
+							<tr>
+								<td>申请编号：$!salesOrderSalesApply.mainID</td>
+								<td>订单编号：$!salesOrderSalesApply.salesOrderID</td>
+								<td>会员：$!salesOrderSalesApply.customerName</td>
+							</tr>
+							<tr>
+								<td>产品：$!salesOrderSalesApply.productName</td>
+								<td>商品：$!salesOrderSalesApply.itemName</td>
+							</tr>
+							<tr>
+								<td>购买数量：$!salesOrderSalesApply.itemCount</td>
+								<td>购买金额：$!NumberTool.format("#0.00",$!salesOrderSalesApply.salesPrice)元
+								</td>
+							</tr>
+							<tr>
+								<td>申请类型： #if("$!salesOrderSalesApply.salesType"=="1") 退货
+									#elseif("$!salesOrderSalesApply.salesType"=="2") 换货 #end</td>
+							</tr>
+							<tr>
+								<td colspan="4">备注：$!salesOrderSalesApply.description</td>
+							</tr>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+		</div>
+		<form id="updateSalesApplyInfo" action="$!{domain}/admin/order/updateSalesApplyInfo.htm" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="mainID" value="$!salesOrderSalesApply.mainID" />
+			<input type="hidden" name="salesID" value="$!salesOrderSalesApply.salesID" />
+			<input type="hidden" name="customerID" value="$!salesOrderSalesApply.customerID" />
+			<input type="hidden" name="salesOrderID" value="$!salesOrderSalesApply.salesOrderID" />
+			<input type="hidden" name="productID" value="$!salesOrderSalesApply.productID" />
+			<input type="hidden" name="itemID" value="$!salesOrderSalesApply.itemID" />
+			<div class="ddanInfo">
+				<dl class="">
+					<dt>
+						<em class="bold"></em>
+					</dt>
+					<dd>
+						<table>
+							<tbody>
+								<tr>
+									<td><span>类型：</span>
+										#if("$!salesOrderSalesApply.confirmSalesType"=="") <select
+										name="salesType">
+											<option value="1" #if("$!salesOrderSalesApply.salesType"==
+												"1")selected="selected" #end>退货</option>
+											<option value="2" #if("$!salesOrderSalesApply.salesType"==
+												"2")selected="selected" #end>换货</option>
+									</select> #else <select name="salesType">
+											<option value="1"
+												#if("$!salesOrderSalesApply.confirmSalesType"==
+												"1")selected="selected" #end>退货</option>
+											<option value="2"
+												#if("$!salesOrderSalesApply.confirmSalesType"==
+												"2")selected="selected" #end>换货</option>
+									</select> #end</td>
+								</tr>
+								<tr>
+									<td><span>联系人：</span>
+										<input class="cText cTextLen" type="text"
+										name="salesAddressVO.name"
+										value="$!salesOrderSalesApply.salesAddressVO.name" /></td>
+								</tr>
+								<tr>
+									<td><span>电话：</span>
+										<input class="cText cTextLen" type="text"
+										name="salesAddressVO.telephone"
+										value="$!salesOrderSalesApply.salesAddressVO.telephone" />
+									</td>
+								</tr>
+								<tr>
+									<td><span>手机：</span>
+										<input class="cText cTextLen" type="text"
+										name="salesAddressVO.mobile"
+										value="$!salesOrderSalesApply.salesAddressVO.mobile" />
+									</td>
+								</tr>
+								<tr>
+									<td><span class="sh">售后地址：</span>
+										<div class="formRow clearfix">
+											<select name="salesAddressVO.provinceID" class="select"
+												onchange="changeProvinceID(this.value)">
+												#foreach($!province in $!provinceList)
+												<option
+													#if("$!salesOrderSalesApply.salesAddressVO.provinceID"==
+													"$!province.mainID")selected="selected" #end
+													value="$!province.mainID">$!province.name</option> #end
+											</select> &nbsp; <select name="salesAddressVO.cityID" id="cityid"
+												class="select" onchange="changeCity(this.value)">
+												#foreach($!city in $!cityList)
+												<option
+													#if("$!salesOrderSalesApply.salesAddressVO.cityID"==
+													"$!city.mainID")selected="selected" #end
+													value="$!city.mainID">$!city.name</option> #end
+											</select> &nbsp; <select name="salesAddressVO.disctrictID"
+												id="districtid" class="select"> #foreach($!district
+												in $!districtList)
+												<option
+													#if("$!salesOrderSalesApply.salesAddressVO.districtID"==
+													"$!district.mainID")selected="selected" #end
+													value="$!district.mainID">$!district.name</option> #end
+											</select>
+										</div></td>
+								</tr>
+								<tr>
+									<td>
+										<input class="cText cTextLen cTextBrn" type="text"
+										name="salesAddressVO.address"
+										value="$!salesOrderSalesApply.salesAddressVO.address" />
+									</td>
+								<tr>
+									<td><span>说明：</span> <textarea rows="5" cols="75"
+											name="description">$!salesOrderSalesApply.description</textarea></td>
+								</tr>
+							</tbody>
+						</table>
+					</dd>
+				</dl>
+			</div>
+		</form>
+		<div class="qm">
+			<button type="button" class="ck" onclick="salesApplyForm();">编辑</button>
+			<button type="button" class="ck"
+				onclick="changeStatus('$!salesOrderSalesApply.mainID','2')">确认</button>
+			<button type="button" class="ck"
+				onclick="changeStatus('$!salesOrderSalesApply.mainID','1')">拒绝</button>
+			<button type="reset" class="dy" onclick="javascript:window.close();">取消</button>
+		</div>
+		<div class="clear"></div>
+
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+$(".listFunBtnScroll").on("click",".listFunBtnDown li",function() {
+	$(this).addClass('c').siblings().removeClass('c').closest('.listFunBtn').find('.linkDemo').html($(this).html());
+	$(this).addClass('c').siblings().removeClass('c').closest('.listFunBtn').find('input[type="hidden"]').val($(this).find("a").attr("rel"));
+	$(this).closest('.down').hide();
+});
+</script>
+</html>

@@ -1,0 +1,19 @@
+<div class="foot">
+	<div class="w">
+		<!--
+		<div class="v">
+			<ul class="fr">
+				<li></li>
+				<li class="spacer"></li>
+				<li>上海晨阑数据技术股份有限公司</li>
+			</ul>
+		</div>-->
+		<div class="v">
+			<ul class="fr">
+				<li class="#" style="color: #666666;">©Copyright 2015-2025 SDT Corporation.
+				All rights Reserved  沪ICP备123456789号</li>
+			</ul>
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,82 @@
+/* CSS Document */
+.filter{ border:1px solid #ddd; border-bottom:none; background:#f1f1f1;}
+
+.filter .unitbox{ border-bottom:1px solid #ddd;}
+.filter .unitbox .nameKey{ float:left; text-align:center; width:10%; padding:10px 0;}
+.filter .unitbox .nameKey h2{ font-size:14px;}
+
+.openBrandsBtn{ font-size:14px; padding-left:20px; margin-right:80px; line-height:23px; background:url(../images/ico-down4.png) left center no-repeat; cursor:pointer;}
+.openBrandsBtn.on{background:url(../images/ico-up4.png) left center no-repeat;}
+
+.filter .unitbox .nameVal{float:left; width:90%; background:#fff;}
+.filter .unitbox .nameVal .qk_search,.filter .unitbox .nameVal .attrTxt{ margin:8px 0; padding:0 25px}
+.filter .unitbox .nameVal #jBrands{ padding:1px; max-height:98px;_height:98px; overflow:hidden; margin:10px 25px;}
+.filter .unitbox .nameVal #jBrands.on{max-height:180px;_height:180px; overflow-y:scroll;}
+.filter .unitbox .nameVal #jBrands li{ float:left; margin:-1px 0 0 -1px; width:104px; height:32px; border:1px solid #e1e1e1;}
+.filter .unitbox .nameVal #jBrands li:hover{border:1px dashed #fd7115; z-index:1; position:relative;}
+.filter .unitbox .nameVal #jBrands li a .bimg{ width:104px; height:32px;}
+
+.filter .unitbox .nameVal .attrTxt li{ float:left; display:inline; margin:0 8px 0 0; white-space:nowrap;}
+.filter .unitbox .nameVal .attrTxt li a{ border:1px solid #fff; line-height:22px; padding:2px 5px; display:inline-block; color:#646464;}
+.filter .unitbox .nameVal .attrTxt li a:hover{border:1px dashed #fd7115;}
+
+.sortordBar{ margin-top:10px;}
+
+.sortLink,.rangeBox,.showLink{ border:1px solid #ddd; height:22px; display:inline-block; vertical-align:middle}
+.sortLink.up,.sortLink.down{ border:1px dashed #fd7115}
+.sortLink a{ padding:0 10px; line-height:22px;  display:block}
+.sortLink a i{ display:inline-block; vertical-align:middle; width:12px; height:12px; overflow:hidden;background:url(../images/ico-up_down.png) 0 0 no-repeat; margin-left:3px;}
+.sortLink.up a i{ background-position:0 -25px;}
+.sortLink.down a i{ background-position:0 -50px;}
+
+.rangeBox{ font-weight:bold; border:0; height:24px;}
+.rangeBox .rbox{ position:absolute; width:156px; height:24px;background:#ddd; border-top:none; top:22px; left:0px; text-align:center; display:none;}
+.rangeBox.on{ background:#ddd}
+.rangeBox,.rangeBox b{ position:relative; _zoom:1;}
+.rangeBox b{ font-weight:normal; display:inline-block;border:1px solid #ddd;vertical-align:top}
+.rangeBox b i{ position:absolute; left:5px; top:0; color:#000; font-style:normal; z-index:1;}
+.rangeBox .ipt{ width:50px; padding-left:20px; height:21px; border:0; line-height:21px;}
+.rangeBox .cbtn,.rangeBox .sbtn{ vertical-align:middle; height:20px; width:40px; border:0; border-radius:3px; margin:0 6px; cursor:pointer;}
+.rangeBox .cbtn{ background:#fff; color:#333;}
+.rangeBox .sbtn{ background:#d6000b; color:#fff;}
+
+.showLink{*margin-left:5px}
+.picLink,.txtLink{ display:inline-block; padding:0 28px 0 6px; background:url(../images/ico-show.png) no-repeat;}
+.picLink{background-position:38px 5px; border-right:1px solid #ddd;}
+.picLink.on{background-position:38px -21px;}
+.txtLink{background-position:-20px 5px;}
+.txtLink.on{background-position:-20px -21px;}
+
+.thBar{ background:#f1f1f1;padding:5px 25px; margin-top:10px;line-height:30px;}
+.thBar span,.tdUnit div{ float:left;}
+.thBar input{margin-right:3px;*margin-right:0;}
+.w45{ width:45px;}
+.w80{ width:80px;}
+.w100{ width:100px;}
+.w210{ width:210px;}
+.w310{ width:310px;}
+
+.tdList{ border:1px solid #ddd;border-bottom:0; margin:10px 0;}
+.tdUnit{ border-bottom:1px solid #ddd;padding:5px 24px; }
+.tdUnit td{ font-size:14px; color:#646464}
+.tdUnit .pimg{ vertical-align:middle; width:55px; border:1px solid #fff;}
+.tdUnit .pimg:hover{ border:1px dashed #ff500b}
+.tdUnit a.opLink{ background:#41a8f7; color:#fff; display:inline-block; padding:3px 10px; font-size:12px;}
+.thBar a.gobtn{ display:inline-block; padding:0 20px; line-height:30px;background:#fd7115; color:#fff;}
+a.subbtn,a.addbtn{overflow:hidden; height:16px; display:inline-block; text-align:center; width:16px; border:1px solid #ddd; vertical-align:middle}
+a.subbtn{ background:url(../images/ico-sub.png) center center no-repeat;}
+a.addbtn{ background:url(../images/ico-add.png) center center no-repeat;}
+.unitNum{ line-height:26px;color:#111; border:1px solid #ccc; height:26px; width:26px; display:inline-block; vertical-align:middle; margin:0 5px;}
+
+
+.pbody{ background:#fafafa; width:945px; border:1px solid #ccc; padding:20px; margin:20px auto;-webkit-box-shadow: #eee 0px 2px 2px;-moz-box-shadow: #eee 0px 2px 2px;box-shadow: #eee 0px 2px 2px;}
+.printMes{ float:left; background:#fff; width:730px; padding:40px; border:1px dashed #ccc; display:inline-block; min-height:500px;_height:500px;}
+.printMes h1{ font-size:20px; margin-bottom:50px;}
+.printMes table{ width:100%;border-collapse: collapse;border-bottom:2px solid #000;}
+.printMes th,.printMes td{border-top:2px solid #000;}
+.printMes th{ background:#e7e7e7; }
+.printMes td{ padding:8px 0;}
+
+.logbody{ width:590px; margin-left:auto;margin-right:auto;}
+.logbody table{border-collapse: collapse;border:1px solid #ff9999; width:100%; margin-top:10px; color:#111;}
+.logbody table td{border-top:1px solid #ff9999; border-bottom:1px solid #ff9999; line-height:24px; padding-left:10px;}

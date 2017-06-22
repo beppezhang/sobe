@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>产品类型</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>产品管理 》产品类型</span>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				#if($!menuUtil.isExistMenu("/admin/product/addProductTypePage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/product/addProductTypePage.htm" class="TableAddBtn"
+					title="新增类型">+新增类型</a> #end
+			</div>
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/product/productTypeList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!productTypeDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!productTypeDTO.pageSize">
+			</form>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td>产品类型编号</td>
+						<td>产品类型名称</td>
+						<td>产品类型描述</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					#foreach( $!productTypeVO in $!list)
+					<tr>
+						<td>$!productTypeVO.mainID</td>
+						<td>$!productTypeVO.name</td>
+						<td>$!productTypeVO.description</td>
+						<td class="last">
+							#if($!menuUtil.isExistMenu("/admin/product/editProductTypePage.htm",$!menuAllList)
+							) <a class="icon iconEdit"
+							href="$!{domain}/admin/product/editProductTypePage.htm?mainID=$!productTypeVO.mainID"
+							title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/product/deleteProductType.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconDel"
+							onclick="deleteProductType('$!productTypeVO.mainID')" title="删除"></a>
+							#end
+						</td>
+					</tr>
+					#end #pagination($!productTypeDTO)
+				</tbody>
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	//菜单
+	$(".navLi").bind("mouseenter", function() {
+		$(this).closest(".navLi").find(".navUiSe").show();
+	})
+	$(".navLi").bind("mouseleave", function() {
+		$(this).closest(".navLi").find(".navUiSe").hide();
+	});
+
+	//店面名称
+	$(".setInfoBar").bind("mouseenter", function() {
+		$(this).find(".setInfoList").show();
+	})
+	$(".setInfoBar").bind("mouseleave", function() {
+		$(this).find(".setInfoList").hide();
+	})
+	//显示头部消息
+	$("#sysInfo").bind("click", function() {
+		$("#headerInfo").show();
+	})
+	$("#headerInfo").bind("mouseleave", function() {
+		$("#headerInfo").hide();
+	})
+	//搜索商店
+	$("#searchShop").inputFocus();
+</script>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>销售规格</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+	
+	    <div class="conTit">
+			<span>产品管理 》销售规格</span>
+		</div>
+		
+		<div class="tableListBar">
+
+			<form id="serachform" name="serachform" method="post" action="$!{domain}/admin/product/productPropList.htm">
+				<input type="hidden"  id="pageNo" name="pageNo" value="$!productPropDTO.pageNo"> <input type="hidden"  id="pageSize" name="pageSize" value="$!productPropDTO.pageSize">
+			</form>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td>销售规格</td>
+						<td>规格值</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					#foreach( $!itemPropVO in $!list)
+					<tr>
+						<td>$!itemPropVO.name</td>
+						<td style="width: 400px;line-height:25px;">					
+						#foreach ($!itemPropValue in $!itemPropVO.itemPropValues )
+						#if($!menuUtil.isExistMenu("/admin/product/deleteItemtPropVale.do",$!menuAllList) )
+						  <a style="margin: 10px;position:relative" href="javascript:;" title="你要删除吗" onclick="deleteItemtPropVale('$!itemPropValue.mainID')"><em class="xdel absoluteP" style="right:-5px;top:-8px" >×</em>$!itemPropValue.name</a>,  
+                        #end
+						#end
+						</td>
+
+						<td class="last">
+						#if($!menuUtil.isExistMenu("/admin/product/addItemPropValue.do",$!menuAllList) )
+						<a class="icon iconAdd"  rel="$!itemPropVO.mainID" href="javascript:;" title="新增属性值"></a>
+						#end
+						&nbsp;
+						#if($!menuUtil.isExistMenu("/admin/product/deleteItemProp.do",$!menuAllList) )
+					    <a href="javascript:;" class="icon iconDel" onclick="deleteItemProp('$!itemPropVO.mainID')" title="删除"></a>
+					    #end
+					    </td>
+					</tr>
+
+					#end
+					<tr>
+						<form id="propForm" action="$!{domain}/admin/product/addItemProp.htm" method="post">
+							<td><input name="name" id="propname" class="cText" ></td>
+							<td><input name="itemPropValue" id="propvalue" class="cText">&nbsp; <label id="labelId">单个属性用,(英文)分割 如红色,白色</label></td>
+							<td>
+							#if($!menuUtil.isExistMenu("/admin/product/addItemProp.htm",$!menuAllList) )
+							<input type="button" onclick="submitProp();" value="提交">
+							#end
+							</td>
+						</form>
+					</tr>
+					#pagination($!itemPropDTO)
+				</tbody>
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+jQuery(function(){
+	
+	jQuery(".iconAdd").bind("click",function(){
+		var getId = $(this).attr("rel");
+		var e = '<div class="" style="width:400px">'+
+			'<div class="systemBar">'+
+			'	<dl class="formSet">'+
+			'		<dd class="clearfix">'+
+			'			<div class="formTt">值名称：</div>'+
+			'			<div class="formRow">'+
+			'				<input type="text" class="cText cTextLen" value="" id="PP_'+getId+'" />'+
+			'			</div>'+
+			'		</dd> '+           
+			'		<dd class="clearfix">'+
+			'			<div class="formTt">&nbsp;</div>'+
+			'			<div style="margin-top:15px;" class="formRow">'+
+			'				<input type="button" name="save" class="layerSave" value="提交" onclick="addItemPropValue(\''+getId+'\')" />'+
+			'				<input type="reset" name="cencle" class="layerCancel" value="取消" />'+
+			'			</div>'+
+			'		</dd>'+
+			'	</dl>'+
+			'</div>'+
+		'</div>';
+		kt.getDialog("新增值",e);
+	});
+	
+	jQuery("#searchShop").inputFocus();
+})
+</script>
+</html>

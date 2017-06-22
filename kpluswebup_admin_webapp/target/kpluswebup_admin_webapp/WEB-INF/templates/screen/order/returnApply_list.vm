@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>退货申请</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<form id="serachform" name="serachform" method="post"
+		action="$!{domain}/admin/order/returnApplyList.htm">
+		<input type="hidden" id="pageNo" name="pageNo"
+			value="$!salesOrderReturnApply.pageNo"> <input type="hidden"
+			id="pageSize" name="pageSize"
+			value="$!salesOrderReturnApply.pageSize">
+	</form>
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>订单管理》退货申请</span>
+		</div>
+		<div class="tableListBar">
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td>退款单号</td>
+						<td>采购商</td>
+						<td>订单</td>
+						<td>退款原因</td>
+						<td>产品</td>
+						<td>数量</td>
+						<td>状态</td>
+						<td>退款时间</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!salesOrderReturnApply in $!salesOrderReturnApplyList)
+					<tr>
+						<td><a target="_blank"
+							href="$!{domain}/admin/order/returnApplyInfo.htm?mainId=$!salesOrderReturnApply.mainID">$!salesOrderReturnApply.mainID</a></td>
+						<td>$!salesOrderReturnApply.customerName</td>
+						<td>$!salesOrderReturnApply.salesOrderID</td>
+						<td>$!salesOrderReturnApply.description</td>
+						<td>$!salesOrderReturnApply.itemName</td>
+						<td>$!salesOrderReturnApply.count</td>
+						<td>#if("$!salesOrderReturnApply.status"=="0") 申请
+							#elseif("$!salesOrderReturnApply.status"=="1") 拒绝
+							#elseif("$!salesOrderReturnApply.status"=="2") 退款中
+							#elseif("$!salesOrderReturnApply.status"=="3") 完成 #end</td>
+						<td><span
+								title="$!date.format("yyyy-MM-dd HH:mm:ss",$!salesOrderReturnApply.modifyTime)"
+								class="dealtime">$!date.format('yyyy-MM-dd
+									HH:mm:ss',$!salesOrderReturnApply.modifyTime)</span></td>
+						<td>#if("$!salesOrderReturnApply.status"=="0")
+							#if($!menuUtil.isExistMenu("/admin/order/editReturnApply.htm",$!menuAllList)
+							) <a target="_blank" class="icon iconEdit"
+							href="$!{domain}/admin/order/editReturnApply.htm?mainId=$!{salesOrderReturnApply.mainID}"
+							title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/order/refundmentOperation.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconRefund"
+							onclick="refundmentOperation('$!salesOrderReturnApply.mainID','2')"
+							title="退款"></a> #end #end
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!salesOrderReturnApply)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>

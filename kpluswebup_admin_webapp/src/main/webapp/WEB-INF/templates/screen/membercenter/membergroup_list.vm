@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>采购商分组列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+
+	<div class="main clearfix">
+		<div class="conTit">
+		        <em class="icon iconMenu1 "></em><a href="memberList.htm">采购商中心</a> &gt;  <span>采购商分组</span>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a>
+				#if($!menuUtil.isExistMenu("/admin/member/deleteMemberGroup.do",$!menuAllList)
+				) <a href="javascript:;" title="删除" id="deleteMemberGroupAll"><em
+					class="icon iconDel"></em></a> #end
+				#if($!menuUtil.isExistMenu("/admin/member/addMemberGroupPage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/member/addMemberGroupPage.htm" class="TableAddBtn"
+					title="新增会员分组">+新增会员分组</a> #end
+			</div>
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/member/membergroupList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!customerGroupDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!customerGroupDTO.pageSize">
+			</form>
+		</div>
+		<table class="tableList grid">
+			<thead>
+				<tr>
+					<td style="width: 10%;"><label class="label"> <input
+							type="checkbox" value="" id="all" /></label></td>
+					<td>分组名称</td>
+					<td>备注</td>
+					<td>操作</td>
+				</tr>
+			</thead>
+			<tbody id="list">
+				#foreach($!customergroup in $!membergroupList)
+				<tr>
+					<td style="width: 10%;"><label class="label"> <input
+							type="checkbox" value="$!customergroup.mainID"
+							id="check_box_$!customergroup.mainID" /></label></td>
+					<td>$!customergroup.name</td>
+					<td>$!customergroup.description</td>
+					<td>
+						#if($!menuUtil.isExistMenu("/admin/member/editMemberGroupPage.htm",$!menuAllList)
+						) <a class="icon iconEdit"
+						href="$!{domain}/admin/member/editMemberGroupPage.htm?mainID=$!{customergroup.mainID}"
+						title="编辑"></a> #end
+						#if($!menuUtil.isExistMenu("/admin/member/deleteMemberGroup.do",$!menuAllList)
+						) &nbsp; <a href="javascript:;" class="icon iconDel" title="删除"
+						onclick="deleteMemberGroup('$!customergroup.mainID')"></a> #end
+					</td>
+				</tr>
+				#end
+			</tbody>
+			#pagination($!customerGroupDTO)
+		</table>
+	</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

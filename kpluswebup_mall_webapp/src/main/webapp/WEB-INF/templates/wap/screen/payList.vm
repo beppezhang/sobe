@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<title>查看商品列表</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+<div class="taximeter clearfix">
+	<span class="lt">请选择支付方式</span>
+</div>
+<div class="payway">
+    	<p class="txt_r clearfix">
+          <label for="pay1">
+              <span class="lt"><input name="payment" type="radio" id="pay1" value="2"><img src="$!domain/wap/img/ico-unionpay.png"></span>
+              <span class="lt"><em class="f14">货到付款</em><br>货到付款</span>
+              <i></i>
+          </label>
+        </p>
+        <p class="txt_r clearfix">
+          <label for="pay2">
+            <span class="lt"><input name="payment" type="radio" id="pay2" value="4"><img src="$!domain/wap/img/ico-wechatpay.png"></span>
+            <span class="lt"><em class="f14">微信支付</em><br>微信付款支付</span>
+            <i></i>
+          </label>
+        </p>
+        <form action="$!doamin/weixin/usershopcart2.htm" method="get" id="payTypeForm">
+    	<input type="hidden" value="$!ids" id="ids" name="ids">
+    	<input type="hidden" value="$!itemID" id="itemID" name="itemID">
+    	<input type="hidden" value="$!addreID" id="addreID" name="addreID">
+    	<input type="hidden" value="$!type" id="type" name="type">
+    	<input type="hidden" value="$!itemCount" id="itemCount" name="itemCount">
+    	<input type="hidden" value="" id="paymentType" name="paymentType">
+    	</form>
+</div>
+<script>
+		jQuery(function(){
+			jQuery(".payway p label").click(function(){
+				jQuery(this).closest("p").addClass("cur").siblings("p").removeClass("cur");
+				var paymentType = jQuery(this).find("input[type='radio']").val();
+				jQuery("#paymentType").val(paymentType);
+				jQuery("#payTypeForm").submit();
+			})
+		});
+</script>  
+</body>
+</html>
+
+

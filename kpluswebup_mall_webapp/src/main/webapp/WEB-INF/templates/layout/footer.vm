@@ -1,0 +1,111 @@
+<!-- <div class='totop'><a href='http://wpa.qq.com/msgrd?v=3&uin=4008853933&site=qq&menu=yes' class='serLink'></a><a href='javasrcipt:;' id='totop' title='返回顶部'></a></div>公用底部开始 -->
+<div id="footer">
+	<div class="layout clearfix">
+		<div class="slogen clearfix">
+			<dl>
+				<dt>
+					<img src="$!{mallStatic}/images/gw3_ico.png">
+				</dt>
+				<dd>
+					<h2>精准定位</h2>
+					<h3>专注汽车行业，精准定位</h3>
+				</dd>
+			</dl>
+			<dl>
+				<dt>
+					<img src="$!{mallStatic}/images/gw1_ico.png">
+				</dt>
+				<dd>
+					<h2>正品保障</h2>
+					<h3>正品保障，正规发票</h3>
+				</dd>
+			</dl>
+			<dl>
+				<dt>
+					<img src="$!{mallStatic}/images/gw2_ico.png">
+				</dt>
+				<dd>
+					<h2>专业服务</h2>
+					<h3>汽车行业资深服务经验</h3>
+				</dd>
+			</dl>
+			<dl>
+				<dt>
+					<img src="$!{mallStatic}/images/gw4_ico.png">
+				</dt>
+				<dd>
+					<h2>无忧售后</h2>
+					<h3>平台监管，售后无忧</h3>
+				</dd>
+			</dl>
+			<dl>
+				<dt>
+					<img src="$!{mallStatic}/images/gw5_ico.png">
+				</dt>
+				<dd>
+					<h2>帮助说明</h2>
+					<h3>提供你想要的帮助</h3>
+				</dd>
+			</dl>
+		</div>
+		<div class="root_ser">
+			#foreach($helps in $helpslist)
+			<dl>
+				<dt>$!helps.Name</dt>
+				#foreach($help in $helps.cmsHelpCenterVO)
+				<dd>
+					<a href="javascript:;"
+						target="_blank">
+						$!help.name
+						</a>
+				</dd>
+				#end
+			</dl>
+			#end
+			
+			<!--
+			<dl>
+				<dt>$!helps.Name</dt>
+				#foreach($help in $helps.cmsHelpCenterVO)
+				<dd>
+					<a
+						href="$!{domain}/mall/helps/helpsDetail.htm?mainID=$!help.mainID"
+						target="_blank">$!help.name</a>
+				</dd>
+				#end
+			</dl>				
+			-->	
+			
+			<!-- <div class="weixin ct rt"> $!{domain}/mall/helps/helpsDetail.htm?mainID=$!help.mainID
+				<p>
+					<img src="$!{mallStatic}/images/weixin.jpg">
+					
+				</p>
+				<p>
+				<strong style="color:#ff6600">客服电话<br/>4000-000-0000<br/></strong>(周一到周日 8:20-24:00)
+				</p>
+			</div> -->
+		</div>
+	</div>
+</div>
+<div id="btmbar">
+	<div class="info">
+		<p>沪ICP备13033286号-2|上海晨阑数据技术有限公司</p>
+		<p>Copyright &copy;上海晨阑 2015-2025 ，All Right Reserved</p>
+	</div>
+</div>
+
+<div id="right">
+  <ul>
+    <li><a href="$!{domain}/mall/buyer/userCenter.htm"><img src="$!{mallStatic}/img/ico-rt1.gif">我</a></li>
+    <li><a href="$!{domain}/mall/buyer/userfavoriteList.htm"><img src="$!{mallStatic}/img/ico-rt2.gif">收藏</a></li>
+    <li><a href="$!{domain}/mall/product/searchProductList.htm?productType=&name="><img src="$!{mallStatic}/img/ico-rt3.gif">上新</a></li>
+    <li><a href="$!{domain}/mall/buyer/userHistroyList.htm"><img src="$!{mallStatic}/img/ico-rt4.gif">足迹</a></li>
+    <li><a href="#" style="text-decoration: none;" target="_self">
+		<span style="width: 34px;height:34px;font-size: 12px;line-height: 17px;background: #999;display:block;text-align:center;color:#fff;">回到顶部</span>
+	</a></li>
+  </ul>
+</div>
+<!-- WPA Button Begin 
+<script charset="utf-8" type="text/javascript" src="http://wpa.b.qq.com/cgi/wpa.php?key=XzkzODAzNDY3MF8yODI2NzdfNDAwODg1MzkzM18"></script>-->
+<!-- WPA Button End -->

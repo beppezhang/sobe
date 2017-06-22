@@ -1,0 +1,51 @@
+<div id="nav">
+	<div class="layout clearfix">
+		<div id="allCategory">
+			<h2>全部商品分类</h2>
+			<div id="category">
+			    <ul>
+			        #foreach($!productCategoryVO in $!productCategoryList)
+                     <li class="firMenu">
+                        <div class="firLink">
+                          <p><a href="$!{domain}/mall/product/searchProductList.htm?catID=$!productCategoryVO.mainID&cType=1">$!productCategoryVO.name</a></p>
+                          #foreach($!twoCat in $!productCategoryVO.levelTwo)
+                          <span><a href="$!{domain}/mall/product/searchProductList.htm?catID=$!twoCat.mainID&cType=2">$!twoCat.name</a></span><span class="fg">|</span>
+                          #end
+                        </div>
+                     </li> 
+                    #end
+                  </ul>
+			</div>
+			
+			<div class="dorpdown-layer"> 
+              <!-- item-sub1 -->
+              #foreach($!oneCat in $!productCategoryList)
+              <div class="item-sub">
+                <div class="subitems">
+                 #foreach($!twoCat in $!oneCat.levelTwo)
+                  <dl >
+                    <dt><a href="$!{domain}/mall/product/searchProductList.htm?catID=$!twoCat.mainID&cType=2" target="_blank">$!twoCat.name<i>&gt;</i></a></dt>
+                    <dd class="cle_top">
+                     #foreach($!threeCat in $!twoCat.levelThre)
+                      <a href="$!{domain}/mall/product/searchProductList.htm?catID=$!threeCat.mainID&cType=3" target="_blank">$!threeCat.name</a>
+                      #end
+                    </dd>
+                  </dl>
+                  #end
+                </div>
+              </div>
+              #end
+		</div>
+		<ul id="navbar">
+			<li><a href="$!{domain}/index.htm">首页</a></li>
+			<!-- <li><a href="$!{domain}/mall/product/searchProductList.htm?productType=1">市场专区</a></li>
+			<li><a href="$!{domain}/mall/product/productList.htm">一键订货</a></li>
+			<li><a href="$!{domain}/mall/product/searchProductList.htm?productType=2">代理专区</a></li> -->
+			 #foreach($!category in  $!productCategoryRecommendList)
+			  <li><a href="$!{domain}/mall/product/searchProductList.htm?catID=$!category.mainID&cType=1">$!category.name</a></li> 
+			 #end
+			<!-- <li><a href="$!{domain}/newsList.htm">新闻资讯</a></li> -->
+		</ul>
+	</div>
+</div>
+</div>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>采购报表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>统计报表》采购报表</span>
+		</div>
+		<div class="tableListBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/report/purchaseReportList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!itemDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!itemDTO.pageSize">
+				<div class="tableTool">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">商品编码：</span><input type="text"
+									name="searchmainID" id="searchmainID" class="cText" value="$!itemDTO.mainID" /></td>
+								<td><span class="grayF">商品名称：</span><input type="text"
+									name="searchName" id="searchName" class="cText" value="$!itemDTO.name" /></td>
+								<td>
+									#if($!menuUtil.isExistMenu("/admin/report/purchaseReportList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div class="tableListBar">
+				<div class="tableTool">
+					<!-- <a href="javascript:;" title="全选" id="selectAll"><em
+						class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+						id="unSelect"><em class="icon iconInverse"></em></a>  -->
+					#if($!menuUtil.isExistMenu("/admin/report/exportPurchaseItem.do",$!menuAllList)
+					) <a href="javascript:;" title="导出" id="exportPurchaseItem"><em
+					class="icon iconExport"></em></a> #end
+				</div>
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><!-- <label class="label"> <input type="checkbox"
+								value="" id="all" /></label> --></td>
+						<td>商品编码</td>
+						<td>商品名称</td>
+						<td>商品进价</td>
+						<td>采购数量</td>
+						<td>供应时间</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!item in $!itemList)
+					<tr>
+						<td style="width: 30px"><!-- <label class="label"> <input type="checkbox"
+								value="$!item.mainID" id="check_box_$!item.mainID" /></label> --></td>
+						<td>$!item.mainID</td>
+						<td>$!item.name</td>
+						<td>$!NumberTool.format("#0.00",$!item.purchasePrice)</td>
+						<td>$!item.stock</td>
+						<td>$!date.format("yyyy-MM-dd",$!item.createTime)</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!itemDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

@@ -1,0 +1,23 @@
+.matter{padding:67px 0 0px 0;}
+.ct{width:966px;margin:0 auto;}
+.ct .step{height:76px;background:url(../pic/rg2.jpg) no-repeat 0 0;text-indent: -9999px;margin:0 0 18px 0;}
+.ct .detail{padding-bottom:5px;}
+.ct .detail .form{width:500px;margin:0 auto;text-align:left;}
+.fw{font-weight:800;font-size:13px;color: #000;}
+.ct .detail .form .it{height:45px;line-height:45px;margin-top:20px;}
+.ct .detail .form .pt1{display:inline-block;width:100px;text-align:right;margin-right:19px;}
+.ct .detail .form .pt1 b{font-size:14px;color:#ff2400;position:relative;left:-9px;top:2px;}
+.ct .detail .form .it .pt_val input{height:33px;width:220px;border:none;border:1px solid #cccccc;padding-left:6px;border-radius:4px;}
+.ct .detail .form .it .pt_val .getvf{display: inline-block;width: 130px;height: 28px;line-height:28px;text-align:center;font-weight: bold;border: 1px solid #ccc;background: #f3f3f3;color: #777777;}
+.ct .detail .form .it .pt_val .sel_box{width:12px;position:relative;top:-17px;}
+.ct .detail .form .it .pt_val .xy{display: inline-block;width: 170px;line-height: 16px;}
+.ct .detail .form .sp{height:88px;line-height:88px;margin-top:20px;}
+.ct .detail .form .sp .cump{background:url(../images/up_file.jpg) no-repeat;display:inline-block;height:88px;}
+.ct .detail .form .sp .cump .up_file{height:88px; width:88px;opacity:0;-webkit-opacity:0;filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);cursor:pointer;}
+.ct .detail .form .it select{border:none;width:112px;height:28px;border:1px solid #dcdcdc;color:#898989;}
+.ct .detail .form .it .psub{display:inline-block;font-size:14px;height:32px;width:180px;border-radius:3px;color:#fff;background:#40a8f7;line-height:32px;text-align:center;}
+.ct .detail .form .it .break{display:inline-block;font-size:14px;height:32px;width:180px;text-align:left;color:#40a8f7;}
+.ct .detail .form .it .psub:hover{color:#fff;}
+.ct .detail .form .it .break:hover{color:#40a8f7;}
+
+

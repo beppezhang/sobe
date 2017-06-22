@@ -1,0 +1,137 @@
+
+<dd class="clearfix" id="itemID">
+	<div class="formTt">选择会员：</div>
+	<div class="formTt"></div>
+	<div class="formRow" id="customerInfo" style="width: 80%;">
+		<a href="javascript:;" onclick="ico1.show();" style="color: blue;">选择会员</a>&nbsp;&nbsp;
+		<div id="groupid"></div>
+		<div id="customerid"></div>
+		<span id="groupName"></span><br> <span id="customerName"></span>
+	</div>
+</dd>
+<div class="alertBox">
+	<a href="javascript:;" id="close" class="close" onclick="ico1.hide();"></a>
+	<div class="alertBoxHead">
+		<span><select id="searchType" name="searchType">
+				<option value="1">会员分组</option>
+				<option value="2">用户名</option>
+				<option value="3">姓名</option>
+				<option value="4">手机号</option>
+		</select> <input type="text" name="keyword" id="keyword"
+			onchange="searchCustomerOrGroup()" />
+			<button onclick="searchCustomerOrGroup()"></button></span>
+	</div>
+	<div class="alertTable">
+		<div class="tableHead">
+			<div style="width: 115px;">
+				<input type="checkbox" id="all" />
+			</div>
+			<div style="width: 210px;">编号</div>
+			<div style="width: 180px;">名称</div>
+		</div>
+		<div class="tableBody">
+			<table class="tableList grid" id="list">
+
+				<tbody id="serachList">
+					<tr>
+						<td style="width: 100px;"><label  class="label"></label></td>
+						<td style="width: 210px;"></td>
+						<td style="width: 180px;"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+	var ico1 = $(".alertBox").divWin({
+		width : 605,
+		height : 500,
+		autoSize : false
+	});
+
+	function searchCustomerOrGroup() {
+		var keyword = jQuery("#keyword").val();
+		var searchType = jQuery("#searchType").find("option:selected").val();
+		var data = {
+			keyword : keyword,
+			searchType : searchType,
+			pageSize : 10000
+		}
+
+		var url = "$!{domain}/admin/member/searchCustomerOrGroup.do";
+		jQuery
+				.ajax({
+					url : url,
+					type : "POST",
+					data : data,
+					dataType : "json",
+					success : function(data) {
+						if (data.code == 0) {
+							var catAry = data.result;
+							$("#serachList").empty();
+							for ( var i in catAry) {
+								$("#serachList")
+										.append(
+												" <tr><td style='width: 100px;'><label class='label'><input type='checkbox' data='"+catAry[i].username+"' value='"+catAry[i].mainID+"' id='check_box_"+catAry[i].mainID+"' /></label></td><td style='width: 210px;'>"
+														+ catAry[i].mainID
+														+ "</td><td style='width: 180px;'>"
+														+ catAry[i].username
+														+ "</td></tr>  ");
+							}
+							$(".tableBody").find("#submitBut").remove();
+							$(".tableBody")
+									.append(
+											"<div id='submitBut' style='margin-top: 15px;margin-left:50%;' class='formRow'><input type='button' class='save' onclick='submitCustomer()' value='提交'></div>");
+						} else {
+							alert("加载失败");
+						}
+					},
+					error : function() {
+						alert("加载失败");
+					}
+				});
+
+	}
+	function submitCustomer() {
+		var valArr = new Array;
+		var nameArr = new Array;
+		var searchType = jQuery("#searchType").find("option:selected").val();
+		$("#list :checkbox:checked").each(
+				function(i) {
+					valArr[i] = $(this).val();
+					nameArr[i] = $(this).attr("data");
+					if ($(this).val() != "") {
+						if (searchType == "1") {
+							jQuery("#groupid").append(
+									"<input type='hidden' name='groupID' id='"
+											+ i + "' value='" + $(this).val()
+											+ "'>");
+							jQuery("#groupName").append(
+									"<a href='javascript:;' onclick='delThis("
+											+ i + ")' id='" + i
+											+ "' class='thisDel'>" + nameArr[i]
+											+ "<em onclick='delThis(" + i
+											+ ")'>x</em></a>");
+							ico1.hide();
+						} else {
+							jQuery("#customerName").append(
+									"<a href='javascript:;' onclick='delThis("
+											+ i + ")' id='" + i
+											+ "' class='thisDel'>" + nameArr[i]
+											+ "<em onclick='delThis(" + i
+											+ ")'>x</em></a>");
+							jQuery("#customerid").append(
+									"<input type='hidden' id='" + i
+											+ "' name='customerID' value='"
+											+ $(this).val() + "'>");
+							ico1.hide();
+						}
+					}
+				});
+	}
+
+	function delThis(value) {
+		$("#" + value).remove();
+	}
+</script>

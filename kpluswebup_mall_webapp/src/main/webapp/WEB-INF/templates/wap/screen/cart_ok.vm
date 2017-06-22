@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+<title>购买成功</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+#parse("wap/layout/head_sider.vm")
+<div class="shop-success">
+        <h2>恭喜你已经成功购买商品</h2>
+        <p>订单编号： $!order.mainID</p>
+        <div class="btn"><button onclick="javascript:window.location.href='$!domain/weixin/userOrderDetail.htm?orderID=$!order.mainID'">查看订单</button>
+        <button onclick="javascript:window.location.href='$!domain/weixin/index.htm'" class="goback">返回首页</button></div>
+    </div>
+    <script type="text/javascript">
+	    jQuery(function(){
+			jQuery(".searchLink").addClass("cur");
+		});
+    </script>
+</body>
+</html>
+

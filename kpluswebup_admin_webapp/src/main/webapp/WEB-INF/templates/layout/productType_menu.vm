@@ -1,0 +1,25 @@
+
+<div class="contentLf tabList">
+	<ul>
+		#if($!menuUtil.isExistMenu("/admin/product/editProductTypePage.htm",$!menuAllList)
+		)
+		<li class="producttype_menu_1"><a
+			href="$!{domain}/admin/product/editProductTypePage.htm?mainID=$!{productTypeMainID}">基本设置</a></li>
+		#end
+		#if($!menuUtil.isExistMenu("/admin/product/addProductTypeProductPropPage.htm",$!menuAllList)
+		)
+		<li class="producttype_menu_2"><a
+			href="$!{domain}/admin/product/addProductTypeProductPropPage.htm?productTypeMainID=$!{productTypeMainID}">产品属性</a></li>
+		#end
+		#if($!menuUtil.isExistMenu("/admin/product/addProductTypeItemPropPage.htm",$!menuAllList)
+		)
+		<li class="producttype_menu_3"><a
+			href="$!{domain}/admin/product/addProductTypeItemPropPage.htm?productTypeMainID=$!{productTypeMainID}">销售规格</a></li>
+		#end
+		#if($!menuUtil.isExistMenu("/admin/product/productTypeBrandPage.htm",$!menuAllList)
+		)
+		<li class="producttype_menu_4"><a
+			href="$!{domain}/admin/product/productTypeBrandPage.htm?productTypeMainID=$!{productTypeMainID}">关联品牌</a></li>
+		#end
+	</ul>
+</div>

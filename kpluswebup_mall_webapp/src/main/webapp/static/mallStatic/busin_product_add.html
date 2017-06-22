@@ -1,0 +1,611 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="css/supplier.css">
+<link rel="stylesheet" type="text/css" href="css/base.css">
+<link rel="stylesheet" type="text/css" href="css/busin.css">
+<link rel="stylesheet" type="text/css" href="css/jquery.mcdropdown.min.css">
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery.mcdropdown.min.js"></script>
+<script type="text/javascript" src="js/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="js/kindeditor-4.1.5/kindeditor-min.js"></script>
+<script type="text/javascript" src="js/jquery.scrollto.js"></script>
+<script type="text/javascript" src="js/verify.js"></script>
+<script type="text/javascript" src="js/public.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+    editor = K.create("textarea.product_mark", {
+        allowFileManager : true
+    });
+});
+
+$(document).ready(function (){
+    $(".category1").mcDropdown(".menu1");
+    $(".category2").mcDropdown(".menu2");
+    
+    $(".select_product_color").on("click", "input:checkbox", function(){
+        var t = $(this).parent();
+        if(t.find("input:checkbox:checked").length){
+            var _ul = "";
+            $(".select_product_size input:checked").each(function(index, el){
+                _ul += "<ul data-name='" + $(el).parent().attr("for") + "'><li>" + $(el).parent().text() + "</li><li><input class='text' type='text'></li><li><input class='text' type='text'></li><li><input class='text size_hasnumber' type='text'></li><li><input class='text' type='text'></li></ul>";
+            });
+            $("table.size_table").append("<tr data-name='" + t.attr("for") + "'><td>" + t.text() + "</td><td colspan='5'>" + _ul + "</td></tr>");
+        }else{
+            $("table.size_table tr[data-name='" + t.attr("for") + "']").remove();
+        }
+        if($(".select_product_color input:checkbox:checked").length){
+            $("table.size_table").show();
+        }else{
+            $("table.size_table").hide();
+        }
+    });
+    
+    $(".select_product_size").on("click", "input:checkbox", function(){
+        var t = $(this).parent(), ta = $("table.size_table"), tr = ta.find("tr:has('td')");
+        if($(".select_product_color input:checkbox:checked").length == 0){
+            tr.find("td:last").html("");
+        }else{
+            if(t.find("input:checkbox:checked").length){
+                tr.find("td:last").append("<ul data-name='" + t.attr("for") + "'><li>" + t.text() + "</li><li><input class='text' type='text'></li><li><input class='text' type='text'></li><li><input class='text size_hasnumber' type='text'></li><li><input class='text' type='text'></li></ul>");
+            }else{
+                $("table.size_table ul[data-name='" + t.attr("for") + "']").remove();
+            }
+        }
+    });
+    
+    $(".size_table").on("keyup", "input.size_hasnumber", function(){
+        t = $(this);
+        if(!t.attr("data-temp-hasnumber") && t.attr("data-temp-hasnumber") == t.val()){
+            return;
+        }
+        t.attr("data-temp-hasnumber", t.val());
+        var _number = 0;
+        t.parents(".size_table").find("input.size_hasnumber").each(function(index, el){
+            if(parseInt($(el).val())){d
+                _number += parseInt($(el).val());
+            }
+        });
+        $(".porduct_hasnumber").val(_number);
+    });
+    
+    $(".page_submit").click(function(){
+        $(".verify_nonempty, .verify_isnan, .verify_textlength").blur();
+        $(".category").each(function(){
+            var _val = $(this).val();
+            if(!_val){
+                $(this).addClass("text_error");
+            }else{
+                $(this).removeClass("text_error");
+            }
+        });
+        if($(".text_error").length){
+            $($(".text_error")[0]).focus().ScrollTo();
+            return false;
+        }
+    });
+});
+</script>
+</head>
+
+<body>
+<div id="header">
+	<div class="layout clearfix">
+    	<h1 class="lt">中邮普泰</h1>
+        <span class="mintt lt">商家中心</span>
+        <span class="sipt lt">
+        	<input name="" type="text" class="ipt" placeholder="商城商品搜索"><input name="" type="button" class="sbtn">
+        </span>
+        <div class="iBox">
+            <img src="img/fz.jpg" class="pimg">
+            <div class="lt">
+                <p class="name">当前用户</p>
+                <p>跳大神</p>
+            </div>
+            <p class="tools"><a href="#"><img src="images/ico-home2.gif"></a> <a href="#"><img src="images/ico-tool.gif"></a> <a href="#"><img src="images/ico-exit2.gif"></a></p>
+        </div>
+    </div>
+</div>
+<div class="layout clearfix">
+	<div id="leftNav" class="busin_side">
+        <div class="atp"><img src="images/a1.png"></div>
+        <dl>
+            <dt class="s1"><a class="host" href="javascript:;">交易管理</a></dt>
+            <dd><a href="#">订单管理</a></dd>
+            <dd><a href="#">评价管理</a></dd>
+        </dl>
+        <dl>
+            <dt class="s2"><a class="host" href="javascript:;">商品管理</a></dt>
+            <dd><a href="#">发布商品</a></dd>
+            <dd><a href="#">商品列表</a></dd>
+            <dd><a href="#">分类管理</a></dd>
+            <dd><a href="#">资讯管理</a></dd>
+        </dl>
+        <dl>
+            <dt class="s3"><a class="host" href="javascript:;">店铺管理</a></dt>
+            <dd><a href="#">查看店铺</a></dd>
+            <dd><a href="#">店铺设置</a></dd>
+            <dd><a href="#">导航设置</a></dd>
+        </dl>
+        <dl>
+            <dt class="s4"><a class="host" href="javascript:;">邮费管理</a></dt>
+            <dd><a href="#">邮费模板</a></dd>
+        </dl>
+        <dl>
+            <dt class="s5"><a class="host" href="javascript:;">商家管理</a></dt>
+            <dd><a href="#">基本资料</a></dd>
+            <dd><a href="#">销售统计</a></dd>
+            <dd><a href="#">财务结算</a></dd>
+            <dd><a href="#">修改密码</a></dd>
+        </dl>    
+    </div>
+    <div id="rightMain">
+    	<div class="crumbs">
+        	商家管理中心 &gt; 商品管理 &gt; 发布商品
+        </div>
+        <div class="p15">
+            <div class="stitbar">
+                <strong>发布商品</strong>
+            </div>
+            <div class="accInfo mt25 shop_setting">
+                <dl class="clearfix verify">
+                    <dt><em class="red">*</em>宝贝标题：</dt>
+                    <dd><input class="text langtext verify_textlength verify_nonempty" data-length="30" data-length-follow="true" data-nonempty-istrim="true" type="text" name="title"></dd>
+                    <span class="note">还可以输入<em class="verify_handle" data-length-follow="true" data-length-turn="true">30</em>个字</span>
+                </dl>
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>所属分类：</dt>
+                    <dd>
+                        <div class="cons">
+                            <div style="margin:5px 0;"><input type="text" name="category1" class="category1" value="" /></div>
+                            <ul class="mcdropdown_menu menu1">
+                                <li rel="1">Arts &amp; Humanities
+                                    <ul>
+                                        <li rel="2">Photography
+                                            <ul>
+                                                <li rel="3">3D</li>
+                                                <li rel="4">Digital</li>
+                                            </ul>
+                                        </li>
+                                        <li rel="5">History</li>
+                                        <li rel="6">Literature</li>
+                                    </ul>
+                                </li>
+                                <li rel="7">Business &amp; Economy</li>
+                                <li rel="8">Computers &amp; Internet</li>
+                                <li rel="9">Education</li>
+                                <li rel="11">Entertainment
+                                    <ul>
+                                        <li rel="12">Movies</li>
+                                        <li rel="13">TV Shows</li>
+                                        <li rel="14">Music</li>
+                                        <li rel="15">Humor</li>
+                                    </ul>
+                                </li>
+                                <li rel="10">Health</li> 
+                            </ul>
+                            <div class="child_list">
+                                <p class="child_list_title"><em class="red">*</em> 产品基本属性：设置产品基本属性</p>
+                                <ul>
+                                    <li class="clear"><span class="name">货号：</span>
+                                        <input class="text" type="text">
+                                    </li>
+                                    <li class="clear"><span class="name"><em>*</em>袖长：</span>
+                                        <select>
+                                            <option value="175/M">175/M</option>
+                                        </select>
+                                    </li>
+                                </ul>
+                                <p class="child_list_title"><em class="red">*</em> 规格：设置产品规格</p>
+                                <ul>
+                                    <li class="clearfix select_product_color">
+                                        <span class="name">颜色：</span>
+                                        <div class="cons">
+                                            <p>
+                                <label for="select-color-1"><!-- 后面的id和for属性 类推 -->
+                                    <input id="select-color-1" class="checkbox" name="select-product-color" type="checkbox">
+                                    牛奶白1
+                                </label>
+                                <label for="select-color-2">
+                                    <input id="select-color-2" class="checkbox" name="select-product-color" type="checkbox">
+                                    牛奶白2
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    牛奶白3
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    牛奶白4
+                                </label>
+                                            </p>
+                                            <p>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    葡萄紫1
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    葡萄紫2
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    葡萄紫3
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    葡萄紫4
+                                </label>
+                                            </p>
+                                            <p>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    苹果绿1
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    苹果绿2
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    苹果绿3
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    苹果绿4
+                                </label>
+                                            </p>
+                                            <p>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    蓝莓蓝1
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    蓝莓蓝2
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    蓝莓蓝3
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    蓝莓蓝4
+                                </label>
+                                            </p>
+                                        </div>
+                                    </li>
+                                    <li class="select_product_size">
+                                        <span class="name">尺寸：</span>
+                                        <div class="cons">
+                                            <p>
+                                <label for="select-size-1"><!-- 后面的id和for属性 类推 -->
+                                    <input id="select-size-1" class="checkbox" name="select-product-size" type="checkbox">
+                                    165/S</label>
+                                <label for="select-size-2">
+                                    <input id="select-size-2" class="checkbox" name="select-product-size" type="checkbox">
+                                    170/M</label>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    175/L</label>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    180/XL</label>
+                                            </p>
+                                            <p>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    185/XXL</label>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    190/XXXL</label>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    195/XXXXL</label>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    200/XXXXXL</label>
+                                            </p>
+                                            <table class="size_table">
+                                <tr>
+                                    <th>颜色</th>
+                                    <th colspan="5">
+                                        <ul>
+                                            <li>尺码</li>
+                                            <li>价格<em>*</em></li>
+                                            <li>银币</li>
+                                            <li>数量</li>
+                                            <li>商家编码<em>*</em></li>
+                                        </ul>
+                                    </th>
+                                </tr>
+                                            </table>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>所属分类：</dt>
+                    <dd>
+                        <div class="cons">
+                            <div style="margin:5px 0;"><input type="text" name="category2" class="category2" value="" /></div>
+                            <ul class="mcdropdown_menu menu2">
+                                <li rel="1">Arts &amp; Humanities
+                                    <ul>
+                                        <li rel="2">11
+                                            <ul>
+                                                <li rel="3">22</li>
+                                                <li rel="4">333</li>
+                                            </ul>
+                                        </li>
+                                        <li rel="5">44</li>
+                                        <li rel="6">555</li>
+                                    </ul>
+                                </li>
+                                <li rel="7">66 &amp; 66</li>
+                                <li rel="8">77 &amp; 77</li>
+                                <li rel="9">88</li>
+                                <li rel="11">99
+                                    <ul>
+                                        <li rel="12">Movies</li>
+                                        <li rel="13">TV Shows</li>
+                                        <li rel="14">Music</li>
+                                        <li rel="15">Humor</li>
+                                    </ul>
+                                </li>
+                                <li rel="10">Health</li> 
+                            </ul>
+                            <div class="child_list">
+                                <p class="child_list_title"><em class="red">*</em> 产品基本属性：设置产品基本属性</p>
+                                <ul>
+                                    <li class="clear"><span class="name">货号：</span>
+                                        <input class="text" type="text">
+                                    </li>
+                                    <li class="clear"><span class="name"><em>*</em>袖长：</span>
+                                        <select>
+                                            <option value="175/M">175/M</option>
+                                        </select>
+                                    </li>
+                                </ul>
+                                <p class="child_list_title"><em class="red">*</em> 规格：设置产品规格</p>
+                                <ul>
+                                    <li class="clearfix select_product_color">
+                                        <span class="name">颜色：</span>
+                                        <div class="cons">
+                                            <p>
+                                <label for="select-color-1"><!-- 后面的id和for属性 类推 -->
+                                    <input id="select-color-1" class="checkbox" name="select-product-color" type="checkbox">
+                                    牛奶白1
+                                </label>
+                                <label for="select-color-2">
+                                    <input id="select-color-2" class="checkbox" name="select-product-color" type="checkbox">
+                                    牛奶白2
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    牛奶白3
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    牛奶白4
+                                </label>
+                                            </p>
+                                            <p>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    葡萄紫1
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    葡萄紫2
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    葡萄紫3
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    葡萄紫4
+                                </label>
+                                            </p>
+                                            <p>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    苹果绿1
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    苹果绿2
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    苹果绿3
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    苹果绿4
+                                </label>
+                                            </p>
+                                            <p>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    蓝莓蓝1
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    蓝莓蓝2
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    蓝莓蓝3
+                                </label>
+                                <label>
+                                    <input class="checkbox" name="select-product-color" type="checkbox">
+                                    蓝莓蓝4
+                                </label>
+                                            </p>
+                                        </div>
+                                    </li>
+                                    <li class="select_product_size">
+                                        <span class="name">尺寸：</span>
+                                        <div class="cons">
+                                            <p>
+                                <label for="select-size-1"><!-- 后面的id和for属性 类推 -->
+                                    <input id="select-size-1" class="checkbox" name="select-product-size" type="checkbox">
+                                    165/S</label>
+                                <label for="select-size-2">
+                                    <input id="select-size-2" class="checkbox" name="select-product-size" type="checkbox">
+                                    170/M</label>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    175/L</label>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    180/XL</label>
+                                            </p>
+                                            <p>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    185/XXL</label>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    190/XXXL</label>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    195/XXXXL</label>
+                                <label>
+                                    <input class="checkbox" name="select-product-size" type="checkbox">
+                                    200/XXXXXL</label>
+                                            </p>
+                                            <table class="size_table">
+                                <tr>
+                                    <th>颜色</th>
+                                    <th colspan="5">
+                                        <ul>
+                                            <li>尺码</li>
+                                            <li>价格<em>*</em></li>
+                                            <li>银币</li>
+                                            <li>数量</li>
+                                            <li>商家编码<em>*</em></li>
+                                        </ul>
+                                    </th>
+                                </tr>
+                                            </table>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>价格：</dt>
+                    <dd>
+                        <input class="text shorttext think_value verify_nonempty verify_isnan" data-think-value="元" data-think-istrim="true" data-nonempty-istrim="true" type="text" value="元" data-think-color="rgb(116, 116, 71)" style="color: rgb(204, 204, 204);">
+                        <input class="text shorttext think_value verify_nonempty verify_isnan" data-think-value="银币" data-think-istrim="true" data-nonempty-istrim="true" type="text" value="银币" data-think-color="rgb(116, 116, 71)" style="color: rgb(204, 204, 204);">
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>销售数量：</dt>
+                    <dd>
+                        <input class="text shorttext porduct_hasnumber" type="text" value="0" readonly="">
+                        <span class="note">（请如实填写）</span>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt>商品编号：</dt>
+                    <dd>
+                        <input class="text" type="text">
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>商品图片：</dt>
+                    <dd>
+                        <ul class="cons file_list">
+                            <li><img src="img/default.png" alt="请上传商品正面图片">
+                                <p><a class="areasubmit file_label" href="javascript:;">上传图片
+                                    <input type="file">
+                                    </a></p>
+                            </li>
+                            <li><img src="img/default.png" alt="请上传商品正面图片">
+                                <p><a class="areasubmit file_label" href="javascript:;">上传图片
+                                    <input type="file">
+                                    </a></p>
+                            </li>
+                            <li><img src="img/default.png" alt="请上传商品正面图片">
+                                <p><a class="areasubmit file_label" href="javascript:;">上传图片
+                                    <input type="file">
+                                    </a></p>
+                            </li>
+                            <li><img src="img/default.png" alt="请上传商品正面图片">
+                                <p><a class="areasubmit file_label" href="javascript:;">上传图片
+                                    <input type="file">
+                                    </a></p>
+                            </li>
+                            <li><img src="img/default.png" alt="请上传商品正面图片">
+                                <p><a class="areasubmit file_label" href="javascript:;">上传图片
+                                    <input type="file">
+                                    </a></p>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt><em class="red">*</em>商品描述：</dt>
+                    <dd>
+                        <div class="cons">
+                            <textarea class="product_mark" style="width:760px;height:300px;visibility:hidden;"></textarea>
+                        </div>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt>所在地：</dt>
+                    <dd>
+                        <select>
+                            <option value="#">1</option>
+                        </select>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt>运费：</dt>
+                    <dd>
+                        <div class="cons">
+                            <p><label><input type="checkbox" name="select-postage-type" class="checkbox">免邮</label></p>
+                            <p><label><input type="checkbox" name="select-postage-type" class="checkbox">选择运费模板</label><select>
+                                            <option value="#">1</option>
+                                        </select></p>
+                            <div class="child_list">
+                                <label><input type="checkbox" class="checkbox"></label>平邮：<input class="text mini" type="text">元&nbsp;&nbsp;&nbsp;&nbsp;快递：<input class="text mini" type="text">元&nbsp;&nbsp;&nbsp;&nbsp;EMS：<input class="text mini" type="text">元
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt>是否上架：</dt>
+                    <dd>
+                        <label><input type="checkbox" class="checkbox">是</label>
+                        <label><input type="checkbox" class="checkbox">否</label>
+                    </dd>
+                </dl>
+            </div>
+            <p class="ct mt25"><a href="#" class="nextLink">提交</a></p>
+       </div>
+    </div>
+</div>
+<div id="footer">
+	<div class="layout">
+    	<p><a href="#">关于中邮普泰</a> | <a href="#">我们的团队</a> | <a href="#">网站联盟</a> | <a href="#">热门搜索</a> | <a href="#">友情链接</a> | <a href="#">诚征英才</a></p>
+        <p>浙ICP备2121245号 | 合字B1.B2-20130004 | 营业执照 | 互联网药品交易服务资格证</p>
+        <p>Copyright© 中邮普泰 2007-2015，All Rights Reserved</p>
+    </div>
+</div>
+</ul>
+
+</body>
+</html>

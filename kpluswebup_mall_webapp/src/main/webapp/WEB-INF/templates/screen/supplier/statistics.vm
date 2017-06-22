@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/jquery-ui.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+	#parse("layout/suppliercenter/leftmenu.vm")
+	<div id="rightMain">
+      <div class="crumbs">
+          商家管理中心 &gt; <a href="supplierCenter.htm">首页</a> &gt; 销售统计
+      </div>
+       <div class="p15">
+         <div class="situation">
+          <p>1、符合以下任何一种条件的订单即为有效订单：1）采用在线支付方式支付并已付款；2）采用货到付款方式支付并且交易已完成</p>
+            <p>2、统计图展示了符合搜索条件的有效订单中的下单总金额和下单数量在时间段内的走势情况及与前一个时间段的趋势对比</p>
+            <p>3、统计表显示了符合搜索条件的全部有效订单记录并可以点击"导出Excel"将订单记录有导处为Excel文件</p>
+         </div>
+         <!-- <div class="selbar txt_r">
+          <span><select name=""><option>按照天统计</option></select></span>
+            <span class="ml10"><input name="" type="text" class="datepicker ipt"></span>
+            <span class="ml10"><select name=""><option>请选择</option></select> <input name="" type="button" class="sbtn" value="搜索"></span>
+         </div> -->
+         <div class="selbar txt_r">
+          <form id="form0"  name="serachform" method="get" action="statistics.htm" style="display: inline">
+              <span class="ml10">下单时间 <input id="from0" name="fromDate" type="text" class="datepicker ipt" value="$!salesOrderDTO.fromDate"> - <input id="end0" name="endDate" type="text" class="ipt datepicker" value="$!salesOrderDTO.endDate"></span>
+              <a  class="apLink timeFilter" href="javascript:;">筛选</a>
+          </form>
+              <a id="export" class="apLink" href="javascript:;">导出</a>
+            </div>
+         <table class="smpTable">
+              <tr>
+                <th>订单编号</th>
+                <th>买家</th>
+                <th>下单时间</th>
+                <th>订单总额</th>
+                <th>订单状态</th>
+              </tr>
+              #foreach($!order in $!salesOrderList)
+              <tr>
+                <td class="mainID">$!order.mainID</td>
+                <td>$!order.customerUserName</td>
+                <td>$!date.format("yyyy-MM-dd hh:mm:ss", $!order.createTime)</td>
+                <td>￥$!order.totalAmount</td>
+                <td>
+                  #if("$!order.orderStatus"=="0") 订单已取消
+                  #elseif("$!order.orderStatus"=="1") 待确认
+                  #elseif("$!order.orderStatus"=="2") 待出库
+                  #elseif("$!order.orderStatus"=="3") 待发货
+                  #elseif("$!order.orderStatus"=="4") 已发货
+                  #elseif("$!order.orderStatus"=="5") 已收货
+                  #elseif("$!order.orderStatus"=="6") 已完成
+                  #elseif("$!order.orderStatus"=="7") 售后申请中
+                  #elseif("$!order.orderStatus"=="8") 售后处理中
+                  #elseif("$!order.orderStatus"=="9") 已售后
+                  #elseif("$!order.orderStatus"=="10") 售后已取消
+                  #elseif("$!order.orderStatus"=="11") 售后申请被拒绝 #end
+                </td>
+              </tr>
+              #end
+            </table>
+            <form id="serachform" name="serachform" method="get" action="statistics.htm">
+                  <input type="hidden" id="pageNo" name="pageNo"
+                  value="$!salesOrderDTO.pageNo">
+                  <input type="hidden" id="pageSize" name="pageSize" 
+                      value="$!salesOrderDTO.pageSize">
+                  <input type="hidden" name="fromDate" 
+                      value="$!salesOrderDTO.fromDate">
+                  <input type="hidden" name="endDate" 
+                      value="$!salesOrderDTO.endDate">
+            </form>
+            <div class="pagerbar clearfix ct">
+              #pagination($!salesOrderDTO)
+            </div>
+       </div>      
+    </div>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-ui.min.js"></script>
+<script type="text/javascript">
+  $("dt:eq(3)").addClass("on");
+  $(".datepicker").datepicker();  
+</script>
+<script type="text/javascript">
+
+jQuery(function() {
+jQuery(".pagerbar").pager({
+    pagenumber : $salesOrderDTO.pageNo,
+    pagecount : $salesOrderDTO.pageCount,
+    buttonClickCallback : PageClick
+  });
+
+  $("#export").click(function(){
+    var mainIDs = [];
+    $("td.mainID").each(function(index, ele){
+      mainIDs.push(ele.innerHTML);
+    });
+    location.href = "statisticsExcel.htm?mainIDs="+mainIDs.join(",")
+  });
+
+  $(".timeFilter").click(function(){
+    // var from = $("#from0").val();
+    // var end = $("#end0").val();
+    // if(from == '' || end == ''){
+    //   alert('请填写订单起始时间');
+    //   return;
+    // }
+    $("#form0").submit();
+  })
+
+})
+PageClick = function(pageclickednumber) {
+  jQuery(".pagerbar").pager({
+    pagenumber : pageclickednumber,
+    pagecount : $salesOrderDTO.pageCount,
+    buttonClickCallback : PageClick
+  })
+  jQuery("#pageNo").val(pageclickednumber);
+  jQuery("#serachform").submit();
+}
+
+
+</script>
+</body>
+</html>

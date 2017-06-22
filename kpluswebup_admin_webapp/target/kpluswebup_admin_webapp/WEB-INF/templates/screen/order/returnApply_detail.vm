@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>退换货申请详情</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+
+	<!--header E-->
+
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>退换货申请详情</span>
+		</div>
+		<div class="ddanInfo">
+			<dl class="">
+				<dd>
+					<table>
+						<tbody>
+							<tr>
+								<td>申请编号：$!salesOrderReturnApply.mainID</td>
+								<td>订单编号：$!salesOrderReturnApply.salesOrderID</td>
+								<td>会员：$!salesOrderReturnApply.customerName</td>
+							</tr>
+							<tr>
+								<td>产品：$!salesOrderReturnApply.productName</td>
+								<td>商品：$!salesOrderReturnApply.itemName</td>
+							</tr>
+							<tr>
+								<td>购买数量：$!salesOrderReturnApply.itemCount</td>
+								<td>购买金额
+									$!NumberTool.format('#0.00',$!salesOrderReturnApply.confirmReturnAmount)
+									元</td>
+							</tr>
+							<tr>
+								<td>申请类型： #if("$!salesOrderReturnApply.returnType"=="1") 退货
+									#elseif("$!salesOrderReturnApply.returnType"=="2") 换货 #end</td>
+								<td>数量：$!salesOrderReturnApply.count</td>
+							</tr>
+							<tr>
+								<td colspan="4">备注：$!salesOrderReturnApply.memo</td>
+							</tr>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+			<dl class="">
+				<dd>
+					<table>
+						<tbody>
+							<tr>
+								<td>#if("$!salesOrderReturnApply.returnType"=="1")退#elseif("$!salesOrderReturnApply.returnType"=="2")换#end货编号：$!salesOrderReturnApply.returnID</td>
+								<td>订单编号：$!salesOrderReturnApply.salesOrderID</td>
+								<td>会员：$!salesOrderReturnApply.customerName</td>
+							</tr>
+							<tr>
+								<td>产品：$!salesOrderReturnApply.productName</td>
+								<td>商品：$!salesOrderReturnApply.itemName</td>
+							</tr>
+							<tr>
+								<td>购买数量：$!salesOrderReturnApply.itemCount</td>
+								<td>购买金额：
+									$!NumberTool.format('#0.00',$!salesOrderReturnApply.confirmReturnAmount)
+									元</td>
+							</tr>
+							<tr>
+								<td>类型：
+									#if("$!salesOrderReturnApply.confirmReturnType"=="1") 退货
+									#elseif("$!salesOrderReturnApply.confirmReturnType"=="2") 换货
+									#end</td>
+								<td>数量：$!salesOrderReturnApply.confirmCount</td>
+								<td>金额：
+									#if("$!salesOrderReturnApply.confirmReturnAmount"=="")
+									$!NumberTool.format('#0.00',$!salesOrderReturnApply.returnAmount)
+									#else
+									$!NumberTool.format('#0.00',$!salesOrderReturnApply.confirmReturnAmount)
+									#end 元
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4">状态：
+									#if("$!salesOrderReturnApply.status"=="0") 待确认
+									#elseif("$!salesOrderReturnApply.confirmStatus"=="1") 已确认
+									#elseif("$!salesOrderReturnApply.confirmStatus"=="2") 拒绝
+									#elseif("$!salesOrderReturnApply.confirmStatus"=="3") 已退货
+									#elseif("$!salesOrderReturnApply.confirmStatus"=="4") 已收货
+									#elseif("$!salesOrderReturnApply.confirmStatus"=="5") 退款中
+									#elseif("$!salesOrderReturnApply.confirmStatus"=="6") 换货中
+									#elseif("$!salesOrderReturnApply.confirmStatus"=="7") 已退款
+									#elseif("$!salesOrderReturnApply.confirmStatus"=="8") 已换货
+									#elseif("$!salesOrderReturnApply.confirmStatus"=="9") 完成 #end
+							</tr>
+							<tr>
+								<td colspan="4">说明
+									：$!salesOrderReturnApply.confirmDescription</td>
+							</tr>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+			#if("$!salesOrderReturnApply.confirmReturnType"=="1" &&
+			"$!salesOrderReturnApply.accountMainID"!="")
+			<dl class="">
+				<dd>
+					<table>
+						<tbody>
+							<tr>
+								<td>退款单：$!salesOrderReturnApply.accountMainID</td>
+								<td>会员：$!salesOrderReturnApply.customerName</td>
+							</tr>
+							<tr>
+								<td colspan="4">金额：$!salesOrderReturnApply.amount</td>
+							</tr>
+							<tr>
+								<td colspan="4">状态 ：
+									#if("$!salesOrderReturnApply.accountStatus"=="0") 申请
+									#elseif("$!salesOrderReturnApply.accountStatus"=="1") 确认
+									#elseif("$!salesOrderReturnApply.accountStatus"=="2") 拒绝 #end
+							</tr>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+			#end #if("$!salesOrderReturnApply.confirmReturnType"=="2" &&
+			"$!salesOrderReturnApply.returnSalesOrderID"!="")
+			<dl class="">
+				<dd>
+					<table>
+						<tbody>
+							<tr>
+								<td>换货订单：$!salesOrderReturnApply.returnSalesOrderID</td>
+								<td>会员：$!salesOrderReturnApply.customerName</td>
+							</tr>
+							<tr>
+								<td colspan="4">状态 ：
+									#if($!salesOrderReturnApply.orderStatus==0) 已关闭
+									#elseif($!salesOrderReturnApply.orderStatus==1) 待确认
+									#elseif($!salesOrderReturnApply.orderStatus==2) 待出库
+									#elseif($!salesOrderReturnApply.orderStatus==3) 待发货
+									#elseif($!salesOrderReturnApply.orderStatus==4) 已发货
+									#elseif($!salesOrderReturnApply.orderStatus==5) 已收货
+									#elseif($!salesOrderReturnApply.orderStatus==6) 已完成
+									#elseif($!salesOrderReturnApply.orderStatus==7) 已退换货 #end
+							</tr>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+			#end
+		</div>
+		<div class="clear"></div>
+
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>

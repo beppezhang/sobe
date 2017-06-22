@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+<title>我的地址</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/list.css">
+</head>
+<body>
+<a href="$!domain/weixin/useraddAddress.htm" class="increase">
+    	<span>添加收货地址</span>
+    </a>
+    #foreach($!li in $!list)
+   <div class="addr_content">
+        <div class="addr_info clearfix">
+            <a href="javascript:;" id="addressId" data="$!li.id" class="selected #if($!velocityCount==1&&$!li.status==1)on#end clearfix">
+                <span class="lt consignee">$!li.name</span>
+                <span class="rt  tele">$!li.mobile</span>
+                <p>$!li.provinceName $!li.cityName $!li.districtName $!li.address</p>
+            </a> 
+       </div>	
+        <ul class="operate_list">
+            <li>
+                <a href="$!domain/weixin/usereditAddress.htm?id=$!li.id">
+                    <span class="edit">编辑</span>
+                </a>
+            </li>
+            <li>
+                <a href="$!domain/weixin/userdeleteAddress.htm?id=$!li.id">
+                    <span class="del">删除</span>
+                </a>
+            </li>
+            <li>
+                 <span >  #if("$!li.status"=="2") 
+						               未审核
+						  #elseif("$!li.status"=="3")
+						              审核失败
+						  #elseif("$!li.status"=="1")
+						              审核通过
+						  #end</span>
+            </li>
+       </ul>
+    </div>
+    #end
+    <script type="text/javascript" src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script> 
+    <script>
+		$(function(){
+			$(".selected").click(function(){
+				$(this).addClass("on").closest(".addr_content").siblings(".addr_content").find(".selected").removeClass("on");
+				var addressId=$("#addressId").attr("data");
+				var customerID="$!customerID";
+				jQuery.ajax({
+					url : "updateDefaultAddress.do",
+					type : "POST",
+					dataType : "json",
+					data : {
+						"addressId": addressId,
+						"customerId":customerID,
+						"type":"0"
+					},
+					success : function(data) {
+						if (data.code == 0) {
+							location.reload();
+						}
+					}
+				})
+			})
+			$(".del").click(function(){
+				$(this).closest(".addr_content").hide();
+			})
+		})
+    </script>
+</body> 
+</htmL>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--<title>搜索结果</title>-->
+<title>汽车品牌</title>
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/global.css">
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/brand.css">
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/header_fixed.css">
+	<script type="text/javascript" src="${mallStatic}/js/jquery-1.11.0.min.js"></script>
+</head>
+
+<body style="min-height: 600px;">
+	<!-- top bar -->
+	#parse("layout/head_top_new.vm")
+	<div id="box">
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider_new.vm")
+	<!--nav导航条-->
+	#parse("layout/menu_new.vm")
+	</div>
+	
+	<div id="brand_filter">
+	    <ul class="channel-tab fix">
+	        <li id="brand_filter_1" class="act"><a href="javascript:;"><i class="cT-ico1"></i>按首字母查找</a></li>
+	    </ul>
+
+	    <div id="tab_brand_filter_1" class="channel-fixedBar">
+	        <div id="float_brand_filter_1" class="channel-inner">
+	            <div class="channel-bg">
+			      <ul class="channel-letterTab fix event-act">
+			            <li class="act acr"><a href="#">全部<i></i></a></li>
+		            	#foreach($!brandModel in $!brandsModel)
+		            	<li><a href="javascript:void(0)">$!brandModel.code<i></i></a></li>
+		            	#end
+			     </ul>
+	            </div>
+	    	</div>
+	    </div>
+	</div>
+
+	#foreach($!brandModel in $!brandsModel)
+	<div class="channel-brand">
+		<div id="carLetter" class="cont fix">
+		    <div class="channel-mod">
+		      <h3 name="$!brandModel.code" id="$!brandModel.code" class="channel-title">$!brandModel.code</h3>
+		       	<ul class="clearfix">
+			      #foreach($!productCategoryVo in $!brandModel.brands)
+    				<li class="brand-list-item">
+                        <div class="brand-lPannel">
+                            <a href="$!{domain}/mall/product/searchProductList.htm?type=car&&carMainID=$!{productCategoryVo.mainID}" class="link">
+                                <img src="$!{mallStatic}/img/logo/$!{productCategoryVo.picUrl}" class="brand-logo">
+                                <h4 class="brand-name">$!productCategoryVo.name</h4>
+                            </a>	                                  
+                        </div>					            
+                    </li>
+	  			  #end
+  				</ul>
+		    </div>
+		</div>  
+	</div>
+	#end
+
+<script>
+	$(document).ready(function(){
+		var num1=$("#brand_filter").offset().top;
+		$(window).scroll(function(){
+			var num2=$(window).scrollTop();
+			var num3=$(".channel-brand").eq(1).offset().top;
+			
+			if(num2>0){
+    			$("#brand_filter").css("position","fixed").css("top","188px").css("left","50%").css("margin-left","-600px").css("margin-top","0");
+    			}else{
+    				$("#brand_filter").css("position","static").css("margin-left","0").css("margin-top","-2px");
+    			};	
+			});
+			$(".channel-letterTab li").click(function(){
+				$(this).addClass("act").siblings().removeClass("act");
+				
+				if($(this).index()>1){
+					$("#brand_filter").css("position","fixed").css("top","188px").css("left","50%").css("margin-left","-600px");
+					$("html,body").animate({"scrollTop":$(".channel-brand").eq($(this).index()-1).offset().top-328},500);
+					/*var num4=$(".channel-brand").eq($(this).index()-1).offset().top-328; 
+					console.log(num4);*/
+				}else{
+					$("#brand_filter").css("position","static").css("margin-left","0");
+					$("html,body").animate({"scrollTop":$(".channel-brand").eq(0).offset().top-328},500);
+				};
+			});
+	});
+</script>
+</body>
+</html>

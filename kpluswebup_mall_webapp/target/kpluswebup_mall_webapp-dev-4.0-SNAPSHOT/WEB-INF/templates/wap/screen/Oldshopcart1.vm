@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+<head>
+<title>购物车</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+	#if("$!list"!="")
+	<div class="sc_body">
+	<div class="sc_toolbar">
+	<a href="javascript:delCart();" class="del_link rt">删除</a>
+	</div>
+	#foreach($!li in $!list)
+    <div class="sc_unit">
+        <div class="pd clearfix">
+            <span class="u1"><em class="check_box on">
+	            <input type="hidden" class="cartID" value="$!li.id">
+	            <input name="check_op" type="checkbox" value=""></em>
+            </span>
+            <span class="u2"><a href="$!{domain}/weixin/productDetail.htm?productID=$!li.productID"><img src="$!{imgurl}/$!li.itemPicUrl" class="pimg"></a></span>
+            <div class="u3"><a href="$!{domain}/weixin/productDetail.htm?productID=$!li.productID">$!li.itemName</a>
+            <p class="mt5">
+            	#if("$!li.type"=="1")
+            	￥$!NumberTool.format("#0.00",$!li.salesPrice)
+            #elseif("$!li.type"=="2")
+            <em class="jf">$!li.score</em>
+            #else
+          	  ￥$!NumberTool.format("#0.00",$!li.scorePrice)+<em class="jf">$!li.salesScore</em>
+            #end
+            </p>
+            </div>
+            
+        </div>
+        <p class="txt_r">数量： x$!li.itemCount</p>
+        #if("$!li.type"=="1")
+        <p class="txt_r">合计： ￥<em class="col01">$!NumberTool.format("#0.00",$!li.allamount)</p>
+        #elseif("$!li.type"=="2")
+        <p class="txt_r">合计：<em class="jf">$!li.allscore</em></p>
+        #else
+        <p class="txt_r">合计：￥ <em class="col01">$!NumberTool.format("#0.00",$!li.allamount)</em>+<em class="jf">$!li.allscore</em></p>
+        #end
+    </div>
+   #end 
+</div>
+<div class="operation clearfix">
+	<em class="check_box on"><input name="" type="checkbox" id="allCheck" value=""></em>
+	<span class="lt count">
+        <em class="f14"> </em>总金额<em class="doule">￥ <em class="f14 col01">368.00</em></em><em class="add">+</em><em class="jf"></em>
+    </span>
+	<a href="javascript:gobuy();" class="gobuy rt">付款</a>
+</div>
+<input type="hidden" id="customerID" value="$!wxuser.mainID">
+<input type="hidden" id="cartIDS" value="">
+<input type="hidden" id="domain" value="$!domain">
+#else
+	<div class="empty_sc">
+		<p>购物车还是空的，去挑几件中意的商品吧</p>
+	    <p><a href="$!{domain}/weixin/index.htm" class="golink">开始购物</a></p>
+	</div>
+#end
+<script>
+	
+	//删除购物车
+	function delCart(){
+		var ids = [];
+		jQuery(".sc_unit .u1 .on .cartID").each(function(){
+			var cartID = jQuery(this).val();
+			ids.push(cartID);
+		});
+		var cartIDS = ids.join();
+		jQuery("#cartIDS").val(cartIDS);
+		var id = jQuery("#cartIDS").val();
+		if (id == ""){
+			alert("请选择要删除的商品！");
+			return;
+		}else {
+			window.location='delCart.htm?ids='+id;
+		}
+	}
+	
+	//总金额 
+	function getCount(){
+		var count = 0.00;
+		var scorecount = 0;
+
+		jQuery(".sc_unit").each(function(){
+			var price = jQuery(this).find(".check_box.on").closest(".sc_unit").find(".txt_r").find(".col01").text();
+			if ((price ==null )||(price =="")){
+				price =0;
+			}
+			count = parseFloat(count) + parseFloat(price);
+		});
+		
+		jQuery(".sc_unit").each(function(){
+			var score = jQuery(this).find(".check_box.on").closest(".sc_unit").find(".txt_r").find(".jf").text();
+			if ((score ==null )||(score =="")){
+				score =0;
+			}
+			scorecount = parseInt(score) + parseInt(scorecount);
+		});
+		if (parseFloat(count)<=0){
+			jQuery(".doule").hide();
+			jQuery(".operation .lt .col01").text(parseFloat(count).toFixed(2));
+			jQuery(".operation .lt .jf").text(scorecount);
+		}else {
+			jQuery(".operation .lt .col01").text(parseFloat(count).toFixed(2));
+			jQuery(".operation .lt .jf").text(scorecount);
+			jQuery(".doule").show();
+		}
+		if (parseInt(scorecount)==0){
+			jQuery(".operation .lt .col01").text(parseFloat(count).toFixed(2));
+			jQuery(".operation .lt .jf").text(scorecount);
+			jQuery(".operation .lt .jf").hide();
+		}else {
+			jQuery(".operation .lt .col01").text(parseFloat(count).toFixed(2));
+			jQuery(".operation .lt .jf").text(scorecount);
+			jQuery(".operation .lt .jf").show();
+		}
+		if (parseFloat(count)>0 && parseInt(scorecount)!=0){
+			jQuery(".add").show();
+		}else {
+			jQuery(".add").hide();
+		}
+		
+		panduan();
+	}
+	
+	function panduan(){
+		var ids = [];
+		jQuery(".sc_unit .u1 .on .cartID").each(function(){
+			var cartID = jQuery(this).val();
+			ids.push(cartID);
+		});
+		var cartIDS = ids.join();
+		jQuery("#cartIDS").val(cartIDS);
+		var id = jQuery("#cartIDS").val();
+		if (id == ""){
+			jQuery(".gobuy").addClass("off");
+		}else {
+			jQuery(".gobuy").removeClass("off");
+		}
+	}
+	
+	//付款
+	function gobuy(){
+		var ids = [];
+		jQuery(".sc_unit .u1 .on .cartID").each(function(){
+			var cartID = jQuery(this).val();
+			ids.push(cartID);
+		});
+		var cartIDS = ids.join();
+		jQuery("#cartIDS").val(cartIDS);
+		var id = jQuery("#cartIDS").val();
+		if (jQuery(".gobuy").hasClass("off")){
+			return;
+		}
+		var customerID = jQuery("#customerID").val();
+		var domain = jQuery("#domain").val();
+		if (customerID == ""){
+			window.location.href="/mall/member/toLogin.htm";
+		}
+		
+		window.location= domain + '/weixin/usershopcart2.htm?ids='+id;
+	}
+	
+	$(function(){
+		getCount();
+		$(".sc_unit").find(".check_box").click(function(){
+			$(this).toggleClass("on");
+			/* $("input[name='check_op']").each(function(){
+				var ck = $(this).prop("checked");
+				if(ck==true){
+					$("#allCheck").attr("checked",true);
+					$("#allCheck").closest(".check_box").addClass("on");
+				}else{
+					$("#allCheck").removeAttr("checked");
+					$("#allCheck").closest(".check_box").removeClass("on");
+					return false;
+				}
+			}) */
+			var j = -1;
+			jQuery(".sc_unit").find(".check_box").each(function(i){
+				if (jQuery(this).hasClass("on")){
+					j = j+1;
+				}
+				if (j==i){
+					jQuery("#allCheck").closest(".check_box").addClass("on");
+				}else {
+					jQuery("#allCheck").closest(".check_box").removeClass("on");
+				}
+			});
+			getCount();
+		})
+		$("#allCheck").click(function() {
+			$(this).closest("em").toggleClass("on");
+		   /*  $('input[name="check_op"]').attr("checked",this.checked);
+			var ck = $('input[name="check_op"]').prop("checked");
+			var nk = $('input[name="check_op"]');
+			var it = nk.closest("em"); */
+			if(jQuery(this).closest("em").hasClass("on")){
+				jQuery(".check_box").addClass("on");	
+			}else{
+				jQuery(".check_box").removeClass("on");	
+			}
+			getCount();
+		});
+	})
+	
+	jQuery(function(){
+		jQuery(".shopcartLink").addClass("cur");
+	});
+</script>
+</body>
+</html>

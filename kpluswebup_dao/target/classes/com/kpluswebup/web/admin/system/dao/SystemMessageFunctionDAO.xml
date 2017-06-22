@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.SystemMessageFunctionDAO">
+
+	<select id="findSystemMessageFunction" resultType="systemMessageFunctionVO">
+		select * from
+		kplus_systemMessageFunction where isDelete=0
+	</select>
+
+	<select id="findSystemMessageFunctionByMainID" parameterType="java.lang.String"
+		resultType="systemMessageFunctionVO">
+		select * from kplus_systemMessageFunction where isDelete=0
+		and
+		mainID=#{mainID}
+	</select>
+
+	<select id="findMessageConfigByFunctionID" parameterType="java.lang.String"
+		resultType="messageConfigVO">
+		select * from kplus_messageConfig where isDelete=0 and
+		messageFunctionID=#{functionID}
+	</select>
+
+	<insert id="insertMessageConfig" parameterType="messageConfigDTO">
+		insert into
+		kplus_messageConfig(
+		messageFunctionID,
+		messageActive,
+		emailActive,
+		smsActive,
+		isDelete,
+		creator,
+		createTime
+		)values(
+		#{messageFunctionID},
+		#{messageActive},
+		#{emailActive},
+		#{smsActive},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+	<update id="updateMessageConfig" parameterType="messageConfigDTO">
+		update kplus_messageConfig
+		<set>
+			modifyTime=now()
+			<if test="messageFunctionID!=null">
+				,messageFunctionID=#{messageFunctionID}
+			</if>
+			<if test="messageActive!=null">
+				,messageActive=#{messageActive}
+			</if>
+			<if test="emailActive!=null">
+				,emailActive=#{emailActive}
+			</if>
+			<if test="smsActive!=null">
+				,smsActive=#{smsActive}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<update id="updateSystemMessageFunction" parameterType="systemMessageFunctionDTO">
+		update kplus_systemMessageFunction
+		<set>
+			modifyTime=now()
+			<if test="messageActive!=null">
+				,messageActive=#{messageActive}
+			</if>
+			<if test="emailActive!=null">
+				,emailActive=#{emailActive}
+			</if>
+			<if test="smsActive!=null">
+				,smsActive=#{smsActive}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<select id="findMessageTemplateByFunctionIDType" parameterType="messageTemplateDTO"
+		resultType="messageTemplateVO">
+		select * from kplus_messageTemplate where isDelete=0 and
+		messageFunctionID=#{messageFunctionID} and
+		templateType=#{templateType}
+	</select>
+
+	<insert id="insertMessageTemplate" parameterType="messageTemplateDTO">
+		insert into
+		kplus_messageTemplate(
+		messageFunctionID,
+		templateType,
+		templateContent,
+		isDelete,
+		creator,
+		createTime
+		)values(
+		#{messageFunctionID},
+		#{templateType},
+		#{templateContent},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+	<update id="updateMessageTemplate" parameterType="messageTemplateDTO">
+		update kplus_messageTemplate
+		<set>
+			modifyTime=now()
+			<if test="messageFunctionID!=null">
+				,messageFunctionID=#{messageFunctionID}
+			</if>
+			<if test="templateType!=null">
+				,templateType=#{templateType}
+			</if>
+			<if test="templateContent!=null">
+				,templateContent=#{templateContent}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

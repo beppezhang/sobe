@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE configuration  
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-config.dtd"> 
+
+<configuration>  
+	<typeAliases>
+		<typeAlias alias="FocusEntity" type="com.kpluswebup.web.vo.FocusEntity"/>
+		<typeAlias alias="PartsCategoryVo" type="com.kpluswebup.web.vo.PartsCategoryVo"/>
+	</typeAliases>
+	  
+    <environments default="development">  
+        <environment id="development">  
+            <transactionManager type="JDBC">  
+                <property name="" value="" />  
+            </transactionManager>  
+            <dataSource type="UNPOOLED">  
+                <property name="driver" value="org.hsqldb.jdbcDriver" />  
+                <property name="url" value="jdbc:hsqldb:mem:tparts-test" />  
+                <property name="username" value="sa" />  
+            </dataSource>  
+        </environment>  
+    </environments>  
+
+    <mappers>  
+        <mapper resource="com/kpluswebup/web/customer/dao/FocusDAO.xml" />  
+        <mapper resource="com/kpluswebup/web/partscategory/dao/PartsCategoryNormalDAO.xml" />  
+    </mappers>  
+  
+</configuration> 

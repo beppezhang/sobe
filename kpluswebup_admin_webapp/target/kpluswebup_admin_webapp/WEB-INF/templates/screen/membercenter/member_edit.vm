@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑会员</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+		        <em class="icon iconMenu1 "></em><a href="memberList.htm">会员中心</a> &gt; <a href="memberList.htm">会员列表</a> &gt; <span>编辑会员</span>
+		</div>
+		<div class="tabBar clearfix">
+			<!-- #parse("layout/member_menu.vm") -->
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class='icon arrowLfWeight'></em><a class="hover"
+						href="$!{domain}/admin/member/editMemberPage.htm?mainId=$!{customerVO.mainID}">基本信息</a></li>
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/member/editMember.htm" method="post">
+						<input type="hidden" value="$!{customerVO.mainID}" name="mainId"
+							id="mainId">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">会员编号：</div>
+									<div class="formRow">$!{customerVO.mainID}</div>
+								</dd>
+								
+								<dd class="clearfix">
+									<div class="formTt">昵称：</div>
+									<div class="formRow">
+										<input type="text" value="$!{customerVO.name}"
+											class="cText cTextLen" name="name">
+									</div>
+								</dd>
+								
+								<!-- <dd class="clearfix">
+									<div class="formTt">公司名称：</div>
+									<div class="formRow">
+										<input type="text" value="$!{customerVO.companyName}"
+											class="cText cTextLen" name="companyName">
+									</div>
+								</dd> -->
+								
+								<dd class="clearfix">
+									<div class="formTt">会员等级：</div>
+									<div class="formRow">
+										<select class="select" name="gradeID">
+											#foreach($!grade in $!gradeList)
+											<option #if($!customerVO.gradeID==$!grade.mainID)selected=
+												"selected"#end value="$!grade.mainID">$!grade.name</option>
+											#end
+										</select>
+									</div>
+								</dd>
+								
+								
+								<dd class="clearfix">
+									<div class="formTt">手机号：</div>
+									<div class="formRow">
+										<input type="text" value="$!{customerVO.mobile}" id="mobile"
+											name="mobile" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">电话：</div>
+									<div class="formRow">
+										<input type="text" value="$!{customerVO.telephone}"
+											id="telephone" name="telephone" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">邮箱：</div>
+									<div class="formRow">
+										<input type="text" value="$!{customerVO.email}" id="email"
+											name="email" class="cText cTextLen">
+									</div>
+								</dd>
+								<!-- <dd class="clearfix">
+									<div class="formTt">公司地址：</div>
+									<div class="formRow">
+										<select name="provinceID" class="select"
+											onchange="changeProvinceID(this.value)">
+											#foreach($!province in $!provinceList)
+											<option #if("$!customerVO.provinceID"==
+												"$!province.mainID")selected="selected" #end
+												value="$!province.mainID">$!province.name</option> #end
+										</select> &nbsp; <select name="cityID" id="cityid" class="select"
+											onchange="changeCity(this.value)"> #foreach($!city
+											in $!cityList)
+											<option #if("$!customerVO.cityID"==
+												"$!city.mainID")selected="selected" #end
+												value="$!city.mainID">$!city.name</option> #end
+										</select> &nbsp; <select name="districtId" id="districtid"
+											class="select"> #foreach($!district in
+											$!districtList)
+											<option #if("$!customerVO.districtID"==
+												"$!district.mainID")selected="selected" #end
+												value="$!district.mainID">$!district.name</option> #end
+										</select>
+									</div>
+								</dd> -->
+								<dd class="clearfix">
+									<div class="formTt">所在地区：</div>
+									<div class="formRow">
+									
+					 
+						<select name="provinceID" onclick="changeProvinceID(this.value);">#foreach($!province in $!provinceList)
+							<option #if("$!customerVO.provinceID"=="$!province.mainID") selected="selected" #end value="$!province.mainID">$!province.name</option>#end</select>
+						<select name="cityID" onclick="changeCity(this.value);"	class="cityed" id="cityid">#foreach($!city in $!cityList)
+							<option #if("$!customerVO.cityID" == "$!city.mainID") selected="selected" #end value="$!city.mainID">$!city.name</option>#end</select> 
+						<select name="districtID" id="districtid" class="district">#foreach($!district in $!districtList) 
+							<option #if("$!customerVO.districtID" == "$!district.mainID") selected="selected" #end	value="$!district.mainID">$!district.name</option>#end</select>
+				<div>
+										<input type="text" value="$!{customerVO.address}" id="address"
+											name="address" class="cText cTextLen" style="width="400px"  >
+									</div>
+									</div>
+								</dd>
+								
+								<!-- <dd class="clearfix">
+									<div class="formTt">营业执照：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen" value="$!{qrurl}$!customerVO.picURL1" name="picURL1" id="picURL1">
+									    <img id="uploadImage1" #if("$!customerVO.picURL1"!="")src="$!{qrurl}$!customerVO.picURL1"#else src="$!{qrurl}/images/header_inco.png"#end style="width: 100px; height: 100px;"> 
+									    <input type="file"	id="myBlogImage1" name="myfiles" onchange="ajaxFileUpload1s(1);" />
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">税务登记证：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen" value="$!{qrurl}$!customerVO.picURL2" name="picURL2" id="picURL2">
+									    <img id="uploadImage2" #if("$!customerVO.picURL2"!="")src="$!{qrurl}$!customerVO.picURL2"#else src="$!{qrurl}/images/header_inco.png"#end style="width: 100px; height: 100px;"> 
+									    <input type="file"	id="myBlogImage2" name="myfiles" onchange="ajaxFileUpload1s(2);" />
+									</div>
+								</dd>
+								
+								<dd class="clearfix">
+									<div class="formTt">组织机构代码：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen" value="$!{qrurl}$!customerVO.picURL3" name="picURL3" id="picURL3">
+									    <img id="uploadImage3" #if("$!customerVO.picURL3"!="")src="$!{qrurl}$!customerVO.picURL3"#else src="$!{qrurl}/images/header_inco.png"#end style="width: 100px; height: 100px;"> 
+									    <input type="file"	id="myBlogImage3" name="myfiles" onchange="ajaxFileUpload1s(3);" />
+									</div>
+								</dd> -->
+								<dd class="clearfix">
+									<div class="formTt">状态：</div>
+									<div class="formRow">
+										#if("$!customerVO.status"=="2") <em class="lock">锁定</em> #end
+										#if("$!customerVO.status"=="1") <em class="normalSta">正常</em>#end
+										#if("$!customerVO.status"=="3") <em>未审核</em>#end
+										#if("$!customerVO.status"=="4") <em>审核失败</em>#end
+									</div>
+								</dd>
+
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										<input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	$(function() {
+		$(".member_menu_1").append("<em class='icon arrowLfWeight'></em>")
+				.find("a").addClass("hover");
+	})
+	//菜单
+	$(".navLi").bind("mouseenter", function() {
+		$(this).closest(".navLi").find(".navUiSe").show();
+	})
+	$(".navLi").bind("mouseleave", function() {
+		$(this).closest(".navLi").find(".navUiSe").hide();
+	});
+
+	//店面名称
+	$(".setInfoBar").bind("mouseenter", function() {
+		$(this).find(".setInfoList").show();
+	})
+	$(".setInfoBar").bind("mouseleave", function() {
+		$(this).find(".setInfoList").hide();
+	})
+	//显示头部消息
+	$("#sysInfo").bind("click", function() {
+		$("#headerInfo").show();
+	})
+	$("#headerInfo").bind("mouseleave", function() {
+		$("#headerInfo").hide();
+	})
+	//搜索商店
+	$("#searchShop").inputFocus();
+</script>
+
+<script type="text/javascript">
+function ajaxFileUpload1s(type) {
+	jQuery.ajaxFileUpload({
+		url : '${domain}/file/fileUpload.do',
+		secureuri : false,// 是否启用安全提交,默认为false
+		fileElementId : 'myBlogImage' + type,// 文件选择框的id属性
+		dataType : 'text',// 服务器返回的格式,可以是json或xml等
+		success : function(data, status) {
+			data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+			data = data.replace("</PRE>", '');
+			data = data.replace("<pre>", '');
+			data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+			if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+				$("img[id='uploadImage" + type + "']").attr("src",
+						"$!domain"+data.substring(2));
+				$("#uploadImage"+ type).show();
+				$("#picURL" + type).val(data.substring(2));
+				$('#result').html("图片上传成功<br/>");
+			} else {
+				$('#result').html('图片上传失败，请重试！！');
+			}
+		},
+		error : function(data, status, e) { // 服务器响应失败时的处理函数
+			$('#result').html('图片上传失败，请重试！！');
+		}
+	});
+}
+</script>
+</html>

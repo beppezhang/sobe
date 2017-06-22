@@ -1,0 +1,353 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+<style type="text/css">
+  .edit{
+    width: 39px;
+  }
+</style>
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+    #parse("layout/suppliercenter/leftmenu.vm")
+    <div id="rightMain">
+        <div class="crumbs">
+            商家管理中心 &gt; <a href="supplierCenter.htm">首页</a> &gt; 商品退换货列表
+        </div>
+        <div class="p15">
+            <div class="stitbar">
+                <strong>
+                  #if($!type == 'return') 
+                                                                               退货单详细
+                  #elseif($!type == 'change') 
+                                                                              换货单详细
+                  #end
+                </strong>
+            </div>
+            <div class="main clearfix">
+               <div class="units">
+                  <h2>退换货单详情</h2>
+					<table class="ddannum">
+						<tbody>
+							<tr>
+								<td >申请编号：$!salesOrderSalesApply.mainID</td>
+								<td >订单编号：$!salesOrderSalesApply.salesOrderID</td>
+								<td>会员：$!salesOrderSalesApply.customerName</td>
+							</tr>
+							<tr>
+								<td >产品：$!salesOrderSalesApply.productName</td>
+								<td></td>
+								<td >商品：$!salesOrderSalesApply.itemName</td>
+							</tr>
+							<tr>
+								<td>购买数量：$!salesOrderSalesApply.itemCount</td>
+								<td></td>
+								<td>购买金额：$!NumberTool.format("#0.00",$!salesOrderSalesApply.salesPrice)元</td>
+							</tr>
+							<tr>
+								<td colspan="4">申请类型： #if("$!salesOrderSalesApply.salesType"=="1") 退货
+									#elseif("$!salesOrderSalesApply.salesType"=="2") 换货 #end</td>
+							</tr>
+							<tr>
+								<td colspan="4">备注：$!salesOrderSalesApply.description</td>
+							</tr>
+						</tbody>
+					</table> 
+					<form id="updateSalesApplyInfo" action="$!{domain}/mall/seller/updateSalesApplyInfo.htm" method="post" enctype="multipart/form-data">
+					    <input type="hidden" name="mainID" value="$!salesOrderSalesApply.mainID" />
+						<input type="hidden" name="salesID" value="$!salesOrderSalesApply.salesID" />
+						<input type="hidden" name="customerID" value="$!salesOrderSalesApply.customerID" />
+						<input type="hidden" name="salesOrderID" value="$!salesOrderSalesApply.salesOrderID" />
+						<input type="hidden" name="productID" value="$!salesOrderSalesApply.productID" />
+						<input type="hidden" name="itemID" value="$!salesOrderSalesApply.itemID" />
+						<input type="hidden" name="type" value="$!type" id="type" />
+						<div class="ddanInfo">
+								<dl class="">
+									<dt>
+										<em class="bold"></em>
+									</dt>
+									<dd>
+									    <table>
+											<tbody>
+												<tr>
+													<td><span>类型：</span>
+														#if("$!salesOrderSalesApply.confirmSalesType"=="") <select
+														name="salesType">
+															<option value="1" #if("$!salesOrderSalesApply.salesType"==
+																"1")selected="selected" #end>退货</option>
+															<option value="2" #if("$!salesOrderSalesApply.salesType"==
+																"2")selected="selected" #end>换货</option>
+													</select> #else <select name="salesType">
+															<option value="1"
+																#if("$!salesOrderSalesApply.confirmSalesType"==
+																"1")selected="selected" #end>退货</option>
+															<option value="2"
+																#if("$!salesOrderSalesApply.confirmSalesType"==
+																"2")selected="selected" #end>换货</option>
+													</select> #end</td>
+												</tr>
+												<tr>
+													<td><span>联系人：</span>
+													<!--$!salesOrderSalesApply.salesAddressVO.name -->
+														 <input class="cText cTextLen" type="text"
+														name="salesAddressVO.name"
+														value="$!salesOrderSalesApply.salesAddressVO.name" />
+												    </td>
+												</tr>
+												<tr>
+													<td><span>电话：</span>
+													<!-- $!salesOrderSalesApply.salesAddressVO.telephone -->
+														<input class="cText cTextLen" type="text"
+														name="salesAddressVO.telephone"
+														value="$!salesOrderSalesApply.salesAddressVO.telephone" /> 
+													</td>
+												</tr>
+												<tr>
+													<td><span>手机：</span>
+												<!-- 	$!salesOrderSalesApply.salesAddressVO.mobile -->
+													<input class="cText cTextLen" type="text"
+														name="salesAddressVO.mobile"
+														value="$!salesOrderSalesApply.salesAddressVO.mobile" /> 
+													</td>
+												</tr>
+												<tr>
+													<td><span class="sh">售后地址：</span>
+															<select name="salesAddressVO.provinceID" class="select"
+																onchange="changeProvinceID(this.value)">
+																#foreach($!province in $!provinceList)
+																<option
+																	#if("$!salesOrderSalesApply.salesAddressVO.provinceID"==
+																	"$!province.mainID")selected="selected" #end
+																	value="$!province.mainID" >$!province.name</option> #end
+															</select> &nbsp; <select name="salesAddressVO.cityID" id="cityid"
+																class="select" onchange="changeCity(this.value)">
+																#foreach($!city in $!cityList)
+																<option
+																	#if("$!salesOrderSalesApply.salesAddressVO.cityID"==
+																	"$!city.mainID")selected="selected" #end
+																	value="$!city.mainID">$!city.name</option> #end
+															</select> &nbsp; <select name="salesAddressVO.disctrictID"
+																id="districtid" class="select"> #foreach($!district
+																in $!districtList)
+																<option
+																	#if("$!salesOrderSalesApply.salesAddressVO.districtID"==
+																	"$!district.mainID")selected="selected" #end
+																	value="$!district.mainID">$!district.name</option> #end
+															</select></td>
+												</tr>
+												<tr>
+													<td><span>详细地址：</span>
+													 <!--  $!salesOrderSalesApply.salesAddressVO.address -->
+														 <input class="cText cTextLen cTextBrn" type="text"
+														name="salesAddressVO.address"
+														value="$!salesOrderSalesApply.salesAddressVO.address" /> 
+													</td>
+												<tr>
+													<td><span>申请理由：</span> 
+													$!salesOrderSalesApply.description
+												</tr>
+												<tr>
+													<td><span>申请状态：</span> 
+													#if("$!salesOrderSalesApply.status"=="0")
+													 申请
+													#elseif("$!salesOrderSalesApply.status"=="1")
+													 拒绝申请
+													#elseif("$!salesOrderSalesApply.status"=="2")
+													 处理中
+													#elseif("$!salesOrderSalesApply.status"=="3")
+													 已完成
+													#elseif("$!salesOrderSalesApply.status"=="4")
+													申请已取消
+													#end
+												</tr>
+												
+												<tr>
+													<td><span>商家说明：</span> 
+													 <textarea rows="5" cols="75"
+															name="memo" class="memo">$!salesOrderSalesApply.memo</textarea></td>
+												</tr>
+											</tbody>
+										</table>
+									</dd>
+								</dl>
+							</div>
+					</form>
+					#if("$!salesOrderSalesApply.status"=="0")
+					<div class="qm">
+						<button type="button" class="ck" onclick="salesApplyForm();">编辑</button>
+						<button type="button" class="ck"
+							onclick="javascript:changeStatus('$!salesOrderSalesApply.mainID','2')">确认</button>
+						<button type="button" class="ck"
+							onclick="changeStatus('$!salesOrderSalesApply.mainID','1')">拒绝</button>
+					</div>
+					<div class="clear"></div>
+					#end
+                  </div>
+			</div>
+        </div>
+    </div>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+ #if($!itemList.size() != 0)
+<script type="text/javascript">
+jQuery(function() {
+ 
+  jQuery(".pagerbar").pager({
+      pagenumber : $itemDTO.pageNo,
+      pagecount : $itemDTO.pageCount,
+      buttonClickCallback : PageClick
+    });
+  })
+
+  PageClick = function(pageclickednumber) {
+    jQuery(".pagerbar").pager({
+      pagenumber : pageclickednumber,
+      pagecount : $itemDTO.pageCount,
+      buttonClickCallback : PageClick
+    })
+    jQuery("#pageNo").val(pageclickednumber);
+    jQuery("#serachform").submit();
+}
+</script>
+#end
+<script>
+function salesApplyForm() {
+	
+	$("#updateSalesApplyInfo").submit();
+}
+
+$(function(){
+        #if($!type == 'return') 
+            $("dd:eq(8)").addClass("on");
+        #elseif($!type == 'change') 
+            $("dd:eq(9)").addClass("on");
+        #end
+        
+        $(".goEdit").on("click",".edit",function(){
+            var itemMainID = $(this).parents(".proUnit").attr("data-id");
+            if (typeof itemMainID == 'undefined') {
+                return;
+            };
+            location.href = "itemDetail.htm?itemMainID="+itemMainID+"&type="+"$!type";
+        });
+        $(".delBtn").on("click", function(){
+            var _this = this;
+            if (!confirm("确定删除该商品吗")) {
+              return false;
+            };
+            var itemMainID = $(this).parents(".proUnit").attr("data-id");
+            if (typeof itemMainID == 'undefined') {
+                return;
+            };
+            jQuery.ajax({
+              url: "itemRemove.do",
+              type: "POST",
+              dataType: "text",
+              data: {
+                itemMainID: itemMainID
+              },
+              success: function(data){
+                if (data == 0) {
+                  $(_this).parents(".proUnit").remove();
+                };
+              }
+
+            })
+            
+        });
+        $("#itemSerach").click(function(){
+          $("form").eq(0).submit();
+         /* var itemName = $("input[name='itemName']").val();
+          if (itemName != '') {
+          };*/
+        });
+        $(".submit").click(function(){
+          var _this = this;
+          var itemMainID = $(_this).parents("tbody").attr("data-id");
+          var salePrice = $(_this).parents("tbody").find(".saleprice").val();
+          var stock = $(_this).parents("tbody").find(".stock").val();
+          var priceReg = /^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/;
+          var numReg = /^[0-9]+$/;
+          if (!priceReg.test(salePrice)) {
+            alert("价格格式有误");
+            return;
+          };
+          if (!numReg.test(stock)) {
+            alert("库存格式有误");
+            return;
+          };
+          jQuery.ajax({
+            url: "item.do",
+            type: "POST",
+            dataType: "text",
+            data: {
+              itemMainID: itemMainID,
+              salePrice: salePrice,
+              stock: stock
+            },
+            success: function(data){
+              if (data == 0) {
+                alert("操作成功");
+                $(_this).text("已提交").removeClass("submit").unbind("click");
+              };
+            }
+          })
+        });
+    })
+    
+</script>
+<script type="text/javascript">
+function changeStatus(mainID, status) {
+	updateStatus(mainID, status);
+}
+
+function updateStatus(mainID, status) {
+	var type = jQuery("#type").val();
+	var memo = jQuery(".memo").val();
+	if(memo == ""){
+		alert("请填写同意或拒绝原因！");
+		return;
+	}
+	//return;
+	var data = {
+		mainId : mainID,
+		status : status,
+		memo   :memo
+	};
+	if (confirm("确定要操作吗？")) {
+		var url = "changeAfterSaleStatus.do";
+		jQuery.ajax({
+			url : url,
+			type : "POST",
+			data : data,
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 0) {
+					alert("操作成功");
+					window.location.href = "salesApplyMallList.htm?type="+type;
+				} else {
+					alert("操作失败");
+				}
+			},
+			error : function() {
+				alert("操作失败");
+			}
+		});
+	} else {
+		return false;
+	}
+}
+</script>
+</body>
+</html>

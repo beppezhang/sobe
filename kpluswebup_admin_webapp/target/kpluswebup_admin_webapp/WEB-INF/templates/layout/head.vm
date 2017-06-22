@@ -1,0 +1,37 @@
+<div class="header">
+	<div class="headerBar clearfix">
+		<div class="logo fl">
+			<img src="$!{adminStatic}/theme/default/images/logo.png" />
+		</div>
+		<div class="menu fl">
+			<div class="clearfix headerNav">
+
+				<ul class="navList">
+					#foreach($!menu in $!menuList)
+					<li class="navLi"><a class="navLink"
+						href="$!{domain}$!menu.functionURL">$!menu.name#if($!velocityCount!=1)<em
+							class="icon arrowUp"></em>#end
+					</a>
+						<ul class="navUiSe none">
+							#foreach($!menuchild in $!menu.childList )
+							<li class="navLiSe"><a
+								href="$!{domain}$!menuchild.functionURL">$!menuchild.name</a></li>
+							#end
+						</ul></li> #end
+				</ul>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="setTool fr">
+			<span class="setInfo"> <span class="setInfoBar">
+					欢迎您，$!operatorVO.username
+					<ul class="setInfoList none">
+						<li><a
+							href="$!{domain}/admin/system/editOperatorPwd.htm?mainID=$!operatorVO.mainID">修改密码</a></li>
+						<li><a href="$!{domain}/admin/exitLogin.htm">退出</a></li>
+					</ul>
+			</span>
+			</span>
+		</div>
+	</div>
+</div>

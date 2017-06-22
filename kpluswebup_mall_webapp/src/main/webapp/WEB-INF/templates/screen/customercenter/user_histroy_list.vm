@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>我的足迹</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user.css">
+<script type="text/javascript"src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+</head>
+
+<body>
+<!--顶部信息-->
+<!-- top bar -->
+	#parse("layout/head_top.vm")
+<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+<!-- 主导航 -->
+	#parse("layout/menu.vm")
+<!-- body头部 -->
+	#parse("layout/customercenter/header.vm")
+
+<div class="layout clearfix">
+<!-- 左边菜单 -->
+		#parse("layout/customercenter/leftmenu.vm")
+	
+    <div class="mainbody">
+    	<div class="tittab">
+       	  <span class="cur">我的足迹</span>
+        </div>
+        <form action="$!{domain}/mall/buyer/userHistroyList.htm" id="serachform" method="post">
+			<input type="hidden" id="pageNo" name="pageNo" value="$!histroyDTO.pageNo">
+			<input type="hidden" id="pageSize" name="pageSize" value="$!histroyDTO.pageSize">
+		</form>
+      <div class="pbar">
+        	<label for="sel_all"><input name="allCk" id="sel_all" class="allCk" type="checkbox" value=""> 全选</label>
+        <a id="printMany" class="delBtn ml10" href="javascript:;">删除</a>
+      </div>
+        <div class="plist mt10">
+        	<ul class="clearfix">
+        		#foreach($!histroy in $!histroyList)
+            	<li>
+                	<a href="javaScript:seeItem('$!{histroy.productID}','$!{histroy.itemID}');">
+                    	<p class="ct"><img src="$!{domainImg}$!{histroy.picUrl}" class="pimg imgMove"></p></a>
+                        <div class="p10">
+                        	<h4 class="col01"><input class="ck" name="ck" type="checkbox" value="$!histroy.id">
+                        	<a href="javaScript:seeItem('$!{histroy.productID}','$!{histroy.itemID}');">
+                        	$!histroy.productName</a>
+                        	</h4>
+                            <p>
+                            	<strong>￥$!NumberTool.format("#0.00",$!histroy.salePrice)</strong>元
+                            </p>
+                        </div>
+                    </a>
+                </li>#end
+            </ul>
+        </div>
+        #if("$!histroyList"!="" && $histroyList.size()>0)
+        <div class="pagerbar clearfix ct">#pagination($!histroyDTO)</div>#end
+        #if("$!histroyList"=="" || $histroyList.size()==0)
+        <div class="noMes"><img src="$!{mallStatic}/images/ico-exc.png"> 暂无符合条件的数据记录 </div>#end
+  </div>	
+</div>
+<!-- footer -->
+	#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+<script> 
+$(function() { 
+	 $(".allCk").click(function(){
+			$(".plist").find(':checkbox').attr("checked",this.checked);
+	 })
+});
+jQuery(document).ready(function(){
+	jQuery("#Histroy").addClass("cur").siblings(".leve10").removeClass("cur");
+})
+$(function() {
+	$("#printMany").on('click', function() {
+		if ($(".ck:checked").length == 0) {
+			alert("请选择要删除的宝贝");
+			return;
+		}
+		;
+		var arr = [];
+		$(".ck:checked").each(function(index, ele) {
+			arr.push(ele.value);
+		});
+		var histroyIds = arr.join(",");
+		jQuery.ajax({
+			url : "cancelHistory.do",
+			type : "POST",
+			data : {
+				"histroyIds" : histroyIds
+			},
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 0) {
+					location.reload();
+				} else {
+					alert("删除失败！");
+				}
+			}
+		});
+	});
+})
+/** 上传头像 * */
+function ajaxFileUpload() {
+	jQuery.ajaxFileUpload({
+		url : '/file/fileUpload.do',
+		secureuri : false,// 是否启用安全提交,默认为false
+		fileElementId : 'myBlogImage',// 文件选择框的id属性
+		dataType : 'text',// 服务器返回的格式,可以是json或xml等
+		success : function(data, status) {
+			data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+			data = data.replace("</PRE>", '');
+			data = data.replace("<pre>", '');
+			data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+			if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+				jQuery("img[id='uploadImage']").attr("src",
+						data.substring(2));
+				jQuery("#picURL").val(data.substring(2));
+				var mainID = jQuery("#mainID").val();
+				var picURL = jQuery("#picURL").val();
+				jQuery.ajax({
+					url : '/mall/buyer/saveAvatar.do',
+					data : {
+						'mainID' : mainID,
+						'picURL' : picURL
+					},
+					secureuri : false,// 是否启用安全提交,默认为false
+					fileElementId : 'myBlogImage',// 文件选择框的id属性
+					dataType : 'text',// 服务器返回的格式,可以是json或xml等
+					success : function() {
+					}
+				});
+			} else {
+				jQuery('#result').html('图片上传失败，请重试！！');
+			}
+		},
+		error : function(data, status, e) { // 服务器响应失败时的处理函数
+			jQuery('#result').html('图片上传失败，请重试！！');
+		}
+	});
+}
+
+function seeItem(productID,itemID) {
+	var data = {
+			productID : productID,
+			itemID : itemID
+	}
+		var url = "productDetailBuy.do";
+		jQuery.ajax({
+			url : url,
+			type : "POST",
+			data : data,
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 0) {
+					window.open('$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID,"_blank");
+				} else {
+					alert("该商品已下架！");
+				}
+			},
+			error : function() {
+				alert("操作失败");
+			}
+		});
+}
+</script>
+</body>
+</html>

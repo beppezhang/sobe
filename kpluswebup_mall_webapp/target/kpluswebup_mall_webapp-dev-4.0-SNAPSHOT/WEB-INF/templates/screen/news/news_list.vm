@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>新闻资讯</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+</head>
+
+<body>
+<!-- top bar -->
+	#parse("layout/head_top.vm")
+<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+<!-- 主导航 -->
+	#parse("layout/menu.vm")
+
+<div class="crumbs">
+	<div class="layout clearfix">
+    	<a href="$!{domain}/index.htm" class="home">首页</a> &gt; <a href="$!{domain}/newsList.htm">新闻资讯</a>
+    </div>
+</div>
+<div class="layout mt10 clearfix">
+  <div id="breakNews">
+    	<ul>
+    		#foreach($!hotNews in $hotNews)
+        	<li><a href="$!{domain}/newsDetail.htm?mainID=$!hotNews.mainID">$!hotNews.name</a></li>
+        	#end
+        </ul>
+        <div class="bn-arrows"><span class="bn-arrows-left">&lt;</span><span class="bn-arrows-right">&gt;</span></div>
+    </div>
+    <div class="newslist">
+    	<ul>
+    		#if("$!newsList"!="" && $newsList.size()>0) #foreach($news in $newsList)
+        	<li>
+            	<span class="pbox"><a href="$!{domain}/newsDetail.htm?mainID=$!news.mainID" target="_blank">
+            		<img src="$!{imgurl}$!news.picUrl" class="pimg"></a></span>
+                <h4><a href="$!{domain}/newsDetail.htm?mainID=$!news.mainID" target="_blank">$!news.name</a></h4>
+                <p>$!news.subTitle[<a href="$!{domain}/newsDetail.htm?mainID=$!news.mainID" class="col01" target="_blank">查看原文</a>]</p>
+                <span class="time">$!date.format('yyyy-MM-dd',$!news.publishTime)</span>
+            </li>
+            #end #end
+        </ul>
+        <form id="serachform" method="post" action="$!{domain}/newsList.htm">
+          	<input type="hidden" id="pageNo" name="pageNo" value="$!cmsContentDTO.pageNo">
+           	<input type="hidden" id="pageSize" name="pageSize" value="$!cmsContentDTO.pageSize">
+        </form>
+        <div class="pagerbar clearfix ct">
+                #pagination($!cmsContentDTO)
+               </div>
+    </div>
+</div>
+<!-- footer -->
+	#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/BreakingNews.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('#breakNews').BreakingNews({
+		timer: 3000,
+		effect: 'slide'
+	});
+})
+</script>
+</body>
+</html>

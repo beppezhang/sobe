@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.ExpressFormatDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID , name, expressID,picURL,isDefault,width,height,
+		creator, createTime,
+		modifier,
+		modifyTime
+	</sql>
+
+	<update id="deleteExpressFormatByMainID" parameterType="java.lang.String">
+		update
+		kplus_expressformat
+		set isDelete=1
+		where mainID =
+		#{mainID,jdbcType=VARCHAR}
+	</update>
+
+
+
+	<select id="findExpressFormat" resultType="expressFormatVO">
+		SELECT
+		ef.id,
+		ef.mainID,
+		ef.`name`,
+		ef.expressID,
+		e.`name` AS expressName,
+		ef.picURL,
+		ef.isDefault,
+		ef.width,
+		ef.height,
+		ef.creator,
+		ef.createTime,
+		ef.modifier,
+		ef.modifyTime
+		FROM
+		kplus_expressformat ef
+		LEFT JOIN kplus_express e ON
+		ef.expressID = e.mainID
+		WHERE
+		ef.isDelete = 0
+	</select>
+
+
+	<insert id="addExpressFormat" parameterType="expressFormatDTO">
+		INSERT INTO
+		kplus_expressformat (
+		mainID,
+		name,
+		expressID,
+		picURL,
+		isDefault,
+		width,
+		height,
+		isDelete,
+		creator,
+		createTime
+		)
+		VALUES
+		(
+		#{mainID},
+		#{name},
+		#{expressID},
+		#{picURL},
+		#{isDefault},
+		#{width},
+		#{height},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+
+
+	<select id="findExpressFormatByMainID" resultType="expressFormatVO"
+		parameterType="java.lang.String">
+		SELECT
+		ef.id,
+		ef.mainID,
+		ef.`name`,
+		ef.expressID,
+		e.`name` AS
+		expressName,
+		ef.picURL,
+		ef.isDefault,
+		ef.width,
+		ef.height,
+		ef.creator,
+		ef.createTime,
+		ef.modifier,
+		ef.modifyTime
+		FROM
+		kplus_expressformat ef
+		LEFT
+		JOIN kplus_express e ON ef.expressID = e.mainID
+		WHERE
+		ef.isDelete = 0
+		AND
+		ef.mainID=#{mainID,jdbcType=VARCHAR}
+
+	</select>
+
+
+	<update id="updateExpressFormatByMainID" parameterType="expressFormatDTO">
+		update
+		kplus_expressformat
+		set modifyTime=now()
+		<if test="name != null">
+			,name = #{name}
+		</if>
+		<if test="expressID != null">
+			,expressID = #{expressID}
+		</if>
+		<if test="picURL != null">
+			,picURL = #{picURL}
+		</if>
+		<if test="isDefault != null">
+			,isDefault = #{isDefault}
+		</if>
+		<if test="picURL != null">
+			,picURL = #{picURL}
+		</if>
+		<if test="width != null">
+			,width = #{width}
+		</if>
+		<if test="height != null">
+			,height = #{height}
+		</if>
+		<if test="modifier!=null">
+			,modifier=#{modifier}
+		</if>
+		where isDelete=0 and
+		mainID=#{mainID}
+	</update>
+
+	<select id="findExpressFormatByID" parameterType="java.lang.Long"
+		resultType="expressFormatVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_expressformat where id=#{id}
+	</select>
+
+	<select id="findExpressFormatByExpressID" parameterType="java.lang.String"
+		resultType="expressFormatVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_expressformat where isDelete=0 and expressID=#{expressID}
+	</select>
+</mapper>

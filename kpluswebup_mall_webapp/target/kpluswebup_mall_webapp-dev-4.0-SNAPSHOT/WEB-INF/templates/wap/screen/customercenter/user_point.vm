@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<title>我的积分</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+	#parse("wap/layout/head_sider.vm")
+	<div class="wrap">
+	#if("$!list"!="" && $!list.size()>0)
+    <table cellspacing="0" cellpadding="0" class="rebate_tb">
+          <tr>
+            <th width="33.3%">积分 </th>
+            <th width="33.3%">获取方式</th>
+            <th>获取时间</th>
+          </tr>
+        #foreach($!accountDetail in $!list)
+        <tr>
+            <td><em class="coin">$!NumberTool.format("#0",$!accountDetail.amount)</em></td>
+            <td>#if("$!accountDetail.detailType"=="4")订单奖励#elseif("$!accountDetail.detailType"=="1")充值#elseif("$!accountDetail.detailType"=="2")订单消费#elseif("$!accountDetail.detailType"=="3")退款#elseif("$!accountDetail.detailType"=="5")积分奖励#elseif("$!accountDetail.detailType"=="6")积分惩罚#elseif("$!accountDetail.detailType"=="7")扫码送积分#elseif("$!accountDetail.detailType"=="8")取消订单退积分#end</td>
+            <td>$!date.format('yyyy-MM-dd',$!accountDetail.createTime)</td>
+          </tr>
+        #end
+    </table>
+    #else
+    <div class="empty_sc empty_points">
+    <p>暂无积分记录</p>
+	</div>
+    #end
+</div>
+
+ <script type="text/javascript">
+    jQuery(function(){
+		jQuery(".userLink").addClass("cur");
+	});
+    </script> 
+</body> 
+</htmL>

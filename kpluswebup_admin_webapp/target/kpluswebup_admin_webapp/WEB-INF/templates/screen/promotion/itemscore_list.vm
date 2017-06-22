@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品积分</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销工具》商品积分</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/promotion/itemScoreList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!itemScoreDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!itemScoreDTO.pageSize">
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				<a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a>
+				#if($!menuUtil.isExistMenu("/admin/promotion/deleteFlashSale.do",$!menuAllList)
+				) <a href="javascript:;" title="删除" id="deleteItemScoreAll"><em
+					class="icon iconDel"></em></a> #end
+				#if($!menuUtil.isExistMenu("/admin/promotion/addItemScorePage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/promotion/addItemScorePage.htm"
+					title="新增商品积分" class="TableAddBtn">+新增商品积分</a> #end
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="" id="all" /></label></td>
+						<td>积分值</td>
+						<td>数量</td>
+						<td>关联商品</td>
+						<td>有效期</td>
+						<td>创建时间</td>
+						<td>创建人</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!itemscore in $!itemScoreList)
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+								value="$!itemscore.mainID" id="check_box_$!itemscore.mainID" /></label></td>
+						<td>$!itemscore.score</td>
+						<td>$!itemscore.num</td>
+						<td>$!itemscore.itemName</td>
+						<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!itemscore.endTime)</td>
+						<td>$!date.format("yyyy-MM-dd
+							HH:mm:ss",$!itemscore.createTime)</td>
+						<td>$!itemscore.createName</td>
+						<td>
+							#if($!menuUtil.isExistMenu("/admin/promotion/editItemScorePage.htm",$!menuAllList)
+							) <a
+							href="$!{domain}/admin/promotion/editItemScorePage.htm?mainID=$!itemscore.mainID"
+							class="icon iconEdit" title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/promotion/deleteItemScore.do",$!menuAllList)
+							) <a href="javascript:;"
+							onclick="deleteItemScore('$!itemscore.mainID');"
+							class="icon iconDel" title="删除"></a> #end <a
+							href="$!{domain}/admin/promotion/itemScoreDetailList.htm?itemScoreID=$!itemscore.mainID"
+							title="明细" class="icon iconDetailed"></a> <a
+							href="$!{domain}/admin/promotion/exportItemScoreDetail.htm?itemScoreID=$!itemscore.mainID"
+							title="导出" class="icon iconExport"></a>
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!itemScoreDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

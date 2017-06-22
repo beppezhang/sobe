@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="../css/supplier.css">
+<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+</head>
+
+<body>
+<div id="header">
+	<div class="layout clearfix">
+    	<h1 class="lt">中邮普泰</h1>
+        <span class="mintt lt">商家中心</span>
+        <span class="sipt lt">
+        	<input name="" type="text" class="ipt" placeholder="商城商品搜索"><input name="" type="button" class="sbtn">
+        </span>
+        <div class="iBox">
+            <img src="../pic/fz.jpg" class="pimg">
+            <div class="lt">
+                <p class="name">当前用户</p>
+                <p>跳大神</p>
+            </div>
+            <p class="tools"><a href="#"><img src="../images/ico-home2.gif"></a> <a href="#"><img src="../images/ico-tool.gif"></a> <a href="#"><img src="../images/ico-exit2.gif"></a></p>
+        </div>
+    </div>
+</div>
+<div class="layout clearfix">
+	<div id="leftNav">
+    	<div class="atp"><img src="../images/a4.png"></div>
+        <dl>
+        	<dt class="s1">商品管理</dt>
+            <dd><a href="#">商品选择</a></dd>
+            <dd><a href="#">出售中的商品</a></dd>
+            <dd><a href="#">等待中的商品</a></dd>
+            <dd><a href="#">下架的商品</a></dd>
+        </dl>
+        <dl>
+        	<dt class="s2">交易管理</dt>
+            <dd><a href="#">订单列表</a></dd>
+            <dd><a href="#">取货单列表</a></dd>
+        </dl>
+        <dl>
+        	<dt class="s3"><a href="#">财务管理</a></dt>
+        </dl>
+        <dl>
+        	<dt class="s4 on"><a href="#" class="on">销售统计</a></dt>
+        </dl>
+        <dl>
+        	<dt class="s5"><a href="#">店铺信息</a></dt>
+        </dl>    
+    </div>
+    <div id="rightMain">
+      <div class="crumbs">
+          商家管理中心 &gt; <a href="business_center.html">首页</a> &gt; 销售统计
+      </div>
+       <div class="p15">
+         <div class="situation">
+         	<p>1、符合以下任何一种条件的订单即为有效订单：1）采用在线支付方式支付并已付款；2）采用货到付款方式支付并且交易已完成</p>
+            <p>2、统计图展示了符合搜索条件的有效订单中的下单总金额和下单数量在时间段内的走势情况及与前一个时间段的趋势对比</p>
+            <p>3、统计表显示了符合搜索条件的全部有效订单记录并可以点击"导出Excel"将订单记录有到处为Excel文件</p>
+         </div>
+         <div class="selbar txt_r">
+         	<span><select name=""><option>按照天统计</option></select></span>
+            <span class="ml10"><input name="" type="text" class="datepicker ipt"></span>
+            <span class="ml10"><select name=""><option>请选择</option></select> <input name="" type="button" class="sbtn" value="搜索"></span>
+         </div>
+         <table class="smpTable">
+              <tr>
+                <th>订单编号</th>
+                <th>买家</th>
+                <th>下单时间</th>
+                <th>订单总额</th>
+                <th>订单状态</th>
+              </tr>
+              <tr>
+                <td>9488222204304</td>
+                <td>萌妹子</td>
+                <td>2015-02-29</td>
+                <td>￥2000.00</td>
+                <td>交易完成</td>
+              </tr>
+            </table>
+            <div class="pagerbar ct">
+                    <span class="clearfix">
+                        <a href="#">首页</a>
+                        <a href="#">上一页</a>
+                        <a href="#" class="cur">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">...</a>
+                        <a href="#">下一页</a>
+                        <a href="#">末页</a>
+                    </span>
+            </div> 
+       </div>      
+    </div>
+</div>
+<div id="footer">
+	<div class="layout">
+    	<p><a href="#">关于中邮普泰</a> | <a href="#">我们的团队</a> | <a href="#">网站联盟</a> | <a href="#">热门搜索</a> | <a href="#">友情链接</a> | <a href="#">诚征英才</a></p>
+        <p>浙ICP备2121245号 | 合字B1.B2-20130004 | 营业执照 | 互联网药品交易服务资格证</p>
+        <p>Copyright© 中邮普泰 2007-2015，All Rights Reserved</p>
+    </div>
+</div>
+<script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/unify.js"></script>
+<script>
+	$(function(){
+		$(".datepicker").datepicker();	
+	})
+</script>
+</body>
+</html>

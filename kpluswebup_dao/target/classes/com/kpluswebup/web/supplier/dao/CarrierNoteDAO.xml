@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.supplier.dao.CarrierNoteDAO">
+   <select id="queryCarrierNote" parameterType="carrierNoteDTO"
+   		 resultType="carrierNoteVO">
+	   	SELECT
+			*
+		FROM
+			kplus_zy_carrier_note note
+		WHERE
+			note.supplierID = #{supplierID}
+		<if test="status != null">
+			AND note.status = #{status}
+		</if>
+		<if test="storeStatus != null">
+			AND note.storeStatus = #{storeStatus}
+		</if>
+		ORDER BY
+			note.id DESC
+		LIMIT #{startRow},
+		 #{endRow}
+   </select>
+   <select id="queryCarrierNotePagination" parameterType="carrierNoteDTO"
+   		 resultType="carrierNoteVO">
+		SELECT
+			note.*, s.companyName AS supplierName
+		FROM
+			kplus_zy_carrier_note note
+		LEFT JOIN kplus_zy_supplier s ON note.supplierID = s.mainID
+		WHERE
+			1 = 1
+		<if test="mainID != null">
+			AND note.mainID = #{mainID}
+		</if>
+		<if test="storeStatus != null">
+			AND note.`storeStatus` = #{storeStatus}
+		</if>
+		<if test="supplierName != null">
+			AND s.companyName LIKE '%${supplierName}%'		
+		</if>
+		ORDER BY
+			note.createTime DESC
+		LIMIT #{startRow},
+		 #{endRow}
+   </select>
+   <select id="getCarrierNoteCount" parameterType="carrierNoteDTO"
+   		 resultType="java.lang.Long">
+	   	SELECT
+			count(note.id)
+		FROM
+			kplus_zy_carrier_note note
+		WHERE
+			note.supplierID = #{supplierID}
+		<if test="storeStatus != null">
+			AND note.storeStatus = #{storeStatus}
+		</if>
+		<if test="storeStatus != null">
+			AND note.storeStatus = #{storeStatus}
+		</if>
+   </select>
+   <select id="getCarrierNotePaginationCount" parameterType="carrierNoteDTO"
+   		 resultType="java.lang.Long">
+		SELECT
+			count(note.id)
+		FROM
+			kplus_zy_carrier_note note
+		LEFT JOIN kplus_zy_supplier s ON note.supplierID = s.mainID
+		WHERE
+			1 = 1
+		<if test="mainID != null">
+			AND note.mainID = #{mainID}
+		</if>
+		<if test="storeStatus != null">
+			AND note.`storeStatus` = #{storeStatus}
+		</if>
+		<if test="supplierName != null">
+			AND s.companyName LIKE '%${supplierName}%'		
+		</if>			
+   </select>
+   <select id="getCarrierNoteLineBycarrierNoteID" parameterType="java.lang.String"
+   		 resultType="carrierNoteLineVO">
+	    SELECT
+			*
+		FROM
+			kplus_zy_carrier_note_line line
+		WHERE
+			line.carrierNoteID = #{mainID, jdbcType=VARCHAR}
+
+   </select>
+   <select id="getCarrierNoteLineDetailBycarrierNoteLineID" parameterType="java.lang.String"
+   		 resultType="carrierNoteLineDetailVO">
+	    SELECT
+			*
+		FROM
+			kplus_zy_carrier_note_line_detail detail
+		WHERE
+			detail.carrierNoteLineID = #{mainID}
+   </select>
+   <select id="findCarrierNotePrintGroupBySupplierIDAndCarrierNoteIDs" 
+   		resultType="carrierNotePrintGroupVO">
+		SELECT
+			mainID,
+			itemCount AS count,
+			totalAmount
+		FROM
+			kplus_zy_carrier_note
+		WHERE
+			mainID IN 
+			<foreach item="item" index="index" collection="carriesNoteIDs" open="(" separator="," close=")">  
+			  #{item}  
+			</foreach> 
+			AND supplierID =  #{supplierID}
+   </select>
+   <select id="findCarrierNotePrintGroupCarrierNoteID" 
+   		resultType="carrierNotePrintGroupVO">
+		SELECT
+			mainID,
+			itemCount AS count,
+			totalAmount
+		FROM
+			kplus_zy_carrier_note
+		WHERE
+			mainID = #{carrierNoteID}
+   </select>
+   <select id="findCarrierNotePrintGroupLineByGroupID" parameterType="java.lang.String" 
+   		resultType="carrierNotePrintGroupLineVO">
+		SELECT
+			item.`name` AS itemName,
+			detail.salesPrice AS salesPrice,
+			SUM(detail.count) AS itemTotalCount,
+			SUM(detail.totalAmount) AS itemTotalAmount
+		FROM
+			kplus_zy_carrier_note_line_detail detail,
+			kplus_zy_carrier_note_line line,
+			kplus_zy_carrier_note note,
+			kplus_item item
+		WHERE
+			detail.carrierNoteLineID = line.mainID
+		AND line.carrierNoteID = note.mainID
+		AND detail.itemID = item.mainID
+		AND note.mainID = #{mainID}
+		GROUP BY
+			detail.itemID
+   </select>
+   <insert id="addCarrierNote" parameterType="carrierNoteDTO">
+	   	INSERT INTO kplus_zy_carrier_note (
+			mainID,
+			supplierID,
+			itemCount,
+			`status`,
+			storeStatus,
+			createTime,
+			totalAmount
+		)
+		VALUES
+			(
+				#{mainID},
+				#{supplierID},
+				#{itemCount},
+				#{status},
+				#{storeStatus},
+				NOW(),
+				#{totalAmount}
+			)
+   </insert>
+   <insert id="addCarrierNoteLine" parameterType="carrierNoteLineDTO">
+		INSERT INTO kplus_zy_carrier_note_line (
+			mainID,
+			carrierNoteID,
+			salesOrderID
+		)
+		VALUES
+			(#{mainID}, #{carrierNoteID}, #{salesOrderID})
+   </insert>
+   <insert id="addCarrierNoteLineDetail" parameterType="carrierNoteLineDetailDTO">
+		INSERT INTO kplus_zy_carrier_note_line_detail (
+			mainID,
+			carrierNoteLineID,
+			itemID,
+			count,
+			totalAmount,
+			salesPrice
+		)
+		VALUES
+			(#{mainID}, #{carrierNoteLineID}, #{itemID}, #{count}, #{totalAmount}, #{salesPrice})
+   </insert>
+   <update id="updateCarrierNotePrintedBySupplierIDAndCarrierNoteIDs" >
+	   	UPDATE kplus_zy_carrier_note
+		SET `status` = 1
+		,pickupMan = #{pickMan}
+		,pickupTime = NOW()
+		WHERE
+			mainID IN
+			<foreach item="item" index="index" collection="carriesNoteIDs" open="(" separator="," close=")">  
+			  #{item}  
+			</foreach> 
+		AND supplierID =  #{supplierID}
+   		AND `status` = 0
+   </update>
+   <update id="updateCarrierNoteStoreStatusReceived" parameterType="java.lang.String" >
+	   	UPDATE kplus_zy_carrier_note
+		SET storeStatus = 1
+		WHERE
+			mainID = #{carrierNoteID}
+   </update>
+</mapper>

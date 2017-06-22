@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>操作日志</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》操作日志</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/operator_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+						<form id="serachform" name="serachform" method="post"
+							action="$!{domain}/admin/system/systemLogList.htm">
+							<input type="hidden" id="pageNo" name="pageNo"
+								value="$!systemLogDTO.pageNo"> <input type="hidden"
+								id="pageSize" name="pageSize" value="$!systemLogDTO.pageSize">
+						</form>
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td>操作</td>
+									<td>IP</td>
+									<td>用户</td>
+									<td>操作内容</td>
+									<td>执行状态</td>
+									<td>日志时间</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!systemLog in $!systemLogList)
+								<tr>
+									<td>$!systemLog.operation</td>
+									<td>$!systemLog.IP</td>
+									<td>$!systemLog.user</td>
+									<td>$!systemLog.memo</td>
+									<td>#if("$!systemLog.status"=="0")失败#elseif("$!systemLog.status"=="1")成功#end</td>
+									<td>$!date.format("yyyy-MM-dd
+										HH:mm:ss",$!systemLog.logTime)</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!systemLogDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$(".operator_menu_5").append("<em class='icon arrowLfWeight'></em>")
+				.find("a").addClass("hover");
+	})
+</script>
+</html>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.ProductTypeBrandDAO">
+
+	<sql id="Base_Column_List">
+		id, productTypeID, brandID, creator, createTime, modifier,
+		modifyTime
+	</sql>
+
+	<select id="findProductTypeBrand" parameterType="productTypeBrandDTO"
+		resultType="productTypeBrandVO">
+		SELECT
+		pb.id,
+		pb.productTypeID,
+		pb.brandID,
+		b.`name` AS brandName,
+		pb.creator,
+		pb.createTime,
+		pb.modifier,
+		pb.modifyTime
+		FROM
+		kplus_producttype_brand pb
+		LEFT JOIN kplus_brand b ON pb.brandID =
+		b.mainID
+		where 1=1
+		<if test="productTypeID != null">
+			AND pb.productTypeID = #{productTypeID}
+		</if>
+		<if test="id != null">
+			AND pb.id = #{id}
+		</if>
+	</select>
+
+
+	<delete id="deleteProductTypeBrandById" parameterType="java.lang.Long">
+		delete
+		from kplus_producttype_brand
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+
+
+	<insert id="insertProductTypeBrand" parameterType="productTypeBrandDTO">
+		INSERT INTO
+		kplus_producttype_brand(
+		productTypeID,
+		brandID,
+		creator,
+		createTime
+		)
+		VALUES
+		(
+		#{productTypeID},
+		#{brandID},
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updateProductTypeBrandById" parameterType="productTypeBrandDTO">
+		update kplus_producttype_brand
+		<set>
+			modifyTime = now()
+			<if test="productTypeID != null">
+				,productTypeID = #{productTypeID}
+			</if>
+			<if test="brandID != null">
+				,brandID = #{brandID}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+</mapper>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑运费模板</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+#parse("control/public_css_js.vm")
+</head>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--hearder E-->
+	<!--menu S-->
+	
+	<!--menu E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》 物流管理 》 运费模板 》 编辑运费模板</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			#parse("layout/express_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<!--form  S------->
+					<form action="$!{domain}/admin/system/editFreightTemplate.htm"
+						method="post">
+						<input type="hidden" name="mainID"
+							value="$!freightTemplateVO.mainID">
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix"></dd>
+								<dd class="clearfix">
+									<div class="formTt">名称：</div>
+									<div class="formRow">
+										<input type="text" name="name"
+											value="$!freightTemplateVO.name" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">物流公司：</div>
+									<div class="formRow">
+										<select name="expressID" class="select">
+											#foreach($!express in $!expressList)
+											<option #if("$!freightTemplateVO.expressID"==
+												"$!express.mainID")selected="selected" #end
+												value="$!express.mainID">$!express.name</option> #end
+										</select>
+									</div>
+								</dd>
+								<!--
+								<dd class="clearfix">
+									<div class="formTt">物流单：</div>
+									<div class="formRow">
+										<select name="formatID" class="select">
+											#foreach($!format in $!formatList)
+											<option #if("$!freightTemplateVO.formatID"==
+												"$!format.mainID")selected="selected" #end
+												value="$!format.mainID">$!format.name</option> #end
+										</select>
+									</div>
+								</dd>
+								-->
+								<dd class="clearfix">
+									<div class="formTt">计费方式：</div>
+									<div class="formRow">
+										<select name="priceType" class="select">
+											<option #if("$!freightTemplateVO.priceType"==
+												"1")selected="selected" #end value="1">按重量</option>
+											<option #if("$!freightTemplateVO.priceType"==
+												"2")selected="selected" #end value="2">按件数</option>
+											<option #if("$!freightTemplateVO.priceType"==
+												"3")selected="selected" #end value="3">按体积</option>
+											<option #if("$!freightTemplateVO.priceType"==
+												"4")selected="selected" #end value="4">按单</option>
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">起步单位：</div>
+									<div class="formRow">
+										<input type="text" name="firstCondition"
+											value="$!freightTemplateVO.firstCondition"
+											class="cText cTextMr">克
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">起步价：</div>
+									<div class="formRow">
+										<input type="text" name="firstPrice"
+											value="$!freightTemplateVO.firstPrice" class="cText cTextMr">元
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">加价单位：</div>
+									<div class="formRow">
+										<input type="text" name="addUnit"
+											value="$!freightTemplateVO.addUnit" class="cText cTextMr">克
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">加价：</div>
+									<div class="formRow">
+										<input type="text" name="addPrice"
+											value="$!freightTemplateVO.addPrice" class="cText cTextMr">元
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">说明：</div>
+									<div class="formRow">
+										<textarea class="textarea" name="description" cols="100"
+											rows="5">$!freightTemplateVO.description</textarea>
+									</div>
+								</dd>
+							</dl>
+							<div class="temTable">
+								<table class="tableList grid">
+									<thead>
+										<tr>
+											<td width="10%"><a href="javascript:;" class="addBtn">+增加</a></td>
+											<td width="10%">地区</td>
+											<td width="15%">起步单位（元）</td>
+											<td width="15%">起步价（元）</td>
+											<td width="15%">加价单位（元）</td>
+											<td width="15%">加价（元）</td>
+											<td width="10%">操作</td>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+							<div class="centerBtn">
+								<input type="submit" name="save" class="save" value="提交"
+									id="saveTbaleCon"> <input type="reset" name="cencle"
+									class="cencle" value="重置">
+							</div>
+						</div>
+						<div id="tableCon">
+							#foreach($!ftprice in $!ftpList) <input iid="$!velocityCount"
+								value="$!ftprice.firstCondition|$!ftprice.firstPrice|$!ftprice.addUnit|$!ftprice.addPrice|,#foreach($!area in $!ftprice.priceareasetList)$!area.areaID%$!area.areaDepth|#end"
+								type="hidden"> #end
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	<div class="alertBox pd0 Area">
+		<a id="close"></a>
+		<h2>选择地区</h2>
+		<dl>
+			<dt>
+				<span><label class="label"><input type="checkbox"
+						name="checkAllPro" bid="6" />中国</label></span>
+			</dt>
+			<dd>
+				#foreach($!province in $!provinceList) <span style="width: 115px;">
+					<em><label class="label"><input type="checkbox"
+							name="checkAllCity" bid="$!province.mainID%$!province.depth" />$!province.name</label><a
+						href="javascript:;" class="pop">(0)</a></em>
+					<div>
+						#foreach($!city in $!province.cityList) <label class="label"><input
+							type="checkbox" bid="$!city.mainID%$!city.depth" name="city" />$!city.name</label>
+						#end
+						<p>
+							<a href="javascript:;" class="close">关闭</a>
+						</p>
+					</div>
+				</span> #end
+			</dd>
+		</dl>
+		<div class="btn">
+			<button type="button" id="okToAdd">确定</button>
+		</div>
+	</div>
+	<script>
+		var ico1 = $("div.alertBox").divWin({
+			width : 360,
+			height : 300,
+			autoSize : true
+		});
+		$(function() {
+			//页面加载时载入数据
+			loadCon();
+			function loadCon() {
+				if ($("#tableCon input").length == 0) {
+					return;
+				}
+				$("#tableCon input")
+						.each(
+								function() {
+									var _val = $(this).val();
+									var val_arr = _val.split(",");
+									var number = val_arr[0].split("|");
+									$(".temTable tbody")
+											.append(
+													"<tr>"
+															+ "<td>&nbsp;</td>"
+															+ "<td><a href='javascript:;' class='chooseBtn'>选择</a><input value='"+val_arr[1]+"' type='hidden' class='hidden'></td>"
+															+ "<td><input type='text' value='"+number[0]+"'/></td>"
+															+ "<td><input type='text' value='"+number[1]+"'/></td>"
+															+ "<td><input type='text' value='"+number[2]+"'/></td>"
+															+ "<td><input type='text' value='"+number[3]+"'/></td>"
+															+ "<td>"
+															+ "<a href='javascript:;' class='icon iconDel'></a>"
+															+ "</td>" + "</tr>")
+								})
+			}
+
+			//增加行
+			$(".temTable .addBtn")
+					.bind(
+							"click",
+							function() {
+								$(".temTable tbody")
+										.append(
+												"<tr>"
+														+ "<td>&nbsp;</td>"
+														+ "<td><a href='javascript:;' class='chooseBtn'>选择</a><input value='' type='hidden' class='hidden'></td>"
+														+ "<td><input type='text'/></td>"
+														+ "<td><input type='text'/></td>"
+														+ "<td><input type='text'/></td>"
+														+ "<td><input type='text'/></td>"
+														+ "<td>"
+														+ "<a href='javascript:;' class='icon iconDel'></a>"
+														+ "</td>" + "</tr>")
+							})
+			//删除行
+			$(".temTable").delegate(".iconDel", "click", function() {
+				$(this).parents("tr").remove();
+			})
+
+			//弹出-市级
+			$(".Area .pop").bind("click", function() {
+				reCla_cut();
+				$(this).parents("span").addClass("cut");
+			});
+
+			//弹出-市级-关闭
+			$(".Area .close").bind("click", function() {
+				reCla_cut();
+			})
+
+			var c_this;//当前点击的行内选择
+			//选择-弹出
+			$(".temTable").delegate(
+					".chooseBtn",
+					"click",
+					function() {
+						$(".Area input").prop("checked", false);//清空
+						$(".Area .pop").html("(0)");//清空
+						c_this = $(this);
+						var check_arr = c_this.parent().find(".hidden").val()
+								.split("|");
+						$(".Area input").each(function() {
+							for (var i = 0; i < check_arr.length; i++) {
+								if ($(this).attr("bid") == check_arr[i]) {
+									$(this).prop("checked", true);
+								}
+							}
+						})
+						//计算选中数量
+						$(".Area span").each(function() {
+							var c_num = 0;
+							$(this).find("input[name='city']").each(function() {
+								if ($(this).prop("checked")) {
+									c_num++;
+								}
+							})
+							$(this).find(".pop").html("(" + c_num + ")");
+						})
+						ico1.show();//弹出
+					})
+
+			//关闭
+			$("#close").bind("click", function() {
+				reCla_cut();
+				ico1.hide();
+			})
+
+			function reCla_cut() {
+				$(".Area span").removeClass("cut");
+			}
+
+			//绑定全选事件
+			$("input[name='checkAllPro'],input[name='checkAllCity']")
+					.bind(
+							"click",
+							function() {
+								var c_chd;
+								if ($(this).attr("name") == "checkAllPro") {
+									c_chd = $(this).parents("dl").find("input")
+											.not($(this));
+								} else {
+									c_chd = $(this).parents("span").find(
+											"input").not($(this));//全选市
+								}
+								if ($(this).attr("name") == "checkAllCity") {
+									var count = 0;
+									$(this).parents("dl").find(
+											"input[name='checkAllCity']").each(
+											function() {
+												if ($(this).prop("checked")) {
+													count++;
+												}
+											})
+									if ($(this).parents("dl").find(
+											"input[name='checkAllCity']").length == count) {
+										$(this).parents("dl").find(
+												"input[name='checkAllPro']")
+												.prop("checked", true)
+									} else {
+										$(this).parents("dl").find(
+												"input[name='checkAllPro']")
+												.prop("checked", false)
+									}
+								}
+								if ($(this).prop("checked")) {
+									c_chd.prop("checked", true);
+									if ($(this).attr("name") == "checkAllCity") {
+										$(this)
+												.parents("span")
+												.find(".pop")
+												.html(
+														"("
+																+ $(this)
+																		.parents(
+																				"span")
+																		.find(
+																				"input[name='city']").length
+																+ ")");
+									} else {
+										$(this)
+												.parents("dl")
+												.find(".pop")
+												.each(
+														function() {
+															$(this)
+																	.html(
+																			"("
+																					+ $(
+																							this)
+																							.parents(
+																									"span")
+																							.find(
+																									"input[name='city']").length
+																					+ ")");
+														})
+									}
+								} else {
+									c_chd.prop("checked", false);
+									if ($(this).attr("name") == "checkAllCity") {
+										$(this).parents("span").find(".pop")
+												.html("(0)");
+									} else {
+										$(this).parents("dl").find(".pop")
+												.html("(0)");
+									}
+								}
+							})
+
+			var num;//计数
+			$("input[name='city']").bind(
+					"click",
+					function() {
+						num = 0;
+						var ch_this = $(this).parents("span").find(
+								"input[name='city']");
+						ch_this.each(function() {
+							if ($(this).prop("checked")) {
+								num++;
+							}
+						})
+						$(this).parents("span").find(".pop").html(
+								"(" + num + ")");
+						if (ch_this.length == num) {
+							$(this).parents("span").find(
+									"input[name='checkAllCity']").prop(
+									"checked", true);
+						} else {
+							$(this).parents("span").find(
+									"input[name='checkAllCity']").prop(
+									"checked", false);
+						}
+					})
+
+			//添加hidden
+			$("#okToAdd").bind("click", function() {
+				$(this).parent().find(".hidden").empty();//清空隐藏域
+				var _val = "";
+				$(".Area input").each(function() {
+					if ($(this).prop("checked")) {
+						_val += $(this).attr("bid") + "|"
+					}
+				})
+				//清空-生成隐藏域的内容
+				c_this.parent().find(".hidden").val("");
+				c_this.parent().find(".hidden").val(_val);
+				//清空并关闭
+				$(".Area dd span").removeClass("cut");
+				ico1.hide();
+			})
+
+			//保存生成隐藏域
+			$("#saveTbaleCon").bind(
+					"click",
+					function() {
+						$("#tableCon").empty();
+						var t_tr = $(".temTable tbody tr");
+						if (t_tr.length == 0) {
+							return;
+						}
+						var _val = "";
+						t_tr.each(function() {
+							_val = ""
+							$(this).find("input[type='text']").each(function() {
+								if ($(this).index() != "3") {
+									_val += $(this).val() + "|"
+								} else {
+									_val += $(this).val()
+								}
+							})
+							_val += "," + $(this).find(".hidden").val();
+							$("#tableCon").append(
+									"<input name='fTPricesAreaIDs' iid='"
+											+ $(this).index()
+											+ "' type='hidden' value='" + _val
+											+ "'/>")
+						})
+					})
+		})
+	</script>
+	<script type="text/javascript">
+		$(function() {
+			$(".express_menu_2").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+	</script>
+</body>
+</html>

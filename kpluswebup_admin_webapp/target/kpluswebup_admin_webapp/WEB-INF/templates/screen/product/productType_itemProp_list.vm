@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>销售规格</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+.last{ width:70px;}
+.none{ display:none}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>产品管理 》产品类型》销售规格</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<input type="hidden" id="productTypeMainID"
+			value="$!{productTypeMainID}">
+		<div class="tabBar clearfix">
+			#parse("layout/productType_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="systemBar">
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td style="width: 200px">销售规格</td>
+									<td style="width: 200px">规格名称</td>
+									<td>规格值</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody>
+								#foreach ($!productTypeItemPropVO in $!productTypeItemPropList)
+								<tr>
+									<td>$!productTypeItemPropVO.name</td>
+									<td><input type="text" id="propName_$!productTypeItemPropVO.mainID"
+										value="$!productTypeItemPropVO.name" class="cText cTextLen">
+									</td>
+									<td>
+									<span class="odData">$!productTypeItemPropVO.itemPropValue</span>
+                                    	<span class="edData none">
+                                    	#foreach ( $!itemPropVO in $!productTypeItemPropVO.itemPropValueList) 
+                                           <label>
+                                           		<input name="propName_$!productTypeItemPropVO.mainID" type="checkbox" data="$!itemPropVO.name:$!itemPropVO.mainID" value="$!itemPropVO.name" #if("$!itemPropVO.flag"=="1")checked#end>$!itemPropVO.name
+                                           </label>
+                                        #end
+                                        </span>
+									</td>
+									<td class="last">
+										#if($!menuUtil.isExistMenu("/admin/product/deleteProductTypeItemProp.do",$!menuAllList))
+										<a href="javascript:;" class="icon iconDel"
+										onclick="deleteProductTypeItemProp('$!{productTypeItemPropVO.mainID}')"
+										title="删除"></a> #end
+										<a href="javascript:;" class="icon iconEdit" title="编辑"></a><a class="icon iconSure none" href="javascript:;" onclick="editProductTypeItemProp('$!productTypeItemPropVO.mainID','$!productTypeItemPropVO.itemPropID')" title="确认"></a>	
+									</td>
+								</tr>
+
+								#end
+								<tr id="addProductProp">
+									<td><select onchange="changeItemProp()"
+										id="changeItemProp"> 
+										<option>请选择</option>
+										#foreach ( $!itemPropVO in $!itemPropList)
+
+											<option value="$!itemPropVO.mainID">$!itemPropVO.name
+											</option> #end
+									</select></td>
+									<td><input type="text" class="cText cTextLen" name="name"
+										id="itemPropName"></td>
+									<td>#foreach ( $!itemPropVO in $!itemPropList) <input
+										type="hidden" class="cText cTextLen"
+										value="$!itemPropVO.itemPropValue" name="name"
+										id="itemPropName_$!itemPropVO.mainID" /> #end
+										<div id="itemPropValue"></div>
+									</td>
+									<td class="last">
+										#if($!menuUtil.isExistMenu("/admin/product/saveProductTypeItemProp.do",$!menuAllList))
+										<input type="button" value="新增"
+										onclick="saveProductTypeItemProp()"> #end
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".producttype_menu_3").append(
+					"<em class='icon arrowLfWeight'></em>").find("a").addClass(
+					"hover");
+			
+			$(".tableList").on("click",".iconEdit",function(){
+				$(this).addClass("none");
+				$(this).next("a").removeClass("none");
+				$(this).closest("td").prev("td").find(".edData").removeClass("none");
+				$(this).closest("td").prev("td").find(".odData").addClass("none");	
+			})
+			$(".tableList").on("click",".iconSure",function(){
+				$(this).closest("td").prev("td").find(".odData").empty();
+				var a = $(this).closest("td").prev("td").find(".edData").find("input[type=checkbox]:checked");
+				$(a).each(function() {
+	              	  $(this).closest(".edData").prev(".odData").append(this.value + ",");
+	            });
+				$(this).addClass("none");
+				$(this).prev("a").removeClass("none");
+				$(this).closest("td").prev("td").find(".edData").addClass("none");
+				$(this).closest("td").prev("td").find(".odData").removeClass("none");
+				
+			})
+		})
+	</script>
+	#parse("layout/footer.vm")
+</body>
+</html>

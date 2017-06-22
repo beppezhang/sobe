@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>登录</title>
+	<meta charset="utf-8"/>
+	<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+	<link rel="stylesheet" type="text/css" href="$!{mallStatic}/style/login.css">
+	<link rel="stylesheet" type="text/css" href="$!{mallStatic}/style/register1.css">
+</head>
+<body>
+<!-- top bar -->
+<!-- 头部 -->
+	<div class="header">
+		<div class="w">
+			<div class="zl">
+				<a href="$!{domain}/index.htm" style="background:url($!{imgurl}$!shopLogo) no-repeat 0 0;"></a>
+			</div>
+			<ul class="zr">
+				<li><a href="$!{domain}/index.htm">首页</a></li>
+				<li class="spacer"></li>
+				<li><a href="$!{domain}/mall/seller/supplierCenter.htm">我是供应商</a></li>
+				<li class="spacer"></li>
+				<li><a href="$!{domain}/mall/helps/helpsCenter.htm" target="_blank">帮助中心</a></li>
+			</ul>
+			<span class="clean_up"></span>
+		</div>
+	</div>
+	<!-- 内容 -->
+	<div class="content">
+		<div class="w wrp" style="background:url($!{imgurl}$!advertPicUrl) no-repeat 88px 115px;">
+			<form id="submitform" action="$!{domain}/mall/member/doLogin.htm" method="post">
+					<div class="login_form">
+						<div class="log_box">
+							<h2>用户登录</h2>
+							<div class="item">
+								<span>登录名:</span>
+							</div>
+							<div class="la">
+								<input type="text" name="userName" class="lagname"  id="username" placeholder="手机号">
+								<em class="prompt_1 col05 prompt_mobile" ></em>
+							</div>
+							<div class="item">
+								<span>登录密码:</span>
+								<a href="$!{domain}/mall/member/forgetPasswd.htm" class="password">忘记登录密码?</a>
+							</div>
+							<div class="la">
+								<input type="password" name="password" class="lagname" id="password" placeholder="登录密码">
+								<em class="prompt_1 col05 prompt_password" ></em>
+								<p style="color: red">$!error</p>
+							</div>
+							<div class="la">
+								<a href="javascript:;" class="slog page_submit">登录</a>
+							</div>
+							<div class="item">
+								<a href="$!{domain}/mall/member/registerPage.htm">免费注册</a>
+							</div>
+							<div class="la agree">
+								<span><input type="checkbox" name="ck" checked="checked" class="ck"></span>
+								<span>我同意并阅读<a href="$!{domain}/mall/member/announcement.htm" target="_blank">《网站服务协议》</a></span>
+							</div>
+						</div>
+					</div>
+				</form>
+			<span class="clean_up"></span>
+		</div>
+	</div>
+	 #parse("layout/bottom.vm")
+	<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript">
+	jQuery("#username").blur(function(){
+		var username = jQuery(this).val();
+		var filter=/^1[3|4|5|7|8][0-9]\d{8}$/;
+		if(username == ""){
+			jQuery(".prompt_mobile").removeClass("ok").addClass("error").html("用户名不能为空");
+		}/* else if(!filter.test(username)){
+			jQuery(".prompt_mobile").removeClass("ok").addClass("error").html("用户名格式不正确");
+		} */else{
+			jQuery(".prompt_mobile").removeClass("error").addClass("ok").html("");
+		}
+		
+	});
+	jQuery("#password").blur(function(){
+		var password = jQuery(this).val();
+		if(password == ""){
+			jQuery(".prompt_password").removeClass("ok").addClass("error").html("密码不能为空");
+		}else{
+			jQuery(".prompt_password").removeClass("error").addClass("ok").html("");
+		}
+		
+	});
+    jQuery(".page_submit").click(function(){
+    	jQuery("#username").blur();
+    	jQuery("#password").blur();
+    	var errorObj = $(".error");
+    	if(errorObj.length>0){
+			 return;    		
+    	}else{
+    		$(".page_submit").css("font-size","12px").html("登录中,请稍后...");
+    		jQuery("#submitform").submit();
+    	}
+    })
+    
+    jQuery(document).keydown(function (ev) {
+    	var currKey=0,ev=ev||event;
+    	currKey=ev.keyCode||ev.which||ev.charCode;
+        if (currKey == 13) {
+        	jQuery("#username").blur();
+        	jQuery("#password").blur();
+        	var errorObj = $(".error");
+        	if(errorObj.length>0){
+    			 return;    		
+        	}else{
+        		$(".page_submit").css("font-size","12px").html("登录中,请稍后...");
+        		jQuery("#submitform").submit();
+        	}
+        }
+    });
+</script>
+</body>
+</html>

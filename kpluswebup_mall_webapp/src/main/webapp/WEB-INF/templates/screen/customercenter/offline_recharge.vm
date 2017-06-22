@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>线下充值金币</title>
+</head>
+<body>
+<!-- top bar -->
+#parse("layout/head_top.vm")
+#parse("layout/customercenter/header.vm")
+<!-- crumb -->
+<div id="crumb">
+	<div class="layout clearfix">
+    	<a href="${domain}/index.htm">首页</a> &gt; <a href="${domain}/mall/buyer/userCenter.htm">用户中心</a>
+    </div>
+</div>
+<div class="layout mt10 clearfix">
+  #parse("layout/customercenter/leftmenu.vm")
+    <div class="mainbody bg">
+    	<div class="titbar_m mt10">
+        	<strong>线下充值金币</strong>
+        </div>
+        <div class="pro_unit">
+        	<span id="statusbox">
+            	<strong>可用金币：<em class="col01 jf">￥5120.00</em></strong>
+                <strong class="bd">账户状态：<em class="col01">有效</em></strong>
+            </span>
+            <div class="serbar">
+            	<span class="lt">
+                	交易时间：<input name="" type="text" class="ipt time datepicker"> - <input name="" type="text" class="ipt time datepicker"> <input name="" type="button" value="查询" class="stn">
+                </span>
+            </div>
+           <table cellspacing="0" cellpadding="0" class="table01 mt10">
+                  <tr>
+                    <th width="200">日期</th>
+                    <th width="200">存入</th>
+                    <th width="200">支出</th>
+                    <th>说明</th>
+                  </tr>
+                  <tr>
+                    <td>2014-01-28 00:00</td>
+                    <td><strong class="col01">+2000</strong></td>
+                    <td></td>
+                    <td>存款</td>
+                  </tr>
+                  <tr>
+                    <td>2014-01-28 00:00</td>
+                    <td></td>
+                    <td><strong class="col03">-20</strong></td>
+                    <td>付款</td>
+                  </tr>
+            </table>
+            <div class="pagerbar">
+            	<a href="#">上一页</a>
+                <a href="#" class="cur">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">...</a>
+                <a href="#">下一页</a>
+                共10页 到<input name="" type="text" class="num">页 <input name="" type="button" value="确定" class="go">
+            </div>
+         </div>
+
+    </div>	
+</div>
+<!-- footer -->
+#parse("layout/footer.vm")
+<script> 
+jQuery(document).ready(function() { 
+	jQuery(".datepicker").datepicker(); 
+}); 
+
+jQuery.datepicker.regional['zh-CN'] = {
+    clearText: '清除',
+    clearStatus: '清除已选日期',
+    closeText: '关闭',
+    closeStatus: '不改变当前选择',
+    prevText: '<上月',
+    prevStatus: '显示上月',
+    prevBigText: '<<',
+    prevBigStatus: '显示上一年',
+    nextText: '下月>',
+    nextStatus: '显示下月',
+    nextBigText: '>>',
+    nextBigStatus: '显示下一年',
+    currentText: '今天',
+    currentStatus: '显示本月',
+    monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+    monthNamesShort: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+    monthStatus: '选择月份',
+    yearStatus: '选择年份',
+    weekHeader: '周',
+    weekStatus: '年内周次',
+    dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+    dayNamesShort: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+    dayNamesMin: ['日', '一', '二', '三', '四', '五', '六'],
+    dayStatus: '设置 DD 为一周起始',
+    dateStatus: '选择 m月 d日, DD',
+    dateFormat: 'yy-mm-dd',
+    firstDay: 1,
+	changeMonth:true,
+	changeYear:true,
+	yearRange:'c-50:c',
+    initStatus: '请选择日期',
+    isRTL: false
+   };
+jQuery.datepicker.setDefaults($.datepicker.regional['zh-CN']); 
+
+</script> 
+<script type="text/javascript">
+jQuery(document).ready(function(){
+  jQuery("#user_offlinerecharge_list_cur").addClass("active cur").siblings(".level0").removeClass("cur");
+});
+</script>
+</body>
+</html>

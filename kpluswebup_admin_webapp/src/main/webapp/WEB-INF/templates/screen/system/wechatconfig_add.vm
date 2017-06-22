@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增微信接口</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》接口管理》微信接口》新增微信接口</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			#parse("layout/interfaceconfig_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/system/addWechatConfig.htm"
+						method="post">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">微信名称：</div>
+									<div class="formRow">
+										<input type="text" name="name" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">系统接口：</div>
+									<div class="formRow">
+										<select name="systeminterfaceID" class="select">
+											#foreach($!systeminterface in $!systeminterfaceList)
+											<option value="$!systeminterface.mainID">$!systeminterface.name</option>
+											#end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">显示图标：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen" name="picURL"
+											id="picURL"> <img id="uploadImage" src="">   <input
+											type="file" id="myBlogImage" name="myfiles"
+											onchange="ajaxFileUpload()" />
+									</div>
+								</dd>
+								#foreach($!paramter in $!systeminterfaceparameterList)
+								<input type="hidden" name="parameterID"
+									value="$!paramter.mainID">
+								<input type="hidden" name="parameterName"
+									value="$!paramter.name">
+								<dd class="clearfix">
+									<div class="formTt">$!paramter.name：</div>
+									<div class="formRow">
+										<input type="text" name="parameterValue"
+											class="cText cTextLen">
+									</div>
+								</dd>
+								#end
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										<input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+</body>
+<script type="text/javascript">
+    $(function() {
+	$(".interfaceconfig_menu_3").append(
+		"<em class='icon arrowLfWeight'></em>").find("a").addClass(
+		"hover");
+    })
+</script>
+</html>

@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.account.dao.AccountDetailDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID , customerID, accountType, detailType, objID,
+		paymentType, interfaceID,
+		serialNumber, amount,
+		blance, description,
+		status, creator,
+		createTime,
+		modifier, modifyTime
+	</sql>
+
+	<select id="findAccountDetailByPagination" parameterType="accountDetailDTO"
+		resultType="accountDetailVO">
+		select
+		a.id,
+		a.mainID,
+		c.name as customerName,
+		sr.salesOrderID
+		as orderID,
+		sr.itemID,
+		a.amount,
+		a.paymentType,
+		a.createTime,
+		a.status,
+		a.objID,
+		a.modifyTime,
+		a.type
+		from
+		kplus_account_detail a left join
+		kplus_salesorder_return sr on
+		sr.mainID=a.objID
+		left join kplus_customer
+		c on a.customerID=c.mainID
+		left join kplus_product p on
+		sr.productID=p.mainID
+		left join kplus_item
+		i on sr.itemID=i.mainID
+		where
+		sr.isDelete=0
+		<if test="detailType!=null">
+			and a.detailType=#{detailType}
+		</if>
+		<if test="accountType!=null">
+			and a.accountType=#{accountType}
+		</if>
+		<if test="itemName!=null">
+			and p.name like '%${itemName}%' or i.name like
+			'%${itemName}%'
+		</if>
+		<if test="startTime!=null">
+			and a.createTime&gt;=#{startTime}
+		</if>
+		<if test="endTime!=null">
+			and a.createTime&lt;=#{endTime}
+		</if>
+		<if test="startModifyTime!=null">
+			and a.modifyTime&gt;=#{startModifyTime}
+		</if>
+		<if test="endModifyTime!=null">
+			and a.modifyTime&lt;=#{endModifyTime}
+		</if>
+		<if test="status!=null">
+			and a.status=#{status}
+		</if>
+		<if test="customerName!=null">
+			and c.name like '%${customerName}%'
+		</if>
+		<if test="type!=null">
+			and a.type=#{type}
+		</if>
+		<if test="paymentType!=null">
+			and a.paymentType=#{paymentType}
+		</if>
+		<if test="serialNumber!=null">
+			and a.serialNumber like '%${serialNumber}%'
+		</if>
+		order by a.id desc
+	</select>
+
+	<select id="findAccountDetailCount" parameterType="accountDetailDTO"
+		resultType="java.lang.Long">
+		select count(a.mainID) from kplus_account_detail a
+		left join
+		kplus_salesorder_return
+		sr on
+		sr.mainID=a.objID
+		left join kplus_customer
+		c on a.customerID=c.mainID
+		left join kplus_product p on
+		sr.productID=p.mainID
+		left join kplus_item i on sr.itemID=i.mainID
+		where sr.isDelete=0
+		<if test="customerID != null">
+			and a.customerID=#{customerID}
+		</if>
+		<if test="detailType!=null">
+			and a.detailType=#{detailType}
+		</if>
+		<if test="accountType!=null">
+			and a.accountType=#{accountType}
+		</if>
+		<if test="itemName!=null">
+			and p.name like '%${itemName}%' or i.name like
+			'%${itemName}%'
+		</if>
+		<if test="startTime!=null">
+			and a.createTime&gt;=#{startTime}
+		</if>
+		<if test="endTime!=null">
+			and a.createTime&lt;=#{endTime}
+		</if>
+		<if test="startModifyTime!=null">
+			and a.modifyTime&gt;=#{startModifyTime}
+		</if>
+		<if test="endModifyTime!=null">
+			and a.modifyTime&lt;=#{endModifyTime}
+		</if>
+		<if test="status!=null">
+			and a.status=#{status}
+		</if>
+		<if test="customerName!=null">
+			and c.name like '%${customerName}%'
+		</if>
+	</select>
+
+	<select id="findAccountDetailCountByCustomerID" parameterType="accountDetailDTO"
+		resultType="java.lang.Long">
+		select count(kad.id)
+		from kplus_account_detail kad
+		LEFT JOIN
+		kplus_customer kc on kad.customerID = kc.mainID
+		where 1=1
+		<if test="accountType != null">
+			and kad.accountType=#{accountType}
+		</if>
+		<if test="detailType != null">
+			and kad.detailType=#{detailType}
+		</if>
+		<if test="customerID != null">
+			and kad.customerID = #{customerID}
+		</if>
+	</select>
+
+	<select id="findAccountDetail" parameterType="java.lang.String"
+		resultType="accountDetailVO">
+		select * from kplus_account_detail where mainID=#{mainID}
+	</select>
+
+	<update id="updateAccountDetail" parameterType="accountDetailDTO">
+		update kplus_account_detail
+		<set>
+			modifyTime =now()
+			<if test="status != null">
+				,status = #{status}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="serialNumber!=null">
+				,serialNumber=#{serialNumber}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+	<select id="findSalesOrderReturnApply" parameterType="java.lang.String"
+		resultType="salesOrderReturnApplyVO">
+		select * from kplus_salesorder_returnapply where isDelete=0
+		and
+		mainID=#{mainID}
+	</select>
+
+	<update id="updateSalesOrderReturnApply" parameterType="salesOrderReturnApplyDTO">
+		update kplus_salesorder_returnapply
+		<set>
+			modifyTime=now()
+			<if test="status != null">
+				,status = #{status}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+	<select id="findSalesOrderReturn" parameterType="java.lang.String"
+		resultType="salesOrderReturnVO">
+		select * from kplus_salesorder_return where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<update id="updateSalesOrderReturn" parameterType="salesOrderReturnDTO">
+		update kplus_salesorder_return
+		<set>
+			modifyTime=now()
+			<if test="status != null">
+				,status = #{status}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+	<select id="findPaymentByPagination" parameterType="accountDetailDTO"
+		resultType="accountDetailVO">
+		select
+		a.id,
+		a.mainID,
+		c.name as customerName,
+		s.mainID
+		as
+		orderID,
+		a.amount,
+		a.paymentType,
+		a.createTime,
+		a.status,
+		s.orderStatus,
+		s.paymentStatus,
+		s.modifyTime,
+		a.serialNumber
+		from
+		kplus_account_detail a
+		left join
+		kplus_customer
+		c on
+		a.customerID=c.mainID
+		left join
+		kplus_salesorder s on
+		a.objID=s.mainID
+		where 1=1
+		<if test="detailType!=null">
+			and a.detailType=#{detailType}
+		</if>
+		<if test="mainID!=null">
+			and a.mainID like '%${mainID}%'
+		</if>
+		<if test="startTime!=null">
+			and a.createTime&gt;=#{startTime}
+		</if>
+		<if test="endTime!=null">
+			and a.createTime&lt;=#{endTime}
+		</if>
+		<if test="startModifyTime!=null">
+			and a.modifyTime&gt;=#{startModifyTime}
+		</if>
+		<if test="endModifyTime!=null">
+			and a.modifyTime&lt;=#{endModifyTime}
+		</if>
+		<if test="paymentType!=null">
+			and a.paymentType=#{paymentType}
+		</if>
+		<if test="status!=null">
+			and a.status=#{status}
+		</if>
+		<if test="customerName!=null">
+			and c.name like '%${customerName}%'
+		</if>
+		<if test="serialNumber!=null">
+			and a.serialNumber like '%${serialNumber}%'
+		</if>
+		order by a.id desc
+	</select>
+
+	<select id="findPaymentCount" parameterType="accountDetailDTO"
+		resultType="java.lang.Long">
+		select count(a.mainID) from kplus_account_detail a
+		left join
+		kplus_customer c on a.customerID=c.mainID
+		left join kplus_salesorder s
+		on s.mainID=a.objID
+		where 1=1
+		<if test="detailType!=null">
+			and a.detailType=#{detailType}
+		</if>
+		<if test="mainID!=null">
+			and a.mainID like '%${mainID}%'
+		</if>
+		<if test="startTime!=null">
+			and a.createTime&gt;=#{startTime}
+		</if>
+		<if test="endTime!=null">
+			and a.createTime&lt;=#{endTime}
+		</if>
+		<if test="startModifyTime!=null">
+			and a.modifyTime&gt;=#{startModifyTime}
+		</if>
+		<if test="endModifyTime!=null">
+			and a.modifyTime&lt;=#{endModifyTime}
+		</if>
+		<if test="paymentType!=null">
+			and a.paymentType=#{paymentType}
+		</if>
+		<if test="status!=null">
+			and a.status=#{status}
+		</if>
+		<if test="customerName!=null">
+			and c.name like '%${customerName}%'
+		</if>
+		<if test="serialNumber!=null">
+			and a.serialNumber like '%${serialNumber}%'
+		</if>
+	</select>
+
+
+	<select id="findMemberScoreByPagination" parameterType="accountDetailDTO"
+		resultType="accountDetailVO">
+		select a.*,c.username as customerName from kplus_account_detail a
+		left
+		join
+		kplus_customer c on
+		a.customerID=c.mainID
+		where a.accountType=2 and
+		c.isDelete=0
+		<if test="detailType!=null">
+			<if test="detailType==4">
+				and a.detailType&gt;=4 and a.detailType&lt;=6
+			</if>
+		</if>
+		<if test="customerID!=null">
+			and a.customerID=#{customerID}
+		</if>
+		order by a.id desc
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findAccountDetailTypeByCustermor" parameterType="accountDetailDTO"
+		resultType="accountDetailVO">
+		select kad.*,kso.totalAmount
+		from kplus_account_detail
+		kad,kplus_salesorder kso
+		where kad.objID=kso.mainID
+		<if test="accountType != null">
+			and kad.accountType=#{accountType}
+		</if>
+		<if test="detailType != null">
+			and kad.detailType=#{detailType}
+		</if>
+		<if test="customerID!=null">
+			and kad.customerID=#{customerID}
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findAccountDetailByBuy" parameterType="accountDetailDTO"
+		resultType="accountDetailVO">
+		SELECT kad.amount,ks.payableAmount,kad.createTime
+		from
+		kplus_account_detail kad,kplus_salesorder ks
+		WHERE kad.objID=ks.mainID
+		<if test="customerID!=null">
+			and kad.customerID=#{customerID}
+		</if>
+		order by kad.id desc
+	</select>
+
+	<select id="findMemberScoreCount" parameterType="accountDetailDTO"
+		resultType="java.lang.Long">
+		select count(a.mainID) from kplus_account_detail a
+		left join
+		kplus_customer c on a.customerID=c.mainID
+		where a.accountType=2 and
+		c.isDelete=0
+		<if test="detailType!=null">
+			and a.detailType=#{detailType}
+		</if>
+		<if test="customerID!=null">
+			and a.customerID=#{customerID}
+		</if>
+	</select>
+
+	<insert id="insertMemberScore" parameterType="accountDetailDTO">
+		insert into
+		kplus_account_detail(
+		mainID,
+		customerID,
+		accountType,
+		detailType,
+		objID,
+		paymentType,
+		interfaceID,
+		serialNumber,
+		amount,
+		blance,
+		description,
+		status,
+		creator,
+		createTime,
+		modifier,
+		modifyTime
+		)values(
+		#{mainID},
+		#{customerID},
+		#{accountType},
+		#{detailType},
+		#{objID},
+		#{paymentType},
+		#{interfaceID},
+		#{serialNumber},
+		#{amount},
+		#{blance},
+		#{description},
+		#{status},
+		#{creator},
+		now(),
+		#{modifier},
+		now()
+		)
+	</insert>
+
+	<delete id="deleteAccountDetail" parameterType="java.lang.String">
+		delete from kplus_account_detail where objID=#{objID}
+	</delete>
+
+</mapper>

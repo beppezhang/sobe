@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.EmailDAO">
+
+	<select id="findEmailByPagination" parameterType="emailDTO"
+		resultType="emailVO">
+		select e.*,c.username as customerUserName,c.name as customerName from
+		kplus_email e
+		left join
+		kplus_customer c on e.customerID=c.mainID where
+		e.isDelete=0
+		<if test="customerID!=null">
+			and e.customerID=#{customerID}
+		</if>
+		<if test="searchUserName!=null">
+			and c.username like '%${searchUserName}%'
+		</if>
+		<if test="searchCustomerName!=null">
+			and c.name like '%${searchCustomerName}%'
+		</if>
+		<if test="email!=null">
+			and e.email like '%${email}%'
+		</if>
+		<if test="status!=null">
+			and e.status=#{status}
+		</if>
+		order by e.id desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findEmailCount" parameterType="emailDTO" resultType="java.lang.Long">
+		select count(e.mainID) from kplus_email e
+		left join
+		kplus_customer c on
+		e.customerID=c.mainID
+		where e.isDelete=0
+		<if test="customerID!=null">
+			and e.customerID=#{customerID}
+		</if>
+		<if test="searchUserName!=null">
+			and c.username like '%${searchUserName}%'
+		</if>
+		<if test="searchCustomerName!=null">
+			and c.name like '%${searchCustomerName}%'
+		</if>
+		<if test="email!=null">
+			and e.email like '%${email}%'
+		</if>
+		<if test="status!=null">
+			and e.status=#{status}
+		</if>
+	</select>
+
+	<select id="findEmailByMainID" parameterType="java.lang.String"
+		resultType="emailVO">
+		select * from kplus_email where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<update id="updateEmailStatus" parameterType="emailDTO">
+		update kplus_email
+		<set>
+			createTime=now(),
+			<if test="status!=null">
+				status=#{status}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<insert id="emailSend" parameterType="emailDTO">
+		insert into
+		kplus_email(
+		mainID,
+		customerID,
+		email,
+		title,
+		content,
+		status,
+		isDelete,
+		createTime,
+		creator
+		)values(
+		#{mainID},
+		#{customerID},
+		#{email},
+		#{title},
+		#{content},
+		#{status},
+		0,
+		now(),
+		#{creator}
+		)
+	</insert>
+
+</mapper>

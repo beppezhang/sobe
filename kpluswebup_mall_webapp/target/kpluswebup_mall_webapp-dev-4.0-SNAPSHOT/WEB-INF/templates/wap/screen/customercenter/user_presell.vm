@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<title>我的预定</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+	#parse("wap/layout/head_sider.vm")
+	#if("$!presellList" != "" && $!presellList.size()>0)
+		#foreach($!presellList in $!presellList)
+		<div class="online">
+	    	<span class="cdbox" data="$!date.format('yyyy-MM-dd HH:mm:ss',$!presellList.preEndDate)">剩余时间 <em class='cdDay'></em>天<em class='cdHour'></em>时<em class='cdMin'></em>分<em class='cdSec'></em>秒</span>
+	    	<a class="yy" href="$!domain/weixin/itemDetail.htm?itemID=$!presellList.itemID&preID=$!presellList.objID">在线预购</a>
+		</div>
+		<div class="presell-box">
+			<ul>
+				<li>
+					<img src="$!imgurl/$!presellList.itemPicUrl" alt=""/>
+					<div class="msg">
+						<span>$!presellList.itemName</span>
+						<p>
+							<strong class="money"><b>￥</b>
+							#if("$!presellList.salesPrice"=="")
+							0.00
+							#else
+							$!NumberTool.format("#0.00",$!presellList.salesPrice)
+							#end
+							
+							</strong>
+						</p>
+					</div>
+				</li>
+				<li>
+					<div class="count">
+						<span>共<b>$!presellList.itemCount</b>件商品
+						</span>
+						<span>实付: 
+							<strong class="money"><b>￥</b>$!NumberTool.format("#0.00",$presellList.totalAmount)</strong>
+						</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	#end
+#else
+<div class="empty_sc empty_goods">
+    <p>暂无预售记录</p>
+    <p><a href="$!domain/weixin/index.htm" class="golink">去逛逛</a></p>
+</div>
+#end
+	
+	 <script type="text/javascript">
+    jQuery(function(){
+		jQuery(".userLink").addClass("cur");
+	});
+    </script> 
+</body>
+</htmL>

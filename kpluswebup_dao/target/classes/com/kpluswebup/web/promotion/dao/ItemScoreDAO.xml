@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.promotion.dao.ItemScoreDAO">
+
+	<select id="findItemScoreByPagination" parameterType="itemScoreDTO"
+		resultType="itemScoreVO">
+		select
+		s.mainID,
+		s.itemID,
+		s.score,
+		s.num,
+		s.creator,
+		s.createTime,
+		s.endTime,
+		o.name as createName,
+		i.name as itemName
+		from
+		kplus_item_score s
+		left join kplus_operator o on
+		s.creator=o.mainID
+		left
+		join kplus_item i on s.itemID=i.mainID
+		where
+		s.isDelete=0 order by
+		s.id
+		desc limit
+		#{startRow}
+		,#{pageSize}
+	</select>
+
+	<select id="findItemScoreCount" parameterType="itemScoreDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_item_score where
+		isDelete=0
+	</select>
+
+	<insert id="addItemScore" parameterType="itemScoreDTO">
+		insert into
+		kplus_item_score(
+		mainID,
+		itemID,
+		score,
+		num,
+		endTime,
+		creator,
+		createTime,
+		isDelete
+		)
+		values(
+		#{mainID},
+		#{itemID},
+		#{score},
+		#{num},
+		#{endTime},
+		#{creator},
+		now(),
+		0
+		)
+	</insert>
+
+	<update id="updateItemScore" parameterType="itemScoreDTO">
+		update kplus_item_score
+		<set>
+			modifyTime=now()
+			<if test="itemID!=null">
+				,itemID=#{itemID}
+			</if>
+			<if test="score!=null">
+				,score=#{score}
+			</if>
+			<if test="num!=null">
+				,num=#{num}
+			</if>
+			<if test="endTime!=null">
+				,endTime=#{endTime}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<select id="findItemScoreByMainID" parameterType="java.lang.String"
+		resultType="itemScoreVO">
+		select * from kplus_item_score where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<update id="deleteItemScore" parameterType="java.lang.String">
+		update
+		kplus_item_score set isDelete=1 where mainID=#{mainID}
+	</update>
+
+	<select id="findItemScoreDetailByPatination" parameterType="itemScoreDetailDTO"
+		resultType="itemScoreDetailVO">
+		select d.*,c.username as customerName from
+		kplus_item_score_detail d
+		left join kplus_customer c on
+		d.customerID=c.mainID
+		where
+		d.itemScoreID=#{itemScoreID} limit
+		#{startRow}
+		,#{pageSize}
+	</select>
+
+	<select id="findItemScoreDetailCount" parameterType="itemScoreDetailDTO"
+		resultType="java.lang.Long">
+		select count(id) from kplus_item_score_detail where
+		itemScoreID=#{itemScoreID}
+	</select>
+
+	<insert id="addItemScoreDetail" parameterType="itemScoreDetailDTO">
+		insert into
+		kplus_item_score_detail(
+		mainID,
+		qrCodeUrl,
+		isQrcode,
+		customerID,
+		itemScoreID,
+		createTime,
+		creator
+		)values(
+		#{mainID},
+		#{qrCodeUrl},
+		0,
+		#{customerID},
+		#{itemScoreID},
+		now(),
+		#{creator}
+		)
+	</insert>
+
+	<select id="findItemScoreDetailByItemScoreID" parameterType="itemScoreDetailDTO"
+		resultType="itemScoreDetailVO">
+		select d.*,c.username as customerName from
+		kplus_item_score_detail d
+		left join kplus_customer c on
+		d.customerID=c.mainID
+		where
+		d.itemScoreID=#{itemScoreID}
+	</select>
+
+	<select id="findItemScoreDetailByMainID" parameterType="itemScoreDetailDTO"
+		resultType="itemScoreDetailVO">
+		select d.*,s.score,i.name as itemName,s.endTime from
+		kplus_item_score_detail d
+		left join
+		kplus_item_score s on
+		d.itemScoreID=s.mainID
+		left join kplus_item i on s.itemID=i.mainID
+		where
+		<if test="isQrcode!=null">
+			d.isQrcode=#{isQrcode} and
+		</if>
+		d.mainID=#{mainID} and s.endTime&gt;now()
+	</select>
+
+	<update id="updateItemScoreDetail" parameterType="itemScoreDetailDTO">
+		update kplus_item_score_detail
+		<set>
+			modifyTime=now()
+			<if test="isQrcode!=null">
+				,isQrcode=#{isQrcode}
+			</if>
+			<if test="customerID!=null">
+				,customerID=#{customerID}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+</mapper>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.content.dao.AdvertDAO">
+
+	<select id="findAdvertByPagination" parameterType="cmsAdvertDTO"
+		resultType="cmsAdvertVO">
+		select
+		co.id,
+		co.mainID,
+		co.name,
+		ca.name as categoryName,
+		co.posionID,
+		co.sortOrder,
+		co.picURL,
+		co.advertLink,
+		co.activeTime,
+		co.endTime,
+		co.description,
+		sa.name as posionName,
+		co.productCategoryID
+		from
+		kplus_cms_advert
+		co
+		left join
+		kplus_cms_category ca
+		on
+		co.categoryID=ca.mainID
+		left join
+		kplus_systemadvertposion sa on
+		co.posionID=sa.mainID
+		where
+		co.isDelete=0
+		<if test="posionID !=null">
+			and co.posionID=#{posionID}
+		</if>
+		<if test="productCategoryID!=null">
+			and co.productCategoryID=#{productCategoryID}
+		</if>
+		<if test="serachDate != null">
+			and DATE_FORMAT(#{serachDate}, '%Y-%m-%d %H:%i:%s')
+			>=co.activeTime and DATE_FORMAT(#{serachDate}, '%Y-%m-%d %H:%i:%s')
+			&lt;=co.endTime
+		</if>
+		order by
+		co.sortOrder desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findAdvertCount" parameterType="cmsAdvertDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_cms_advert where
+		isDelete=0
+		<if test="posionID !=null">
+			and posionID=#{posionID}
+		</if>
+		<if test="productCategoryID!=null">
+			and productCategoryID=#{productCategoryID}
+		</if>
+		<if test="serachDate != null">
+			and DATE_FORMAT(#{serachDate}, '%Y-%m-%d %H:%i:%s')
+			>=activeTime and DATE_FORMAT(#{serachDate}, '%Y-%m-%d %H:%i:%s')
+			&lt;= endTime
+		</if>
+	</select>
+
+	<update id="deleteAdvertByMainID" parameterType="cmsAdvertDTO">
+		update
+		kplus_cms_advert set isDelete=1 where
+		mainID=#{mainID}
+	</update>
+
+	<insert id="insertAdvert" parameterType="cmsAdvertDTO">
+		insert into
+		kplus_cms_advert(
+		mainID,
+		categoryID,
+		posionID,
+		name,
+		picURL,
+		activeTime,
+		endTime,
+		linkType,
+		advertLink,
+		status,
+		description,
+		clickCount,
+		sortOrder,
+		isDelete,
+		creator,
+		createTime,
+		productCategoryID,
+		parentID
+		)
+		values(
+		#{mainID},
+		#{categoryID},
+		#{posionID},
+		#{name},
+		#{picURL},
+		#{activeTime},
+		#{endTime},
+		#{linkType},
+		#{advertLink},
+		1,
+		#{description},
+		0,
+		#{sortOrder},
+		0,
+		#{creator},
+		now(),
+		#{productCategoryID},
+		#{parentID}
+		)
+	</insert>
+
+	<select id="findAdvertByMainID" parameterType="cmsAdvertDTO"
+		resultType="cmsAdvertVO">
+		select * from kplus_cms_advert where mainID=#{mainID} and
+		isDelete=0
+	</select>
+
+	<update id="updateAdvertByMainID" parameterType="cmsAdvertDTO">
+		update kplus_cms_advert
+		<set>
+			modifyTime=now()
+			<if test="name != null">
+				, name = #{name}
+			</if>
+			<if test="categoryID != null">
+				, categoryID = #{categoryID}
+			</if>
+			<if test="posionID != null">
+				, posionID = #{posionID}
+			</if>
+			<if test="picURL != null">
+				, picURL = #{picURL}
+			</if>
+			<if test="activeTime != null">
+				, activeTime = #{activeTime}
+			</if>
+			<if test="endTime != null">
+				, endTime = #{endTime}
+			</if>
+			<if test="linkType != null">
+				, linkType = #{linkType}
+			</if>
+			, advertLink = #{advertLink}
+			<if test="description != null">
+				, description = #{description}
+			</if>
+			<if test="sortOrder != null">
+				,sortOrder = #{sortOrder}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			,productCategoryID=#{productCategoryID}
+			,parentID=#{parentID}
+		</set>
+		where mainID =#{mainID}
+	</update>
+
+	<select id="findAdvertClickByPagination" parameterType="cmsAdvertClickDTO"
+		resultType="cmsAdvertClickVO">
+		select
+		a.IP,
+		c.name as customerName,
+		a.clickTime
+		from
+		kplus_cms_advertclick a
+		left join kplus_customer c on
+		a.customerID=c.mainID where
+		a.advertID=#{advertID}
+	</select>
+
+	<select id="findAdvertClickCount" parameterType="cmsAdvertClickDTO"
+		resultType="java.lang.Long">
+		select count(id) from kplus_cms_advertclick where
+		advertID=#{advertID}
+	</select>
+
+	<select id="findProductTypeByName" parameterType="java.lang.String"
+		resultType="advertLinkVO">
+		select * from kplus_producttype where isDelete=0 and name
+		like
+		"%${_parameter}%"
+	</select>
+	<select id="findBrandByName" parameterType="java.lang.String"
+		resultType="advertLinkVO">
+		select * from kplus_brand where isDelete=0 and name like
+		"%${_parameter}%"
+	</select>
+	<select id="findProductByName" parameterType="java.lang.String"
+		resultType="advertLinkVO">
+		select * from kplus_product where isDelete=0 and name like
+		"%${_parameter}%"
+	</select>
+	<select id="findItemByName" parameterType="java.lang.String"
+		resultType="advertLinkVO">
+		select * from kplus_item where isDelete=0 and name like
+		"%${_parameter}%"
+	</select>
+	<select id="findProductCategoryByName" parameterType="productCategoryDTO"
+		resultType="advertLinkVO">
+		select * from kplus_product_category where isDelete=0 and
+		parentID=#{parentID}
+		<if test="name!=null">
+			and name like "%${name}%"
+		</if>
+	</select>
+	<select id="findItemByMainID" parameterType="java.lang.String"
+		resultType="itemVO">
+		select * from kplus_item where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<select id="findAdvertIndex" resultType="cmsAdvertVO">
+		select * from
+		kplus_cms_advert co
+		left join kplus_systemadvertposion sa on
+		co.posionID=sa.mainID
+		where co.isDelete=0 and sa.mainID="index"
+	</select>
+
+	<select id="findAdvertIndexChild" parameterType="cmsAdvertDTO"
+		resultType="cmsAdvertVO">
+		select * from kplus_cms_advert co where
+		co.parentID=#{parentID} and
+		co.isDelete=0 order by
+		co.sortOrder desc
+		limit #{startRow} ,#{pageSize}
+	</select>
+</mapper>

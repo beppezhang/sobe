@@ -1,0 +1,365 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>商家中心</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/supplier.css">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+<style type="text/css">
+  .edit{
+    width: 39px;
+  }
+</style>
+</head>
+
+<body>
+
+#parse("layout/suppliercenter/header.vm")
+<div class="layout clearfix">
+    #parse("layout/suppliercenter/leftmenu.vm")
+    <div id="rightMain">
+        <div class="crumbs">
+            商家管理中心 &gt; <a href="supplierCenter.htm">商品管理</a> &gt; #if($!type=='sale')出售中的商品#elseif($!type == 'unSale')下架的商品#end
+        </div>
+        <div class="p15">
+            <div class="stitbar">
+                <strong>
+                  #if(!$!stringUtil.isNull($categoryMainID)) 
+                  商品选择
+                  #elseif($!type == 'sale') 
+                  出售中的商品
+                  #elseif($!type == 'wait') 
+                  等待中的商品
+                  #elseif($!type == 'unSale') 
+                  下架的商品
+                  #end
+                </strong>
+            </div>
+            #if($!itemMap.size() == 0)
+            <div style="height: 100px;padding: 49px 0;font-size: 20px;text-align:center; line-height: 100px;">暂无匹配的条目！</div>
+            #end
+
+            #if($!itemMap.size() != 0)
+            <div class="selbar txt_r">
+                <form action="item.htm">
+                  <span style="display: inline-block; height: 28px;font-size: 16px;">商品编号</span>
+                  <input type="hidden" name="type" value="$!{type}"/>
+                  <input type="hidden" name="categoryMainID" value="$!{categoryMainID}"/>
+                  <!--<input name="itemName" type="text" class="ipt" value="$!{itemName}"><input name="" type="button" id="itemSerach" class="sbtn" value="搜索">--> 
+                  <input name="itemCode" type="text" class="ipt" value="$!{itemCode}"><input name="" type="button" id="itemSerach" class="sbtn" value="搜索">
+                </form>
+            </div>
+            <table class="sellist mt25">
+              <tr>
+                <th width="500">商品信息</th>
+                <th>价格</th>
+                <th>平台最低价</th>
+               <!-- <th>报价</th>
+                <th colspan="2">库存</th>-->
+                <th></th>
+                <th colspan="2"></th>
+                <th>发布时间</th>
+                <th>操作</th>
+              </tr>
+              <tr>
+               <td class="txt_r" colspan="5">
+                   <!-- <label for="sel_all" class="lt"><input name="allCk" id="sel_all" class="allCk" type="checkbox" value=""> 全选</label> -->
+                    <!-- <a href="#" class="apLink">申请售后</a> -->
+               </td>
+              </tr>
+              <!-- 列表循环 -->
+              #foreach($data in $!itemMap.entrySet())
+              <!--<tbody class="proUnit" data-id="$!item.mainID" data-productID="$!item.productID">-->
+              <tbody class="proUnit">
+                  <tr>
+                     <td colspan="7" class="bg">
+                      产品编号：$data.key
+                     </td>
+                  </tr>
+              	#foreach($!item in ${data.value})
+                  <tr data-id="$!item.mainID" value="$!item.supplierID">
+                      <td class="goEdit" style="cursor: pointer">
+                       #if("$!type"=="sale")
+                        <a href="$!domain/mall/product/productDetail.htm?productID=$!item.productID&itemID=$!item.mainID" class="col01" target="_blank">
+                        <img src="$!{domainImg}$!{item.picURL}" class="pimg lt"></a>
+                        <p><a href="$!domain/mall/product/productDetail.htm?productID=$!item.productID&itemID=$!item.mainID" target="_blank" class="col01 edit">$!item.name</a></p>
+                       #else
+                        <a class="col01 edit">
+                        <img src="$!{domainImg}$!{item.picURL}" class="pimg lt"></a>
+                        <p><a>$!item.name</a></p>
+                       #end
+                        <p>商品编号： 
+                          $!item.skuCode
+                        </p>
+                      </td>
+                      <td class="ct">
+                          <span >￥<em class="unitPrice"><input class="edit saleprice" type="hidden" value="$!item.sSalesPrice" />$!item.sSalesPrice</em></span>
+                      </td>
+                      <td class="ct">
+                          <span ><em class="unitPrice" style="color: red"><input class="edit saleprice" type="hidden" value="$!item.sSalesPrice" />￥$!item.sSalesPrice</em></span>
+                      </td>
+                      <td class="ct">
+                          <!--<span >￥<em class="unitPrice">$!item.standrardPrice</em></span>-->
+                          <span ><em class="unitPrice"></em></span>
+                      </td>
+                      <td class="ct" colspan="2">
+                          <!--<input class="edit stock" type="hidden" value="$!{item.stock}" />
+                          $!{item.stock}-->
+                      </td>
+                      <td class="ct">$!date.format('yyyy-MM-dd',$!item.modifyTime)</td>
+                      <td class="ct">
+                        <!-- <a href="javascript:void(0);" class="submit">提交</a> -->
+                        <!--<a href="editProduct.htm?mainID=$!item.productID" class="editBtn">编辑</a>-->
+                        #if($!stringUtil.isNull($categoryMainID)) 
+                         #if("$!type"=="sale")
+                        <a href="viewItem.htm?mainID=$!item.mainID" class="editBtn">查看</a>
+                        <a href="javascript:void(0);" class="downBtn">下架</a>
+                        #end
+                         #if("$!type"=="unSale")
+                        <a href="editItem.htm?mainID=$!item.mainID" class="editBtn">编辑</a>
+                         <a href="javascript:void(0);" class="delBtn">删除</a>
+                          <a href="javascript:void(0);" class="upBtn">上架</a>
+                         #end
+                        <!--  -->
+                        #end
+                    </td>
+                  </tr>
+                #end
+              </tbody>
+				
+              #end
+              <!-- 列表循环end -->
+              
+              <!--
+              <tr>
+               <td class="txt_r" colspan="5">
+                   <label for="sel_all_btm" class="lt"><input name="allCk" id="sel_all_btm" class="allCk" type="checkbox" value=""> 全选</label> 
+                   <a href="#" class="apLink">申请售后</a> 
+               </td>
+              </tr>
+              -->
+            </table>
+            #end
+        </div>
+        <form id="serachform" name="serachform" method="get" action="item.htm">
+                  <input type="hidden" name="type" value="$!type"/>
+                  <!--<input type="hidden" name="itemName" value="$!itemName"/>-->
+                  <input type="hidden" name="categoryMainID" value="$!categoryMainID"/>
+                  <input type="hidden" id="pageNo" name="pageNo"
+                  value="$!itemDTO.pageNo">
+                 <input type="hidden" id="pageSize" name="pageSize" 
+                      value="$!itemDTO.pageSize">
+               </form>
+        #if($!itemMap.size() != 0)
+        <div class="pagerbar clearfix ct">
+        #pagination($!itemDTO)
+        </div>
+        #end
+    </div>
+</div>
+#parse("layout/suppliercenter/footer.vm")
+
+
+<script type="text/javascript" src="$!{mallStatic}/js/unify.js"></script>
+#if($!itemMap.size() != 0) 
+<script type="text/javascript">
+/*
+jQuery(function() {
+ 
+  jQuery(".pagerbar").pager({
+      pagenumber : $itemDTO.pageNo,
+      pagecount : $itemDTO.pageCount,
+      buttonClickCallback : PageClick
+    });
+ });
+
+  PageClick = function(pageclickednumber) {
+    jQuery(".pagerbar").pager({
+      pagenumber : pageclickednumber,
+      pagecount : $itemDTO.pageCount,
+      buttonClickCallback : PageClick
+    });
+    jQuery("#pageNo").val(pageclickednumber);
+    jQuery("#serachform").submit();
+};
+*/
+</script>
+#end
+
+<script>
+$(function(){
+        #if(!$!stringUtil.isNull($categoryMainID)) 
+            $("dd:eq(0)").addClass("on");
+        #elseif($!type == 'sale') 
+            $("dd:eq(1)").addClass("on");
+        #elseif($!type == 'wait') 
+            $("dd:eq(2)").addClass("on");
+        #elseif($!type == 'unSale') 
+            $("dd:eq(3)").addClass("on");
+        #end
+        
+        $(".goEdit").on("click",".edit",function(){
+            var itemMainID = $(this).parents(".proUnit").attr("data-id");
+            if (typeof itemMainID == 'undefined') {
+                return;
+            };
+            location.href = "itemDetail.htm?itemMainID="+itemMainID+"&type="+"$!type";
+        });
+        $(".delBtn").on("click", function(){
+            var _this = this;
+            if (!confirm("确定删除该商品吗")) {
+              return false;
+            };
+            //var itemMainID = $(this).parents(".proUnit").attr("data-id");
+            var itemMainID = $(this).parents("tr").attr("data-id");
+            if (typeof itemMainID == 'undefined') {
+                return;
+            };
+            jQuery.ajax({
+              url: "$!{domain}/mall/seller/itemRemove.do",
+              type: "POST",
+              dataType: "text",
+              data: {
+                itemMainID: itemMainID
+              },
+              success: function(data){
+                	//location.reload();	//去掉刷新，一方面后面已经做了相关删除操作，同时，这里的reload会影响呈现效果
+                if (data == 0) {
+                 //$(_this).parents(".proUnit").remove();
+                 
+                 //这里在删除item条目的时候要做一个判断，如果当前只剩下一个item则连带产品编号栏一起移除，如果不只一个item则移除当前item所在tr
+                  if ($(_this).parents(".proUnit").children().length == 2){
+                  	  $(_this).parents(".proUnit").remove();
+					  location.reload();		//这里需要一次reload，在没有item之后刷新列表给出暂无匹配条目的提示
+                  }else{
+	                  $(_this).parents("tr").remove();
+                  }
+
+                }
+              }
+
+            })
+            
+        });
+        $(".downBtn").on("click", function(){
+            var _this = this;
+            if (!confirm("确定下架该商品吗")) {
+              return false;
+            };
+            //var productMainID = $(this).parents(".proUnit").attr("data-productID");
+            var itemMainID = $(this).parents("tr").attr("data-id");
+            if (typeof itemMainID == 'undefined') {
+                return;
+            };
+            jQuery.ajax({
+              //url: "$!{domain}/mall/seller/updateProductStatus.do",
+              url: "$!{domain}/mall/seller/updateItemStatus.do",
+              type: "POST",
+              //dataType: "text", 		//返回纯文本格式能以data.code方式判断？shit!
+              dataType: "json",
+              data: {
+            	  mainIDs: itemMainID,
+            	  status:0
+              },
+              success: function(data){
+                	//location.reload();
+                if (data.code == 0) {
+                  //$(_this).parents(".proUnit").remove();
+
+                  if ($(_this).parents(".proUnit").children().length == 2){
+                  	  $(_this).parents(".proUnit").remove();
+					  location.reload();		//这里需要一次reload，在没有item之后刷新列表给出暂无匹配条目的提示
+                  }else{
+	                  $(_this).parents("tr").remove();
+                  }
+                  
+                  }
+                }
+
+            })
+            
+        });
+        
+        $(".upBtn").on("click", function(){
+            var _this = this;
+            if (!confirm("确定上架该商品吗")) {
+              return false;
+            };
+            //var productMainID = $(this).parents(".proUnit").attr("data-productID");
+            var itemMainID = $(this).parents("tr").attr("data-id");
+            if (typeof itemMainID == 'undefined') {
+                return;
+            };
+            jQuery.ajax({
+              //url: "$!{domain}/mall/seller/updateProductStatus.do",
+              url: "$!{domain}/mall/seller/updateItemStatus.do",
+              type: "POST",
+              //dataType: "text",
+              dataType: "json",
+              data: {
+            	  mainIDs: itemMainID,
+            	  status:1
+              },
+              success: function(data){
+                	//location.reload();
+                if (data.code == 0) {
+                  //$(_this).parents(".proUnit").remove();
+
+                  if ($(_this).parents(".proUnit").children().length == 2){
+                  	  $(_this).parents(".proUnit").remove();
+					  location.reload();
+                  }else{
+	                  $(_this).parents("tr").remove();
+                  }
+                }
+              }
+
+            })
+            
+        });
+        
+        
+        $("#itemSerach").click(function(){
+          $("form").eq(0).submit();
+         /* var itemName = $("input[name='itemName']").val();
+          if (itemName != '') {
+          };*/
+        });
+        $(".submit").click(function(){
+          var _this = this;
+          var itemMainID = $(_this).parents("tbody").attr("data-id");
+          var salePrice = $(_this).parents("tbody").find(".saleprice").val();
+          var stock = $(_this).parents("tbody").find(".stock").val();
+          var priceReg = /^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/;
+          var numReg = /^[0-9]+$/;
+          if (!priceReg.test(salePrice)) {
+            alert("价格格式有误");
+            return;
+          };
+          if (!numReg.test(stock)) {
+            alert("库存格式有误");
+            return;
+          };
+          jQuery.ajax({
+            url: "item.do",
+            type: "POST",
+            dataType: "text",
+            data: {
+              itemMainID: itemMainID,
+              salePrice: salePrice,
+              stock: stock
+            },
+            success: function(data){
+              if (data == 0) {
+                alert("操作成功");
+                $(_this).text("已提交").removeClass("submit").unbind("click");
+              };
+            }
+          })
+        });
+    })
+    
+</script>
+</body>
+</html>

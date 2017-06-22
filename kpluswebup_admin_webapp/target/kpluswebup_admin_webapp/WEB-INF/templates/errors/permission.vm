@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无权限</title>
+<meta name="keywords" content=""/>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width"/>
+#parse("control/public_css_js.vm")
+</head>
+<body>
+#parse("layout/head.vm") 
+    <!--menu E--> 
+    <div class="main clearfix">
+    	<div class="conTit"><span>权限错误</span></div>
+        <div class="error_kata">
+            <span></span>
+            <div>
+                <h2>对不起，您没有访问权限,请联系管理员</h2>
+               <a href="$!{domain}/admin/main.htm">返回首页</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

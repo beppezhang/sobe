@@ -1,0 +1,17 @@
+<div id="topbar">
+	<div class="layout txt_r clearfix">
+    	<div class="lt welbox">您好，<a href="/mall/buyer/userInfo.htm">$!{user.name}</a> 欢迎来到搜贝#if("$!{user.username}"!="")<a href="/mall/member/logout.do">退出</a>#else<a href="$!{domain}/mall/member/toLogin.htm">请登录</a><a href="/mall/member/registerPage.htm">免费注册</a>#end</div>
+        <div class="shortcut_bar">
+           #if("$!{user.username}"!="")
+        	<span class="linkbox"><a href="/mall/buyer/userCenter.htm">我的主页</a></span>
+            <span class="linkbox"><a href="/mall/buyer/userOrderList.htm">我的订单</a></span>
+            #end
+          <!--   <span class="linkbox"><a href="javascript:;" class="phone"><i></i>手机版</a></span> -->
+          	<!--
+            <span class="linkbox"><a href="/mall/helps/helpsDetail.htm?mainID=dd3521b484854bd1a1cb08e5a6670fda" ><i></i>商家入驻</a></span>-->
+            <span class="linkbox"><a href="/mall/seller/supplierCenter.htm" target="_blank">我是商家</a></span> 
+           <!--  <span class="linkbox serviceLink"><a href="#">客服服务<i class="down"></i></a></span>
+            <span class="linkbox"><a href="#" class="listLink">网站导航<i class="down"></i></a></span> -->
+        </div>
+    </div>
+</div>

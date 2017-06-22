@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增商品</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销管理 >> 新增商品</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					#if($!menuUtil.isExistMenu("/admin/product/editIntegralProductPage.htm",$!menuAllList)
+					)
+					<li><a
+						href="$!{domain}/admin/product/editIntegralProductPage.htm?mainID=$!productID&productTypeMainID=$!productTypeMainID">礼品信息</a>
+					</li> #end
+					#if($!menuUtil.isExistMenu("/admin/product/addIntegralItemPage.htm",$!menuAllList)
+					)
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="$!{domain}/admin/product/addIntegralItemPage.htm?productID=$!productID&productTypeMainID=$!productTypeMainID"
+						class="hover">新增商品</a></li> #end
+					#if($!menuUtil.isExistMenu("/admin/product/IntegralProductImgPic.htm",$!menuAllList)
+					)
+					<li><a
+						href="$!{domain}/admin/product/IntegralProductImgPic.htm?productID=$!productID&productTypeMainID=$!productTypeMainID">礼品相册</a>
+					</li> #end
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+
+					<!--form  S------->
+					<div class="systemBar">
+						<div class="p10Box">
+							<a href="javascript:;" class="redBtn" id="checkSpe"
+								onclick="ico1.show();">选择规格</a>
+
+							<div class="sysTableDiv">
+								<table class="sysTable">
+									<thead>
+										<tr>
+											<td width="78">商品编号</td>
+											<td>销售规格</td>
+											<td width="118">商品名称</td>
+											<td width="63">图片</td>
+											<td width="78">价格(元)</td>
+											<td width="78">库存</td>
+											<td width="78">起订数</td>
+											<td width="78">体积</td>
+											<td width="78">重量(kg)</td>
+											<td width="78">线下货号</td>
+											<td width="58">排序</td>
+											<td width="38">操作</td>
+										</tr>
+									</thead>
+
+									<tbody id="PreList">
+										#foreach($!item in $!itemList)
+										<tr>
+											<td><input class="shopId" type="text"
+												value="$!item.mainID" disabled='disabled' /></td>
+											<td><span class='ProductPre'> #foreach($!itemdet
+													in $!item.itemDetailList ) $!itemdet.itemPropValue #end </span></td>
+											<td><input type="text" value="$!item.name" /></td>
+											<td><label class='img'> <input type="hidden"
+													class="cText cTextLen" value="" name="picURL"
+													id="picURL_$!item.mainID"> <img
+													id="uploadImage_$!item.mainID" src="$!item.picURL"
+													width="23" height="23">   浏览<input type="file"
+													id="myBlogImage_$!item.mainID" name="myfiles"
+													onchange="ajaxItemFileUpload('$!item.mainID')" />
+											</label></td>
+											<td><input type="text" value="$!item.salesPrice" /></td>
+											<td><input type="text" value="$!item.stock" /></td>
+											<td><input type="text" value="$!item.minimumQty" /></td>
+											<td><input type="text" value="$!item.cubage" /></td>
+											<td><input type="text" value="$!item.weight" /></td>
+											<td><input type="text" value="$!item.oldNumber" /></td>
+											<td><div class="revNum">
+													<input type="text" value="5" /><a class="top"></a><a
+														class="bot"></a>
+												</div></td>
+											<td><a href="javascript:;" class="icon iconDel"
+												onclick="deleteItem(this,'$!item.mainID')"></a></td>
+										</tr>
+										#end
+									</tbody>
+								</table>
+							</div>
+							<div class="centerBtn">
+								#if($!menuUtil.isExistMenu("/admin/product/addIntegralItem.htm",$!menuAllList)
+								) <input name="save" class="save" value="提交" id="saveTableInfo"
+									type="button"> <input name="cencle" class="cencle"
+									value="取消" type="reset"> #end
+								#if($!menuUtil.isExistMenu("/admin/product/productImgPic.htm",$!menuAllList)
+								) <a
+									href="$!{domain}/admin/product/productImgPic.htm?productID=$!productID">下一步</a>
+								#end
+							</div>
+
+							<div class="alertBox pd0" id="CheckBox">
+								<h2>销售规格自动组合</h2>
+								<a href="javascript:;" class="closeBox" onclick="ico1.hide()"></a>
+								<div class="bd">
+									#foreach($!productTypeItemPropVO in $!productTypeItemPropList)
+									<div class="box">
+										<strong>$!productTypeItemPropVO.name</strong><label
+											class="label"><input type="checkbox" class="checkAll" />全选</label>
+										<p>
+											#foreach($!itemPropValue in
+											$!productTypeItemPropVO.itemPropValueVO) <label class="label"><input
+												type="checkbox" value="$!itemPropValue.name"
+												class="onyCheck"
+												data="$!itemPropValue.name:$!itemPropValue.mainID" />$!itemPropValue.name</label>
+											#end
+										</p>
+										##<a href="javascript:;" class="addSpeBtn" data="0">新增</a>
+									</div>
+									#end
+									<div class="alertBtn">
+										<a href="javascript:;" class="blueBtn" id="generatePre">生成规格商品</a>
+									</div>
+								</div>
+							</div>
+							<div class="alertBox pd0" id="addPre">
+								<h2>新增规格值</h2>
+								<a href="javascript:;" class="closeBox"></a>
+								<div class="bd">
+									<dl>
+										<dt>值名称：</dt>
+										<dd>
+											<input type="text" class="text" id="preVal" />
+										</dd>
+									</dl>
+									<!--<dl><dt>图片：</dt><dd><input type="text" class="text minText"/><a href="#">浏览</a></dd></dl>-->
+									<dl>
+										<dt>图片：</dt>
+										<dd>
+											<input type="file" />
+										</dd>
+									</dl>
+									<dl>
+										<dt>&nbsp;</dt>
+										<dd>
+											#if($!menuUtil.isExistMenu("/admin/product/addIntegralItem.htm",$!menuAllList)
+											) <input name="save" class="save" value="提交" type="button">
+											#end <input name="cencle" class="cencle" value="取消"
+												type="reset">
+										</dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	<form action="$!domain/admin/product/addIntegralItem.htm" method="post"
+		id="formid">
+		<input name="productTypeMainID" type="hidden"
+			value="$!productTypeMainID" /> <input name="productID" type="hidden"
+			value="$!productID" />
+		<div id="allPreList"></div>
+	</form>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	jQuery(function() {
+		jQuery("#generatePre")
+				.bind(
+						"click",
+						function() {
+							var jsonArr = "{'data':[";
+							var row1_checkBox = jQuery("#CheckBox .box").eq(0)
+									.find(".onyCheck");
+							var row2_checkBox = jQuery("#CheckBox .box").eq(1)
+									.find(".onyCheck");
+							for (var i = 0; i < row1_checkBox.length; i++) {
+								for (var j = 0; j < row2_checkBox.length; j++) {
+									if (row1_checkBox.eq(i).prop("checked")
+											&& row2_checkBox.eq(j).prop(
+													"checked")) {
+										jsonArr += "{'id':'"
+												+ row1_checkBox.eq(i).attr(
+														"data")
+												+ "-"
+												+ row2_checkBox.eq(j).attr(
+														"data") + "','val':'"
+												+ row1_checkBox.eq(i).val()
+												+ " "
+												+ row2_checkBox.eq(j).val()
+												+ "' },";
+									}
+								}
+							}
+							jsonArr += "]}";
+							var obj = eval("(" + jsonArr + ")");
+							//alert(obj.data[0].id);
+							//alert(obj.data.length)
+							var inhereID = new Array();
+							var p_val = jQuery(".ProductPre");
+							p_val.each(function() {
+								inhereID.push(jQuery(this).attr("id"));
+							})
+							for (var i = 0; i < obj.data.length; i++) {
+								var execute = true;
+								for (var j = 0; j < inhereID.length; j++) {
+									if (obj.data[i].id == inhereID[j]) {
+										execute = false;
+									}
+								}
+								if (execute) {
+									jQuery("#PreList")
+											.append(
+													"<tr>"
+															+ "<td><input class='shopId' type='text' value='' disabled='disabled' /></td>"
+															+ "<td><span class='ProductPre' id='" + obj.data[i].id + "'>"
+															+ obj.data[i].val
+															+ "</span></td>"
+															+ "<td><input type='text' value=''/></td>"
+															+ "<td><label class='img'><input type='hidden' class='cText cTextLen' value='' name='picURL' id='picURL_" + obj.data[i].id + "'>				  <img  id='uploadImage_" + obj.data[i].id + "' src='' alt='' width='23' height='23'/>"
+															+ "浏览"
+															+ "<input type='file'  name='myfiles' id='myBlogImage_"
+															+ obj.data[i].id
+															+ "' onchange='ajaxItemFileUpload(&quot;"
+															+ obj.data[i].id
+															+ "&quot;)' ></label></td>"
+															+ "<td><input type='text' value='0'/></td>"
+															+ "<td><input type='text' value='0'/></td>"
+															+ "<td><input type='text' value='0'/></td>"
+															+ "<td><input type='text' value='0'/></td>"
+															+ "<td><input type='text' value='0'/></td>"
+															+ "<td><input type='text' value='0'/></td>"
+															+ "<td><div class='revNum'><input type='text' value='0'/><a class='top'></a><a class='bot'></a></div></td>"
+															+ "<td><a href='javascript:;' class='icon iconDel'onclick='deleteItem(this,null)' ></a></td>"
+															+ "</tr>")
+								}
+								execute = true;
+							}
+							ico1.hide();
+						})
+		//数字加减
+		jQuery(".revNum a").bind("click", function() {
+			var v_inp = jQuery(this).parent().find("input");
+			if (jQuery(this).hasClass("top")) {
+				v_inp.val(parseInt(v_inp.val()) + 1)
+			} else {
+				v_inp.val(parseInt(v_inp.val()) - 1)
+			}
+		})
+		//全选
+		jQuery(".checkAll").click(
+				function() {
+					if (jQuery(this).prop("checked")) {
+						jQuery(this).parents(".box").find(".onyCheck").prop(
+								"checked", true)
+					} else {
+						jQuery(this).parents(".box").find(".onyCheck").prop(
+								"checked", false)
+					}
+				})
+
+		// 保存规格值
+		jQuery("#addPre .save")
+				.click(
+						function() {
+							var checkLabel = "<label class='label'><input type='checkbox'/>"
+									+ jQuery("#preVal").val() + "</label>";
+							jQuery("#CheckBox .box").eq(a_num).find("p")
+									.append(checkLabel);
+							layer.close(alertBox2);
+						})
+
+		jQuery("#saveTableInfo")
+				.click(
+						function() {
+
+							jQuery("#allPreList").html("");
+							var p_list = jQuery("#PreList tr");
+							var p_num = p_list.length;
+							//alert(p_num);
+							var str = "";//用于保存以“,”分割并拼接起来的字符串val 说明：商品编号,销售规格,商品名称,图片,价格(元),库存,起订数,体积,重量(kg),线下货号,排序
+							p_list
+									.each(function() {
+										str = "";
+										jQuery(this)
+												.find("td")
+												.each(
+														function() {
+															if (jQuery(this)
+																	.index() == 1) {//表格第二列保存span id
+																str += jQuery(
+																		this)
+																		.find(
+																				"span")
+																		.attr(
+																				"id")
+																		+ "|";
+																return true;
+															} else if (jQuery(
+																	this)
+																	.index() == 3) {//表格第四保存img src
+																str += jQuery(
+																		this)
+																		.find(
+																				"img")
+																		.attr(
+																				"src")
+																		+ "|";
+																return true;
+															} else if (jQuery(
+																	this)
+																	.index() == 11) {//表格操作列 不保存任何
+																return true;
+															} else {
+																str += jQuery(
+																		this)
+																		.find(
+																				"input")
+																		.val()
+																		+ "|";
+															}
+														})
+										//alert(str)
+										jQuery("#allPreList")
+												.append(
+														"<input type='hidden' name='items' value='"+str+"'/>");//生成隐藏域
+										$("#formid").submit();
+									})
+
+						})
+	})
+
+	function ajaxItemFileUpload(mainID) {
+		jQuery.ajaxFileUpload({
+			url : '/file/fileUpload.htm',
+			secureuri : false,// 是否启用安全提交,默认为false
+			fileElementId : 'myBlogImage_' + mainID,// 文件选择框的id属性
+			dataType : 'text',// 服务器返回的格式,可以是json或xml等
+			success : function(data, status) {
+				data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+				data = data.replace("</PRE>", '');
+				data = data.replace("<pre>", '');
+				data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+				if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+					jQuery("img[id='uploadImage_" + mainID + "']").attr("src",
+							data.substring(2));
+					jQuery("#picURL_" + mainID).val(data.substring(2));
+					//jQuery("#result"+mainID).html("图片上传成功<br/>");
+				} else {
+					//jQuery("#result"+mainID).html('图片上传失败，请重试！！');
+				}
+			},
+			error : function(data, status, e) { // 服务器响应失败时的处理函数
+				//jQuery("#result"+mainID).html('图片上传失败，请重试！！');
+			}
+		});
+	}
+
+	function deleteItem(event, mainID) {
+		if (jQuery(event).parents("tr").find(".shopId").val().trim() == "") {
+			jQuery(event).parents("tr").remove();
+		} else {
+			var data = {
+				mainID : mainID
+			}
+			if (confirm("确定要删除数据吗？")) {
+				var url = "deleteItem.do";
+				jQuery.ajax({
+					url : url,
+					type : "POST",
+					data : data,
+					dataType : "json",
+					success : function(data) {
+						if (data.code == 0) {
+							$(event).parents("tr").remove();
+						} else {
+							alert("删除失败");
+						}
+					},
+					error : function() {
+						alert("删除失败");
+					}
+				});
+			} else {
+				return false;
+			}
+
+		}
+	}
+
+	var ico1 = $("#CheckBox").divWin({
+		width : 568,
+		height : 300,
+		autoSize : true
+	});
+</script>
+</html>

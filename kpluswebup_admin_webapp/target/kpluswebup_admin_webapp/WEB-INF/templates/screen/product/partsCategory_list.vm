@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>配件类目</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<em class="icon iconMenu2"></em><a href="productList.htm">产品管理</a>
+			&gt; <span>配件类目</span>
+			<!--<span>产品管理 &gt; 配件类目</span>-->
+		</div>
+		#if($!menuUtil.isExistMenu("/admin/product/addProductCategoryPage.htm",$!menuAllList)
+							) 
+		<!--<div class="tableListBar">
+       		<div class="tableTool"><a class="TableAddBtn"  href="$!{domain}/admin/product/addProductCategoryPage.htm" title="新增类目">新增类目</a></div>
+   	    </div>-->
+   	     #end
+		<div class="tableListBar">
+			<table class="tableList grid seTable">
+				<thead>
+					<tr>
+						<td class="first" width="20%">类目名称</td>
+						<!--<td width="20%">产品类型</td>-->
+						<td style="width=20%">上级类目</td>
+						<!--<td width="20%">车系logo</td>-->
+						<!--<td width="20%">类目拼音</td>-->
+						<!--<td width="20%">排序</td>-->
+						<!--<td width="20%">操作</td>-->
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="TreeList">
+			#foreach( $!partsCategoryVO in $!list)
+			<div class="level level1">
+				<div class="first">
+					<span class="s">$!partsCategoryVO.name</span>
+				</div>
+				<!--<div class="w300">$!productCategoryVO.productName</div>-->
+				<div class="w300"></div>
+				
+				<!--<div class="w300">
+					<img src="${mallStatic}/img/logo/$!productCategoryVO.picUrl" style="width: 30px;height: 30px;"/>
+				</div>
+				<div class="w300">$!productCategoryVO.pinyin</div>
+				<div class="w300">
+					<span class="elevators">#if("$!productCategoryVO.sortOrder"!="") $!productCategoryVO.sortOrder #else  0 #end</span>
+				</div>-->
+				
+				<!--<div class="w150">
+					#if($!menuUtil.isExistMenu("/admin/product/editProductCategoryPage.htm",$!menuAllList)
+					) <a class="icon iconEdit"
+						href="$!{domain}/admin/product/editProductCategoryPage.htm?mainID=$!productCategoryVO.mainID"
+						title="编辑"></a> #end
+					#if($!menuUtil.isExistMenu("/admin/product/deleteProductCategory.do",$!menuAllList)
+					) <a href="javascript:;" class="icon iconDel"
+						onclick="deleteProductCategory('$!productCategoryVO.mainID')" title="删除"></a> #end
+				</div>-->
+			</div>
+			<ul>
+				#foreach($!partsCategoryVOTWO in $!partsCategoryVO.levelTwo)
+				<li>
+					<div class="level level2">
+						<!--<div class="first">
+							<span class="s"
+								onclick="showlevel3('$!productCategoryVOTWO.mainID',$!productCategoryVOTWO.name,this)">$!productCategoryVOTWO.name</span>
+						</div>-->
+						<div class="first">
+							<!--<span class="s">$!partsCategoryVOTWO.name</span>-->
+							<span>$!partsCategoryVOTWO.name</span>
+						</div>
+
+						<div class="w300">$!partsCategoryVO.name</div>
+						
+						<!--<div class="w300">
+						#if($!productCategoryVOTWO.picUrl)
+							<img src="${mallStatic}/img/logo/$!productCategoryVOTWO.picUrl" style="width: 30px;height: 30px;"/>
+						#end
+						</div>
+						<div class="w300">$!productCategoryVOTWO.pinyin</div>
+						<div class="w300">
+							<span class="elevators">#if("$!productCategoryVOTWO.sortOrder"!="") $!productCategoryVOTWO.sortOrder #else  0 #end <a
+								href="javascript:;" class="top"></a><a href="javascript:;" class="bot"></a></span>
+						</div>-->
+						
+						<!--<div class="w150">
+							#if($!menuUtil.isExistMenu("/admin/product/editProductCategoryPage.htm",$!menuAllList)
+							) <a class="icon iconEdit"
+								href="$!{domain}/admin/product/editProductCategoryPage.htm?mainID=$!productCategoryVOTWO.mainID"
+								title="编辑"></a> #end
+							#if($!menuUtil.isExistMenu("/admin/product/deleteProductCategory.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconDel"
+								onclick="deleteProductCategory('$!productCategoryVOTWO.mainID')"
+								title="删除"></a> #end
+						</div>-->
+					</div>
+					<ul>
+						<!-- #foreach($!partsCategorysThird in $!partsCategoryVOTWO.levelThree)
+						<li>
+							<div class="level level3" style="display:block">
+								<div class="first">
+									<span>$!partsCategorysThird.name</span>
+								</div>
+			
+								<div class="w300">$!partsCategoryVOTWO.name</div>
+							</div>
+						</li>
+						#end 
+						-->							
+					</ul>
+
+				</li> #end
+			</ul>
+			#end
+
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script>
+	$(function(){
+		$(".level .first span").click(function() {
+			var $t_parent = $(this).parents(".level");
+			//如果是收起状态
+			if ($(this).hasClass("s")) {
+				$(this).removeClass("s").addClass("z");
+				$t_parent.next("ul").show();
+			} 
+			else{
+				if ($t_parent.hasClass("level1")){
+					$(this).removeClass("z").addClass("s");
+					$t_parent.next("ul").hide();
+				}
+			}
+			// else {
+				// //如果是展开状态（并且不是第三级类目）
+				// if (!$t_parent.hasClass("level3")){
+					// $(this).removeClass("z").addClass("s");
+					// $t_parent.next("ul").hide();
+				// }
+			// }
+		});
+	});
+</script>
+</html>

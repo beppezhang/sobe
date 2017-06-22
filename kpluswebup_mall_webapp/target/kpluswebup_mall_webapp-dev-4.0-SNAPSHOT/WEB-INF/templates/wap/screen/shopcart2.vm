@@ -1,0 +1,240 @@
+<!doctype html>
+<html>
+<head>
+<title>确认订单</title>
+<meta http-equiv="Content-Type"
+	content="application/vnd.wap.xhtml+xml; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/indi.css">
+</head>
+<body>
+	<div class="dispa">
+		<span>订单与配送信息</span>
+	</div>
+	<div class="dispa_info clearfix">
+		<ul>
+			#foreach($!li in $!list)
+			<li><a
+				href="$!{domain}/weixin/productDetail.htm?productID=$!li.productID"
+				class="tb clearfix">
+					<div class="cell pimg">
+						<img src="$!imgurl/$!li.itemPicUrl" />
+					</div>
+					<div class="cell txt">
+						<h4>$!li.itemName</h4>
+						<p>
+							<em>￥$!NumberTool.format("#0.00",$!li.salesPrice)</em>
+						</p>
+					</div>
+					<div class="cell num">
+						<b>x$!li.itemCount</b>
+					</div>
+			</a></li> #end
+		</ul>
+	</div>
+
+	<div class="order_details clearfix addrlist">
+		#if("$!address"!="") <a
+			href="$!domain/weixin/userselectAddr.htm?ids=$!ids&itemID=$!itemID&type=$!type&paymentType=$!paymentType&itemCount=$!itemCount&supplierID=$!supplierID&generateType=$!generateType">
+			<span class="fullname">$!address.name</span> <span class="tele">$!address.mobile</span>
+			<p class="address">$!address.provinceName$!address.cityName$!address.districtName$!address.address</p>
+		</a> #else <a
+			href="$!domain/weixin/userselectAddr.htm?ids=$!ids&itemID=$!itemID&type=$!type&paymentType=$!paymentType&itemCount=$!itemCount&supplierID=$!supplierID&generateType=$!generateType"
+			class="ct f14 all_link" style="line-height: 50px; display: block;">请添加收货地址</a>
+		#end
+	</div>
+	<div class="way">
+		<ul>
+			<!--<li id="delivery"><span class="lt">配送方式</span> <span
+				class="deliverybar rt"> <em class="cell kd on"><i></i>快递</em>
+					<em class="cell"><i></i>物流</em>
+			</span></li>-->
+			<li><a href="javascript:void(0);"> <span class="lt">留言</span>
+					<span class="rt"><input type="text" name="u-mes"
+						class="u-mes" placeholder="输入20到30个字符" maxlength="30"
+						autocomplete="off"></span>
+			</a></li>
+			<li><span class="lt">订单总计</span> <span class="rt"><em>￥$!NumberTool.format("#0.00",$!allTotal)</em></span>
+			</li>
+		</ul>
+	</div>
+
+	<div class="pay">
+		<span>支付方式</span>
+	</div>
+
+	<div class="payment">
+		<ul class="paytype">
+			<a
+				href="$!domain/weixin/selPays.htm?ids=$!ids&itemID=$!itemID&addreID=$!address.id&type=$!type&itemCount=$!itemCount"></a>
+			<li class="txt_r clearfix">
+				<p class="clearfix">
+					<span class="lt"> <img src="$!{doamin}/wap/img/nh_bank.png"
+						class="款到发货">
+					</span> <span class="lt"> <em>款到发货</em><br /> <em class="rd1">推荐使用</em>
+					</span> <i class="on" data="1"></i>
+				</p>
+			</li>
+			<li class="txt_r clearfix pd0">
+				<p class="clearfix h24">
+					<span class="lt">卡号</span> <span class="rt">6228 4803 2844
+						9525 273</span>
+				</p>
+				<p class="clearfix h24">
+					<span class="lt">开户行</span> <span class="rt">农行浙江省分行</span>
+				</p>
+				<p class="clearfix h24">
+					<span class="lt">户名</span> <span class="rt">殷宏国</span>
+				</p>
+			</li>
+			<li class="txt_r clearfix">
+				<p class="clearfix">
+					<span class="lt"> <img src="$!{doamin}/wap/img/ico-bag.png"
+						class="货到付款" />
+					</span> <span class="lt"> <em>货到付款</em><br /> <em class="yd1">货到付款</em>
+					</span> <i data="2"></i>
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<div class="all clearfix">
+		<span class="lt"> <em class="col1">总金额</em> <em class="col2">￥#if("$!realAllAmount"!="")$!NumberTool.format("#0.00",$!realAllAmount)
+				#else 0.00 #end</em> <br> （共$!itemCount件，<em id="postage">邮费￥#if("$!freight"!="")$!NumberTool.format("#0.00",$!freight)
+				#else 0.00 #end</em>）
+		</span> <a href="javascript:gobuy();" class="settlement rt">立即结算</a>
+	</div>
+	<form action="$!domain/weixin/userSaveOrder.htm" method="post"
+		class="orderForm">
+		<input id="addressID" type="hidden" value="$!address.id"
+			name="addressID"> <input id="cartID" type="hidden"
+			value="$!ids" name="cartIDs"><input id="itemID" type="hidden"
+			value="$!itemID" name="itemID"><input id="itemType"
+			type="hidden" value="$!item.type" name="itemType"> <input
+			id="paymentType" type="hidden" name="paymentType"
+			value="$!paymentType"> <input id="orderAmount" type="hidden"
+			name="orderAmount" value="$!realAllAmount"> <input
+			id="scoreAll" type="hidden" name="scoreAll" value="$!allScore">
+		<input id="memo" type="hidden" name="memo"> <input
+			id="itemCount" type="hidden" name="itemCount" value="$!itemCount">
+		<input type="hidden" name="supplierID" value="$!supplierID"> <input
+			id="generateType" type="hidden" name="generateType"
+			value="$!generateType" /> <input id="orderType" type="hidden"
+			name="orderType" value="$!orderType" /> <input id="orderID"
+			type="hidden" name="tempOrderID" value="$!orderID" /> <input
+			id="invoiceType" type="hidden" name="invoiceType" value="1" />
+	</form>
+	<script type="text/javascript"
+		src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script>
+	<script>
+		$(".payment li").click(
+				function() {
+					$(this).find("i").addClass("on").closest("li").siblings(
+							"li").find("i").removeClass("on");
+				})
+		$(".invoice span").click(function() {
+			$(this).toggleClass("on");
+			$(".invoice_content").toggle();
+		})
+		$(".change li").click(function() {
+			$(this).addClass("on").siblings().removeClass("on");
+
+		})
+		$(".detail li").click(
+				function() {
+					$(this).addClass("on").find("i").addClass("on").closest(
+							"li").siblings("li").removeClass("on").find("i")
+							.removeClass("on");
+				})
+		$(".deliverybar").find("em").click(function() {
+			$(this).addClass("on").siblings().removeClass("on");
+			if ($(this).hasClass("kd")) {
+				$("#postage").text("邮费￥10.00");
+			} else {
+				$("#postage").text("邮费￥0.00");
+			}
+		})
+	</script>
+	<script type="text/javascript">
+		function gobuy() {
+			var url = "";
+			if (jQuery(".gobuy").hasClass("off")) {
+				return;
+			}
+			var paymentType = jQuery("i.on").attr("data");
+			if (paymentType == "") {
+				url = jQuery(".paytype a").attr("href");
+				window.location = url;
+				return;
+			} else {
+				jQuery("#paymentType").val(paymentType);
+			}
+			var addressID = jQuery("#addressID").val();
+
+			if (addressID == "") {
+				alert("请添加收货地址");
+				return;
+			}
+			var memo = jQuery(".u-mes").val();
+			jQuery("#memo").val(memo);
+			jQuery(".orderForm").submit();
+		}
+
+		function panduan() {
+			var cusScore = jQuery("#score").val();
+			var score = jQuery(".count .jf").text();
+			var allprice = jQuery(".toPrice i").text();
+			if (parseInt(cusScore) < parseInt(score)) {
+				jQuery(".gobuy").addClass("off");
+			} else {
+				jQuery(".gobuy").removeClass("off");
+			}
+			if (parseFloat(allprice) <= 0) {
+				jQuery(".toPrice").hide();
+				jQuery(".viewprice .price").hide();
+				jQuery("#paymentType").val("3");
+			} else {
+				jQuery(".toPrice").show();
+				jQuery(".viewprice .price").show();
+			}
+			if (parseFloat(score) <= 0) {
+				jQuery(".count .jf").hide();
+				jQuery(".viewprice .jf").hide();
+			} else {
+				jQuery(".count .jf").show();
+				jQuery(".viewprice .jf").show();
+			}
+			if (parseFloat(score) > 0 && parseFloat(allprice) > 0) {
+				jQuery(".add").show();
+				jQuery(".add1").show();
+			} else {
+				jQuery(".add").hide();
+				jQuery(".add1").hide();
+			}
+			var payType = jQuery("#paymentType").val();
+			if (payType == "3") {
+				jQuery(".paytype").hide();
+				jQuery(".yunfei").hide();
+			} else {
+				jQuery(".paytype").show();
+				jQuery(".yunfei").show();
+			}
+		}
+
+		jQuery(function() {
+			panduan();
+		});
+	</script>
+</body>
+</html>
+

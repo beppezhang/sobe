@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+<title>添加地址</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/list.css">
+</head>
+<body>
+<form action="$!domain/weixin/usersaveAddress.htm" method="post" class="saveForm">
+<div class="addr">
+    	<dl class="clearfix">
+        	<dt>收货人</dt>
+            <dd>
+                <input type="hidden" name="type" value="$!type">
+            	<input id="name" name="name" type="text" class="ipt" placeholder="收货人">
+            </dd>
+        </dl>
+        <dl class="clearfix">
+        	<dt>手机号</dt>
+            <dd>
+            	<input id="mobile" name="mobile" type="tel" class="ipt" placeholder="手机或固话">
+            </dd>
+        </dl>
+    </div>
+    <div class="addr">
+    	<dl class="clearfix">
+        	<dt>省份</dt>
+            <dd>
+              <select id="provinceID" name="provinceID" onchange="selprovince(this.value)">
+	            #foreach($!province in $!provinceList)
+	            <option value="$!province.mainID">$!province.name</option>
+	            #end
+	          </select>
+            </dd>
+        </dl>
+        <dl class="clearfix">
+        	<dt>城市</dt>
+            <dd>
+             <select id="cityID" name="cityID" onchange="selcity(this.value);" class="cityed">
+	            #foreach($!city in $!cityList)
+	            <option value="$!city.mainID">$!city.name</option>
+	            #end
+	         </select>
+            </dd>
+        </dl>
+        <dl class="clearfix">
+       	  <dt>地区</dt>
+            <dd>
+              <select id="disctrictID" name="disctrictID" class="district">
+	            #foreach($!district in $!districtList)
+	            <option value="$!district.mainID">$!district.name</option>
+	            #end
+	          </select>
+            </dd>
+        </dl>
+        <dl class="clearfix">
+        	<dt>详细地址</dt>
+            <dd>
+            	 <input id="address" name="address" type="text" class="ipt" placeholder="详细地址">
+            </dd>
+        </dl>
+    </div>
+    <p class="submit">
+    	<a class="submit_btn" href="javascript:;" onclick="saveAddress();">提交</a>
+    </p>
+    <input name="ids" value="$!ids" type="hidden">
+    <input name="itemID" value="$!itemID" type="hidden">
+    <input name="itemType" value="$!itemType" type="hidden">
+    <input name="itemCount" value="$!itemCount" type="hidden">
+    <input type="hidden" value="$!paymentType" id="paymentType" name="paymentType">
+    <input type="hidden" value="$!supplierID" id="supplierID" name="supplierID">
+    <input type="hidden" value="$!generateType" id="generateType" name="generateType">
+    </form>
+<script type="text/javascript" src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script> 
+<script type="text/javascript">
+	
+	function saveAddress(){
+		var name = jQuery("#name").val();
+		var provinceID = jQuery("#provinceID").val();
+		var cityID = jQuery("#cityID").val();
+		var disctrictID = jQuery("#disctrictID").val();
+		var address = jQuery("#address").val();
+		var zip = jQuery("#zip").val();
+		var mobile = jQuery("#mobile").val();
+		var youbian	= /^[1-9][0-9]{5}$/;		//邮编验证
+		var hphone = /^0?1[3|4|5|8][0-9]\d{8}$/;		//手机验证
+		if (name == ""){
+			alert("收货人不能为空！");
+			return;
+		}
+		if (provinceID == ""){
+			alert("省不能为空！");
+			return;
+		}
+		if (cityID == ""){
+			alert("市不能为空！");
+			return;
+		}
+		if (disctrictID == ""){
+			alert("地区不能为空！");
+			return;
+		}
+		if (address == ""){
+			alert("详细地址不能为空！");
+			return;
+		}
+		/*if (zip == ""){
+			alert("邮编不能为空！");
+			return;
+		}
+		if (!youbian.test(zip)){
+			alert("邮编格式不正确！");
+			return;
+		}*/
+		if (mobile == ""){
+			alert("手机号码不能为空！");
+			return;
+		}
+		if (!hphone.test(mobile)){
+			alert("手机号码格式不正确！");
+			return;
+		}
+		jQuery(".saveForm").submit();
+	}
+
+	//根据省获取市信息
+	function selprovince(provid){
+		if(provid==""){
+			return;
+		}
+		else{
+			jQuery.ajax({
+				url: "ajaxGetCitys.do",
+				data:{'provid':provid},
+				type:"POST",
+				dataType:"json",
+				success:function(data){
+					if (data.code == 0){
+						$(".cityed").empty();
+						var res = data.result;
+						for(var i in res){
+							$(".cityed").append($("<option></option>").val(res[i].mainID).html(res[i].name));
+						}
+						selcity(res[0].mainID);
+					}
+				},
+				error:function(){
+					alert("系统出错！");
+				}				
+			});
+		}
+	}
+	
+	// 根据市获取地区信息
+	function selcity(cityid){
+		if (cityid == "") {
+			return;
+		}
+		else {
+			jQuery.ajax({
+				url: "ajaxGetDistricts.do",
+				data:{"cityid":cityid},
+				dataType:"json",
+				type:"POST",
+				success:function(data){
+					if (data.code == 0){
+						$(".district").empty();
+						var res = data.result;
+						for(var i in res){
+							$(".district").append($("<option></option>").val(res[i].mainID).html(res[i].name));
+						}
+					}
+				},
+				error:function(){
+					alert("系统出错！");
+				}
+			});
+		}
+	}
+	jQuery(function(){
+		jQuery(".userLink").addClass("cur");
+	});
+</script>
+</body>
+</html>

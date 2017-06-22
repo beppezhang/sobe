@@ -1,0 +1,5 @@
+<div id="topbar">
+	<div class="layout txt_r clearfix">
+    	<div class="welbox" style="margin-right: 50px;">您好，#if($!{user.name})<a href="/mall/buyer/userInfo.htm">$!{user.name}</a>#end欢迎来到搜贝#if("$!{user.username}"!="")<a href="/mall/member/logout.do">退出</a>#else<a href="$!{domain}/mall/member/toLogin.htm">请登录</a><a href="/mall/member/registerPage.htm">免费注册</a>#end</div>
+    </div>
+</div>

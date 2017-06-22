@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>积分奖惩</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<em class="icon iconMenu1 "></em><a href="memberList.htm">会员中心</a> &gt;<a href="scoreList.htm">积分明细</a> &gt; <span>积分奖惩</span>
+		</div>
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="javascript:;" class="hover">积分奖惩</a></li>
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/member/addScore.htm" method="post">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								#parse("/layout/searchmember.vm")
+								<dd class="clearfix">
+									<div class="formTt">调整：</div>
+									<div class="formRow">
+										<select name="type" class="select">
+											<option value="5">奖励</option>
+											<option value="6">扣减</option>
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">积分：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="amount">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">备注：</div>
+									<div class="formRow">
+										<textarea rows="5" cols="80" name="description"> </textarea>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/member/addScore.htm",$!menuAllList)
+										) <input type="submit" class="save" value="提交"> #end<input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".member_menu_2").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+		})
+	</script>
+	#parse("layout/footer.vm")
+</body>
+</html>

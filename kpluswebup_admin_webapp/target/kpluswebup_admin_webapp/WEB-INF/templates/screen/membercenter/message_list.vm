@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>站内信</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<em class="icon iconMenu1 "></em><a href="memberList.htm">会员中心</a> &gt;<span>站内信</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/member/messageList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!messageDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!messageDTO.pageSize">
+				<div class="tableTool">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">用户名：</span><input type="text"
+									name="searchUserName" class="cText"
+									value="$!messageDTO.searchUserName" /></td>
+								<td><span class="grayF">姓名：</span><input type="text"
+									name="searchCustomerName" class="cText"
+									value="$!messageDTO.searchCustomerName" /></td>
+								<td><span class="grayF">发件人用户名：</span><input type="text"
+									name="searchOperatorName" class="cText"
+									value="$!messageDTO.searchOperatorName" /></td>
+								<td rowspan="3">
+									#if($!menuUtil.isExistMenu("/admin/member/messageList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				#if($!menuUtil.isExistMenu("/admin/member/messageSendPage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/member/messageSendPage.htm"
+					title="发送站内信" class="TableAddBtn">发送站内信</a> #end
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td>用户名</td>
+						<td>姓名</td>
+						<td>发件人用户名</td>
+						<td>标题</td>
+						<td>内容</td>
+						<td>发送时间</td>
+						<td>状态</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!message in $!messageList)
+					<tr>
+						<td>$!message.customerUserName</td>
+						<td>$!message.customerName</td>
+						<td>$!message.operatorName</td>
+						<td>$!message.title</td>
+						<td>$!message.content</td>
+						<td>$!date.format('yyyy-MM-dd HH:mm:ss',$!message.createTime)</td>
+						<td>#if("$!message.isReaded"=="0")未读
+							#elseif("$!message.isReaded"=="1")已读 #end</td>
+						<td class="last">
+							#if($!menuUtil.isExistMenu("/admin/member/sendMessage.htm",$!menuAllList)
+							) <a class="icon iconSendAg"
+							href="$!{domain}/admin/member/sendMessage.htm?mainID=$!message.mainID"
+							title="再次发送"></a> #end
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!messageDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

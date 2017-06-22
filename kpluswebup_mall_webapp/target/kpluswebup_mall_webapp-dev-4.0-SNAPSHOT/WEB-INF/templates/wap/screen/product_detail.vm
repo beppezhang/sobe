@@ -1,0 +1,356 @@
+<!doctype html>
+<html>
+<head>
+<title>$!item.name</title>
+<meta http-equiv="Content-Type"
+	content="application/vnd.wap.xhtml+xml; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css"
+	href="$!{domain}/wap/css/product.css">
+</head>
+<style>
+body {
+	padding-bottom: 95px;
+}
+</style>
+<body>
+	<div id="banner_box" class="box_swipe">
+		<ul class="pro">
+			<li><a href="$!{imgurl}$!item.picURL"> <img
+					src="$!{imgurl}$!item.picURL" alt="$!item.name" />
+			</a></li> #foreach($!picture in $!pictures)
+			<li><a href="$!{imgurl}$!picture.picURL"> <img
+					src="$!{imgurl}$!picture.picURL" alt="$!picture.name" />
+			</a></li> #end
+		</ul>
+		<ol>
+			<li class="cur"></li> #foreach($!picture in $!pictures)
+			<li></li> #end
+		</ol>
+		<img src="$!{doamin}/wap/img/share.png" class="share" />
+	</div>
+	<div id="dt_name">
+		<h1>#if("$!item"!="")$!item.name#else 暂无该商品#end</h1>
+		<p class="mt10">
+			<b>￥</b> <strong class="col01 f14">
+				#if("$!item.salesPrice"=="")0.00 #else
+				$!NumberTool.format("#0.00",$!item.salesPrice) #end</strong>
+			<del> #if("$!item.standrardPrice"=="")0.00
+				#else$!NumberTool.format("#0.00",$!item.standrardPrice) #end</del>
+		</p>
+	</div>
+	<div id="dl_pm">
+		#foreach($!prop in $!props)
+		<dl #if($!velocityCount==2)class= "mt10"#end>
+			<dt>$!prop.itemPropName</dt>
+			#foreach($!value in $!prop.values) #foreach($!itemProp in
+			$!itemProps) #if("$!itemProp.itemPropValue"=="$!value")
+			#set($var=$!value)
+			<dd class="sel on">
+				<input type="hidden" class="value" value="$!value"> <a
+					href="javascript:;">$!value</a>
+			</dd>
+			#end #end #if("$!var"=="$!value") #else
+			<dd class="sel">
+				<input type="hidden" class="value" value="$!value"> <a
+					href="javascript:;">$!value</a>
+			</dd>
+			#end #end
+		</dl>
+		#end
+		<dl class="mt10">
+			<dt>数量</dt>
+			<dd class="countman">
+				<p class="txt_r countbox">
+					<span class="lt">购买<em class="bNum" data="$!item.stock">1</em>份
+					</span> <span class="sub"></span> <span class="add"></span>
+				</p>
+			</dd>
+		</dl>
+	</div>
+	<div class="pm_article">
+		<!-- $!product.description
+		<p class="pm_more mt10 ct">
+			<a href="javascript:;">图文详情</a>
+		</p> -->
+		<div class="tb  tab">
+		    <span class="cell cur"><a href="javascript:;">图文详情<i></i></a></span>
+			<!--<span class="cell cur"><a href="javascript:;">使用说明<i></i></a></span>
+			<span class="cell"><a href="javascript:;">购物须知<i></i></a></span>
+		    <span class="cell"><a href="javascript:;">退换规则<i></i></a></span> -->
+		</div>
+		<div class="acrt">
+			<div class="cur">$!product.description</div>
+			<!-- <div>$!product.productProp</div>
+			<div>$!product.saleService</div> -->
+		</div>
+	</div>
+	<div id="mainnav">
+		<div class="opbar">
+			<span class="cell shopcart"><a
+				href="$!{domain}/weixin/usershopcart1.htm"><em class="amo">#if("$!shopCount"!="")$!shopCount#else 0#end</em></a></span>
+			<span class="cell gobuy"><a href="javascript:;"
+				onclick="gobuy();" class="btns">立即购买</a></span> <span class="cell addcart"><a
+				href="javascript:addcat();" class="btns" onClick="openprot(1)">加入购物车</a></span>
+			#if($!favorite) <span id="favorite" class="cell booking on"><a
+				href="javascript:;"></a></span> #else <span id="favorite"
+				class="cell booking"><a href="javascript:;"></a></span> #end
+		</div>
+	</div>
+	<div id="agebox1" class="popbox">
+		<div class="get_result">
+			<h2 class="add_ok">已成功添加至购物车！</h2>
+		</div>
+	</div>
+	<input type="hidden" id="productID" value="$!product.mainID">
+	<input type="hidden" id="itemID" value="$!item.mainID">
+	<input type="hidden" id="customerID" value="$!wxuser.mainID">
+	<input type="hidden" id="domain" value="$!domain">
+	<input type="hidden" id="stock" value="$!item.stock">
+	<input type="hidden" id="supplierID" value="$!item.supplierID">
+
+	<form
+		action="$!domain/weixin/productDetail.htm?productID=$!product.mainID"
+		method="post" id="detailForm">
+		<input type="hidden" name="value1" value="" id="value1"> <input
+			type="hidden" name="value2" value="" id="value2">
+	</form>
+	<script type="text/javascript"
+		src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="$!{domain}/wap/js/swipe.js"></script>
+	<script>
+	jQuery(function(){
+		new Swipe(document.getElementById('banner_box'), {
+			speed:500,
+			auto:3000,
+			callback: function(){
+				var lis = $(this.element).next("ol").children();
+				lis.removeClass("cur").eq(this.index).addClass("cur");
+			}
+		})
+		/*jQuery(".opbar").find(".booking").click(function(){
+			jQuery(this).toggleClass("on")	
+		})*/
+		jQuery(".htbar").click(function(){
+			jQuery(this).toggleClass("on").next(".tclist").toggle();
+			
+		})
+		//选择商品
+		jQuery("#dl_pm").find("dd").click(function(){
+			if(jQuery(this).hasClass("countman")){
+				return;	
+			}
+			jQuery(this).addClass("on").siblings().removeClass("on");	
+		})
+		//选择更多商品
+		jQuery(".tclist li").find(".tb").click(function(){
+			jQuery(this).find(".ckbox").toggleClass("cur");
+			if(jQuery(this).find(".ckbox").hasClass("cur")){
+			  jQuery(this).next(".dt_hidden").slideDown(200);		
+			}
+			else{
+			  jQuery(this).next(".dt_hidden").slideUp(200);
+			}
+		})
+		jQuery(".tclist li dl dd").find("span").click(function(){
+			jQuery(this).addClass("on").siblings().removeClass("on");
+		})
+		//选择数量
+		jQuery(".countbox").find(".add").click(function(){
+			var imtNum = jQuery(this).closest("p").find(".lt").find(".bNum").attr("data");//最大购买数量(库存)
+			var getNum = jQuery(this).closest("p").find(".lt").find(".bNum").html(); //获取本商品数量
+			var addNum = parseInt(getNum) + 1;//数量增加
+			if(imtNum>=addNum){
+			jQuery(this).closest("p").find(".lt").find(".bNum").html(addNum);
+			}else{  alert("已达最大购买数量！");}
+		})
+		jQuery(".countbox").find(".sub").click(function(){
+			var getNum = jQuery(this).closest("p").find(".lt").find(".bNum").html(); //获取本商品数量
+			var subNum = parseInt(getNum) - 1;//数量减少
+			if(subNum>0){
+			jQuery(this).closest("p").find(".lt").find(".bNum").html(subNum);
+			}
+		})
+		jQuery(".tab span").click(function(e){
+			 e.preventDefault();
+			 jQuery(this).addClass('cur').siblings().removeClass('cur');
+			 jQuery(".acrt div").eq(jQuery(".tab span").index(this)).addClass("cur").siblings().removeClass("cur");
+		 })
+
+	})
+	//弹出对话框
+	var isIE = (document.all) ? true : false;
+	var isIE6 = isIE && ([/MSIE (\d)\.0/i.exec(navigator.userAgent)][0][1] == 6);
+	var cwidth =  jQuery(window).width();
+	var cheight =  jQuery(window).height();
+	var dheight =  jQuery(document).height();
+	var i;
+	function openprot(i) {
+		var idname = document.getElementById("agebox"+i);
+		jQuery("body").append("<div id='wrapbg' onClick='closeprot()'></div>");
+		
+		jQuery("#wrapbg").width(cwidth);
+		jQuery("#wrapbg").height(dheight);
+		
+		jQuery(idname).fadeIn(300);
+		idname.style.left = (cwidth - idname.offsetWidth) / 2  + "px";
+		idname.style.top =  (cheight - idname.offsetHeight) / 2.5 + "px";
+	}
+
+	function closeprot() {
+		jQuery("div[id='wrapbg']").remove();
+		jQuery(".popbox").fadeOut(200);
+	} 
+	jQuery(".share").click(function(){
+		jQuery(this).hide();
+	})
+
+	function gobuy(){
+		var customerID = jQuery("#customerID").val();
+		var itemID = jQuery("#itemID").val();
+		var stock = jQuery("#stock").val();
+		var domain = jQuery("#domain").val();
+		var itemCount = jQuery(".bNum").text();
+		var supplierID = jQuery("#supplierID").val();
+		if (parseInt(stock) < parseInt(itemCount)){
+			alert("商品数量不能大于库存！");
+			jQuery("#itemCount").val(stock);
+			return;
+		}
+		if (customerID == ""){
+			window.location.href="/weixin/toLogin.htm";
+			return;
+		}
+		if (stock == "0" || stock ==""){
+			alert("库存不足！");
+			return;
+		}
+		if (itemID == ""){
+			alert("暂无该商品！");
+			return;
+		}
+		window.location=domain + '/weixin/usershopcart2.htm?itemID='+itemID+'&itemCount='+itemCount+'&supplierID='+supplierID+"&generateType=quickBuy";
+		
+	}
+	  jQuery(function(){
+			jQuery(".sel").click(function(e){
+				 e.preventDefault();
+				 var productID = jQuery("#productID").val();
+				 var domain = jQuery("#domain").val();
+					var value1 = -1;
+					var value2 = -1;
+					var leng = jQuery("dd.on").length;
+					var cur = 0;
+					jQuery("dd.on").each(
+							function(i) {
+								cur = parseInt(cur)+1;
+								if (i == 0) {
+									value1 = jQuery(this).children(
+											"input").val();
+								} else {
+									value2 = jQuery(this).children(
+											"input").val();
+								}
+					})
+					if (parseInt(cur) < parseInt(leng)){
+						return
+					}
+					jQuery("#value1").val(value1);
+					jQuery("#value2").val(value2);
+					jQuery("#detailForm").submit();
+			 })
+			jQuery(".opbar .booking").click(function(){
+				if (jQuery(this).hasClass("on")) {
+					alert("已收藏！");
+				} else {
+					var itemID = jQuery("#itemID").val();
+					var productID = jQuery("#productID").val();
+					var customerID = jQuery("#customerID").val();
+					var domain = jQuery("#domain").val();
+					if (customerID == ""){
+						window.location= domain+'/weixin/toLogin.htm';
+						return;
+					}
+					jQuery.ajax({
+						url : "ajaxFavorite.do",
+						data : {
+							"itemID" : itemID,
+							"productID" : productID,
+							"customerID" : customerID
+						},
+						type : "POST",
+						dataType : "json",
+						success : function(data) {
+							if (data.code == 0) {
+								jQuery("#favorite").addClass("on");
+							}else if(data.code==3){
+								alert("已收藏！");
+							} else {
+								alert("收藏失败！");
+							}
+						},
+						error : function() {
+							alert("出现异常！");
+						}
+					});
+				}
+			});
+			
+			jQuery(".pricebox p").click(function(){
+				jQuery(this).find(".check_box").addClass("on").closest("p").siblings().find(".check_box").removeClass("on")
+			})
+		});
+		
+		function addcat(){
+			var itemID = jQuery("#itemID").val();
+			var productID = jQuery("#productID").val();
+			var itemCount = jQuery(".bNum").text();
+			var customerID = jQuery("#customerID").val();
+			var domain = jQuery("#domain").val();
+			var stock = jQuery("#stock").val();
+			var supplierID = jQuery("#supplierID").val();
+			if (parseInt(stock) < parseInt(itemCount)){
+				alert("商品数量不能大于库存！");
+				return;
+			}
+			if (customerID == ""){
+				window.location= domain+'/weixin/toLogin.htm';
+				return;
+			}
+			jQuery.ajax({
+				url : "ajaxAddCat.do",
+				data : {
+					"itemCount" : itemCount,
+					"itemID" : itemID,
+					"productID" : productID,
+					"supplierID":supplierID
+				},
+				type : "POST",
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 0) {
+						openprot(1);
+						setTimeout("closeprot()",1000);
+						jQuery(".amo").text(data.result.itemCount);
+					} else {
+						alert("添加失败！");
+					}
+				},
+				error : function() {
+					alert("系统出错！");
+				}
+			});
+		}
+		
+</script>
+</body>
+</html>

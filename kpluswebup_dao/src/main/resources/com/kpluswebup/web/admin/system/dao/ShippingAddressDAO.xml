@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.ShippingAddressDAO">
+
+	<sql id="Base_Column_List">
+		id, name, telephone, mobile, countryID, provinceID,
+		cityID,
+		disctrictID,
+		address, zip, isDefault, forReturn, isDelete,
+		creator,createTime,modifier,modifyTime
+	</sql>
+
+	<select id="findShippingAddressByPagination" parameterType="shippingAddressDTO"
+		resultType="shippingAddressVO">
+		select
+		s.id, s.name, s.telephone, s.mobile, p.name as
+		provinceName,
+		c.name as cityName,
+		d.name as disctrictName,
+		s.address,
+		s.zip, s.isDefault, s.forReturn
+		from kplus_shipping_address s
+		left join
+		kplus_area p on s.provinceID=p.mainID
+		left join kplus_area c on
+		s.cityID=c.mainID
+		left join kplus_area d on s.disctrictID=d.mainID
+		where
+		isDelete=0 order by s.id desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findShippingAddressCount" parameterType="shippingAddressDTO"
+		resultType="java.lang.Long">
+		select count(id) from kplus_shipping_address where
+		isDelete=0
+	</select>
+
+	<select id="findForReturnShippingAddress" resultType="shippingAddressVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_shipping_address
+		where isDelete=0 and isDefault=1
+	</select>
+
+	<update id="deleteShippingAddress" parameterType="java.lang.Long">
+		update
+		kplus_shipping_address set isDelete=1 where id=#{id}
+	</update>
+
+	<insert id="insertShippingAddress" parameterType="shippingAddressDTO">
+		insert into
+		kplus_shipping_address(
+		name,
+		telephone,
+		mobile,
+		provinceID,
+		cityID,
+		disctrictID,
+		address,
+		zip,
+		isDefault,
+		forReturn,
+		isDelete,
+		creator,
+		createTime
+		)
+		values(
+		#{name},
+		#{telephone},
+		#{mobile},
+		#{provinceID},
+		#{cityID},
+		#{disctrictID},
+		#{address},
+		#{zip},
+		#{isDefault},
+		#{forReturn},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<select id="findShippingAddressByID" parameterType="java.lang.Long"
+		resultType="shippingAddressVO">
+		select * from kplus_shipping_address where isDelete=0 and
+		id=#{id}
+	</select>
+
+	<update id="updateShippingAddress" parameterType="shippingAddressDTO">
+		update kplus_shipping_address
+		<set>
+			modifyTime=now()
+			<if test="name != null">
+				,name = #{name}
+			</if>
+			<if test="telephone != null">
+				,telephone = #{telephone}
+			</if>
+			<if test="mobile != null">
+				,mobile = #{mobile}
+			</if>
+			<if test="countryID != null">
+				,countryID = #{countryID}
+			</if>
+			<if test="provinceID != null">
+				,provinceID = #{provinceID}
+			</if>
+			<if test="cityID != null">
+				,cityID = #{cityID}
+			</if>
+			<if test="disctrictID != null">
+				,disctrictID = #{disctrictID}
+			</if>
+			<if test="address != null">
+				,address = #{address}
+			</if>
+			<if test="zip != null">
+				,zip = #{zip}
+			</if>
+			<if test="isDefault != null">
+				,isDefault = #{isDefault}
+			</if>
+			<if test="forReturn != null">
+				,forReturn = #{forReturn}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="findDefaultShippingAddress" resultType="shippingAddressVO">
+		select * from
+		kplus_shipping_address where
+		isDelete=0 and
+		isDefault=0
+	</select>
+	<select id="findDefaultShippingAddressOrder" resultType="shippingAddressVO">
+		select
+		a.*,p.name as provinceName,c.name as cityName
+		from
+		kplus_shipping_address a
+		left join kplus_area p on
+		a.provinceID=p.mainID
+		left join kplus_area c on
+		a.cityID=c.mainID
+		where
+		a.isDelete=0 and
+		a.isDefault=0
+	</select>
+	<select id="findforReturnDefaultShippingAddress" resultType="shippingAddressVO">
+		select * from kplus_shipping_address where
+		isDelete=0 and
+		forReturn=0
+	</select>
+
+	<update id="updateDefaultShippingAddress" parameterType="java.lang.Long">
+		update
+		kplus_shipping_address set isDefault=1 where isDelete=0 and id=#{id}
+	</update>
+	<update id="updateIsDefaultShippingAddress" parameterType="java.lang.Long">
+		update
+		kplus_shipping_address set isDefault=0 where isDelete=0 and
+		id=#{id}
+	</update>
+	<update id="updateforReturnDefaultShippingAddress"
+		parameterType="java.lang.Long">
+		update
+		kplus_shipping_address set forReturn=1 where
+		isDelete=0 and
+		id=#{id}
+	</update>
+	<update id="updateforReturnIsDefaultShippingAddress"
+		parameterType="java.lang.Long">
+		update
+		kplus_shipping_address set forReturn=0 where
+		isDelete=0 and
+		id=#{id}
+	</update>
+
+</mapper>

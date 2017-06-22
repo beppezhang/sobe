@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.FreightTemplateDAO">
+
+	<select id="findFreightTemplate" resultType="freightTemplateVO">
+		select f.*,e.name as
+		expressName from
+		kplus_freighttemplate f
+		left join kplus_express e on
+		f.expressID=e.mainID
+		where f.isDelete=0 order by f.isDefault desc,f.id
+		desc
+	</select>
+	<select id="findFreightTemplateBySupplierID" resultType="freightTemplateVO">
+		select f.*,e.name as
+		expressName from
+		kplus_freighttemplate f
+		left join kplus_express e on
+		f.expressID=e.mainID
+		where f.isDelete=0 
+		and f.supplierID=#{supplierID} 
+		order by f.isDefault desc,f.id
+		desc
+	</select>
+	
+
+	<select id="findFreightTemplateByMainID" parameterType="java.lang.String"
+		resultType="freightTemplateVO">
+		select * from kplus_freighttemplate where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<insert id="insertFreightTemplate" parameterType="freightTemplateDTO">
+		insert into
+		kplus_freighttemplate(
+		mainID,
+		name,
+		priceType,
+		expressID,
+		formatID,
+		firstCondition,
+		firstPrice,
+		addUnit,
+		addPrice,
+		description,
+		isDefault,
+		isDelete,
+		createTime,
+		creator,
+		supplierID
+		)values(
+		#{mainID},
+		#{name},
+		#{priceType},
+		#{expressID},
+		#{formatID},
+		#{firstCondition},
+		#{firstPrice},
+		#{addUnit},
+		#{addPrice},
+		#{description},
+		0,
+		0,
+		now(),
+		#{creator},
+		#{supplierID}
+		)
+	</insert>
+
+	<update id="updateFreightTemplate" parameterType="freightTemplateDTO">
+		update kplus_freighttemplate
+		<set>
+			modifyTime=now()
+			<if test="name!=null">
+				,name=#{name}
+			</if>
+			<if test="priceType!=null">
+				,priceType=#{priceType}
+			</if>
+			<if test="expressID!=null">
+				,expressID=#{expressID}
+			</if>
+			<if test="formatID!=null">
+				,formatID=#{formatID}
+			</if>
+			<if test="firstCondition!=null">
+				,firstCondition=#{firstCondition}
+			</if>
+			<if test="firstPrice!=null">
+				,firstPrice=#{firstPrice}
+			</if>
+			<if test="addUnit!=null">
+				,addUnit=#{addUnit}
+			</if>
+			<if test="addPrice!=null">
+				,addPrice=#{addPrice}
+			</if>
+			<if test="description!=null">
+				,description=#{description}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="deleteFreightTemplateByMainID" parameterType="java.lang.String">
+		update
+		kplus_freighttemplate set isDelete=1 where mainID=#{mainID}
+	</update>
+
+	<select id="findFreightTemplateDefault" resultType="freightTemplateVO">
+		select * from
+		kplus_freighttemplate where isDelete=0 and isDefault=1
+	</select>
+
+	<update id="updateFreightTemplateDefault" parameterType="java.lang.String">
+		update
+		kplus_freighttemplate set isDefault=0 where mainID=#{mainID}
+	</update>
+
+	<update id="updateFreightTemplateIsDefault" parameterType="java.lang.String">
+		update kplus_freighttemplate set isDefault=1 where mainID=#{mainID}
+	</update>
+
+	<select id="findFreightTemplateByProduct" resultType="freightTemplateVO">
+		select f.* from kplus_product p INNER JOIN kplus_freighttemplate f on p.freightTemplateID=f.mainID where p.mainID=#{mainID}
+	</select>
+	
+	<select id="findFreightTemplateByItem" resultType="freightTemplateVO">
+		select f.* from kplus_item i INNER JOIN kplus_freighttemplate f on i.freightTemplateID=f.mainID where i.mainID=#{mainID}
+	</select>	
+
+
+
+	<select id="findFreightTemplateByExpressID" resultType="freightTemplateVO">
+		select * from kplus_freighttemplate where expressID =#{expressID} and isDelete=0
+	</select>
+
+	<select id="findFreightTemplateByName" resultType="freightTemplateVO">
+		select * from kplus_freighttemplate where name =#{name} and supplierID=#{supplierID} and isDelete=0
+		<if test="mainID!=null">
+			and mainID !=#{mainID}
+		</if>
+		
+	</select>
+
+</mapper>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>供应商列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+
+
+	<div class="main clearfix">
+		<div class="conTit">
+		        <em class="icon iconMenu1 "></em><a href="$!{domain}/admin/supplier/supplierList.htm">供应商管理</a> &gt; <span>供应商列表</span>
+		</div>
+					<div class="searchBar">
+						<form id="serachform" name="serachform" method="post" action="$!{domain}/admin/supplier/supplierList.htm">
+							<input type="hidden" id="pageNo" name="pageNo" value="$!supplierDTO.pageNo"> 
+							<input type="hidden" id="pageSize" name="pageSize" value="$!supplierDTO.pageSize">
+							<table class="searchTable">
+								<tbody>
+									<tr>
+									    <td><span class="grayF">手机号码：</span><input type="text"
+											name="searchMobile" id="searchMobile" class="cText" value="$!supplierDTO.mobile" />
+										</td>
+										<td><span class="grayF">公司名称：</span><input type="text"
+											name="searchCompanyName" id="searchCompanyName" class="cText" value="$!supplierDTO.companyName" />
+										</td>
+										<td><span class="grayF">联系人姓名：</span><input type="text"
+											name="searchLinkMan" id="searchLinkMan" class="cText" value="$!supplierDTO.linkMan" />
+										</td>
+										<td><span class="grayF">开户行：</span><input type="text"
+											name="searchOpeningBank" id="searchOpeningBank" class="cText" value="$!supplierDTO.openingBank" />
+										</td>
+									</tr>
+									<tr>
+									    <td><span class="grayF">银行账号：</span><input type="text"
+											name="searchBankAccount" id="searchBankAccount" class="cText" value="$!supplierDTO.bankAccount" />
+										</td>
+										<td><span class="grayF">取件地址：</span><input type="text"
+											name="searchAddress" id="searchAddress" class="cText" value="$!supplierDTO.address" />
+										</td>
+										<td><span class="grayF">用户名：</span><input type="text"
+											name="searchUserName" id="searchUserName" class="cText" value="$!supplierDTO.userName" />
+										</td>
+										<td rowspan="3">
+										<input class="searchBtn" type="submit" value="搜索" />
+								</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+				</div>
+				<div class="tableListBar">
+						<div class="tableTool">
+							<!-- <a href="javascript:;" title="全选" id="selectAll"><em
+								class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+								id="unSelect"><em class="icon iconInverse"></em></a> -->
+							#if($!menuUtil.isExistMenu("/admin/supplier/exportSupplier.do",$!menuAllList)
+							) <a href="javascript:;" id="exportSupplier" title="导出"><em
+								class="icon iconExport"></em></a> #end
+			#if($!menuUtil.isExistMenu("/admin/supplier/addSupplierPage.htm",$!menuAllList)
+			) <a href="$!{domain}/admin/supplier/addSupplierPage.htm" class="TableAddBtn" title="新增供应商">+新增供应商</a>
+			#end
+						</div>
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td><!-- <label class="label"> <input type="checkbox" value="" id="all" /></label> --></td>
+									<td>手机号码</td>
+									<td>公司名称</td>
+									<td>联系人姓名</td>
+									<td>开户行</td>
+									<td>银行账号</td>
+									<td>取件地址</td>
+									<td>保证金</td>
+									<td>用户名</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+							#foreach($!supplier in $!supplierList)
+								<tr>
+								    <td><!-- <label class="label"> <input type="checkbox"
+								        value="$!supplier.mainID" id="check_box_$!preSale.mainID" /></label> --></td>
+									<td>$!supplier.mobile</td>
+									<td>$!supplier.companyName</td>
+									<td>$!supplier.linkMan</td>
+									<td>$!supplier.openingBank</td>
+									<td>$!supplier.bankAccount</td>
+									<td>$!supplier.address</td>
+									<td>$!supplier.cashDep</td>
+									<td>$!supplier.userName</td>
+									<td>
+										#if($!menuUtil.isExistMenu("/admin/supplier/editSupplier.htm",$!menuAllList)
+										) <a class="icon iconEdit"
+										href="$!{domain}/admin/supplier/editSupplierPage.htm?mainID=$!{supplier.mainID}"
+										title="编辑"></a> #end
+										#if($!menuUtil.isExistMenu("/admin/supplier/deleteSupplier.do",$!menuAllList)
+						                ) &nbsp; <a href="javascript:;" class="icon iconDel" title="删除"
+						                onclick="deleteSupplier('$!supplier.mainID')"></a> #end
+									</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!supplierDTO)
+						</table>
+		</div></div>
+</body>
+</html>

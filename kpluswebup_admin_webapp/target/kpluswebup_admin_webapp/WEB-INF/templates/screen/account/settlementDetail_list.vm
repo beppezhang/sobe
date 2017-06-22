@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>结算单明细</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>财务中心 》结算明细</span>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+			<input type="hidden" id="finalStatementID" value="$!finalstatement.mainID">
+				<!-- <a href="javascript:;" title="全选" id="selectAll"><em
+					class="icon iconAllSel"></em></a> <a href="javascript:;" title="反选"
+					id="unSelect"><em class="icon iconInverse"></em></a> -->
+				#if($!menuUtil.isExistMenu("/admin/account/exportSettlementDetail.do",$!menuAllList)
+				) <a href="javascript:;" title="导出" id="exportSettlementDetail"><em
+					class="icon iconExport"></em></a> #end
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td></td>
+						<td>订单编号</td>
+						<td>下单时间</td>
+						<td>商品数量</td>
+						<td>订单金额</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!order in $!finalstatement.salesOrderList)
+					<tr>
+						<td style="width: 60px"><!-- <label class="label"><input
+									type="checkbox" value="$!order.mainID"
+									id="check_box_$!order.mainID" /></label> --></td>
+						<td>$!order.mainID</td>
+						<td><span
+							title="$!date.format('yyyy-MM-dd HH:mm:ss',$!settlement.createTime)"
+							class="dealtime">$!date.format("yyyy-MM-dd HH:mm:ss", $!order.createTime)</span></td>
+						<td>$!order.itemCount</td>
+						<td class="price"><p>￥$!NumberTool.format("#0.00",$!order.totalAmount)</p></td>
+					</tr>#end
+				</tbody>
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

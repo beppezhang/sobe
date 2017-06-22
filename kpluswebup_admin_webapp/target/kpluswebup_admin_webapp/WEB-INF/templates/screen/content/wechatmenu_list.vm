@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>菜单配置</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>内容管理 》微信内容》菜单配置</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/wechat_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<!--form  S------->
+					<div class="systemBar">
+						<div class="p10Box leftToTable">
+							<div class="tableListBar">
+								<form id="serachform" name="serachform" method="post"
+									action="$!{domain}/admin/content/wechatMenuList.htm">
+									<input type="hidden" id="pageNo" name="pageNo"
+										value="$!cmsWechatMenuDTO.pageNo"> <input
+										type="hidden" id="pageSize" name="pageSize"
+										value="$!cmsWechatMenuDTO.pageSize">
+									<div class="searchT">
+										微信名称：<select class="select" name="interfaceConfigID">
+											<option value="">全部</option> #foreach($!interfaceconfig in
+											$!interfaceConfigList)
+											<option #if("$!cmsWechatMenuDTO.interfaceConfigID"==
+												"$!interfaceconfig.mainID")selected="selected" #end
+												value="$!interfaceconfig.mainID">$!interfaceconfig.name</option>
+											#end
+										</select> <a class="btn" href="javascript:;" onclick="submitMenu();">搜索</a>
+									</div>
+								</form>
+								<div class="tableTool operate">
+									<a href="javascript:;" title="全选" id="selectAll"><em
+										class="icon iconAllSel"></em></a> <a href="javascript:;"
+										title="反选" id="unSelect"><em class="icon iconInverse"></em></a>
+									<a href="javascript:;" title="展开"><em
+										class="icon iconDevelop"></em></a> <a href="javascript:;"
+										title="收起"><em class="icon iconSwallowing "></em></a>
+									#if($!menuUtil.isExistMenu("/admin/content/deleteWechatMenu.do",$!menuAllList)
+									) <a href="javascript:;" title="删除" id="deleteWechatMenuAll"><em
+										class="icon iconDel"></em></a> #end
+									#if($!menuUtil.isExistMenu("/admin/content/addWechatMenuPage.htm",$!menuAllList))
+									<a href="$!{domain}/admin/content/addWechatMenuPage.htm"
+										class="TableAddBtn" title="新增主菜单">+新增主菜单</a> #end
+								</div>
+								<table class="tableList grid seTable">
+									<thead>
+										<tr>
+											<td width="5%">&nbsp;</td>
+											<td width="10%">菜单名称</td>
+											<td width="25%">微信名称</td>
+											<td width="25%">菜单类型</td>
+											<td width="15%">排序</td>
+											<td width="20%">操作</td>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div class="TreeList" id="list">
+								#foreach($!wechatMenu in $!wechatMenuList)
+								<div class="level level1">
+									<div style="width: 5%">
+										<label><input type="checkbox"
+											value="$!wechatMenu.mainID"
+											id="check_box_$!wechatMenu.mainID" /></label>&nbsp;
+									</div>
+									<div style="width: 10%" class="first">
+										<span class="s">$!wechatMenu.name</span>
+									</div>
+									<div style="width: 25%">$!wechatMenu.wechatName</div>
+									<div style="width: 25%">#if("$!wechatMenu.menuType"=="1")文字模式#end
+										#if("$!wechatMenu.menuType"=="2")图文模式#end
+										#if("$!wechatMenu.menuType"=="3")应用模式#end</div>
+									<div style="width: 15%">
+										<span class="elevators">$!wechatMenu.sortOrder<a
+											href="javascript:;" class="top"></a><a href="javascript:;" class="bot"></a></span>
+									</div>
+									<div style="width: 20%">
+										#if($!menuUtil.isExistMenu("/admin/content/editWechatMenuPage.htm",$!menuAllList)
+										) <a class="icon iconEdit"
+											href="$!{domain}/admin/content/editWechatMenuPage.htm?mainID=$!wechatMenu.mainID"
+											title="编辑"></a> #end &nbsp;
+										#if($!menuUtil.isExistMenu("/admin/content/deleteWechatMenu.do",$!menuAllList)
+										) <a href="javascript:;" class="icon iconDel"
+											onclick="deleteWechatMenu('$!wechatMenu.mainID')" title="删除"></a>#end
+										#if($!menuUtil.isExistMenu("/admin/content/addWechatMenuPage.htm",$!menuAllList))
+										<a
+											href="$!{domain}/admin/content/addWechatMenuPage.htm?parentID=$!wechatMenu.mainID"
+											class="icon iconAdd" title="新增子菜单"></a>#end
+									</div>
+								</div>
+								<ul>
+									<li>#foreach($!childMenu in
+										$!wechatMenu.cmsWechatMenuChild)
+										<div class="level level2">
+											<div style="width: 5%">
+												<label><input type="checkbox"
+													value="$!childMenu.mainID"
+													id="check_box_$!childMenu.mainID" /></label>&nbsp;
+											</div>
+											<div style="width: 10%" class="first">
+												<span class="z">$!childMenu.name</span>
+											</div>
+											<div style="width: 25%">$!childMenu.wechatName</div>
+											<div style="width: 25%">#if("$!childMenu.menuType"=="1")文字模式#end
+												#if("$!childMenu.menuType"=="2")图文模式#end
+												#if("$!childMenu.menuType"=="3")应用模式#end</div>
+											<div style="width: 15%">
+												<span class="elevators">$!childMenu.sortOrder<a
+													href="javascript:;" class="top"></a><a href="javascript:;" class="bot"></a></span>
+											</div>
+											<div style="width: 20%">
+												#if($!menuUtil.isExistMenu("/admin/content/editWechatMenuPage.htm",$!menuAllList)
+												) <a class="icon iconEdit"
+													href="$!{domain}/admin/content/editWechatMenuPage.htm?mainID=$!childMenu.mainID"
+													title="编辑"></a> #end &nbsp;
+												#if($!menuUtil.isExistMenu("/admin/content/deleteWechatMenu.do",$!menuAllList)
+												) <a href="javascript:;" class="icon iconDel"
+													onclick="deleteWechatMenu('$!childMenu.mainID')" title="删除"></a>#end
+
+											</div>
+										</div> #end
+									</li>
+								</ul>
+								#end
+							</div>
+						</div>
+					</div>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+	<script type="text/javascript">
+		$(function() {
+			$(".wechat_menu_1").append("<em class='icon arrowLfWeight'></em>")
+					.find("a").addClass("hover");
+
+			$(".level .first span").bind("click", function() {
+				var t_parent = $(this).parents(".level");
+				//判断到点击的为1级菜单
+				if (t_parent.hasClass("level1")) {
+					//如果是收起状态
+					if ($(this).hasClass("s")) {
+						$(this).removeClass("s").addClass("z");
+						t_parent.next("ul").show();
+					} else {
+						//如果是展开状态
+						$(this).removeClass("z").addClass("s");
+						t_parent.next("ul").hide();
+					}
+				}
+			})
+
+			//全部展开
+			$(".iconDevelop").bind("click", function() {
+				$(".level1 .s").removeClass("s").addClass("z");
+				$(".TreeList ul").show();
+			})
+			//全部收起
+			$(".iconSwallowing").bind("click", function() {
+				$(".level1 .z").removeClass("z").addClass("s");
+				$(".TreeList ul").hide();
+			})
+
+		})
+
+		function submitMenu() {
+			$("#serachform").submit();
+		}
+	</script>
+</body>
+</html>

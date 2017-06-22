@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.ExpressDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID , name, contactPerson,
+		mobile,description,`code`,`isDefault` as def,
+		creator, createTime,
+		modifier,
+		modifyTime
+	</sql>
+
+	<insert id="addExpress" parameterType="expressDTO">
+		INSERT INTO kplus_express(
+		mainID,
+		name,
+		contactPerson,
+		mobile,
+		description,
+		`code`,
+		`isDefault`,
+		isDelete,
+		creator,
+		createTime,
+		supplierID
+		)
+		VALUES
+		(
+		#{mainID},
+		#{name},
+		#{contactPerson},
+		#{mobile},
+		#{description},
+		#{code},
+		#{def},
+		0,
+		#{creator},
+		now(),
+		#{supplierID}
+		)
+	</insert>
+
+	<update id="deleteExpressByMainID" parameterType="java.lang.String">
+		update
+		kplus_express
+		set isDelete=1
+		where mainID =#{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateExpressByMainID" parameterType="expressDTO">
+		update
+		kplus_express
+		set modifyTime=now()
+		<if test="name != null">
+			,name = #{name}
+		</if>
+		<if test="contactPerson != null">
+			,contactPerson = #{contactPerson}
+		</if>
+		<if test="mobile != null">
+			,mobile = #{mobile}
+		</if>
+		<if test="description != null">
+			,description = #{description}
+		</if>
+		<if test="code != null">
+			,code = #{code}
+		</if>
+		<if test="def != null">
+			,`isDefault` = #{def}
+		</if>
+		<if test="modifier != null">
+			,modifier = #{modifier}
+		</if>
+		where mainID =#{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<select id="findALlExpress" resultType="expressVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_express
+
+		where isDelete=0
+
+	</select>
+	
+	<select id="findALlExpressBySupplierID" parameterType="java.lang.String" resultType="expressVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_express
+
+		where isDelete=0
+		and supplierID=#{supplierID}
+	</select>
+	
+	<select id="findExpressPageBySupplierID" parameterType="expressDTO" resultType="expressVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_express
+
+		where isDelete=0
+		and supplierID=#{supplierID}
+		limit #{startRow} ,#{pageSize}
+	</select>
+	
+
+	<select id="findExpressByMainID" resultType="expressVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_express
+
+		where isDelete=0 and
+		mainID=#{mainID,jdbcType=VARCHAR}
+
+	</select>
+		<select id="findExpressByName" resultType="expressVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_express
+
+		where isDelete=0 and
+		name=#{name,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="findExpressIsDefault" resultType="expressVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_express
+		where isDelete=0 and isDefault=1
+	</select>
+
+	<update id="updateExpressDefault" parameterType="java.lang.String">
+		update kplus_express set isDefault=0 where mainID=#{mainID}
+	</update>
+
+	<select id="findExpressCountBySupplierID" parameterType="expressDTO"
+		resultType="java.lang.Long">
+		SELECT
+		count(s.id)
+		FROM
+		kplus_express s
+		WHERE
+		s.supplierID = #{supplierID}
+		AND s.isDelete = 0
+	</select>
+	
+	<select id="findExpress" resultType="expressVO">
+		select * from kplus_express where name =#{name} and supplierID=#{supplierID} and isDelete=0
+		<if test="mainID!=null">
+			and mainID !=#{mainID}
+		</if>
+	</select>
+	
+	
+</mapper>

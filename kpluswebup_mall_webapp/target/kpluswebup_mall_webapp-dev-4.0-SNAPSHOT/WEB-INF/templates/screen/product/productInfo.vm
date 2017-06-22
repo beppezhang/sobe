@@ -1,0 +1,288 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--<title>上海晨阑数据技术有限公司</title>-->
+<title>$!productVO.name</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/offer.css">
+<link rel="stylesheet" type="text/css" href="${mallStatic}/css/header_fixed.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/style/login.css">
+</head>
+
+<body>
+	<div id="all">
+	<!-- top bar -->
+	#parse("layout/head_top_new.vm")
+	<div id="box">
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider_new.vm")
+	<!--nav导航条-->
+	#parse("layout/menu_new.vm")
+	</div>
+
+<div id="olpProduct" class="a-container">
+  <div class="a-fixed-left-grid a-spacing-base">
+    <div class="a-fixed-left-grid-inner" style="padding-left:130px">
+      <div id="olpProductImage" class="a-text-center a-fixed-left-grid-col a-col-left" style="width:130px;margin-left:-130px;_margin-left:-65px;float:left;">
+    	<p class="ct">
+    			<!--  <a href="javascript:void(0);">  -->   			
+    			<img src=" $!{mallStatic}/img/products/$!productVO.picURL" class="pimg imgMove" style="width:120px;height:120px;">
+    			<!-- </a>-->
+    	</p>          
+      </div>
+      <div id="olpProductDetails" class="a-fixed-left-grid-col a-col-right" style="padding-left:0%;*width:99.6%;float:left;margin-top:8px;margin-left: 30px;">
+        <h1 class="a-size-large a-spacing-none" style="font-size:20px!important;padding-bottom:10px;">
+	        $!productVO.name
+	  		#if($!productVO.type==2)
+	      		(副厂件)	
+	      	#else
+	      		(原厂件)
+	      	#end
+        </h1>
+        <h1 class="a-size-large a-spacing-none">
+        	<span>产品编号&nbsp;:
+          $!productVO.code</span>
+          <!--$!productName-->
+		  #if($!productVO.type==1)
+          <span>OEM&nbsp;: 
+          		$!productVO.code
+          </span>
+          #else
+          <span>OEM&nbsp;: 
+		      #foreach($data in $!productOEMOther)
+		      	$data.code #if($velocityCount == $!productOEMOther.size()) #else , #end  
+		      #end
+          </span>
+          #end
+        </h1>
+		<h1 class="a-size-large a-spacing-none">
+         	 <span>配件品牌&nbsp;: $!productVO.brandTitle $!productVO.brandName  
+         	 	<img src="$!{mallStatic}/img/logo/$!productVO.brandPicURL" style="width: 30px;height: 30px" class="bimg"></span>
+			<span>配件分类&nbsp;: $!partsCategoryLevel.name #if($!partsCategoryLevel2)> $!partsCategoryLevel2.name #end</span>         	 	
+        </h1>
+        <hr class="a-spacing-small a-divider-normal">
+      </div>
+    </div>
+  </div>
+</div>
+<div id="olpOfferList" class="a-container olpOfferList">
+  <ul id="olpTabs" class="a-tabs">
+    
+    <!--增加的适用车型-->
+    <li id="olpTabAll" class="a-active">
+      <a href="#">适用车型</a>
+    </li>
+    <!--增加原厂件-->
+    #if($!productVO.type==2)
+    <li id="olpTabAll">
+      <a href="#">原厂件</a>
+    </li>
+    #end
+    #if($!productVO.type!=2)
+    <!--增加副厂件-->
+    <li id="olpTabAll">
+      <a href="#">副厂件</a>
+    </li>
+    #end
+  </ul>
+  <div id="olpTabContent" class="a-box a-box-tab">
+    <div class="a-box-inner">
+      <div class="a-section a-spacing-double-large" role="main">
+
+     <div class="commonpage curpage">
+     	#foreach($data in $!vehicleTypeMap.entrySet())
+     	
+     	<dl class="plate">
+     		<dt class="platenumber"><img src="$!{mallStatic}/img/logo/$data.key.picUrl"/></dt>
+     		<dd class="platetype">
+     			#foreach($!vehicleType in ${data.value})
+     				<span><a href="${domain}/mall/product/searchProductListByVehicleType.htm?vehicleTypeId=$!vehicleType.mainID" title="$!vehicleType.name">$!vehicleType.name</a></span>
+     			#end
+     			
+     		</dd>
+     		<a class="more_Link" href="javascript:;">更多</a>
+     	</dl>     	
+     	
+     	#end
+	</div>
+      <div class="commonpage">
+        <div class="a-row a-spacing-mini">
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  产品名称
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  产品编码
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                 配件品牌
+              </span>
+          </div>
+          <!--<div class="a-column common">
+              <span class="a-text-bold">
+              </span>
+          </div>-->
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  详细信息
+              </span>
+          </div>
+        </div>
+
+	#if($!productOEMOther.size()==0)
+		<li>暂无信息</li>
+	#else
+        #foreach($data in $!productOEMOther)
+        <hr class="a-spacing-mini a-divider-normal">
+        <div class="a-row a-spacing-mini" style="line-height: 35px">
+          <div class="a-column common size12">
+              <span class="a-text-bold">
+                  	$data.name
+              </span>
+          </div>
+          <div class="a-column common size12">
+              <span class="a-text-bold">
+                 $data.code
+              </span>
+          </div>
+          <div class="a-column common size12">
+              <span class="a-text-bold">
+                	$data.brandTitle
+              </span>
+          </div>
+          <!--<div class="a-column common size12">
+              <span class="a-text-bold">
+                 	<img src="$!{mallStatic}/img/logo/$data.brandPicURL" style="width: 35px;height: 35px" class="bimg">
+              </span>
+          </div>-->
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  <a href="${domain}/mall/item/productInfo.htm?productId=$data.mainID&oem=$pname">查看详情</a>
+              </span>
+          </div>
+        </div>
+        #end
+    #end
+        <hr class="a-spacing-mini a-divider-normal">
+      </div>
+     </div>
+   </div>  
+ </div>  
+</div>
+	<div class="loaner"></div>
+</div>
+	#parse("layout/bottom.vm")
+
+
+
+
+
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+</body>
+</html>
+<script>
+  $(function(){
+//    $(".a-button-input").click(function(){
+//      $(".waite").show();
+//    })
+    $(".waite a").click(function(){
+      $(".waite").hide();
+    })
+  })
+  
+  	function serach(catID, brandID,orderByClause) {
+		//jQuery("#pageNo").val(1);
+		jQuery("#seach").submit();
+	}
+	
+	function goBack(){
+		history.go(-1);
+	}
+	
+	
+	function opeateAddCat(itemID,productID,stock,supplierID) {
+		addcat(itemID,productID,stock,supplierID);
+	}	
+	
+	function addcat(itemID,productID,stock,supplierID){
+			var itemID = itemID;
+			var productID = productID;
+			var itemCount = jQuery("#itemCount").val();
+			var customerID = jQuery("#customerID").val();
+			var domain = jQuery("#domain").val();
+			var stock = stock;
+			var supplierID = supplierID;
+			if (parseInt(stock) < parseInt(itemCount)){
+				alert("商品数量不能大于库存！");
+				return;
+			}
+			if (customerID == "" || customerID == undefined){
+				var preUrl = '/mall/item/list.htm?productId='+productID;
+				window.location= domain+'/mall/product/toLogin.htm?preUrl='+preUrl;
+				//window.location.href="/mall/member/toLogin.htm";
+				return;
+			}
+			jQuery.ajax({
+				url : "/mall/product/ajaxAddCat.do",
+				data : {
+					"itemCount" : itemCount,
+					"itemID" : itemID,
+					"productID" : productID,
+					"supplierID":supplierID
+				},
+				type : "POST",
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 0) {
+						$(".waite").show();
+					} else {
+						alert("添加失败！");
+					}
+				},
+				error : function() {
+					alert("系统出错！");
+				}
+			});
+		}	
+		$("ul.a-tabs li").click(function(){
+			$(this).addClass("a-active").siblings().removeClass("a-active");
+			$(".a-box-tab .commonpage").eq($(this).index()).addClass("curpage").siblings().removeClass("curpage");
+		});
+		
+		/*判断适用车型里，车型数量少于25个，更多按钮隐藏*/
+		$(".a-box-tab .commonpage .plate .platetype").each(function(){
+			if($(this).children().length<25){
+			$(this).siblings("a").css("display","none").parent().css("height","inherit");
+		}else{
+			$(this).siblings("a").css("display","block");
+		};
+		});
+		/*适用车型中最后一个dl无下划线*/
+		$(".a-box-tab .commonpage .plate:last").css("border","none");
+		/*点击更多按钮，显示更多车型*/
+		var lock=true;
+		$(".a-box-tab .commonpage .plate .more_Link").click(function(){
+			/*var number=$(this).siblings('dd').children().length;
+			alert(number);*/
+	        if(lock){
+	        	$(this).html('收起').addClass('up').parent().addClass('on');
+	            lock=false;
+	        }else{
+	        	$(this).html('更多').removeClass('up').parent().removeClass('on');
+	            lock=true;
+	        } 
+    	});
+    	/*下面三行控制footer置底（当body产生margin-top时）*/
+		var newSpace=$(document.body).height()-190;
+		$("#all").css("min-height",newSpace);
+		$("html,body").css("height","0");
+</script>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>咨询回复</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+		        <em class="icon iconMenu1 "></em><a href="memberList.htm">会员中心</a> &gt; <a href="consultingList.htm">商品咨询</a> &gt; <span>回复咨询</span>
+		</div>
+		<div class="clear"></div>
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="javascript:;" class="hover">咨询内容</a></li>
+				</ul>
+			</div>
+
+			<div class="contentRt">
+				<div class="contRt">
+
+					<form action="$!{domain}/admin/member/replyConsulting.htm"
+						method="post">
+						<input type="hidden" value="$!{itemConsultingVO.mainID}"
+							name="mainID">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">咨询商品</div>
+									<div class="formRow">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										$!itemConsultingVO.itemName</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">咨询内容</div>
+									<div class="formRow">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										$!itemConsultingVO.content</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">回复内容</div>
+									<div class="formRow">
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<textarea rows="5" cols="80" name="reply">$!itemConsultingVO.reply</textarea>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										<input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--TAB e-->
+	#parse("layout/footer.vm")
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>售后申请详情</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+
+	<!--header E-->
+
+
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>售后申请详情</span>
+		</div>
+		<div class="ddanInfo">
+			<dl class="">
+				<dd>
+					<table>
+						<tbody>
+							<tr>
+								<td>申请编号：$!salesOrderSalesApply.mainID</td>
+								<td>订单编号：$!salesOrderSalesApply.salesOrderID</td>
+								<td>会员：$!salesOrderSalesApply.customerName</td>
+							</tr>
+							<tr>
+								<td>产品：$!salesOrderSalesApply.productName</td>
+								<td>商品：$!salesOrderSalesApply.itemName</td>
+							</tr>
+							<tr>
+								<td>购买数量：$!salesOrderSalesApply.itemCount</td>
+								<td>购买金额
+									$!NumberTool.format('#0.00',$!salesOrderSalesApply.confirmReturnAmount)
+									元</td>
+							</tr>
+							<tr>
+								<td>申请类型： #if("$!salesOrderSalesApply.salesType"=="1") 退货
+									#elseif("$!salesOrderSalesApply.salesType"=="2") 换货 #end</td>
+								<td>数量：$!salesOrderSalesApply.count</td>
+							</tr>
+							<tr>
+								<td colspan="4">备注：$!salesOrderSalesApply.description</td>
+							</tr>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+			<dl class="">
+				<dd>
+					<table>
+						<tbody>
+							<tr>
+								<td>#if("$!salesOrderSalesApply.salesType"=="1")后#elseif("$!salesOrderSalesApply.salesType"=="2")换#end货编号：$!salesOrderSalesApply.salesID</td>
+								<td>订单编号：$!salesOrderSalesApply.salesOrderID</td>
+								<td>会员：$!salesOrderSalesApply.customerName</td>
+							</tr>
+							<tr>
+								<td>产品：$!salesOrderSalesApply.productName</td>
+								<td>商品：$!salesOrderSalesApply.itemName</td>
+							</tr>
+							<tr>
+								<td>购买数量：$!salesOrderSalesApply.itemCount</td>
+								<td>购买金额：
+									$!NumberTool.format('#0.00',$!salesOrderSalesApply.confirmReturnAmount)
+									元</td>
+							</tr>
+							<tr>
+								<td>类型：
+									#if("$!salesOrderSalesApply.confirmSalesType"=="1") 退货
+									#elseif("$!salesOrderSalesApply.confirmSalesType"=="2") 换货
+									#end</td>
+								<td>数量：$!salesOrderSalesApply.confirmCount</td>
+								<td>金额：
+									#if("$!salesOrderSalesApply.confirmReturnAmount"=="")
+									$!NumberTool.format('#0.00',$!salesOrderSalesApply.returnAmount)
+									#else
+									$!NumberTool.format('#0.00',$!salesOrderSalesApply.confirmReturnAmount)
+									#end 元
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4">状态：
+								#if("$!salesOrderSalesApply.status"=="0")
+									 申请
+									#elseif("$!salesOrderSalesApply.status"=="1")
+									 拒绝申请
+									#elseif("$!salesOrderSalesApply.status"=="2")
+									 处理中
+									#elseif("$!salesOrderSalesApply.status"=="3")
+									 已完成
+									#elseif("$!salesOrderSalesApply.status"=="4")
+									 申请已取消
+									#end
+									<!-- #if("$!salesOrderSalesApply.status"=="0") 待确认
+									#elseif("$!salesOrderSalesApply.confirmStatus"=="1") 已确认
+									#elseif("$!salesOrderSalesApply.confirmStatus"=="2") 拒绝
+									#elseif("$!salesOrderSalesApply.confirmStatus"=="3") 已退货
+									#elseif("$!salesOrderSalesApply.confirmStatus"=="4") 已收货
+									#elseif("$!salesOrderSalesApply.confirmStatus"=="5") 退款中
+									#elseif("$!salesOrderSalesApply.confirmStatus"=="6") 换货中
+									#elseif("$!salesOrderSalesApply.confirmStatus"=="7") 已退款
+									#elseif("$!salesOrderSalesApply.confirmStatus"=="8") 已换货
+									#elseif("$!salesOrderSalesApply.confirmStatus"=="9") 完成 #end -->
+							</tr>
+							<tr>
+								<td colspan="4">说明：$!salesOrderSalesApply.memo</td>
+							</tr>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+			#if("$!salesOrderSalesApply.confirmSalesType"=="1" &&
+			"$!salesOrderSalesApply.accountMainID"!="")
+			<dl class="">
+				<dd>
+					<table>
+						<tbody>
+							<tr>
+								<td>退款单：$!salesOrderSalesApply.accountMainID</td>
+								<td>会员：$!salesOrderSalesApply.customerName</td>
+							</tr>
+							<tr>
+								<td colspan="4">金额：$!salesOrderSalesApply.amount</td>
+							</tr>
+							<tr>
+								<td colspan="4">状态 ：
+									#if("$!salesOrderSalesApply.accountStatus"=="0") 申请
+									#elseif("$!salesOrderSalesApply.accountStatus"=="1") 确认
+									#elseif("$!salesOrderSalesApply.accountStatus"=="2") 拒绝 #end
+							</tr>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+			#end #if("$!salesOrderSalesApply.confirmSalesType"=="2" &&
+			"$!salesOrderSalesApply.returnSalesOrderID"!="")
+			<dl class="">
+				<dd>
+					<table>
+						<tbody>
+							<tr>
+								<td>换货订单：$!salesOrderSalesApply.returnSalesOrderID</td>
+								<td>会员：$!salesOrderSalesApply.customerName</td>
+							</tr>
+							<tr>
+								<td colspan="4">状态 ：
+									#if($!salesOrderSalesApply.orderStatus==0) 已关闭
+									#elseif($!salesOrderSalesApply.orderStatus==1) 待确认
+									#elseif($!salesOrderSalesApply.orderStatus==2) 待出库
+									#elseif($!salesOrderSalesApply.orderStatus==3) 待发货
+									#elseif($!salesOrderSalesApply.orderStatus==4) 已发货
+									#elseif($!salesOrderSalesApply.orderStatus==5) 已收货
+									#elseif($!salesOrderSalesApply.orderStatus==6) 已完成
+									#elseif($!salesOrderSalesApply.orderStatus==7) 已退换货 #end
+							</tr>
+						</tbody>
+					</table>
+				</dd>
+			</dl>
+			#end
+		</div>
+		<div class="clear"></div>
+
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>

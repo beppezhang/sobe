@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>账号充值</title>
+<link rel="stylesheet" href="$!{mallStatic}/css/users.css">
+</head>
+<body>
+<!-- top bar -->
+#parse("layout/head_top.vm")
+#parse("layout/customercenter/header.vm")
+<!-- crumb -->
+<div id="crumb">
+	<div class="layout clearfix">
+    	<a href="${domain}/index.htm">首页</a> &gt; <a href="${domain}/mall/buyer/userCenter.htm">用户中心</a>
+    </div>
+</div>
+<div class="layout mt10 clearfix">
+#parse("layout/customercenter/leftmenu.vm")	
+    <div class="mainbody bg">
+    	<div class="titbar_m mt10">
+        	<strong>账户充值</strong>
+        </div>
+        <div class="info_form">
+            <dl class="clearfix">
+            	<dt>转入金币：</dt>
+                <dd><input name="amount" type="text" class="ipt amount"> 金币<em class="prompt_1 col05"></em></dd>
+                <dd><em class="f14 col01">$!{transConfigVO.scorePrice}元=1金币</em></dd>
+            </dl>
+        </div>
+        <div class="info">
+            <div class="titbar">
+                <strong class="f16">现金支付方式</strong>
+            </div>
+            <div class="paybox">
+                <ul class="clearfix">
+                    <li><input name="paymentType" type="radio" value="1" checked="checked" > <img src="$!{mallStatic}/img/alipay.png"></li>
+                    <li><input name="paymentType" type="radio" value="2"> <img src="$!{mallStatic}/img/chinapay.png"></li>
+                    <!--<li><input name="radio" type="radio" value=""> <img src="$!{mallStatic}/img/eastpay.png"></li>-->
+                    <!--<li><input name="" type="radio" value=""> <img src="../img/balancepay.png"></li>-->
+                </ul>
+            </div>
+           <p class="ct"><a href="#" class="sbtn submitRecharge" data_scorePrice="$!{transConfigVO.scorePrice}">立即充值</a></p>
+        </div>
+        <div class="info">
+           	 <h3>使用遇到问题？</h3>
+             <p><strong class="f14">卡塔网络金币什么时候会显示？</strong></p>
+             <p>答：当天15:00之前转入的资金在第二个工作日由基金公司进行份额确认，对已确认的份额，预计会在次日的15点左右发放收益。15:00后转入
+的资金会顺延1个工作日确认。<br>
+举例：周一15:00前转入卡塔网络的资金，基金公司会在周二确认份额，周三中午15:00前将周二的金币发放到余额宝内。双休日及国家法定假
+期，基金公司不进行份额确认。</p>
+             <p><strong class="f14">什么是卡塔网络金币?</strong></p>
+			 <p>答：卡塔网络是为个人用户推出的通过金币进行基金支付的服务。把资金转入卡塔网络即是向基金公司等机构购买相应理财产品。卡塔网络的
+金币支持购物消费，也可以给他人转账等。</p>
+			 <p><strong class="f14">卡塔网络最低可以转入多少钱?</strong></p>
+             <p>答：卡塔网络转入单笔金额≥1元（可为非正整数）。根据基金行业历史经验，建议您持有100元以上。温馨提示：卡塔网络转入后总额持有不
+超过100万，若现有卡塔网络金额超过100万的用户不影响。</p>
+             <p><strong class="f14">用什么方式可以把钱转入卡塔网络?</strong></p>
+             <p>答：支付宝账户余额支付、储蓄卡快捷支付（含卡通）。</p>
+           </div>
+    </div>	
+</div>
+<!-- footer -->
+#parse("layout/footer.vm")
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+	  jQuery("#user_onlinerebate_list_cur").addClass("active cur").siblings(".level0").removeClass("cur");
+	});
+	jQuery(".amount").blur(function(){
+		var amount = jQuery(".amount").val();
+		var reAmount = /^[1-9]\d*$/;
+		if(amount=="" || amount==null){
+			jQuery(".amount").parent().find(".prompt_1").removeClass("ok").addClass("error").html("请输入要充值的金币额度!");
+		}else if(!reAmount.test(amount)){
+			jQuery(".amount").parent().find(".prompt_1").removeClass("ok").addClass("error").html("请输入大于零的整数额度!");
+		}else{
+	        jQuery(".amount").parent().find(".prompt_1").removeClass("error").addClass("ok").html("");
+		}
+	});
+
+	jQuery(".submitRecharge").click(function(){
+		var amount = jQuery(".amount").val();
+		var scorePrice = jQuery(".submitRecharge").attr("data_scorePrice");
+		var paymentType = jQuery("input[type='radio']:checked").val();
+		jQuery(".amount").blur();
+		var errorObj = $(".error");
+    	if(errorObj.length>0){
+			 return;    		
+    	}else{
+    		//alert(amount*scorePrice);
+	   		 window.location.href="$!{domain}/mall/buyer/rechargeTenPay.htm?amount="+amount*scorePrice+"&paymentType="+paymentType;
+    	}
+	})
+</script>
+</body>
+</html>

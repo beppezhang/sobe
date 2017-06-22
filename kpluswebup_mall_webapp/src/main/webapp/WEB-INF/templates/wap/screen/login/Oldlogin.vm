@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<title>登录</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+<div class="lgbox">
+	<form action="$!domain/weixin/doLogin.htm" method="post" id="loginForm">
+		<input id="userName" name="userName" type="text" placeholder="请输入您的真实姓名" class="text admin"/>
+	    <input id="password" name="password" type="password" placeholder="请输入您的密码" class="text pass"/>
+	    <p class="ct"><input onclick="login();" type="button" class="sbtn" value="立即登录"></p>
+	    <p class="txt_r"><a href="$!domain/weixin/toRegister.htm">立即注册</a></p>
+    </form>
+    <script type="text/javascript">
+    	function login(){
+    		var userName = jQuery("#userName").val();
+    		var password = jQuery("#password").val();
+    		if (userName == ""){
+    			jQuery("#userName").val("用户名不能为空");
+    			return;
+    		}
+    		if (password == ""){
+    			jQuery("#password").val("密码不能为空");
+    			return;
+    		}
+    		jQuery("#loginForm").submit();
+    	}
+    </script>
+</div>
+</body>
+</html>

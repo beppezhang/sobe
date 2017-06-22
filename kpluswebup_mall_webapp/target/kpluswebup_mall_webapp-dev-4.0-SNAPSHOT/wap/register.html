@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<title>新用户注册</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="css/global.css">
+<link rel="stylesheet" type="text/css" href="css/user.css">
+</head>
+<body>
+  <div class="layout">
+      <div class="logbox">
+          <p class="name"><input name="" type="text" class="ipt" placeholder="请输入手机号码"></p>
+          <p class="pwd"><input name="" type="text" class="ipt" placeholder="输入您的密码"></p>
+          <p class="key"><input name="" type="text" class="ipt02" placeholder="输入校检码"><img id="code_img" src="http://captcha.qq.com/getimage?aid=1007901&amp;r=0.23495754413306713" title="点击换一张"></p>
+          <p class="verify"><input name="" type="text" class="ipt02" placeholder="输入您的验证码"><a href="javascript:;" class="keybtn">点击获取</a></p>
+          <p class="trad">
+              <a href="javascript:;" class="txt_r clearfix">
+                  <span class="lt">上传营业执照</span>
+                  <span class="pic"><img src="img/tm-bg.png"></span>
+                  <input name="" type="file" accept="image/*" class="picFile">
+              </a>
+           </p>
+          <p class="ssq">
+            <select name="y-provice" id="y-provice" class="ipt03">
+              <option>浙江省</option>
+              <option>江苏省</option>
+            </select>
+            <select name="y-city" id="y-provice" class="ipt03">
+              <option>杭州市杭州市杭州市杭州市杭州市</option>
+              <option>金华市</option>
+              <option>温州市温州市温州市温州市温州市</option>
+            </select>
+            <select name="y-county" id="y-provice" class="ipt03">
+              <option>西湖区</option>
+              <option>下城区</option>
+            </select>
+          </p>
+          <p class="addr"><input name="" type="text" class="ipt" placeholder="请输入公司地址"></p>
+      </div>
+      <!--<p class="error">账号或密码有误</p>-->
+      <p class="ck"><i class="on"></i>已阅读并同意<a href="#" class="col07">《吉利用户注册协议》</a> </p>
+      <p class="ct">
+        <a href="#" class="log_btn">下一步</a>
+      </p>
+     <!--  <p class="bz"><img src="img/pic-bz.png" ></p> -->
+  </div>
+ <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+ <script type="text/javascript" src="js/upload.js"></script>
+    <script>
+    $(function(){
+      $(".trad a").find("em").click(function(){
+        $(this).addClass("on").siblings().removeClass("on");  
+      })  
+      $(".trad a").find(".picFile").change(function(){
+        var a = $(this).val();
+        $(this).prev(".pic").find("img").attr("src",a);
+      })
+    })
+  
+    </script> 
+</body>
+</html>

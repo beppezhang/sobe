@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>搜贝</title>
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/global.css">
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/brand.css">
+	<link rel="stylesheet" type="text/css" href="${mallStatic}/css/result.css">
+	<script type="text/javascript" src="${mallStatic}/js/jquery-1.11.0.min.js"></script>
+</head>
+
+<body>
+	<!-- top bar -->
+	#parse("layout/head_top_new.vm")
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider_new.vm")
+	<!--nav导航条-->
+	#parse("layout/menu_new.vm")
+	
+	<div id="mainContainer" class="layout">
+		<p class="local">
+      	#if($!productVO.type==1)
+			<a href="#">首页</a>
+		>
+			<a href="#">OEM :  $!productVO.code</a>
+      	#end
+		</p>
+	</div>
+	<div class="result_wrap">
+		<div class="col_left">
+			<h2>$!productVO.name
+				#if($!productVO.type==2)
+	          		(副厂件)	
+	          	#else
+	          		(原厂件)
+	          	#end
+			</h2>
+			<img class="imgBig" src="${mallStatic}/images/u92.png" width="150" alt="" />
+			<ol class="pro_info">
+				<li>产品编号: $!productVO.code</li>
+				<!--<li>OEM: 
+	          	#if($!productVO.type==2)
+	          		12345678958	
+	          	#else
+	          		$!productVO.code
+	          	#end
+				</li>-->
+				<li>配件品牌: $!productVO.brandTitle $!productVO.brandName <img src="$!{mallStatic}/img/logo/$!productVO.brandPicURL" width="30"></li>
+				<li> 配件分类: $!partsCategoryLevel.name #if($!partsCategoryLevel2)> $!partsCategoryLevel2.name #end</li>
+			</ol>
+			<!--<div class="buy_in">
+				<img src="${mallStatic}/images/buy_cut.png" alt="" width="40" />
+				<a class="shopping" href="#">点击进入购物通道</a>
+			</div>-->
+		</div>
+		<div class="col_right">
+			<ul class="tab_title">
+				<li class="current">适用车型</li>
+			    <!--增加原厂件-->
+			    #if($!productVO.type==2)
+				<li>原厂件</li>
+			    #end
+			    #if($!productVO.type!=2)
+			    <!--增加副厂件-->
+				<li>副厂件</li>
+			    #end
+			</ul>
+			<div class="tab_con">
+				<div class="con type current">
+				#foreach($data in $!vehicleTypeMap.entrySet())
+					<dl class="clearfix">
+						<dt><img src="$!{mallStatic}/img/logo/$data.key.picUrl" width="70"></dt>
+			     			<dd>
+			     			#foreach($!vehicleType in ${data.value})
+								<span>
+			     					<a href="${domain}/mall/product/searchProductListByVehicleType.htm?vehicleTypeId=$!vehicleType.mainID" title="$!vehicleType.name">$!vehicleType.name</a>
+			     				</span>
+			     			#end
+			     			</dd>
+					</dl>
+				#end
+				</div>
+				<div class="con accessory">
+					<ul class="pro_head">
+						<li>产品名称</li>
+						<li>产品编码</li>
+						<li>配件品牌</li>
+						<!--<li>所属分类</li>-->
+						<li>详细信息</li>
+					</ul>
+					<ul class="pro_body">
+						
+					#if($!productOEMOther.size()==0)
+						<li>暂无信息</li>
+					#else
+				        #foreach($data in $!productOEMOther)
+							<li>$data.name</li>
+							<li>$data.code</li>
+							<li>$data.brandTitle</li>
+							<!--<li>发动机机油保养</li>-->
+							<li><a href="#">查看详情</a></li>
+						#end
+					#end
+										
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var aLi=$('.result_wrap .col_right .tab_title li');
+		var aTab_con=$('.result_wrap .col_right .tab_con .con');
+		aLi.click(function(){
+			var _this=$(this).index();
+			$(this).addClass('current').siblings().removeClass('current');
+			aTab_con.eq(_this).addClass('current').siblings('.con').removeClass('current');
+		})
+	</script>
+
+
+</body>
+</html>

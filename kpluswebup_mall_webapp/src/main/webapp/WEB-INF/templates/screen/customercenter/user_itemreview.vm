@@ -1,0 +1,422 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>订单列表</title>
+ <link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/details.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/details.css"> 
+<script type="text/javascript"src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+						<!---标头end 列表 -->
+<style type="text/css">
+	  .comment tr{border:1px solid #e7e7e7;}	
+	.comment td{border-color:#e7e7e7!important;}
+	.comment tr.comt td{padding: 10px 60px;background: #fafff9;}
+	.comment tr.comt p{line-height: 22px;margin: 10px 0 20px 0;overflow: hidden;}
+	.comment tr.comt p span{float: left;width: 50px;height: 22px;}
+	.comment tr.comt textarea{width: 740px;height: 150px;line-height: 18px;padding: 5px;}
+	.comment tr.comt .btn{display: inline-block;width: 76px;height: 22px;border:1px solid #c5d1c3;background: #e9fbe5;margin-right: 12px;text-align: center;}
+	 .comment tr.comt .star{width: 14px;height: 14px;padding-right: 5px;text-indent: -9999px;background: url($!{mallStatic}/images/commstar.png) no-repeat left -14px;margin-top: 2px;cursor: pointer;}
+	.comment tr.comt .stars,.comment tr.comt .cur{background: url($!{mallStatic}/images/commstar.png) no-repeat top left;}   
+</style>
+<script type="text/javascript">
+function toreviews(mainID,orderID,productID,itemID){
+	
+	var score = $("#score_").val();
+	var content = $("#"+mainID+"").val()
+	
+	if("" == score) {
+		alert("请选择评分！")
+		return;
+	}
+	 jQuery.ajax({
+		url : "/mall/product/checkIsSubReviewed.do",
+		data : {
+			"productID"   : itemID,
+			"itemID"	  : productID,
+			"salesOrderID": orderID
+		}, 
+		type : "POST",
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 0) {
+				alert('您已评价过该商品！');
+				window.location.reload()
+			} else {
+				alert('评价已提交！');
+				location.href="/mall/product/submitReview.htm?salesOrderID="+orderID+"&productID="+productID+"&itemID="+ itemID+"&score="+score+"&content="+content;
+			}
+		},
+		error : function() {
+			alert('请先登录');
+		}
+	});
+}
+
+</script>
+</head>
+<body>
+	<!-- top bar -->
+	#parse("layout/head_top.vm")
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+	<!-- 主导航 -->
+	#parse("layout/menu.vm")
+	<!-- body头部 -->
+	#parse("layout/customercenter/header.vm")
+	<div class="layout clearfix">
+		<!-- 左边菜单 -->
+		#parse("layout/customercenter/leftmenu.vm")
+		    <div class="mainbody">
+			<div id="tabs" class="tittab">
+				<span class="cur"><a href="http://www.9niuw.com.cn/mall/buyer/userOrderList.htm">订单评价</a></span> 
+			</div>
+			<div id="cons">
+				<div class="none cur">
+					<table class="odTable">
+						<thead>
+							<tr>
+								<th width="80%">商品信息</th>
+								<th width="20%">评价状态</th>
+							</tr>
+						</thead>
+						#foreach($!salesOrderLine in $!itemlist)
+						<tbody class="odlist unPay comment">
+							<tr>
+								<td class="bl">
+									<a href="javaScript:void(0);" class="col01">
+										<img src="$!{domainImg}$!salesOrderLine.itemPicUrl" class="pimg lt" title="$!salesOrderLine.itemName">
+									</a>
+									<input type="hidden" value="$!salesOrderLine.itemID" />
+									<p style="width:90%;height:40px;line-height:20px;"><a href="javaScript:void(0);" onclick="seeItem('$!{salesOrderLine.productID}','$!{salesOrderLine.itemID}')">$!salesOrderLine.itemName</a></p>
+									<p>购买时间：$!date.format('yyyy-MM-dd HH:mm:ss',$!salesOrderLine.createTime)</p>
+								</td>
+								<td class="ct">
+									#if("$!salesOrderLine.isSubmit" == "0")
+										未评价
+									#else
+										已评价
+									#end
+								</td>
+ 							</tr>
+ 							<tr class="comt">
+ 								 <td colspan="2">
+ 									  #if("$!salesOrderLine.isSubmit" == "1") 
+ 									 <p class="num" name="$!salesOrderLine.score_">  
+ 										<span><em class="red">*</em>评分：</span>
+ 											<span class="star">1</span>
+	 										<span class="star">2</span>
+	 										<span class="star">3</span>
+	 										<span class="star">4</span>
+	 										<span class="star">5</span>
+ 									</p>
+ 									#else
+ 									<p>
+ 										<span><em class="red">*</em>评分：</span>
+ 											<span class="star">1</span>
+	 										<span class="star">2</span>
+	 										<span class="star">3</span>
+	 										<span class="star">4</span>
+	 										<span class="star">5</span>
+ 									</p>
+ 									#end
+ 									<p>
+ 										<input type="hidden" name="" id="score_"/>
+ 										<span><em class="red">*</em>心得：</span>
+ 										#if("$!salesOrderLine.isSubmit" == "0")
+											<textarea id="$!salesOrderLine.mainID" name="content" placeholder="商品是否给力？快分享你的购买心得吧~"></textarea>
+										#else
+											<textarea id="$!salesOrderLine.mainID" name="" readonly="readonly" placeholder="商品是否给力？快分享你的购买心得吧~">$!salesOrderLine.content</textarea>
+										#end
+ 									</p>
+ 									<p><span></span>
+ 										<input type="hidden" name="" id="orderID_" value="$!salesOrderLine.orderID"/>
+ 										<input type="hidden" name="" id="productID_" value="$!salesOrderLine.productID"/>
+ 										<input type="hidden" name="" id="itemID_" value="$!salesOrderLine.itemID"/>
+ 										#if("$!salesOrderLine.isSubmit" == "0")
+ 											<a href="javascript:;" onclick="toreviews('$!salesOrderLine.mainID','$!salesOrderLine.orderID','$!salesOrderLine.productID','$!salesOrderLine.itemID');" class="btn">发评论</a>
+ 										#else
+ 											
+ 										#end
+ 									</p>
+ 								</td>
+ 							</tr>
+						</tbody>
+						#end
+					</table>
+        			<!-- <div class="pagerbar clearfix ct">#pagination($!salesOrderDTO)</div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- footer -->
+	#parse("layout/footer.vm")
+	<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+
+<script type="text/javascript">
+
+
+$(function(){
+	/* 评分 */
+	$(".comment").each(function(){
+		var num = $(this).find(".num").attr("name");
+		for(i=0;i<num;i++){
+			$(this).find(".star").eq(i).addClass("cur");
+		}
+	})
+	
+	$(".comment .star").hover(function(){
+		var num = $(this).parent().attr("name");
+		if(num==0 || num==undefined){
+			$(this).parent().find(".star").removeClass("cur");
+			var j = $(this).index();
+			for(i=0;i<j;i++){
+				$(this).parent().find(".star").eq(i).addClass("stars");
+			}
+		}
+		else{}
+		
+	},function(){
+		var num = $(this).parent().attr("name");
+		if(num==0 || num==undefined){
+			$(this).parent().find(".star").removeClass("stars");
+		}
+		else{}
+	
+	})
+	$(".comment .star").click(function(){
+		var num = $(this).parent().attr("name");
+		if(num==0 || num==undefined){
+			$(this).parent().find(".star").removeClass("cur");
+			var j = $(this).index();
+			$("#score_").val(j);
+			for(i=0;i<j;i++){
+				$(this).parent().find(".star").eq(i).addClass("cur");
+			}
+		}
+		else{}
+		
+	})
+	
+
+  $(".pl").each(function(){
+        var nowLeng = $(this).text().length;
+        if(nowLeng > 16){
+            var nowWord = $(this).text().substr(0,16)+'...';
+            $(this).html(nowWord)
+        }           
+    })
+    $(".sidebar li").hover(function(){
+        $(this).addClass("cur");
+        $(".sidebar li p").hide();
+        $(this).find("p").show();
+    },function(){
+        $(".sidebar li").removeClass("cur")
+        $(".sidebar li p").hide();
+    })
+})
+</script>        
+<script type="text/javascript">
+
+  jQuery(function() {
+jQuery(".pagerbar").pager({
+		pagenumber : 2,
+		pagecount : 9,
+		buttonClickCallback : PageClick
+	});
+})
+PageClick = function(pageclickednumber) {
+	jQuery(".pagerbar").pager({
+		pagenumber : pageclickednumber,
+		pagecount : 9,
+		buttonClickCallback : PageClick
+	})
+	jQuery("#pageNo").val(pageclickednumber);
+	jQuery("#serachform").submit();
+	jQuery("#serach").submit();
+	jQuery("#seach").submit(); 
+}
+</script>
+<script type="text/javascript">
+
+
+	var oStar = $(".starsbar");
+	var aLi = $(".starsbar span");
+	//var oUl = oStar.getElementsByTagName("ul")[0];
+	var oSpan = $(".s_result");
+	//var oP = oStar.getElementsByTagName("p")[0];
+	var i = iScore = iStar = 0;
+	var aMsg = [
+				"非常不满",
+				"不满意",
+				"一般",
+				"满意",
+				"非常满意"
+				]
+	
+		for (i = 1; i <= aLi.length; i++){
+		aLi[i - 1].index = i;
+		
+		//鼠标移过显示分数
+		aLi[i - 1].onmouseover = function (){
+			fnPoint(this.index);
+			/*//浮动层显示
+			oP.style.display = "block";
+			//计算浮动层位置
+			oP.style.left = oUl.offsetLeft + this.index * this.offsetWidth - 104 + "px";
+			//匹配浮动层文字内容
+			oP.innerHTML = "<em><b>" + this.index + "</b> 分 " + aMsg[this.index - 1].match(/(.+)\|/)[1] + "</em>" + aMsg[this.index - 1].match(/\|(.+)/)[1]*/
+		};
+		
+		//鼠标离开后恢复上次评分
+		aLi[i - 1].onmouseout = function (){
+			fnPoint();
+			//关闭浮动层
+			//oP.style.display = "none"
+		};
+		
+		//点击后进行评分处理
+		aLi[i - 1].onclick = function (){
+			iStar = this.index;
+			//oP.style.display = "none";
+			oSpan.innerHTML = (this.index) + " 分 "
+		}
+	}
+	
+	//评分处理
+	function fnPoint(iArg){
+		//分数赋值
+		iScore = iArg || iStar;
+		for (i = 0; i < aLi.length; i++) aLi[i].className = i < iScore ? "on" : "";	
+	}
+	
+	$(".sel span a").click(function(e){
+	 e.preventDefault();
+	 $(this).closest("span").toggleClass('cur').siblings().removeClass();
+	})
+	//弹出对话框
+	var isIE = (document.all) ? true : false;
+	var isIE6 = isIE && ([/MSIE (\d)\.0/i.exec(navigator.userAgent)][0][1] == 6);
+	var cwidth =  $(window).width();
+	var cheight =  $(window).height();
+	var dheight =  $(document).height();
+	var i;
+	
+	function openprot(i,productId,itemId,salesOrderID) {
+		
+	/* 	//alert(productId,itemId,salesOrderID)
+		
+		 var idname = document.getElementById("agebox"+i);
+		$("body").append("<div id='wrapbg' onClick='closeprot()'></div>");
+		$("#wrapbg").width(cwidth);
+		$("#wrapbg").height(dheight);
+		
+		$(idname).fadeIn(300);
+		idname.style.left = (cwidth - idname.offsetWidth) / 2  + "px";
+		idname.style.top =  (cheight - idname.offsetHeight) / 2 + "px";
+		
+		$("#product").val(productId)
+		$("#itemid").val(itemId)
+		$("#salesOrderiD").val(salesOrderID) 
+	}
+	function closeprot() {
+		location.reload();
+		$("div[id='wrapbg']").remove();
+		$(".popbox").fadeOut(200);
+		
+		$(".cbox").val("")
+	}   
+	//提交评价详情 */
+	function submitReviews(){
+		
+		//alert($("#product").val()+"--"+$("#itemid").val())
+		var productId = $("#product").val();
+		var itemId = $("#itemid").val();
+		var salesOrderID = $("#salesOrderiD").val();
+		
+		var score = $(".on").length;
+		var content = $(".cbox").val();
+		
+		if(productId == "" || itemId == "") return;
+		
+		jQuery.ajax({
+			url : "/mall/product/checkIsSubReviewed.do",
+			data : {
+				"productID"   : productId,
+				"itemID"	  : itemId,
+				"salesOrderID":salesOrderID
+			},
+			type : "POST",
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 0) {
+					alert('您已评价对该商品！');
+					closeprot();
+				} else {
+					location.href="/mall/product/submitReview.htm?salesOrderID="+salesOrderID+"&productID="+productId+"&itemID="+itemId+"&score="+score+"&content="+content;
+				}
+			},
+			error : function() {
+				alert('请先登录');
+			}
+		});
+		
+	}
+
+	$(function() { 
+		$(".datepicker").datepicker(); 
+	}); 
+</script>
+<form>
+	<input type=hidden id="product">
+	<input type=hidden id="itemid">
+	<input type=hidden id="salesOrderiD">
+</form>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			
+			$("#tabs span").click(
+					function() {
+						$(this).addClass('cur').siblings().removeClass();
+						$("#cons div.none").eq($("#tabs span").index(this))
+								.addClass("cur").siblings().removeClass("cur");
+					})
+
+		});
+		jQuery(document).ready(
+				function() {
+					jQuery("#order").addClass("cur").siblings(".leve10")
+							.removeClass("cur");
+				})
+
+		function seeItem(productID,itemID) {
+			var data = {
+					productID : productID,
+					itemID : itemID
+			}
+				var url = "productDetailBuy.do";
+				jQuery.ajax({
+					url : url,
+					type : "POST",
+					data : data,
+					dataType : "json",
+					success : function(data) {
+						if (data.code == 0) {
+						 location.href='$!{domain}/mall/product/productDetail.htm?productID='+productID+'&itemID='+itemID;
+						} else {
+							alert("该商品已下架！");
+						}
+					},
+					error : function() {
+						alert("操作失败");
+					}
+				});
+		}
+
+	</script>

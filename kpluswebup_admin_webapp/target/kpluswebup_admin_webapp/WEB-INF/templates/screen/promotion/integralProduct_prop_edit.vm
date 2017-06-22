@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>营销管理 》编辑属性</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			            	<div class="contentLf tabList">
+                	<ul>
+                    	<li>
+                        	<a href="$!{domain}/admin/product/editIntegralProductPage.htm?mainID=$!productID&productTypeMainID=$!productTypeMainID">礼品信息</a>
+                        </li>
+                        <li>
+                           <em class="icon arrowLfWeight"></em>
+                        	<a href="$!{domain}/admin/product/editProductTypeIntegralProductPropPage.htm?productID=$!productID&productTypeMainID=$!productTypeMainID" class="hover">产品属性</a>
+                        </li>
+                    	<li>
+                            
+                        	<a href="$!{domain}/admin/product/addIntegralItemPage.htm?productID=$!productID&productTypeMainID=$!productTypeMainID" >新增商品</a>
+                        </li>
+                        <li>
+                            <a href="$!{domain}/admin/product/IntegralProductImgPic.htm?productID=$!productID&productTypeMainID=$!productTypeMainID">礼品相册</a>
+                        </li>
+                    </ul>
+                </div>
+
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/product/addProductDetail.htm" method="post">
+						<input type="hidden" value="$!productID" name="productID" id="productID">
+						<!--form  S------->
+						<div class="systemBar">
+							<table class="tableList grid">
+								<thead>
+									<tr>
+										<td>属性</td>
+										<td>属性值</td>
+										<td>操作</td>
+									</tr>
+								</thead>
+								<tbody>
+									#foreach( $!productTypeProductProp in $!productTypeProductPropList)
+									<tr>
+										<td>$!productTypeProductProp.name <input type="hidden" value="$!productTypeProductProp.mainID" name="productID" id="productID_$!productTypeProductProp.mainID"></td>
+										<td>#foreach($!str in $!productTypeProductProp.propValue) $!str #end</td>
+										<td><a onclick="addProductDetail('$!productTypeProductProp.mainID','$!productTypeProductProp.propType')">新增</a></td>
+									</tr>
+									#end
+									<tr><td colspan="3"><a href="$!{domain}/admin/product/addItemPage.htm?productID=$!productID&productTypeMainID=$!productTypeMainID"> 下一步</a></td>  </tr>
+								</tbody>
+							</table>
+
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

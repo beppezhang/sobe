@@ -1,0 +1,25 @@
+<div class="foot_all">
+	<div class="f-l">Copyright 2008-2014 © All Rights Reserved</div>
+	<div class="f-r">专业电子商务解决方案</div>
+	<!-- <a href="javascript:;"><img
+		src="$!{adminStatic}/theme/default/images/foot-logo.png" alt="" width="80"
+		height="22" /></a> -->
+</div>
+<script>
+    $(function(){
+        function footFixed(){
+            if($(".foot_all").length==0){
+                return;
+            }
+            if($("body").height()-$(".main").height()-50>50){
+                $(".foot_all").addClass("foot_all_fixed");
+            }else{
+                $(".foot_all").removeClass("foot_all_fixed");
+            }
+        }
+        footFixed();
+        $(window).resize(function(){
+            footFixed();
+        })
+    })
+</script>

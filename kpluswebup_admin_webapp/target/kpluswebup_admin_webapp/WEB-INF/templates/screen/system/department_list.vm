@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>部门列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》部门列表</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/operator_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+						<div class="tableTool">
+							#if($!menuUtil.isExistMenu("/admin/system/addDepartmentPage.htm",$!menuAllList)
+							) <a href="$!{domain}/admin/system/addDepartmentPage.htm" class="TableAddBtn" 
+								title="新增部门">+新增部门</a>#end
+						</div>
+						<form id="serachform" name="serachform" method="post"
+							action="$!{domain}/admin/system/departmentList.htm">
+							<input type="hidden" id="pageNo" name="pageNo"
+								value="$!departmentDTO.pageNo"> <input type="hidden"
+								id="pageSize" name="pageSize" value="$!departmentDTO.pageSize">
+						</form>
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td>名称</td>
+									<td>描述</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!department in $!departmentList)
+								<tr>
+									<td>$!department.name</td>
+									<td>$!department.description</td>
+									<td class="last">
+										#if($!menuUtil.isExistMenu("/admin/system/editDepartmentPage.htm",$!menuAllList)
+										) <a class="icon iconEdit"
+										href="$!{domain}/admin/system/editDepartmentPage.htm?mainID=$!department.mainID"
+										title="编辑"></a> #end &nbsp;
+										#if($!menuUtil.isExistMenu("/admin/system/deleteDepartment.do",$!menuAllList)
+										) <a href="javascript:;" class="icon iconDel"
+										onclick="deleteDepartment('$!{department.mainID}')" title="删除"></a>#end
+									</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!departmentDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".operator_menu_2")
+					.append("<em class='icon arrowLfWeight'></em>").find("a")
+					.addClass("hover");
+		})
+	</script>
+</body>
+</html>

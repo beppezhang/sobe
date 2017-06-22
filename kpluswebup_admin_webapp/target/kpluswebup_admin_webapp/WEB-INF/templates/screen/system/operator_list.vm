@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台用户</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》后台用户</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/operator_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+						<div class="tableTool">
+							#if($!menuUtil.isExistMenu("/admin/system/addOperatorPage.htm",$!menuAllList)
+							) <a href="$!{domain}/admin/system/addOperatorPage.htm" class="TableAddBtn" 
+								title="新增用户">+新增用户</a>#end
+						</div>
+						<form id="serachform" name="serachform" method="post"
+							action="$!{domain}/admin/system/operatorList.htm">
+							<input type="hidden" id="pageNo" name="pageNo"
+								value="$!operatorDTO.pageNo"> <input type="hidden"
+								id="pageSize" name="pageSize" value="$!operatorDTO.pageSize">
+						</form>
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td>用户名</td>
+									<td>姓名</td>
+									<td>部门</td>
+									<td>角色</td>
+									<td>手机</td>
+									<td>状态</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!operator in $!operatorList)
+								<tr>
+									<td>$!operator.username</td>
+									<td>$!operator.name</td>
+									<td>$!operator.departmentName</td>
+									<td>$!operator.roleName</td>
+									<td>$!operator.mobile</td>
+									<td>#if("$!operator.status"=="1")<em class="normalSta">正常</em>#elseif("$!operator.status"=="2")<em
+										class="lock">锁定</em>#end
+									</td>
+									<td class="last">
+										#if($!menuUtil.isExistMenu("/admin/system/isLockOperator.do",$!menuAllList)
+										) #if("$!operator.status"=="2") <a href="javascript:;"
+										class="icon iconUnLock" title="解锁"
+										onclick="isLockOperator('$!operator.mainID','1')"></a>&nbsp;
+										#end #if("$!operator.status"=="1") <a href="javascript:;"
+										title="锁定" onclick="isLockOperator('$!operator.mainID','2')"><em
+											class="icon iconLock"></em></a> #end #end
+
+										#if($!menuUtil.isExistMenu("/admin/system/editOperatorPage.htm",$!menuAllList)
+										) <a class="icon iconEdit"
+										href="$!{domain}/admin/system/editOperatorPage.htm?mainID=$!operator.mainID"
+										title="编辑"></a> #end &nbsp;
+										#if($!menuUtil.isExistMenu("/admin/system/deleteOperator.do",$!menuAllList)
+										) <a href="javascript:;" class="icon iconDel"
+										onclick="deleteOperator('$!{operator.mainID}')" title="删除"></a>#end
+									</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!operatorDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".operator_menu_1")
+					.append("<em class='icon arrowLfWeight'></em>").find("a")
+					.addClass("hover");
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增品牌</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>产品管理 》新增品牌</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="javascript:;" class="hover">基本信息</a></li>
+				</ul>
+			</div>
+
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/product/addBrand.htm" method="post">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">品牌名称：</div>
+									<div class="formRow">
+										<input type="text" value="" name="name" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">品牌logo：</div>
+									<div class="formRow">
+										<input type="hidden" class="cText cTextLen" value=""
+											name="picURL" id="picURL1"> <img id="uploadImage1"
+											src="">   <input type="file" id="myBlogImage1"
+											name="myfiles" onchange="ajaxFileUpload1s(1)" />(104*32)
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">官网地址：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" value=""
+											name="domain">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">品牌介绍：</div>
+									<div class="formRow">
+										<textarea rows="5" cols="80" id="text_description" name="description"> </textarea>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">页面标题：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" value=""
+											name="title">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">页面关键词：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" value=""
+											name="metaKeywords">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">页面描述：</div>
+									<div class="formRow">
+										<textarea rows="5" cols="80" name="metaDescription"></textarea>
+									</div>
+								</dd>
+									<dd class="clearfix">
+									<div class="formTt">排序：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen" name="sortOrder">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/product/addBrand.htm",$!menuAllList)
+										) <input type="submit" class="save" value="提交"> #end <input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+function ajaxFileUpload1s(type) {
+	jQuery.ajaxFileUpload({
+		url : '${domain}/file/fileUpload.do',
+		secureuri : false,// 是否启用安全提交,默认为false
+		fileElementId : 'myBlogImage' + type,// 文件选择框的id属性
+		dataType : 'text',// 服务器返回的格式,可以是json或xml等
+		success : function(data, status) {
+			data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+			data = data.replace("</PRE>", '');
+			data = data.replace("<pre>", '');
+			data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+			if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+				$("img[id='uploadImage" + type + "']").attr("src",
+						"$!domain"+data.substring(2));
+				$("#uploadImage"+ type).show();
+				$("#picURL" + type).val(data.substring(2));
+				$('#result').html("图片上传成功<br/>");
+			} else {
+				$('#result').html('图片上传失败，请重试！！');
+			}
+		},
+		error : function(data, status, e) { // 服务器响应失败时的处理函数
+			$('#result').html('图片上传失败，请重试！！');
+		}
+	});
+}
+</script>
+</html>

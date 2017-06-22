@@ -1,0 +1,54 @@
+@charset "utf-8";
+/* CSS Document */
+body{ background:#f1f1f1;}
+a.increase{ margin:3%; display:block; background:#03a1ff; border-radius:3px; text-align:center; height: 32px; line-height:32px; font-size:14px;color:#fff;}
+.increase span{ background:url(../img/add_inco.png) no-repeat 0 center; background-size:14px 14px; width:85px; height:32px; display:inline-block; vertical-align:middle; padding-left:23px;}
+.addr_content{ margin-bottom:10px;}
+.addr_info{ padding:5%; background:#fff; min-height:60px; border-top:1px solid #d7d7d7;}
+.addr_info .selected{ display:block;  height:60px; padding-right:5%;}
+.addr_info .selected.on{background:url(../img/select_inco.png) right center no-repeat; background-size:20px 14px;}
+.addr_info .selected .consignee{ background:url(../img/cargo_inco.png) no-repeat 0 center; background-size: 22px 22px; padding-left:30px;}
+.addr_info .selected .tele{ background:url(../img/phone_inco.png) no-repeat 0 center;
+background-size:15px 22px; padding-left:22px;}
+.addr_info .selected .consignee,.addr_info .selected .tele{ font-size:14px; color:#1d1d1d; line-height:28px; width:40%; display:inline-block}
+.addr_info .selected p{ line-height:28px; font-size:14px; color:#6b6b6b; padding-top:5px; clear:both}
+
+.operate_list{ border-top:1px solid #d7d7d7; border-bottom:1px solid #d7d7d7;padding:7px 0; background:#fff; height:37px;}
+.operate_list li{ float:left; width:33%; border-right:1px solid #d7d7d7; height:37px; line-height:37px; text-align:center;}
+.operate_list li:last-child{ border-right:none;}
+.operate_list li a span.edit{ background:url(../img/edit_inco.png) right center no-repeat; background-size:19px 20px;  padding-right:25px;}
+.operate_list li a span.del{ background:url(../img/del_inco.png) right center no-repeat; background-size: 21px 21px; padding-right:21px;}
+.operate_list li a span{ font-size:14px; color:#727272;width:45px; height:37px;display:inline-block;}
+
+.status{margin-top:30px;font-size:14px;color:#727272;}
+.status{display:block;text-align:center;}
+
+
+.addr{ padding:0 3%; margin-top:3%;background:#fff;border-top:1px solid #d9d9d9;border-bottom:1px solid  #d9d9d9;}
+.addr dl{ line-height:50px;border-bottom:1px solid  #d9d9d9;}
+.addr dl:last-child{ border-bottom:none;}
+.addr dt{ float: left; width:23%; font-size:14px; color:#3a3a3a; padding-left:2%;}
+.addr dd{ float:right; width:75%;}
+.addr dd .ipt,.addr dd select{ height:47px;line-height:50px; border:none; width:100%; font-size:14px; color:#999; text-indent:10px;}
+.addr dd .tx{ height:110px;text-indent:10px; width:100%; border:none; resize:none; line-height:20px; font-size:14px;}
+
+.submit{ padding:3%;}
+.submit .submit_btn{ display:block; height:40px; line-height:40px; background:#03a1ff; text-align:center; border-radius:3px; font-size:14px;color:#fff;}
+
+.payment{ margin-top:15px; background:#fff; border-top:1px solid #e9e9e9; border-bottom:1px solid #e9e9e9; padding:23px 10% 23px 25%; position:relative;}
+.payment b{ position:absolute; background:url(../img/success_inco.png) no-repeat; background-size:47px 47px; top:23%; left:5%; width:47px; height:47px; display:inline-block;}
+.payment strong{ font-size:16px; color:#484848; line-height:28px; font-weight:normal;}
+.order_info{ height:56px; line-height:56px; background:#f1f1f1; text-align:center;}
+.order_info span{ font-size:14px; color:#262626; background:url(../img/info_inco.png) no-repeat; background-size:18px 19px;padding-left:23px;}
+.info{ padding:20px 10%; background:#fff;border-top:1px solid #e9e9e9; border-bottom:1px solid #e9e9e9;}
+.info p{ font-size:14px; color:#808080; line-height:28px;}
+.info p span{ color:#272727;}
+.info p em{ color:#f60;}
+.info p span,.info p em{ display:inline-block; margin-left:20px;}
+.ordernav{ position:fixed; background:#fff; bottom:0; left:0; width:100%; display:block; z-index:15; padding:10px 0;}
+.ordernav .op{ display:table; padding:0 5%; width:90%;}
+.op .cell{ vertical-align:top; text-align:center;}
+.op .cshopping,.op .vieworder{ width:50%;}
+.op .btns{ line-height:42px; height:42px; border-radius:3px; color:#fff; text-align:center; font-size:14px; display:inline-block; width:90%;}
+.op .cshopping .btns{ background:#03a1ff;}
+.op .vieworder .btns{ background:#f60;}

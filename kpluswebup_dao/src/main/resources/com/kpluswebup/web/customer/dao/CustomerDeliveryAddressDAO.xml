@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.CustomerDeliveryAddressDAO">
+
+	<select id="findAddressByCustomerID" parameterType="customerDeliveryAddressDTO"
+		resultType="customerDeliveryAddressVO">
+		select a.*,
+		p.name as provinceName,
+		c.name as cityName,
+		d.name as
+		districtName
+		from kplus_customer_deliveryaddress a
+		left join
+		kplus_area p
+		on a.provinceID=p.mainID
+		left join kplus_area c on
+		a.cityID=c.mainID
+		left join kplus_area d on a.disctrictID=d.mainID
+		where a.isDelete=0 and
+		a.customerID=#{customerID}
+		<if test="type != null">
+			and a.type=#{type}
+		</if>
+		<if test="status!=null">
+			and a.status=#{status}
+		</if>
+		order by a.isDefault
+		asc,a.createTime desc
+	</select>
+
+	<update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		update
+		kplus_customer_deliveryaddress set isDelete=1 where id=#{id}
+	</update>
+
+	<update id="changeDeliveryAddress" parameterType="customerDeliveryAddressDTO">
+		update
+		kplus_customer_deliveryaddress set status=#{status} where id=#{id}
+	</update>
+
+	<select id="findDefaultAddress" parameterType="customerDeliveryAddressDTO"
+		resultType="customerDeliveryAddressVO">
+		select * from kplus_customer_deliveryaddress where
+		isDelete=0 and
+		isDefault=1 and customerID=#{customerID} and status=1
+	</select>
+
+	<update id="updateDefaultAddress" parameterType="java.lang.Long">
+		update
+		kplus_customer_deliveryaddress set isDefault=1 where id=#{id}
+	</update>
+	<update id="updateIsDefaultAddress" parameterType="java.lang.Long">
+		update
+		kplus_customer_deliveryaddress set isDefault=0 where id=#{id}
+	</update>
+	<update id="updateAddressNotDefaultByCustomerMainID"
+		parameterType="java.lang.String">
+		update
+		kplus_customer_deliveryaddress set isDefault=0
+		where customerID=#{mainID}
+	</update>
+
+	<insert id="insertAddress" parameterType="customerDeliveryAddressDTO">
+		insert into
+		kplus_customer_deliveryaddress(
+		customerID,
+		name,
+		mobile,
+		telephone,
+		countryID,
+		provinceID,
+		cityID,
+		disctrictID,
+		address,
+		zip,
+		isDelete,
+		isDefault,
+		creator,
+		createTime,
+		type,
+		status
+		)
+		values(
+		#{customerID},
+		#{name},
+		#{mobile},
+		#{telephone},
+		6,
+		#{provinceID},
+		#{cityID},
+		#{disctrictID},
+		#{address},
+		#{zip},
+		0,
+		#{isDefault},
+		#{creator},
+		now(),
+		#{type},
+		1
+		)
+	</insert>
+
+	<select id="findAddressByID" parameterType="java.lang.Long"
+		resultType="customerDeliveryAddressVO">
+		select a.*,
+		p.name as provinceName,
+		c.name as cityName,
+		d.name
+		as districtName
+		from kplus_customer_deliveryaddress a
+		left join
+		kplus_area p on a.provinceID=p.mainID
+		left join kplus_area c on
+		a.cityID=c.mainID
+		left join kplus_area d on a.disctrictID=d.mainID
+		where
+		a.isDelete=0 and a.id=#{id}
+	</select>
+	
+	<select id="findValidAddressByID" parameterType="java.lang.Long"
+		resultType="customerDeliveryAddressVO">
+		select a.*,
+		p.name as provinceName,
+		c.name as cityName,
+		d.name
+		as districtName
+		from kplus_customer_deliveryaddress a
+		left join
+		kplus_area p on a.provinceID=p.mainID
+		left join kplus_area c on
+		a.cityID=c.mainID
+		left join kplus_area d on a.disctrictID=d.mainID
+		where
+		a.isDelete=0 and a.type=0 and a.status=1 and a.id=#{id}
+	</select>
+
+	<update id="updateAddress" parameterType="customerDeliveryAddressDTO">
+		update kplus_customer_deliveryaddress
+		<set>
+			modifyTime=now()
+			<if test="name != null">
+				, name = #{name}
+			</if>
+			<if test="mobile != null">
+				, mobile = #{mobile}
+			</if>
+			<if test="telephone != null">
+				, telephone = #{telephone}
+			</if>
+			<if test="provinceID != null">
+				,provinceID = #{provinceID}
+			</if>
+			<if test="cityID != null">
+				,cityID = #{cityID}
+			</if>
+			<if test="disctrictID != null">
+				,disctrictID = #{disctrictID}
+			</if>
+			<if test="address != null">
+				,address = #{address}
+			</if>
+			<if test="zip != null">
+				,zip = #{zip}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="isDefault != null">
+				,isDefault = #{isDefault}
+			</if>
+			,status = 1
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="findDeliveryAddressByPagination" parameterType="customerDeliveryAddressDTO"
+		resultType="customerDeliveryAddressVO">
+		select a.*,cs.username as customerName,
+		p.name as provinceName,
+		c.name
+		as
+		cityName,
+		d.name as districtName
+		from
+		kplus_customer_deliveryaddress a
+		left join
+		kplus_customer cs on
+		a.customerID=cs.mainID
+		left join
+		kplus_area p on
+		a.provinceID=p.mainID
+		left join kplus_area c on
+		a.cityID=c.mainID
+		left
+		join kplus_area d on
+		a.disctrictID=d.mainID
+		where
+		a.isDelete=0 and
+		cs.isDelete=0
+		<if test="customerID != null">
+			and a.customerID=#{customerID}
+		</if>
+		<if test="name != null">
+			and cs.username like '%${name}%'
+		</if>
+		<if test="status != null">
+			and a.status=#{status}
+		</if>
+		order by a.id desc
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findDeliveryAddressCount" parameterType="customerDeliveryAddressDTO"
+		resultType="java.lang.Long">
+		select count(a.id) from kplus_customer_deliveryaddress
+		a
+		left join
+		kplus_customer cs on a.customerID=cs.mainID
+		where
+		a.isDelete=0
+		and
+		cs.isDelete=0
+		<if test="customerID != null">
+			and a.customerID=#{customerID}
+		</if>
+		<if test="name != null">
+			and cs.name like '%${name}%'
+		</if>
+		<if test="status != null">
+			and a.status=#{status}
+		</if>
+	</select>
+
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.SupplierItemIDDAO">
+
+	<insert id="addSupplierItemID" parameterType="supplierItemIDDTO">
+		INSERT INTO
+		kplus_zy_supplier_item_id (
+		mainID,
+		supplierID,
+		orderID,
+		`status`,
+		itemName,
+		orderLineId,
+		salesOrderLineID
+		)
+		VALUES
+		(
+		#{mainID},
+		#{supplierID},
+		#{orderID},
+		0,
+		#{itemName},
+		#{orderLineId},
+		#{salesOrderLineID}
+		)
+	</insert>
+	<update id="updateSupplierItemID" parameterType="supplierItemIDDTO">
+		UPDATE kplus_zy_supplier_item_id
+		SET
+		<if test="serialiseNO != null">
+			serialiseNO = #{serialiseNO},
+		</if>
+		<if test="carrierNoteLineDetailID != null">
+			carrierNoteLineDetailID = #{carrierNoteLineDetailID},
+		</if>
+		`status` = #{status}
+		WHERE
+		<if test="orderID != null">
+			orderID = #{orderID}
+			AND supplierID = #{supplierID}
+		</if>
+		<if test="mainID != null">
+			mainID = #{mainID}
+		</if>
+	</update>
+	<update id="updateSupplierItemIDPickUp">
+		UPDATE kplus_zy_supplier_item_id id
+		SET `status` = 1
+		WHERE
+		supplierID =
+		#{supplierID}
+		AND orderID IN (
+		SELECT
+		line.salesOrderID
+		FROM
+		kplus_zy_carrier_note note
+		LEFT JOIN kplus_zy_carrier_note_line line ON
+		note.mainID =
+		line.carrierNoteID
+		WHERE
+		note.mainID IN
+		<foreach item="item" index="index" collection="carrierNoteIDs"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		)
+	</update>
+	<update id="updateSupplierItemIDStatus" parameterType="java.lang.String">
+		UPDATE kplus_zy_supplier_item_id id
+		SET `status` = 1
+		WHERE
+			orderID IN (
+				SELECT
+					line.salesOrderID
+				FROM
+					kplus_zy_carrier_note note
+				LEFT JOIN kplus_zy_carrier_note_line line ON note.mainID = line.carrierNoteID
+				WHERE
+					note.mainID = #{carrierNoteID}
+			)
+	</update>
+	<select id="findSupplierItemIDByOrderID" parameterType="java.lang.String"
+		resultType="supplierItemIDVO">
+		SELECT
+		i.mainID,
+		i.carrierNoteLineDetailID,
+		i.supplierID,
+		s.companyName AS supplierName,
+		i.orderID,
+		i.serialiseNO,
+		i.`status`,
+		i.itemName
+		FROM
+		kplus_zy_supplier_item_id i
+		LEFT JOIN kplus_zy_supplier s
+		ON i.supplierID = s.mainID
+		WHERE
+		orderID = #{orderId}
+	</select>
+	<select id="findSupplierItemIDByOrderLineID" parameterType="java.lang.String"
+		resultType="supplierItemIDVO">
+		SELECT
+		i.mainID,
+		i.carrierNoteLineDetailID,
+		i.supplierID,
+		s.companyName AS supplierName,
+		i.orderID,
+		i.serialiseNO,
+		i.`status`,
+		i.itemName
+		FROM
+		kplus_zy_supplier_item_id i
+		LEFT JOIN kplus_zy_supplier s
+		ON i.supplierID = s.mainID
+		WHERE
+		orderLineId = #{orderLineId}
+	</select>
+	<delete id="deleteSupplierItemIDBySalesOrderLineID"
+		parameterType="java.lang.String">
+		delete from kplus_zy_supplier_item_id WHERE salesOrderLineID =
+		#{salesOrderLineID}
+	</delete>
+	<select id="findSupplierItemIDBySerialiseNo" parameterType="java.lang.String"
+		resultType="supplierItemIDVO">
+		SELECT
+		*
+		FROM
+		kplus_zy_supplier_item_id
+		WHERE
+		serialiseNO =
+		#{serialiseNo}
+		limit 1
+	</select>
+</mapper>

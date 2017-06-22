@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>帮助中心</title>
+<link rel="stylesheet" type="text/css"
+	href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css"
+	href="$!{mallStatic}/css/user.css">
+</head>
+<body>
+	<!-- top bar -->
+	#parse("layout/head_top.vm")
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+	<!-- 主导航 -->
+	#parse("layout/menu.vm")
+
+
+	<!-- banner -->
+	<div class="crumbs">
+		<div class="layout clearfix">
+			<a href="$!{domain}/index.htm" class="home">首页</a> &gt; <a
+				href="$!{domain}/mall/helps/helpsCenter.htm">帮助中心</a>
+		</div>
+	</div>
+	<div class="layout mt10 clearfix">
+		<div id="sidernav">
+			<h2>服务保证</h2>
+			<ul>
+				#if("$!helpslist"!="" && $helpslist.size()>0) #foreach($helps in
+				$helpslist)
+				<li class="firNav cur"><a href="javascript:;" class="firLink">$!helps.Name</a>
+					<ul class="secNav">
+						#foreach($help in $helps.cmsHelpCenterVO)
+						<li><a
+							href="$!{domain}/mall/helps/helpsDetail.htm?mainID=$!help.mainID">$!help.name</a></li>
+						#end
+					</ul></li> #end #end
+			</ul>
+		</div>
+		<div class="mainbody">
+			<div id="help_search" class="clearfix">
+				<h2 class="lt">
+					<img src="$!{mallStatic}/images/ico-help.gif"> 帮助中心
+				</h2>
+				<form action="$!{domain}/mall/helps/helpList.htm" method="post"
+					id="searchhelplist">
+					<input type="hidden" id="pageNo" name="pageNo"
+						value="$!cmsHelpCenterDTO.pageNo"> <input type="hidden"
+						id="pageSize" name="pageSize" value="$!cmsHelpCenterDTO.pageSize">
+					<div class="rt">
+						<strong class="f14 lt">问题搜索：</strong>
+						<div class="col02 lt">
+							<p>
+								<input name="name" type="text" class="ipt"><input
+									name="" type="button" value="快速搜索" class="sbtn"
+									onclick="searchhelplist(1)">
+							</p>
+							<p>
+								热门搜索：#foreach($helps in $pList)<em class="ml10">$!helps.name</em>#end
+							</p>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="help_body mt10">
+				<div class="pro_unit mt10">
+					<div class="titbar_m">
+						<strong>帮助分类</strong>
+					</div>
+					<div id="helpbox" class="clearfix">
+						#foreach($helps in $helpslist)
+						<dl>
+							<dt class="d$!velocityCount">$!helps.Name</dt>
+							#foreach($help in $helps.cmsHelpCenterVO)
+							<dd>
+								&middot; <a target="_blank"
+									href="$!{domain}/mall/helps/helpsDetail.htm?mainID=$!help.mainID">$!help.name</a>
+							</dd>
+							#end
+						</dl>
+						#end
+					</div>
+					<div class="titbar_m mt20">
+						<strong>常见问题</strong>
+					</div>
+					<div class="faqlist">
+						<ul class="clearfix">
+							#foreach($!help in $!helpList)
+							<li><em class="col01">[$!help.categoryName]</em> <a
+								target="_blank"
+								href="$!{domain}/mall/helps/helpsDetail.htm?mainID=$!help.mainID">$!help.name</a></li>
+							#end
+						</ul>
+					</div>
+
+					<div class="titbar_m no_m mt20">
+						<strong>购物流程</strong>
+					</div>
+					<div id="flowbox" class="clearfix">
+						<p class="stbar">
+							<img src="$!{mallStatic}/images/stepbar.png">
+						</p>
+						<dl>
+							<dt>1.新用户注册</dt>
+							<dd>
+								&middot; <a
+									href="$!{domain}/mall/helps/helpsDetail.htm?mainID=$!help.mainID"
+									" target="_blank">手机注册</a>
+							</dd>
+							<dd>
+								&middot; <a
+									href="$!{domain}/mall/helps/helpsDetail.htm?mainID=$!help.mainID"
+									" target="_blank">邮箱注册</a>
+							</dd>
+						</dl>
+						<dl>
+							<dt>2.挑选商品</dt>
+							<dd>
+								&middot; <a href="javascript:;" target="_blank">按分类筛选</a>
+							</dd>
+							<dd>
+								&middot; <a href="javascript:;" target="_blank">搜索商品</a>
+							</dd>
+						</dl>
+						<dl>
+							<dt>3.确认下单</dt>
+							<dd>
+								&middot; <a href="javascript:;" target="_blank">去结算</a>
+							</dd>
+						</dl>
+						<dl>
+							<dt>4.订单跟踪</dt>
+							<dd>
+								&middot; <a href="javascript:;" target="_blank">选择支付方式</a>
+							</dd>
+							<dd>
+								&middot; <a href="javascript:;" target="_blank">选择配送方式</a>
+							</dd>
+						</dl>
+						<dl>
+							<dt>5.验货签收</dt>
+							<dd>
+								&middot; <a href="javascript:;" target="_blank">秀一下</a>
+							</dd>
+							<dd>
+								&middot; <a href="javascript:;" target="_blank">评价商品</a>
+							</dd>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- footer -->
+	#parse("layout/footer.vm")
+	<script type="text/javascript"
+		src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+	<script type="text/javascript">
+		function searchhelplist(pageNo) {
+			$('#pageNo').val(pageNo);
+			$('#searchhelplist').submit();
+		}
+	</script>
+</body>
+</html>

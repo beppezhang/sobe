@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>$!item.name</title>
+<link rel="stylesheet" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" href="$!{mallStatic}/css/detail.css">
+</head>
+
+<body>
+	<!-- sider tool bar  -->
+	#parse("layout/head_sider.vm")
+
+	<!-- top bar -->
+	#parse("layout/head_top.vm")
+	<!-- 头部LOGO -->
+	#parse("layout/logo.vm")
+	<!-- 主导航 -->
+	#parse("layout/menu.vm")
+
+
+	<!-- banner -->
+	<div id="crumb">
+		<div class="layout clearfix">
+			<a href="$!domain/index.htm">首页</a> &gt; $!product.name
+		</div>
+	</div>
+	<div class="layout clearfix">
+		<div class="w800 lt">
+			<!-- product imgs -->
+			<!-- detail -->
+			<div class="pd_detail">
+				<div class="preview">
+					<div id="vertical" class="bigImg">
+						<img src="$!imgurl$!item.picURL" alt="" id="midimg" />
+						<div style="display: none;" id="winSelector"></div>
+					</div>
+					<!--bigImg end-->
+					<div class="smallImg">
+						<div class="scrollbutton smallImgUp disabled"></div>
+						<div id="imageMenu">
+							<ul>
+								<li id="onlickImg"><img src="$!imgurl$!item.picURL" /></li>
+								#foreach($!picture in $!pictures)
+								<li><img src="$!imgurl$!picture.picURL" /></li> #end
+							</ul>
+						</div>
+						<div class="scrollbutton smallImgDown"></div>
+					</div>
+					<!--smallImg end-->
+					<!--  <a href="#" class="share">分享</a>--> #if($!favorite) <a id="favorite"
+						href="javascript:;" class="book cur">已收藏</a> #else <a
+						id="favorite" href="javascript:;" class="book">收藏商品</a> #end （<span
+						class="fcount">$!fCount</span>人收藏）
+					<div id="bigView" style="display: none;">
+						<img alt="" src="" />
+					</div>
+				</div>
+				<!-- product mes -->
+				<div id="parameter">
+					<h1>$!item.name</h1>
+					<h4>$!product.subTitle</h4>
+					<dl class="clearfix">
+						<dt>商品编号</dt>
+						<dd>#if("$!item.mainID"=="")暂无该商品#else$!item.mainID#end</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>发货时间</dt>
+					<!-- 	$!date.format("yyyy-MM-dd",$!sale.modifyTime) -->
+						<dd>预计 2015-4-10日发货
+						</dd>
+					</dl>
+
+					<p class="mt10">
+						<span class="cdbox" data="$!sale.endDate"></span>
+					</p>
+					<p>
+					<dt>促 销 价</dt>
+					<dd>
+						￥<strong class="f18 col01">$!NumberTool.format("#0.00",$!sale.salesPrice)</strong>
+						<del>￥$!NumberTool.format("#0.00",$!item.standrardPrice)</del>
+					</dd>
+					</p>
+					#foreach($!prop in $!itemProps)
+					<dl class="clearfix">
+						<dt>$!prop.itemPropName</dt>
+						<dd class="sel">
+							<span class="cur"><a href="javascript:;">$!prop.itemPropValue</a><i></i></span>
+						</dd>
+					</dl>
+					#end
+					<dl class="clearfix">
+						<dt>数量</dt>
+						<dd class="number_control">
+							<span><a class="prev" href="javascript:;"></a><input
+								id="itemCount" type="text" name="num" value="1"><a
+								class="next" href="javascript:;"></a></span> <em class="col03 ml10">库存：<span
+								id="stock">#if("$!sale.maxmumQty"=="")0#else$!sale.maxmumQty#end</span></em>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dd class="mt10">
+							<a href="javascript:gobuy();" class="gobuy">#if($!orderType==1)支付定金#else立即购买#end</a>
+						</dd>
+					</dl>
+				</div>
+				<div class="clr"></div>
+				<div id="tabbar">
+					<div class="laybox clearfix">
+						<span class="lt tab"> <span class="cur">商品详情</span><span>商品信息</span><span>专享服务</span>
+						</span>
+					</div>
+				</div>
+				<div class="con">
+					<div class="none cur">
+						<div class="textbody">
+							<center>$!product.description</center>
+						</div>
+					</div>
+					<!-- parameters -->
+					<div class="pd_detail none">$!product.productProp</div>
+					<!-- after sale -->
+					<div class="pd_detail none">
+						<div style="padding: 10px;">
+							<pre>$!product.saleService</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- right side -->
+		<div id="more_detail">
+			<p class="brand_logo">
+				<a
+					href="$!{domain}/mall/item/brandHistory.htm?brandId=$!{brand.mainID}"><img
+					src="$!imgurl$!brand.picURL"></a>
+			</p>
+			<p class="serLink mt10 ct">
+				<a href="http://wpa.qq.com/msgrd?v=3&uin=379623440&site=qq&menu=yes"><img src="$!{mallStatic}/img/icon/ico-qq.png">
+					联系客服</a>
+			</p>
+			<p class="mt10 ct">服务支持:</p>
+			<p class="spt ct">
+				<em>定制</em><em>自提</em>
+			</p>
+			<p class="security">本品支持7天内无理由退换货</p>
+			<h3>同类型商品推荐</h3>
+			<ul>
+				#foreach($!it in $!items)
+				<li>
+					<p class="ct">
+						<a
+							href="$!domain/mall/product/productDetail.htm?productID=$!it.productID&itemID=$!it.mainID"
+							target="_blank"><img src="$!imgurl$!it.picURL"
+							class="pimg imgMove"></a>
+					</p>
+					<h4>￥$!NumberTool.format("#0.00",$!it.salesPrice)</h4>
+				</li> #end
+			</ul>
+		</div>
+	</div>
+	<div id="agebox1" class="popbox">
+		<div class="give_comment">
+			<dl class="clearfix">
+				<dt>我的评价：</dt>
+				<dd>
+					<p class="starsbar">
+						<span><a href="javascript:;" title="差"></a></span> <span><a
+							href="javascript:;" title="一般"></a></span> <span><a
+							href="javascript:;" title="中等"></a></span> <span><a
+							href="javascript:;" title="良"></a></span> <span><a
+							href="javascript:;" title="优"></a></span>
+					</p>
+					<em class="s_result"></em>
+				</dd>
+			</dl>
+			<dl class="clearfix">
+				<dt>我的评论：</dt>
+				<dd>
+					<textarea id="review" class="cbox"></textarea>
+				</dd>
+			</dl>
+			<dl class="clearfix">
+				<dd>
+					<input name="" onclick="submitReview()" class="submit"
+						type="button" value="发 布"> <input name=""
+						class="cancel ml10" type="button" value="取 消"
+						onClick="closeprot()">
+				</dd>
+			</dl>
+		</div>
+	</div>
+	<div id="agebox2" class="popbox">
+		<div class="give_comment">
+			<dl class="clearfix">
+				<dt>我的问题：</dt>
+				<dd>
+					<textarea id="zixun" class="cbox"></textarea>
+				</dd>
+			</dl>
+			<dl class="clearfix">
+				<dd>
+					<input onclick="zixun();" id="consulting" name="" class="submit"
+						type="button" value="发 布"> <input name=""
+						class="cancel ml10" type="button" value="取 消"
+						onClick="closeprot()">
+				</dd>
+			</dl>
+		</div>
+	</div>
+
+	<input type="hidden" id="itemID" value="$!item.mainID">
+	<input type="hidden" id="productID" value="$!product.mainID">
+	<input type="hidden" id="customerID" value="$!user.mainID">
+	<input type="hidden" id="isbuy" value="false">
+	<input type="hidden" id="orderType" value="$!orderType">
+	<input type="hidden" id="objID" value="$!sale.mainID">
+	<!-- footer -->
+	#parse("layout/footer.vm")
+	<script type="text/javascript" src="http://121.40.160.130:8280/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/time.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/item_detail.js"></script>
+
+</body>
+</html>

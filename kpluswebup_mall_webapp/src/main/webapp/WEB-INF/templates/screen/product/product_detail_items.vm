@@ -1,0 +1,581 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!--<title>上海晨阑数据技术有限公司</title>-->
+<title>商品列表</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/user.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/offer.css">
+
+<!-- top bar -->
+#parse("layout/head_top.vm")
+</head>
+
+<body>
+
+<!-- sider tool bar  -->
+#parse("layout/head_sider.vm")
+ 
+<!-- 头部LOGO 
+#parse("layout/logo.vm")-->
+<!-- 主导航 -->
+#parse("layout/menu.vm")
+
+
+
+<div id="olpProduct" class="a-container">
+  <div class="a-fixed-left-grid a-spacing-base">
+    <div class="a-fixed-left-grid-inner" style="padding-left:130px">
+      <div id="olpProductImage" class="a-text-center a-fixed-left-grid-col a-col-left" style="width:130px;margin-left:-130px;_margin-left:-65px;float:left;">
+        <!--
+        <a href="http://www.amazon.cn/gp/product/B00B1ZWTSE/sr=8-1/qid=1442893332/ref=olp_product_details/476-4980612-4380569?ie=UTF8&amp;me=&amp;qid=1442893332&amp;sr=8-1">
+          <img src="http://ec4.images-amazon.com/images/I/517mHKmBWSL._SL110_.jpg" width="78" alt="返回至产品信息" height="110" border="0">
+        </a>
+        -->
+       <!--   <img src="$!{mallStatic}$!{productVO.picURL}" width="78" alt="" height="110" border="0"> -->
+    	<p class="ct">
+    			<a href="$!{domain}/mall/item/list.htm?productId=01D5B540-FB86-41A8-92AA-FF5E79E72343">
+    			<img src=" $!{mallStatic}/img/products/$!productVO.picURL" class="pimg imgMove" style="width:120px;height:120px;">
+    			</a>
+    			<!--在p标签的右上角定位一张图片 
+    			<img style="position:absolute;right:0;top:0;" src="$!{mallStatic}/img/logo/$!productVO.brandPicURL" class="bimg">
+    			-->
+    	</p>          
+      </div>
+      <div id="olpProductDetails" class="a-fixed-left-grid-col a-col-right" style="padding-left:0%;*width:99.6%;float:left;margin-top:8px;margin-left: 30px;">
+        <h1 class="a-size-large a-spacing-none" style="font-size:20px!important;padding-bottom:10px;">
+          $!productVO.name
+          <!--$!productName-->
+        </h1>
+        <!--
+        <div class="a-section a-spacing-small">
+          <span class="offerListingPageB00B1ZWTSE">
+            <a class="a-link-normal" href="http://www.amazon.cn/review/create-review/ref=acr_offerlistingpage_solicit/476-4980612-4380569?ie=UTF8&amp;asin=B00B1ZWTSE">分享我的评价</a>
+          </span>
+        </div>
+        -->
+        <h1 class="a-size-large a-spacing-none">
+        	<span>产品编号:
+          $!productVO.code</span>
+          <!--$!productName-->
+          <span>OEM: 
+          	#if($!productVO.type==2)
+          		12345678958	
+          	#else
+          		$!productVO.code
+          	#end
+          </span>
+        </h1>
+		<h1 class="a-size-large a-spacing-none">
+         	 <span>配件品牌: $!productVO.brandTitle $!productVO.brandName  
+         	 	<img src="$!{mallStatic}/img/logo/$!productVO.brandPicURL" style="width: 30px;height: 30px" class="bimg"></span>
+			<span>配件分类: $!partsCategoryLevel.name > $!partsCategoryLevel2.name</span>         	 	
+        </h1>
+        <hr class="a-spacing-small a-divider-normal">
+
+<!--
+        <div class="a-section a-spacing-small">
+          <span class="offerListingPageB00B1ZWTSE">
+            <a class="a-link-normal" href="javascript:goBack()">> 返回产品列表页</a>
+          </span>
+        </div>
+-->
+        <div class="twisterDivider"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div id="olpOfferList" class="a-container olpOfferList">
+  <ul id="olpTabs" class="a-tabs">
+    <li id="olpTabAll" class="a-active">
+      <a href="#">所有</a>
+    </li>
+    <!--增加的适用车型-->
+    <li id="olpTabAll">
+      <a href="#">适用车型</a>
+    </li>
+    <!--增加原厂件-->
+    #if($!productVO.type==2)
+    <li id="olpTabAll">
+      <a href="#">原厂件</a>
+    </li>
+    #end
+    #if($!productVO.type!=2)
+    <!--增加副厂件-->
+    <li id="olpTabAll">
+      <a href="#">副厂件</a>
+    </li>
+    #end
+  </ul>
+  <div id="olpTabContent" class="a-box a-box-tab">
+    <div class="a-box-inner">
+    	
+    	
+      <div class="a-section a-spacing-double-large" role="main">
+      <div class="commonpage curpage">
+        <div class="a-row a-spacing-mini">
+          <div class="a-column a-span2">
+              <span class="a-text-bold">
+                  商品名称
+              </span>
+          </div>
+          <div class="a-column a-span2" style="width:10%;">
+              <span class="a-text-bold">
+                  商品价格
+              </span>
+          </div>
+          <div class="a-column a-span3" style="width:25%;">
+              <span class="a-text-bold">
+                 卖家信息
+              </span>
+          </div>
+          <div class="a-column a-span2" style="width:24%;">
+              <span class="a-text-bold">
+                 商品促销信息
+              </span>
+          </div>
+          <div class="a-column a-span2 a-span-last">
+              <span class="a-text-bold">
+                  购买选项
+              </span>
+          </div>
+        </div>
+       
+		#foreach($!itemVO in $!items)
+		
+        <hr class="a-spacing-mini a-divider-normal">
+        
+        <div class="a-row a-spacing-mini olpOffer">
+        	
+          <!--
+          <div class="a-column a-span3">
+            <span class="a-size-medium">$!itemVO.name</span>
+          </div>
+		  -->
+		  
+          <div class="a-column a-span2"a-size-large a-spacing-none>
+          	<a href="$!{domain}/mall/product/productDetail.htm?productID=$!itemVO.productID&itemID=$!itemVO.mainID" target="_blank">
+            <span class="a-size-large olpOfferPrice a-text-bold">$!itemVO.name</span>
+            </a>
+            <!--
+            <em class="col04 ml10">(当前库存：<span id="stock">#if("$!itemVO.stock"=="")0#else$!itemVO.stock#end</span>件)</em>
+            -->
+            <span class="a-color-price"></span>
+          </div>
+
+          <div class="a-column a-span2" style="width:10%;">
+          	<a href="$!{domain}/mall/product/productDetail.htm?productID=$!itemVO.productID&itemID=$!itemVO.mainID" target="_blank">
+            <span class="a-size-large a-color-price olpOfferPrice a-text-bold">￥$!NumberTool.format("#0.00",$!itemVO.salesPrice)</span>
+            </a>
+            <!--
+            <em class="col04 ml10">(当前库存：<span id="stock">#if("$!itemVO.stock"=="")0#else$!itemVO.stock#end</span>件)</em>
+            -->
+            <span class="a-color-price"></span>
+          </div>
+          
+          <div class="a-column a-span2 olpSellerColumn">
+          	
+            <h3 class="a-spacing-none olpSellerName">
+                   <!--
+                     <a href="#"><img src="1.jpg" height="30" width="120"></a>
+
+                    <span class="a-size-medium">***</span>
+
+                    <span class="a-declarative">
+                        <a class="a-link-normal bsms-olp-link" target="_blank" href="#">
+                            查看商家
+                        </a>
+                    </span>
+                    -->
+                    
+                    <span class="a-size-medium" style="position: relative;background: url(../../img/approve.png) no-repeat left center;padding-left:25px;">
+                    	<a class="a-link-normal bsms-olp-link" href="$!domain/mall/seller/showSupplier.htm?mainID=$!itemVO.supplierID" target="_blank">
+                    	$!itemVO.supplierName
+                    	</a>
+                    	<!--添加商品认证和商品等级开始-->
+          				<div class="rating_box" style="position:absolute;right:-65px;top:0; width: 60px; height: 20px; background: url(../../img/gray_star.png) no-repeat 0 0;">
+							<div class="rating" style="width: 60px; height: 20px;background: url(../../img/yellow_star.png) no-repeat;"></div>
+						</div><!--添加商品认证和商品等级结束-->
+                    </span>
+                    
+            </h3>
+          </div>
+                    
+          <div class="a-column a-span3">
+            <span class="a-size-medium">$!itemVO.promotion</span>
+          </div>
+          
+          <div class="a-column a-span2 olpBuyColumn a-span-last">                 
+            <div class="a-button-stack">
+              <span class="a-declarative">
+                  <span class="a-button a-button-normal a-spacing-micro a-button-primary a-button-icon"><span class="a-button-inner"><i class="a-icon a-icon-cart"></i>
+                  	<input name="submit.addToCart" class="a-button-input" type="submit" onClick="opeateAddCat('$!itemVO.mainID','$!itemVO.productID','$!itemVO.stock','$!itemVO.supplierID')">
+                  	<span class="a-button-text" aria-hidden="true" id="a-autoid-1-announce">
+                    	添加到购物车
+				 
+                  </span></span></span>
+              </span>
+          </div>
+        </div>
+        
+      </div>
+      <!--
+      <hr class="a-spacing-mini a-divider-normal">
+      -->
+      #end
+
+<input type="hidden" id="productID" value="$!itemDTO.productID">
+<input type="hidden" id="itemID" value="$!itemDTO.mainID">
+<input type="hidden" id="customerID" value="$!user.mainID">
+<input type="hidden" id="domain" value="$!domain">
+<input type="hidden" id="stock" value="$!itemDTO.stock">
+<input type="hidden" id="supplierID" value="$!itemDTO.supplierID">
+<input type="hidden" id="itemCount" value="1">
+
+<!--
+<form
+	action="$!{domain}/mall/item/list.htm?productId=$!itemDTO.productID$pageNo=$!itemDTO.pageNo"
+	method="post" class="detailForm">
+	<input type="hidden" id="value1" name="value1" value=""> <input
+		type="hidden" id="value2" name="value2" value="">
+</form>
+   -->
+
+    <form id="serachform" name="serachform" method="get" action="$!{domain}/mall/item/list.htm">
+              <input type="hidden" id="pageNo" name="pageNo"
+              value="$!itemDTO.pageNo">
+              <input type="hidden" id="productId" name="productId"
+              value="$!itemDTO.productID">
+   </form>
+   
+              <!-- 排序条 -->
+      <div class="sortBar clearfix mt10">
+        	<span class="rt">
+	             <!-- 配件产品分页信息 -->
+	             #pagination($!itemDTO)            	  
+            </span>
+        	
+        	<!--
+        	<span class="sortLink"  id="maxSalesVolume">
+        		<a href="javascript:;">销量<i></i></a></span>
+        	<span class="sortLink" id="createTime"><a href="javascript:;">人气<i></i></a></span>
+        	<span class="sortLink"  id="minSalesPrice"><a href="javascript:;">价格<i></i></a></span>
+        	-->
+        </div> 
+     </div>
+     <div class="commonpage">
+     	#foreach($data in $!vehicleTypeMap.entrySet())
+     	
+     	<dl class="plate">
+     		<dt class="platenumber"><img src="$!{mallStatic}/img/logo/$data.key.picUrl"/></dt>
+     		<dd class="platetype">
+     			#foreach($!vehicleType in ${data.value})
+     				<span><a href="#" title="$!vehicleType.name">$!vehicleType.name</a></span>
+     			#end
+     			
+     		</dd>
+     		<a class="more_Link" href="javascript:;">更多</a>
+     	</dl>     	
+     	
+     	#end
+     	
+     	<!--
+     	<dl class="plate">
+     		<dt class="platenumber"><img src="../../../img/logo/bmw.fw.png"/></dt>
+     		<dd class="platetype">
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			
+     		</dd>
+     	</dl>
+     	<dl class="plate">
+     		<dt class="platenumber"><img src="../../../img/logo/Mini.fw.png"/></dt>
+     		<dd class="platetype">
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			
+     		</dd>
+     	</dl>
+     	<dl class="plate">
+     		<dt class="platenumber"><img src="../../../img/logo/Rolls-Royce.fw.png"/></dt>
+     		<dd class="platetype">
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			<a href="#">1' E81 3 门车 116d ECE</a>
+     			
+     		</dd>
+     	</dl>-->
+     	<!--<dl class="plate" style="border:none;">
+     		<dt class="platenumber"><a href="#">更多</a></dt>
+     		<dd class="platetype">
+     		</dd>
+     	</dl>-->
+     </div>
+     #if($!productVO.type==2)
+     <!--原厂件-->
+     <div class="commonpage">
+        <div class="a-row a-spacing-mini">
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  产品名称
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  产品编码
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                 配件品牌
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                 <!-- 所属分类 -->
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  详细信息
+              </span>
+          </div>
+        </div>
+        
+        #foreach($data in $!productOEMOther)
+	        <hr class="a-spacing-mini a-divider-normal">
+	        <div class="a-row a-spacing-mini" style="line-height: 35px">
+	          <div class="a-column common size12">
+	              <span class="a-text-bold">
+	                  $data.name
+	              </span>
+	          </div>
+	          <div class="a-column common size12">
+	              <span class="a-text-bold">
+	                 $data.code
+	              </span>
+	          </div>
+	          <div class="a-column common size12">
+	              <span class="a-text-bold">
+	                 $data.brandTitle
+	              </span>
+	          </div>
+	          <div class="a-column common size12">
+	              <span class="a-text-bold">
+	                <img src="$!{mallStatic}/img/logo/$data.brandPicURL" style="width: 35px;height: 35px" class="bimg">
+	              </span>
+	          </div>
+	          <div class="a-column common">
+	              <span class="a-text-bold">
+	                  <a href="$!{domain}/mall/item/list.htm?productId=$data.mainID">查看</a>
+	              </span>
+	          </div>
+	        </div>
+        #end
+        <hr class="a-spacing-mini a-divider-normal">
+      </div>
+      #end
+      #if($!productVO.type!=2)
+      <!--副厂件-->
+      <div class="commonpage">
+        <div class="a-row a-spacing-mini">
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  产品名称
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  产品编码
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                 配件品牌
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                 <!-- 所属分类 -->
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  详细信息
+              </span>
+          </div>
+        </div>
+        #foreach($data in $!productOEMOther)
+        <hr class="a-spacing-mini a-divider-normal">
+        <div class="a-row a-spacing-mini" style="line-height: 35px">
+          <div class="a-column common size12">
+              <span class="a-text-bold">
+                  	$data.name
+              </span>
+          </div>
+          <div class="a-column common size12">
+              <span class="a-text-bold">
+                 $data.code
+              </span>
+          </div>
+          <div class="a-column common size12">
+              <span class="a-text-bold">
+                	$data.brandTitle
+              </span>
+          </div>
+          <div class="a-column common size12">
+              <span class="a-text-bold">
+                 	<img src="$!{mallStatic}/img/logo/$data.brandPicURL" style="width: 35px;height: 35px" class="bimg">
+              </span>
+          </div>
+          <div class="a-column common">
+              <span class="a-text-bold">
+                  <a href="$!{domain}/mall/item/list.htm?productId=$data.mainID">查看</a>
+              </span>
+          </div>
+        </div>
+        #end
+        <hr class="a-spacing-mini a-divider-normal">
+      </div><!--副厂件结束-->
+      #end
+
+<!--       
+      <div class="a-text-center a-spacing-large">
+        <ul class="a-pagination">
+          <li class="a-first">
+            <a href="#">
+              ←<span class="a-letter-space"></span><span class="a-letter-space"></span>上一页  
+            </a>
+          </li>
+          <li class="a-selected"><a href="#">1</a></li>
+          <li>
+            <a href="#">2</a>
+          </li>
+          <li class="a-last">
+            <a href="#">下一页<span class="a-letter-space"></span><span class="a-letter-space"></span>→</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+-->
+
+
+
+
+<!-- footer -->
+#parse("layout/footer.vm")
+
+<div class="waite">
+  <a href="javascript:;" class="close">X</a>
+  <h3>已成功添加至购物车</h3>
+  <p class="goto"><a href="/shoppingCart1.htm" class="look" target="_blank">查看购物车</a><a href="javascript:;" class="continue">继续购物</a></p>
+</div>
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/pager.js"></script>
+</body>
+</html>
+<script>
+  $(function(){
+//    $(".a-button-input").click(function(){
+//      $(".waite").show();
+//    })
+    $(".waite a").click(function(){
+      $(".waite").hide();
+    })
+  })
+  
+  	function serach(catID, brandID,orderByClause) {
+		//jQuery("#pageNo").val(1);
+		jQuery("#seach").submit();
+	}
+	
+	function goBack(){
+		history.go(-1);
+	}
+	
+	
+	function opeateAddCat(itemID,productID,stock,supplierID) {
+		addcat(itemID,productID,stock,supplierID);
+	}	
+	
+	function addcat(itemID,productID,stock,supplierID){
+			var itemID = itemID;
+			var productID = productID;
+			var itemCount = jQuery("#itemCount").val();
+			var customerID = jQuery("#customerID").val();
+			var domain = jQuery("#domain").val();
+			var stock = stock;
+			var supplierID = supplierID;
+			if (parseInt(stock) < parseInt(itemCount)){
+				alert("商品数量不能大于库存！");
+				return;
+			}
+			if (customerID == "" || customerID == undefined){
+				var preUrl = '/mall/item/list.htm?productId='+productID;
+				window.location= domain+'/mall/product/toLogin.htm?preUrl='+preUrl;
+				//window.location.href="/mall/member/toLogin.htm";
+				return;
+			}
+			jQuery.ajax({
+				url : "/mall/product/ajaxAddCat.do",
+				data : {
+					"itemCount" : itemCount,
+					"itemID" : itemID,
+					"productID" : productID,
+					"supplierID":supplierID
+				},
+				type : "POST",
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 0) {
+						$(".waite").show();
+					} else {
+						alert("添加失败！");
+					}
+				},
+				error : function() {
+					alert("系统出错！");
+				}
+			});
+		}	
+		$("ul.a-tabs li").click(function(){
+			$(this).addClass("a-active").siblings().removeClass("a-active");
+			$(".a-box-tab .commonpage").eq($(this).index()).addClass("curpage").siblings().removeClass("curpage");
+		});
+		var lock=true;
+		$(".a-box-tab .commonpage .plate .more_Link").click(function(){
+	        if(lock){
+	        	$(".a-box-tab .commonpage .plate").addClass('on');
+	            $(this).html('收起').addClass('up');
+	            lock=false;
+	        }else{
+	        	$(".a-box-tab .commonpage .plate").removeClass('on');
+	            $(this).html('更多').removeClass('up');
+	            lock=true;
+	        }
+        
+    });
+</script>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订单发货</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+#itemID{
+	
+}
+#itemID thead{
+	font-weight: bold;
+}
+#itemID td{
+	height: 34px;
+	text-align: center;
+}
+.even{
+	background-color: #fafbfc;
+}
+.contRt ul{
+	width: 100%;
+	margin: 40px;
+}
+.contRt ul li{
+	width: 20%;
+	height: 30px;
+	float: left;
+}
+.contRt ul li span{
+	display: inline-block;
+	margin-right: 10px;
+}
+.package span{
+	display: inline-block;
+	width: 200px;
+	margin: 30px 50px;
+}
+.btn{
+
+}
+.sub{
+    background: #20638f none repeat scroll 0 0;
+    border: 1px solid #20638f;
+    border-radius: 3px;
+    color: #fff;
+    display: block;
+    height: 23px;
+    line-height: 23px;
+    margin: 0 auto;
+    text-align: center;
+    width: 63px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>订单管理》订单发货</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="javascript:;" class="hover">发货信息</a></li>
+				</ul>
+			</div>
+
+			<div class="contentRt">
+				<div class="contRt">
+					#if($!info == '1000')
+					<div style="color:red; text-align:center;height:40px;line-height:40px;font-size: 15px;">存在重复串号</div>
+					#end
+					<ul>
+						<li><span>订单编号:</span><span>$!salesOrder.mainID</span></li>
+						<li><span>会员:</span><span>$!salesOrder.customerUserName</span></li>
+						<!-- <li><span>物流公司:</span><span>圆通</span></li> -->
+						<li><span>商品数量:</span><span>$!itemIDList.size()</span></li>
+						<li><span>订单金额:</span><span>￥$!NumberTool.format("#0.00",$!salesOrder.productAmount)</span></li>
+						<li><span>支付方式:</span>
+							<span>#if("$!salesOrder.paymentType"=="1") 款到发货
+						#elseif("$!salesOrder.paymentType"=="2") 货到付款#end</span>
+						</li>
+						<li><span>支付状态:</span><span>#if("$!salesOrder.paymentStatus"=="0")未支付#elseif("$!salesOrder.paymentStatus"==1)已支付
+						#elseif("$!salesOrder.paymentStatus"=="2") 部分支付 #end</span></li>
+					</ul>
+					<div style="clear:both"></div>
+					<form action="orderDeliver.htm"
+						method="post">
+						<input type="hidden" name="orderID" value="$!salesOrder.mainID"/>
+						<table id="itemID" style="width: 100%;">
+							<thead>
+								<tr><td style="width:40%">产品名称</td><td style="width:30%">供应商</td><td style="width:30%">串号</td></tr>
+							</thead>
+							<tbody>
+								#foreach($!itemID in $!itemIDList)
+								<tr>
+									<td>$!{itemID.itemName}</td>
+									<td>$!{itemID.supplierName}</td>
+									<td>
+										#if("$!{itemID.status}" == "0")
+											该产品尚未取货<input type="hidden" class="unpick"/>
+										#elseif($!{itemID.status} == 1)
+										<input type="hidden" name="supplierItemID" value="$!{itemID.mainID}"/>
+										<input class="itemSerialise" type="text" name="serialiseNo1" value=""/>
+										#elseif($!{itemID.status} == 2)
+										<input type="hidden" name="serialiseNo" value="$!{itemID.mainID}"/>
+										$!{itemID.serialiseNO}
+										#end
+									</td>
+								</tr>
+								#end
+							</tbody>
+						</table>
+						<div class="package">
+							<span>产品数：$!itemIDList.size()</span><span>包裹重量：<input name="packageWeight" type="text"/></span>
+							<span>包裹件数：<input type="text" name="packageNum"></span>
+						</div>
+						<div class="btn">
+							<a class="sub"  href="javascript:;">提交</a>
+						</div>
+						<div class="btn">
+							<a class="sub"  href="javascript:;">提交</a>
+						</div>
+					</form>
+				
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/searchProductType.vm") #parse("layout/footer.vm")
+	<script>
+		$(function(){
+			$("tbody tr:even").addClass("even");
+			$(".sub").click(function(){
+				if($(".unpick").length > 0){
+					alert('无法发货，因该订单含有未取货商品');
+					return;
+				}
+				var flag = true;
+				$(".itemSerialise").each(function(index, ele){
+					if(flag && $(ele).val() == ''){
+						alert('请填写产品串号');
+						flag = false;
+					}
+				});
+				if (flag) {
+					$("form").submit();
+				}
+
+			});
+		})
+	</script>
+</body>
+</html>

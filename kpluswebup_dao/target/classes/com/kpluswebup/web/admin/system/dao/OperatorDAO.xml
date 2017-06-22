@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.OperatorDAO">
+
+	<select id="findOperatorByPagination" parameterType="operatorDTO"
+		resultType="OperatorVO">
+		select o.*,d.name as departmentName,r.name as roleName from
+		kplus_operator o
+		left join kplus_department d on
+		o.departmentID=d.mainID
+		left join
+		kplus_role r on o.roleID=r.mainID
+		where o.isDelete=0 and d.isDelete=0
+		and r.isDelete=0 order by o.id
+		desc
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findOperatorCount" parameterType="operatorDTO"
+		resultType="java.lang.Long">
+		select count(o.mainID) from kplus_operator o
+		left join
+		kplus_department d on o.departmentID=d.mainID
+		left join
+		kplus_role r on
+		o.roleID=r.mainID
+		where o.isDelete=0 and d.isDelete=0
+		and r.isDelete=0
+	</select>
+
+	<insert id="insertOperator" parameterType="operatorDTO">
+		insert into
+		kplus_operator(
+		mainID,
+		username,
+		password,
+		departmentID,
+		roleID,
+		name,
+		telephone,
+		mobile,
+		email,
+		status,
+		isDelete,
+		createTime,
+		creator
+		)values(
+		#{mainID},
+		#{username},
+		#{password},
+		#{departmentID},
+		#{roleID},
+		#{name},
+		#{telephone},
+		#{mobile},
+		#{email},
+		1,
+		0,
+		now(),
+		#{creator}
+		)
+	</insert>
+
+	<select id="findOperatorByMainID" parameterType="java.lang.String"
+		resultType="operatorVO">
+		select * from kplus_operator where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<select id="findOperatorByUserName" parameterType="java.lang.String"
+		resultType="operatorVO">
+		select * from kplus_operator where isDelete=0 and
+		username=#{username}
+	</select>
+
+	<update id="updateOperator" parameterType="operatorDTO">
+		update kplus_operator
+		<set>
+			modifyTime=now()
+			<if test="username!=null">
+				,username=#{username}
+			</if>
+			<if test="password!=null">
+				,password=#{password}
+			</if>
+			<if test="departmentID!=null">
+				,departmentID=#{departmentID}
+			</if>
+			<if test="roleID!=null">
+				,roleID=#{roleID}
+			</if>
+			<if test="name!=null">
+				,name=#{name}
+			</if>
+			<if test="telephone!=null">
+				,telephone=#{telephone}
+			</if>
+			<if test="mobile!=null">
+				,mobile=#{mobile}
+			</if>
+			<if test="email!=null">
+				,email=#{email}
+			</if>
+			<if test="status!=null">
+				,status=#{status}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="deleteOperatorByMainID" parameterType="java.lang.String">
+		update
+		kplus_operator set isDelete=1 where mainID=#{mainID}
+	</update>
+
+	<update id="updateOperatorPwd" parameterType="operatorDTO">
+		update kplus_operator
+		<set>
+			modifyTime=now()
+			<if test="password!=null">
+				,password=#{password}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+</mapper>

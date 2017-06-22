@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.customer.dao.WechatUserDAO">
+
+	<select id="findWechatUserByPagination" parameterType="wechatUserDTO"
+		resultType="wechatUserVO">
+		select w.*,i.name as wechatName,c.username as
+		customerName from
+		kplus_wechatuser w
+		left join
+		kplus_interfaceconfig i on
+		w.interfaceConfigID=i.mainID
+		left join
+		kplus_customer c on
+		w.customerID=c.mainID
+		where w.isDelete=0
+		<if test="wechatNick!=null">
+			and w.wechatNick like '%${wechatNick}%'
+		</if>
+		<if test="interfaceConfigID!=null">
+			and w.interfaceConfigID=#{interfaceConfigID}
+		</if>
+		order by w.id desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findWechatUserCount" parameterType="wechatUserDTO"
+		resultType="java.lang.Long">
+		select count(w.id) from
+		kplus_wechatuser w
+		left join
+		kplus_interfaceconfig i on
+		w.interfaceConfigID=i.mainID
+		left join
+		kplus_customer c on
+		w.customerID=c.mainID
+		where w.isDelete=0
+		<if test="wechatNick!=null">
+			and w.wechatNick like '%${wechatNick}%'
+		</if>
+		<if test="interfaceConfigID!=null">
+			and w.interfaceConfigID=#{interfaceConfigID}
+		</if>
+	</select>
+
+	<select id="findWechatUserByID" parameterType="java.lang.Long"
+		resultType="wechatUserVO">
+		select * from kplus_wechatuser where isDelete=0 and
+		id=#{id}
+	</select>
+</mapper>

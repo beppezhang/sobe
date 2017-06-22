@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>公告列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>内容管理 》公告管理</span>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				#if($!menuUtil.isExistMenu("/admin/content/addNoticePage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/content/addNoticePage.htm" class="TableAddBtn" title="新增公告">+新增公告</a>
+				#end
+			</div>
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/content/noticeList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!cmsContentDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!cmsContentDTO.pageSize">
+			</form>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><label class="label"><input type="checkbox"
+								value="" id="all" /></label></td>
+						<td>标题</td>
+						<td>分类</td>
+						<td>创建时间</td>
+						<td>排序</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!notice in $!noticeList)
+					<tr>
+						<td><label class="label"><input type="checkbox"
+								value="$!notice.mainID" id="check_box_$!notice.mainID" /></label></td>
+						<td>$!notice.name</td>
+						<td>$!notice.categoryName</td>
+						<td><span
+							title="$!date.format('yyyy-MM-dd',$!notice.createTime)"
+							class="dealtime">$!date.format('yyyy-MM-dd
+								HH:mm:ss',$!notice.createTime)</span></td>
+						<td>$!notice.sortOrder</td>
+						<td class="last">
+							#if($!menuUtil.isExistMenu("/admin/content/editNoticePage.htm",$!menuAllList)
+							) <a class="icon iconEdit"
+							href="$!{domain}/admin/content/editNoticePage.htm?mainID=$!notice.mainID"
+							title="编辑"></a> #end &nbsp;
+							#if($!menuUtil.isExistMenu("/admin/content/deleteNotice.do",$!menuAllList)
+							) <a href="javascript:;" class="icon iconDel"
+							onclick="deleteNotice('$!{notice.mainID}')" title="删除"></a> #end
+
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!cmsContentDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>

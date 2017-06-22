@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.ProductPropDAO">
+
+	<sql id="Base_Column_List">
+		mainID, name, propType, isDelete, creator,
+		createTime,
+		modifier,
+		modifyTime
+	</sql>
+
+	<sql id="Base_Column_List_ProductTypeProductProp">
+		id, mainID, productTypeID, productPropID, name,
+		productPropValue,productPropValueID, sortOrder, creator,
+		createTime, modifier, modifyTime
+	</sql>
+	<sql id="Base_Column_List_ProductTypeItemProp">
+		id, mainID, productTypeID, itemPropID, name, itemPropValue,
+		itemPropValueID,sortOrder, creator,
+		createTime, modifier, modifyTime
+	</sql>
+
+	<update id="deleteProductPropByMainID" parameterType="java.lang.String">
+		update
+		kplus_productprop
+		set
+		isDelete = 1
+		where
+		mainID=#{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insertProductProp" parameterType="productPropDTO">
+		insert into
+		kplus_productprop (
+		mainID,
+		name,
+		propType,
+		isDelete,
+		creator,
+		createTime
+		)
+		values (
+		#{mainID},
+		#{name},
+		#{propType},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+
+	<update id="updateProductProp" parameterType="productPropDTO">
+		update kplus_productprop
+		<set>
+			modifyTime =now()
+			<if test="name != null">
+				,name = #{name}
+			</if>
+			<if test="propType != null">
+				,propType = #{propType}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID = #{mainID,jdbcType=VARCHAR}
+	</update>
+
+
+	<select id="findProductPropByMainID" parameterType="java.lang.String"
+		resultType="productPropVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_productprop
+		where mainID = #{mainID,jdbcType=VARCHAR}
+		and
+		isDelete=0
+	</select>
+
+
+	<select id="findProductPropByPagination" resultType="productPropVO"
+		parameterType="productPropDTO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_productprop
+		where isDelete=0
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findProductPropCount" resultType="java.lang.Long"
+		parameterType="productPropDTO">
+		select
+		count(*)
+		from kplus_productprop
+		where isDelete=0
+	</select>
+
+
+	<select id="findProductPropValueByMainID" parameterType="java.lang.String"
+		resultType="productPropValueVO">
+		SELECT
+		mainID,
+		productPropID,
+		name,
+		isDelete,
+		creator,
+		createTime,
+		modifier,
+		modifyTime
+		FROM kplus_productprop_value
+		where productPropID
+		=#{productPropID,jdbcType=VARCHAR}
+		AND
+		isDelete=0
+	</select>
+
+	<insert id="saveProductPropValue" parameterType="productPropDTO">
+		insert into
+		kplus_productprop_value (
+		mainID,
+		productPropID,
+		name,
+		isDelete,
+		creator,
+		createTime
+		)
+		values (
+		#{mainID},
+		#{productPropID},
+		#{name},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="deleteProductPropValueByMainID" parameterType="java.lang.String">
+		update
+		kplus_productprop_value
+		set
+		isDelete = 1
+		where mainID
+		=#{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<update id="deleteProductPropValueByProductPropID"
+		parameterType="java.lang.String">
+		update
+		kplus_productprop_value
+		set
+		isDelete = 1
+		where
+		productPropID =#{productPropID,jdbcType=VARCHAR}
+	</update>
+
+
+	<insert id="insertpProductTypeProductProp" parameterType="productTypeProductPropDTO">
+		INSERT INTO kplus_producttype_productprop(
+		id,
+		mainID,
+		productTypeID,
+		productPropID,
+		NAME,
+		productPropValue,
+		productPropValueID,
+		sortOrder,
+		creator,
+		createTime
+		)
+		VALUES
+		(
+		#{id},
+		#{mainID},
+		#{productTypeID},
+		#{productPropID},
+		#{name},
+		#{productPropValue},
+		#{productPropValueID},
+		#{sortOrder},
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updatepProductTypeProductProp" parameterType="productTypeProductPropDTO">
+		update kplus_producttype_productprop set
+		modifyTime=now()
+		<if test="productTypeID!=null">
+			,productTypeID=#{productTypeID}
+		</if>
+		<if test="productPropID!=null">
+			,productPropID=#{productPropID}
+		</if>
+		<if test="name!=null">
+			,name=#{name}
+		</if>
+		<if test="productPropValue!=null">
+			,productPropValue=#{productPropValue}
+		</if>
+		<if test="productPropValueID!=null">
+			,productPropValueID=#{productPropValueID}
+		</if>
+		<if test="modifier!=null">
+			,modifier=#{modifier}
+		</if>
+		where mainID=#{mainID}
+	</update>
+
+	<insert id="insertpProductTypeItemProp" parameterType="productTypeItemPropDTO">
+		INSERT INTO kplus_producttype_itemprop(
+		id,
+		mainID,
+		productTypeID,
+		itemPropID,
+		NAME,
+		itemPropValueID,
+		itemPropValue,
+		sortOrder,
+		creator,
+		createTime
+		)
+		VALUES
+		(
+		#{id},
+		#{mainID},
+		#{productTypeID},
+		#{itemPropID},
+		#{name},
+		#{itemPropValueID},
+		#{itemPropValue},
+		#{sortOrder},
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="updatepProductTypeItemProp" parameterType="productTypeItemPropDTO">
+		update kplus_producttype_itemprop set
+		modifyTime=now()
+		<if test="productTypeID!=null">
+			,productTypeID=#{productTypeID}
+		</if>
+		<if test="itemPropID!=null">
+			,itemPropID=#{itemPropID}
+		</if>
+		<if test="name!=null">
+			,name=#{name}
+		</if>
+		<if test="itemPropValueID!=null">
+			,itemPropValueID=#{itemPropValueID}
+		</if>
+		<if test="itemPropValue!=null">
+			,itemPropValue=#{itemPropValue}
+		</if>
+		<if test="modifier!=null">
+			,modifier=#{modifier}
+		</if>
+		where mainID=#{mainID}
+	</update>
+
+	<delete id="deleteProductTypeProductProp" parameterType="java.lang.String">
+		delete from kplus_producttype_productprop
+		where mainID = #{mainID,jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="deleteProductTypeItemProp" parameterType="java.lang.String">
+		delete from kplus_producttype_itemprop
+		where mainID = #{mainID,jdbcType=VARCHAR}
+	</delete>
+
+
+	<select id="findProductTypeProductProp" resultType="productTypeProductPropVO"
+		parameterType="productTypeProductPropDTO">
+		select
+		p.propType, t.*
+		from kplus_producttype_productprop t left join kplus_productprop p on
+		p.mainID=t.productPropID AND p.isDelete=0
+		where 1=1
+		<if test="productTypeID != null">
+			and productTypeID=#{productTypeID}
+		</if>
+		<if test="productPropID != null">
+			and productPropID =#{productPropID}
+		</if>
+		<if test="mainID != null">
+			and mainID =#{mainID}
+		</if>
+	</select>
+
+	<select id="findProductTypeItemProp" resultType="productTypeItemPropVO"
+		parameterType="productTypeItemPropDTO">
+		select
+		<include refid="Base_Column_List_ProductTypeItemProp" />
+		from kplus_producttype_itemprop
+		where 1=1
+		<if test="productTypeID != null">
+			and productTypeID=#{productTypeID}
+		</if>
+		<if test="itemPropID != null">
+			and itemPropID =#{itemPropID}
+		</if>
+		<if test="mainID != null">
+			and mainID =#{mainID}
+		</if>
+	</select>
+
+	<select id="seachProductprop" resultType="productTypeProductPropVO"
+		parameterType="java.util.Map">
+		SELECT
+		pp.*
+		FROM
+		kplus_producttype_productprop pp
+		LEFT JOIN
+		kplus_producttype pt ON pt.mainID = pp.productTypeID and pt.isDelete=0
+		LEFT JOIN kplus_product_category pc ON pc.productTypeID = pt.mainID
+		and pc.isDelete=0
+		LEFT JOIN kplus_product_category pc1 ON pc1.mainID =
+		pc.parentID and pc1.isDelete=0
+		LEFT JOIN kplus_product_category pc2 ON
+		pc2.mainID = pc1.parentID and pc2.isDelete=0
+		LEFT JOIN
+		kplus_producttype_brand pb ON pb.productTypeID = pt.mainID
+		WHERE
+		1 = 1
+		<if test="catID != null">
+			AND(pc.mainID = #{catID} OR pc1.mainID = #{catID} OR pc2.mainID = #{catID})
+		</if>
+
+		<if test="brandID != null">
+			AND pb.brandID = #{brandID}
+		</if>
+		GROUP BY pp.mainID
+	</select>
+
+	<select id="findAllProductPropValueByProductPropMianID"
+		resultType="productPropValueVO" parameterType="java.lang.String">
+		select * from
+		kplus_productprop_value
+		where productPropID =
+		#{productPropID,jdbcType=VARCHAR} and isDelete=0
+	</select>
+</mapper>

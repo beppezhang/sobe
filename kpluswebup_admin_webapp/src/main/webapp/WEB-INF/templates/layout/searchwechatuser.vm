@@ -1,0 +1,113 @@
+
+<dd class="clearfix" id="itemID">
+	<div class="formTt">选择会员：</div>
+	<div class="formTt"></div>
+	<div class="formRow" id="customerInfo" style="width: 80%;">
+		<a href="javascript:;" onclick="ico1.show();" style="color: blue;">选择会员</a>&nbsp;&nbsp;
+		<div id="wechatid"></div>
+		<span id="wechatnick"></span>
+	</div>
+</dd>
+<div class="alertBox">
+	<a href="javascript:;" id="close" class="close" onclick="ico1.hide();"></a>
+	<div class="alertBoxHead">
+		微信昵称： <span><input type="text" name="keyword" id="keyword"
+			onchange="searchWechatUser()" />
+			<button onclick="searchWechatUser()"></button></span>
+	</div>
+	<div class="alertTable">
+		<div class="tableHead">
+			<div style="width: 115px;">
+			</div>
+			<div style="width: 210px;">编号</div>
+			<div style="width: 180px;">微信昵称</div>
+		</div>
+		<div class="tableBody">
+			<table class="tableList grid" id="list">
+
+				<tbody id="serachList">
+					<tr>
+						<td style="width: 100px;"><label class="label"></label></td>
+						<td style="width: 210px;"></td>
+						<td style="width: 180px;"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+	var ico1 = $(".alertBox").divWin({
+		width : 605,
+		height : 500,
+		autoSize : false
+	});
+
+	function searchWechatUser() {
+		var keyword = jQuery("#keyword").val();
+		var data = {
+			keyword : keyword,
+			pageSize : 10000
+		}
+
+		var url = "$!{domain}/admin/member/searchWechatUser.do";
+		jQuery
+				.ajax({
+					url : url,
+					type : "POST",
+					data : data,
+					dataType : "json",
+					success : function(data) {
+						if (data.code == 0) {
+							var catAry = data.result;
+							$("#serachList").empty();
+							for ( var i in catAry) {
+								$("#serachList")
+										.append(
+												" <tr><td style='width: 100px;'><label class='label'><input type='checkbox' data='"+catAry[i].wechatNick+"' value='"+catAry[i].id+"' id='check_box_"+catAry[i].id+"' /></label></td><td style='width: 210px;'>"
+														+ catAry[i].id
+														+ "</td><td style='width: 180px;'>"
+														+ catAry[i].wechatNick
+														+ "</td></tr>  ");
+							}
+							$(".tableBody").find("#submitBut").remove();
+							$(".tableBody")
+									.append(
+											"<div id='submitBut' style='margin-top: 15px;margin-left:50%;' class='formRow'><input type='button' class='save' onclick='submitWechatUser()' value='提交'></div>");
+						} else {
+							alert("加载失败");
+						}
+					},
+					error : function() {
+						alert("加载失败");
+					}
+				});
+
+	}
+	function submitWechatUser() {
+		var valArr = new Array;
+		var nameArr = new Array;
+		$("#list :checkbox:checked").each(
+				function(i) {
+					valArr[i] = $(this).val();
+					nameArr[i] = $(this).attr("data");
+					if ($(this).val() != "") {
+							jQuery("#wechatid").append(
+									"<input type='hidden' name='wechatID' id='"
+											+ i + "' value='" + $(this).val()
+											+ "'>");
+							jQuery("#wechatnick").append(
+									"<a href='javascript:;' onclick='delThis("
+											+ i + ")' id='" + i
+											+ "' class='thisDel'>" + nameArr[i]
+											+ "<em onclick='delThis(" + i
+											+ ")'>x</em></a>");
+							ico1.hide();
+					}
+				});
+	}
+
+	function delThis(value) {
+		$("#" + value).remove();
+	}
+</script>

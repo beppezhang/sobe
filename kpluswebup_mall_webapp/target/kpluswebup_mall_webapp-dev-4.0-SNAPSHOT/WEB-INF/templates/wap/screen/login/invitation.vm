@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+<title>会员邀请</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+	#parse("wap/layout/head_sider.vm")
+	<div class="logo_box ct">
+	<p><img src="img/logo.png" class="logo"></p>
+    <p><input name="" type="text" class="ipt" placeholder="输入手机号注册成为会员"></p>
+    <p><input name="" type="button" class="btn" value="注册成为会员"></p>
+    <p><img src="img/two-code.png" class="twocode"></p>
+    <p>扫描二维码即可邀请会员</p>
+    <p><input name="" type="button" class="btn01" value="发送给好友"> <input name="" type="button" class="btn01" value="分享到朋友圈"></p>
+</div>
+</body> 
+</htmL>

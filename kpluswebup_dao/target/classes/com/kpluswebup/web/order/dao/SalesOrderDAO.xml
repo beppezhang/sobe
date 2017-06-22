@@ -1,0 +1,1454 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.order.dao.SalesOrderDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID , customerID, orderType, changeOrderID,
+		paymentType,
+		interfaceConfigID, productAmount,
+		expressFee, totalAmount,
+		discountAmount, payableAmount, expressID, expressNumber,
+		memo,
+		paymentStatus, orderStatus, printStatus, invoiceStatus,
+		carriageStatus, isDelete,
+		creator, createTime, modifier, modifyTime
+	</sql>
+
+	<select id="findSalesOrderByPagination" parameterType="salesOrderDTO"
+		resultType="salesOrderVO">
+		SELECT
+		s.*, c.username AS customerUserName,
+		c.`name` AS realName,
+		pr.`name` AS dvProvinceName,
+		ci.`name` AS dvCityName,
+		dis.`name` AS dvDistrictName
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c ON s.customerID = c.mainID
+		LEFT JOIN kplus_salesorder_deliveryaddress d ON
+		d.salesOrderID = s.mainID
+		LEFT JOIN
+		kplus_area pr ON pr.mainID = d.provinceID
+		LEFT JOIN kplus_area ci ON
+		ci.mainID = d.cityID
+		LEFT JOIN kplus_area dis ON dis.mainID =
+		d.disctrictID
+		WHERE
+		s.isDelete = 0
+		AND c.isDelete = 0
+		<if test="mainID != null">
+			and s.mainID like '%${mainID}%'
+		</if>
+		<if test="expressNumber != null">
+			and s.expressNumber like '%${expressNumber}%'
+		</if>
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+		<if test="customerUserName != null">
+			and c.username like '%${customerUserName}%'
+		</if>
+		<if test="paymentType !=null">
+			and s.paymentType = #{paymentType}
+		</if>
+		<if test="paymentStatus !=null">
+			and s.paymentStatus = #{paymentStatus}
+		</if>
+		<if test="orderStatus != null">
+			<if test="orderStatus==5">
+				and (s.orderStatus = 5 or s.orderStatus=6)
+			</if>
+			<if test="orderStatus==6">
+				and (s.orderStatus=6 or s.orderStatus=8 or
+				s.orderStatus=10)
+			</if>
+			<if test="orderStatus==7">
+				and s.orderStatus &gt;1
+			</if>
+			<if test="orderStatus&lt;5">
+				and s.orderStatus=#{orderStatus}
+			</if>
+		</if>
+		<if test="fromDate != null">
+			and s.createTime &gt; #{fromDate}
+		</if>
+		<if test="endDate != null">
+			and s.createTime &lt; #{endDate}
+		</if>
+		<if test="startTime!=null">
+			and s.createTime&gt;=#{startTime}
+		</if>
+		<if test="endTime!=null">
+			and s.createTime&lt;=#{endTime}
+		</if>
+		<if test="startModifyTime!=null">
+			and s.receivableTime&gt;=#{startModifyTime}
+		</if>
+		<if test="endModifyTime!=null">
+			and s.receivableTime&lt;=#{endModifyTime}
+		</if>
+		<if test="startModifyTime!=null">
+			and s.shipmentsTime&gt;=#{startModifyTime}
+		</if>
+		<if test="endModifyTime!=null">
+			and s.shipmentsTime&lt;=#{endModifyTime}
+		</if>
+		<if test="provinceID!=null">
+			AND pr.mainID = #{provinceID}
+		</if>
+		<if test="cityID!=null">
+			AND ci.mainID = #{cityID}
+		</if>
+		<if test="districtID!=null">
+			AND dis.mainID = #{districtID}
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findDeleteOrderByPagination" parameterType="salesOrderDTO"
+		resultType="salesOrderVO">
+		SELECT
+		s.*,c.username as customerUserName,d.name as realName
+		FROM
+		kplus_salesorder s
+		LEFT
+		JOIN kplus_customer c ON s.customerID =c.mainID
+		left join
+		kplus_salesorder_deliveryaddress d on d.salesOrderID=s.mainID
+		where
+		s.isDelete=1 and
+		c.isDelete=0
+		<if test="mainID != null">
+			and s.mainID like '%${mainID}%'
+		</if>
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+		<if test="customerUserName != null">
+			and c.username like '%${customerUserName}%'
+		</if>
+		<if test="orderStatus != null">
+			<if test="orderStatus==5">
+				and (s.orderStatus = 5 or s.orderStatus=6)
+			</if>
+			<if test="orderStatus==6">
+				and (s.orderStatus=6 or s.orderStatus=8 or
+				s.orderStatus=10)
+			</if>
+			<if test="orderStatus&lt;5">
+				and s.orderStatus=#{orderStatus}
+			</if>
+		</if>
+		<if test="fromDate != null">
+			and s.createTime &gt; #{fromDate}
+		</if>
+		<if test="endDate != null">
+			and s.createTime &lt; #{endDate}
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findOrdersBySupplierID" parameterType="salesOrderDTO"
+		resultType="salesOrderVO">
+		SELECT
+		s.*, c.username AS customerUserName,
+		d. NAME AS realName
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c ON s.customerID =
+		c.mainID
+		LEFT JOIN
+		kplus_salesorder_deliveryaddress d ON d.salesOrderID
+		= s.mainID
+		WHERE
+		s.mainID IN (
+			SELECT
+			DISTINCT line.orderID
+			FROM
+			kplus_salesorder_line line
+			WHERE
+			line.supplierID = #{supplierID}
+		)
+		AND
+		s.isDelete = 0
+		AND c.isDelete = 0
+		<if test="mainID != null">
+			and s.mainID like '%${mainID}%'
+		</if>
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+		<if test="fromDate != null">
+			and s.createTime &gt; #{fromDate}
+		</if>
+		<if test="endDate != null">
+			and s.createTime &lt; #{endDate}
+		</if>
+		<if test="customerUserName != null">
+			and c.username like '%${customerUserName}%'
+		</if>
+		<if test="paymentType !=null">
+			and s.paymentType = #{paymentType}
+		</if>
+		<if test="paymentStatus !=null">
+			and s.paymentStatus = #{paymentStatus}
+		</if>
+		<if test="orderStatus != null">
+			<if test="orderStatus==5">
+				and (s.orderStatus = 5 or s.orderStatus=6)
+			</if>
+			<if test="orderStatus==6">
+				and (s.orderStatus=6 or s.orderStatus=8 or
+				s.orderStatus=10)
+			</if>
+			<if test="orderStatus&lt;5">
+				and s.orderStatus=#{orderStatus}
+			</if>
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		order by s.createTime DESC
+		limit #{startRow} ,#{pageSize}
+	</select>
+	<select id="findOrderCountBySupplierID" parameterType="salesOrderDTO"
+		resultType="java.lang.Long">
+		SELECT
+		count(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c ON
+		s.customerID = c.mainID
+		LEFT JOIN
+		kplus_salesorder_deliveryaddress d ON
+		d.salesOrderID = s.mainID
+		WHERE
+		s.mainID IN (
+			SELECT
+			DISTINCT line.orderID
+			FROM
+			kplus_salesorder_line line
+			WHERE
+			line.supplierID = #{supplierID}
+		)
+		AND s.isDelete = 0
+		AND c.isDelete = 0
+		<if test="mainID != null">
+			and s.mainID like '%${mainID}%'
+		</if>
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+		<if test="fromDate != null">
+			and s.createTime &gt; #{fromDate}
+		</if>
+		<if test="endDate != null">
+			and s.createTime &lt; #{endDate}
+		</if>
+		<if test="customerUserName != null">
+			and c.username like '%${customerUserName}%'
+		</if>
+		<if test="paymentType !=null">
+			and s.paymentType = #{paymentType}
+		</if>
+		<if test="paymentStatus !=null">
+			and s.paymentStatus = #{paymentStatus}
+		</if>
+		<if test="orderStatus != null">
+			<if test="orderStatus==5">
+				and (s.orderStatus = 5 or s.orderStatus=6)
+			</if>
+			<if test="orderStatus==6">
+				and (s.orderStatus=6 or s.orderStatus=8 or
+				s.orderStatus=10)
+			</if>
+			<if test="orderStatus&lt;5">
+				and s.orderStatus=#{orderStatus}
+			</if>
+		</if>
+	</select>
+	<select id="getWaitForDealOrder" parameterType="salesOrderDTO"
+		resultType="java.lang.Long">
+		SELECT
+		count(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c ON
+		s.customerID = c.mainID
+		LEFT JOIN
+		kplus_salesorder_deliveryaddress d ON
+		d.salesOrderID = s.mainID
+		WHERE
+		s.mainID IN (
+		SELECT
+		DISTINCT line.orderID
+		FROM
+		kplus_salesorder_line line LEFT JOIN kplus_product kp on line.productID=kp.mainID
+		WHERE
+		line.supplierID = #{supplierID}
+		)
+		AND s.isDelete = 0
+		AND c.isDelete = 0
+		AND (s.orderStatus=2 or s.orderStatus=3 or s.orderStatus=7 or s.orderStatus=9)
+	</select>
+
+	<select id="findSalesOrderCount" parameterType="salesOrderDTO"
+		resultType="java.lang.Long">
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c ON s.customerID = c.mainID
+		LEFT JOIN kplus_salesorder_deliveryaddress d ON
+		d.salesOrderID = s.mainID
+		LEFT JOIN
+		kplus_area pr ON pr.mainID = d.provinceID
+		LEFT JOIN kplus_area ci ON
+		ci.mainID = d.cityID
+		LEFT JOIN kplus_area dis ON dis.mainID =
+		d.disctrictID
+		WHERE
+		s.isDelete = 0
+		AND c.isDelete = 0
+		<if test="mainID != null">
+			and s.mainID like '%${mainID}%'
+		</if>
+		<if test="expressNumber != null">
+			and s.expressNumber like '%${expressNumber}%'
+		</if>
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+		<if test="customerUserName != null">
+			and c.username like '%${customerUserName}%'
+		</if>
+		<if test="paymentType !=null">
+			and s.paymentType = #{paymentType}
+		</if>
+		<if test="paymentStatus !=null">
+			and s.paymentStatus = #{paymentStatus}
+		</if>
+		<if test="orderStatus != null">
+			<if test="orderStatus==5">
+				and (s.orderStatus = 5 or s.orderStatus=6)
+			</if>
+			<if test="orderStatus==6">
+				and (s.orderStatus=6 or s.orderStatus=8 or
+				s.orderStatus=10)
+			</if>
+			<if test="orderStatus==7">
+				and s.orderStatus &gt;1
+			</if>
+			<if test="orderStatus&lt;5">
+				and s.orderStatus=#{orderStatus}
+			</if>
+		</if>
+		<if test="fromDate != null">
+			and s.createTime &gt; #{fromDate}
+		</if>
+		<if test="endDate != null">
+			and s.createTime &lt; #{endDate}
+		</if>
+		<if test="startTime!=null">
+			and s.createTime&gt;=#{startTime}
+		</if>
+		<if test="endTime!=null">
+			and s.createTime&lt;=#{endTime}
+		</if>
+		<if test="startModifyTime!=null">
+			and s.receivableTime&gt;=#{startModifyTime}
+		</if>
+		<if test="endModifyTime!=null">
+			and s.receivableTime&lt;=#{endModifyTime}
+		</if>
+		<if test="startModifyTime!=null">
+			and s.shipmentsTime&gt;=#{startModifyTime}
+		</if>
+		<if test="endModifyTime!=null">
+			and s.shipmentsTime&lt;=#{endModifyTime}
+		</if>
+		<if test="provinceID!=null">
+			AND pr.mainID = #{provinceID}
+		</if>
+		<if test="cityID!=null">
+			AND ci.mainID = #{cityID}
+		</if>
+		<if test="districtID!=null">
+			AND dis.mainID = #{districtID}
+		</if>
+	</select>
+
+	<select id="findDeleteOrderCount" parameterType="salesOrderDTO"
+		resultType="java.lang.Long">
+		SELECT
+		count(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c
+		ON
+		s.customerID = c.mainID
+		where s.isDelete=1 and c.isDelete=0
+		<if test="mainID != null">
+			and s.mainID like '%${mainID}%'
+		</if>
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+		<if test="customerUserName != null">
+			and c.username like '%${customerUserName}%'
+		</if>
+		<if test="paymentType !=null">
+			and s.paymentType = #{paymentType}
+		</if>
+		<if test="paymentStatus !=null">
+			and s.paymentStatus = #{paymentStatus}
+		</if>
+		<if test="orderStatus != null">
+			and s.orderStatus = #{orderStatus}
+		</if>
+	</select>
+
+	<select id="findSalesOrderByMainID" parameterType="java.lang.String"
+		resultType="salesOrderVO">
+		select
+		s.*,ex.name as expressname,
+		c.username,c.name as
+		realName,
+		c.username as customerUserName,
+		sd.name as
+		dvName,sd.telephone
+		as dvTelephone,sd.mobile as
+		dvMobile,sd.address as
+		dvAddress,
+		sd.zip as
+		dvZip,sd.provinceID as
+		dvProvinceID,sd.cityID as
+		dvCityID,sd.disctrictID as dvDisctrictID,
+		ss.name as
+		spName,ss.telephone as spTelephone,ss.mobile as
+		spMobile,ss.address as
+		spAddress,
+		ss.zip as spZip,ss.provinceID as
+		spProvinceID,ss.cityID as
+		spCityID,ss.disctrictID as spDisctrictID,
+		pr.`name` AS dvProvinceName,
+		ci.`name` AS dvCityName,
+		dis.`name` AS dvDistrictName
+		from
+		kplus_salesorder s
+		LEFT
+		JOIN kplus_customer c ON
+		s.customerID = c.mainID
+		LEFT JOIN
+		kplus_salesorder_deliveryaddress sd ON
+		s.mainID =
+		sd.salesOrderID
+		LEFT
+		JOIN kplus_salesorder_shippingaddress ss
+		ON
+		s.mainID = ss.salesOrderID
+		LEFT
+		JOIN kplus_express ex ON ex.mainID =
+		s.expressID
+		LEFT JOIN kplus_area pr ON pr.mainID = sd.provinceID
+		LEFT
+		JOIN kplus_area ci ON ci.mainID = sd.cityID
+		LEFT JOIN kplus_area dis ON
+		dis.mainID = sd.disctrictID
+		where s.mainId =
+		#{mainId} and
+		s.isDelete=0
+		and
+		c.isDelete=0
+	</select>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultType="salesOrderVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_salesorder
+		where id = #{id}
+	</select>
+
+	<select id="findSalesOrderByChangeOrderID" parameterType="java.lang.String"
+		resultType="salesOrderVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_salesorder
+		where isDelete=0 and changeOrderID =
+		#{changeOrderID}
+	</select>
+
+	<insert id="addSalesOrder" parameterType="salesOrderDTO">
+		insert into
+		kplus_salesorder(
+		mainID,
+		customerID,
+		orderType,
+		changeOrderID,
+		paymentType,
+		interfaceConfigID,
+		productAmount,
+		expressFee,
+		totalAmount,
+		discountAmount,
+		payableAmount,
+		expressID,
+		expressNumber,
+		memo,
+		paymentStatus,
+		orderStatus,
+		printStatus,
+		invoiceStatus,
+		carriageStatus,
+		isDelete,
+		createTime,
+		scoreTotal,
+		invoiceType,
+		invoiceTitle
+		)
+		values(
+		#{mainID},
+		#{customerID},
+		#{orderType},
+		#{changeOrderID},
+		#{paymentType},
+		#{interfaceConfigID},
+		#{productAmount},#{expressFee},
+		#{totalAmount},
+		0,
+		#{payableAmount},
+		#{expressID},
+		#{expressNumber},
+		#{memo},
+		#{paymentStatus},
+		1,
+		0,
+		0,
+		0,
+		0,
+		now(),
+		#{scoreTotal},
+		#{invoiceType},
+		#{invoiceTitle}
+		)
+	</insert>
+
+	<update id="updateSalesOrderByMainID" parameterType="salesOrderDTO">
+		update kplus_salesorder
+		<set>
+			modifyTime=now()
+			<if test="customerID != null">
+				,customerID = #{customerID}
+			</if>
+			<if test="orderType != null">
+				,orderType = #{orderType}
+			</if>
+			<if test="changeOrderID != null">
+				,changeOrderID = #{changeOrderID}
+			</if>
+			<if test="paymentType != null">
+				,paymentType = #{paymentType}
+			</if>
+			<if test="interfaceConfigID != null">
+				,interfaceConfigID = #{interfaceConfigID}
+			</if>
+			<if test="productAmount != null">
+				,productAmount = #{productAmount}
+			</if>
+			<if test="expressFee != null">
+				,expressFee = #{expressFee}
+			</if>
+			<if test="totalAmount != null">
+				,totalAmount = #{totalAmount}
+			</if>
+			<if test="discountAmount != null">
+				,discountAmount = #{discountAmount}
+			</if>
+			<if test="payableAmount != null">
+				,payableAmount = #{payableAmount}
+			</if>
+			<if test="expressID != null">
+				,expressID = #{expressID}
+			</if>
+			<if test="expressNumber != null">
+				,expressNumber = #{expressNumber}
+			</if>
+			<if test="memo != null">
+				,memo = #{memo}
+			</if>
+			<if test="paymentStatus != null">
+				,paymentStatus = #{paymentStatus}
+			</if>
+			<if test="orderStatus != null">
+				,orderStatus = #{orderStatus}
+			</if>
+			<if test="printStatus != null">
+				,printStatus = #{printStatus}
+			</if>
+			<if test="invoiceStatus != null">
+				,invoiceStatus = #{invoiceStatus}
+			</if>
+			<if test="carriageStatus != null">
+				,carriageStatus = #{carriageStatus}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="invoiceType != null">
+				,invoiceType = #{invoiceType}
+			</if>
+			<if test="invoiceTitle != null">
+				,invoiceTitle = #{invoiceTitle}
+			</if>
+			<if test="description != null">
+				,description = #{description}
+			</if>
+			<if test="scoreTotal!=null">
+				,scoreTotal=#{scoreTotal}
+			</if>
+			<if test="weight!=null">
+				,weight=#{weight}
+			</if>
+			<if test="packageNum!=null">
+				,packageNum=#{packageNum}
+			</if>
+			<if test="shipmentsTime!=null">
+				,shipmentsTime=#{shipmentsTime}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+	<update id="updateSalesOrderPrintStatus" parameterType="salesOrderDTO">
+		update kplus_salesorder
+		<set>
+			modifyTime=now()
+			<if test="printStatus!=null">
+				,printStatus=#{printStatus}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+	<update id="updateSalesOrderInvoiceStatus" parameterType="salesOrderDTO">
+		update kplus_salesorder
+		<set>
+			<if test="invoiceStatus!=null">
+				invoiceStatus=#{invoiceStatus}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+	<update id="updateSalesOrderCarriageStatus" parameterType="salesOrderDTO">
+		update kplus_salesorder
+		<set>
+			<if test="carriageStatus!=null">
+				carriageStatus=#{carriageStatus}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<select id="findUserOrderStstusVO" parameterType="java.lang.String"
+		resultType="UserOrderStstusVO">
+		SELECT
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN
+		kplus_customer c ON
+		s.customerID =
+		c.mainID
+		where s.isDelete=0 and
+		c.isDelete=0 and c.mainID=#{userMainID}
+		)AS orderTotalCount,
+
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c ON
+		s.customerID =
+		c.mainID
+		where s.isDelete=0 and c.isDelete=0 and
+		s.paymentStatus = 0 and c.mainID=#{userMainID}
+		)AS orderPanymentCount,
+
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN
+		kplus_customer c ON
+		s.customerID =
+		c.mainID
+		WHERE
+		s.isDelete=0 and c.isDelete=0 and
+		s.orderStatus = 3 and c.mainID=#{userMainID}
+		)AS orderDorupCount,
+
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN
+		kplus_customer c ON
+		s.customerID =
+		c.mainID
+		WHERE
+		s.isDelete=0 and c.isDelete=0 and
+		s.orderStatus = 4 and c.mainID=#{userMainID}
+		)AS orderReceingCount,
+
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN
+		kplus_customer c ON
+		s.customerID =
+		c.mainID
+		WHERE
+		s.isDelete=0 and c.isDelete=0 and
+		(s.orderStatus = 5 or s.orderStatus=6) and c.mainID=#{userMainID}
+		)AS
+		orderEvaluateCount,
+
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN
+		kplus_customer c ON
+		s.customerID =
+		c.mainID
+		WHERE
+		s.isDelete=0 and
+		c.isDelete=0 and
+		s.orderStatus = 0 and c.mainID=#{userMainID}
+		)AS
+		orderCancenlCount,
+
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN
+		kplus_customer c ON
+		s.customerID =
+		c.mainID
+		WHERE
+		s.isDelete=0 and
+		c.isDelete=0 and
+		(s.orderStatus = 6 or s.orderStatus = 8 or
+		s.orderStatus = 10) and c.mainID=#{userMainID}
+		)AS
+		orderFinishCount,
+
+		(
+		SELECT
+		COUNT(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN
+		kplus_customer c ON
+		s.customerID =
+		c.mainID
+		WHERE
+		s.isDelete=0 and
+		c.isDelete=0 and
+		(s.orderStatus = 7) and c.mainID=#{userMainID}
+		)AS
+		orderApplyCount
+
+	</select>
+
+	<select id="findUserOrderPresellCount" parameterType="salesOrderDTO"
+		resultType="java.lang.Long">
+		SELECT
+		count(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c
+		ON
+		s.customerID =c.mainID
+		LEFT JOIN kplus_salesorder_line sl
+		ON
+		s.mainID=sl.orderID
+		LEFT JOIN kplus_product p
+		ON sl.productID=p.mainID
+		LEFT JOIN kplus_item i
+		ON sl.itemID=i.mainID
+		LEFT JOIN kplus_preSale ps
+		ON sl.objID=ps.mainID
+		WHERE
+		s.isDelete=0
+		AND c.isDelete=0
+		AND
+		s.orderType=1
+		AND p.isDelete=0
+		AND i.isDelete=0
+		AND ps.isDelete=0
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+
+	</select>
+
+	<select id="getUserOrderPresellPagination" parameterType="salesOrderDTO"
+		resultType="salesOrderVO">
+		SELECT
+		s.*,
+		c.username as customerUserName,
+		c.name as realName,
+		sl.itemID,
+		sl.standrardPrice,
+		sl.transactionPrice,
+		sl.objID,
+		sl.itemCount,
+		p.name as productName,
+		i.name as itemName,
+		i.salesPrice as
+		salesPrice,
+		i.picURL as itemPicUrl,
+		c.nick,
+		ps.endDate as preEndDate,
+		ps.fromDate as preFromDate
+		FROM
+		kplus_salesorder s
+		LEFT JOIN
+		kplus_customer c
+		ON s.customerID =c.mainID
+		LEFT JOIN
+		kplus_salesorder_line sl
+		ON
+		s.mainID=sl.orderID
+		LEFT JOIN kplus_product p
+		ON sl.productID=p.mainID
+		LEFT JOIN kplus_item i
+		ON sl.itemID=i.mainID
+		LEFT JOIN kplus_preSale ps
+		ON sl.objID=ps.mainID
+		WHERE
+		s.isDelete=0
+		AND
+		c.isDelete=0
+		AND s.orderType=1
+		AND p.isDelete=0
+		AND i.isDelete=0
+		AND
+		ps.isDelete=0
+
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+		<if test="orderStatus != null">
+			and s.orderStatus = #{orderStatus}
+		</if>
+		<if test="paymentStatus !=null">
+			and s.paymentStatus = #{paymentStatus}
+		</if>
+		<if test="mainID != null">
+			and s.mainID = #{mainID}
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findOrderLineByCustomer" parameterType="salesOrderDTO"
+		resultType="salesOrderLineVO">
+		SELECT * FROM kplus_salesorder_line B
+		WHERE
+		B.productID=#{itemID}
+		AND B.orderID IN
+		(
+		SELECT A.mainID
+		FROM
+		kplus_salesorder A
+		WHERE A.customerID=#{customerID}
+		AND (A.orderStatus=5
+		or A.orderStatus=6)
+		)
+	</select>
+	<select id="findOrderLineByOrderAndSupplier" resultType="salesOrderLineVO">
+		SELECT
+		l.id,
+		l.productID,
+		l.itemID,
+		i.`name` AS itemName,
+		i.picURL AS itemPicUrl,
+		l.standrardPrice,
+		l.salesPrice,
+		l.itemCount,
+		l.iscarriered,
+		l.isReturned,
+		l.isPromotion,
+		l.`status`,
+		l.returnApplyID,
+		l.totalAmount,
+		l.type
+		FROM
+		kplus_salesorder_line l
+		LEFT JOIN kplus_product kp on l.productID=kp.mainID
+		LEFT
+		JOIN kplus_item i
+		ON l.itemID = i.mainID
+		WHERE
+		l.orderID = #{orderMainID}
+		AND l.supplierID = #{supplierID}
+
+	</select>
+	<select id="findorderLineBySupplierIDAndDate" resultType="salesOrderLineVO">
+		SELECT
+		l.id,
+		l.orderID,
+		l.productID,
+		l.itemID,
+		i.`name` AS itemName,
+		i.picURL AS
+		itemPicUrl,
+		l.standrardPrice,
+		l.salesPrice,
+		l.itemCount,
+		l.isPromotion,
+		l.`status`,
+		l.returnApplyID,
+		l.type
+		FROM
+		kplus_salesorder_line l
+		LEFT JOIN
+		kplus_item i ON l.itemID = i.mainID
+		LEFT JOIN
+		kplus_salesorder o ON
+		o.mainID = l.orderID
+		WHERE
+		l.supplierID = #{supplierID}
+		AND l.iscarriered
+		= 0
+		AND o.orderStatus &gt; 1
+		AND
+		o.createTime &gt; #{fromDate}
+		AND
+		o.createTime &lt; #{endDate}
+	</select>
+
+	<select id="findOrdersByCustomerID" parameterType="java.lang.String"
+		resultType="salesOrderVO">
+		SELECT
+		A.*
+		FROM
+		kplus_salesorder A
+		WHERE
+		A.customerID=#{customerID}
+		AND A.isDelete=0
+		order by A.createTime desc
+	</select>
+
+	<select id="findOrdersByOrderID" parameterType="java.lang.String"
+		resultType="salesOrderLineVO">
+		SELECT
+		A.*,
+		B.`name` AS itemName,
+		B.picURL AS itemPicUrl,
+		B.standrardPrice AS
+		standrardPrice,
+		B.salesPrice AS salesPrice,
+		B.score,
+		B.scorePrice,
+		B.salesScore
+		FROM
+		kplus_salesorder_line A
+		LEFT JOIN
+		kplus_item B
+		ON
+		A.itemID=B.mainID
+		WHERE B.isDelete=0
+		AND
+		A.orderID=#{orderID}
+	</select>
+
+	<select id="getSettlementList" parameterType="salesOrderDTO"
+		resultType="salesOrderVO">
+		SELECT * from kplus_salesorder
+		where
+		orderStatus=#{orderStatus} And paymentStatus=#{paymentStatus}
+	</select>
+
+	<update id="updateSalesOrderByID" parameterType="java.lang.String">
+		update
+		kplus_salesorder set isDelete=1 where mainID=#{mainID}
+	</update>
+	<select id="findSalesOrderByFinalstatementID" parameterType="java.lang.String"
+		resultType="salesOrderVO">
+		SELECT
+		o.*,
+		c.username AS customerUserName
+		FROM
+		kplus_salesorder o
+		LEFT JOIN kplus_customer c
+		ON o.customerID = c.mainID
+		WHERE
+		o.mainID IN (
+		SELECT
+		rs.orderID
+		FROM
+		kplus_zy_rs_finalstatement_saleorder rs
+		WHERE
+		rs.finalstatementID =
+		#{finalStatementID}
+		)
+
+	</select>
+
+	<insert id="salesOrderTransSave" useGeneratedKeys="true"
+		parameterType="java.util.List">
+		<selectKey resultType="long" keyProperty="id" order="AFTER">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into kplus_salesorder_trans
+		(tmsServiceCode,operators,operatorDate,orderCode,orderNo,status,scanSite,station,ctrName,content,remark,reciveTime)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.tmsServiceCode},#{item.operators},#{item.operatorDate},#{item.orderCode},#{item.orderNo},#{item.status},#{item.scanSite},#{item.station},#{item.ctrName},#{item.content},#{item.remark},now())
+		</foreach>
+	</insert>
+
+	<select id="findUserTradeCount" parameterType="salesOrderDTO"
+		resultType="java.lang.Long">
+		SELECT
+		count(s.id)
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c
+		ON
+		s.customerID = c.mainID
+		where s.isDelete=0 and c.isDelete=0
+		and
+		s.orderStatus=6 and s.paymentStatus=1
+		<if test="mainID != null">
+			and s.mainID like '%${mainID}%'
+		</if>
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+		<if test="customerUserName != null">
+			and c.username like '%${customerUserName}%'
+		</if>
+		<if test="paymentStatus !=null">
+			and s.paymentStatus = #{paymentStatus}
+		</if>
+		<if test="orderStatus != null">
+			and s.orderStatus = #{orderStatus}
+		</if>
+	</select>
+
+	<select id="findUserTradeByPagination" parameterType="salesOrderDTO"
+		resultType="salesOrderVO">
+		SELECT
+		s.*,c.username as customerUserName,c.name as realName
+		FROM
+		kplus_salesorder s
+		LEFT
+		JOIN kplus_customer c ON s.customerID =c.mainID
+		left join
+		kplus_salesorder_deliveryaddress d on d.salesOrderID=s.mainID
+		where
+		s.isDelete=0 and c.isDelete=0
+		<if test="mainID != null">
+			and s.mainID like '%${mainID}%'
+		</if>
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+		<if test="customerUserName != null">
+			and c.username like '%${customerUserName}%'
+		</if>
+		<if test="paymentStatus !=null">
+			and s.paymentStatus = #{paymentStatus}
+		</if>
+		<if test="orderStatus != null">
+			and (s.orderStatus &gt; 5)
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<update id="updatePaymentStatus" parameterType="java.lang.String">
+		update kplus_salesorder
+		<set>
+			receivableTime=now(),paymentStatus=1,orderStatus=2
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="updateReceiveStatus" parameterType="java.lang.String">
+		update kplus_salesorder
+		<set>
+			receivableTime=null,paymentStatus=0
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<select id="getSalesOrderTrans" parameterType="salesOrderTransDTO"
+		resultType="salesOrderTransVO">
+		select * from kplus_salesorder_trans where 1=1
+		<if test="orderNO != null">
+			AND orderNo = #{orderNO}
+		</if>
+		<if test="orderCode != null">
+			AND orderCode = #{orderCode}
+		</if>
+		order by operatorDate asc
+	</select>
+	<select id="findFinishedOrderBySupplierID" parameterType="salesOrderDTO"
+		resultType="salesOrderVO">
+		SELECT
+		o.mainID,
+		SUM(l.totalAmount) AS totalAmount,
+		o.orderStatus,
+		o.createTime,
+		o.paymentStatus,
+		c.`name` AS customerUserName
+		FROM
+		kplus_salesorder o
+		LEFT JOIN kplus_salesorder_line l ON l.orderID =
+		o.mainID
+		LEFT JOIN
+		kplus_customer c ON o.customerID = c.mainID
+		WHERE
+		l.supplierID = #{supplierID}
+		AND o.orderStatus > 4
+		AND o.paymentStatus =
+		1
+		<if test="fromDate != null">
+			AND o.createTime &gt; #{fromDate}
+		</if>
+		<if test="endDate != null">
+			AND o.createTime &lt; #{endDate}
+		</if>
+		GROUP BY
+		o.mainID
+		ORDER BY
+		o.createTime DESC
+		LIMIT #{startRow},#{endRow}
+	</select>
+	<select id="findSupplierOrderBySupplierIDAndOrderID" resultType="salesOrderVO">
+		SELECT
+		o.mainID,
+		SUM(l.totalAmount) AS totalAmount,
+		o.orderStatus,
+		o.createTime,
+		o.paymentStatus,
+		c.`name` AS customerUserName
+		FROM
+		kplus_salesorder o
+		LEFT JOIN kplus_salesorder_line l ON l.orderID =
+		o.mainID
+		LEFT JOIN
+		kplus_customer c ON o.customerID = c.mainID
+		WHERE
+		l.supplierID = #{supplierID}
+		AND o.mainID = #{orderID}
+		GROUP BY
+		o.mainID
+	</select>
+	<select id="getFinishedOrderCountBySupplierID" parameterType="salesOrderDTO"
+		resultType="java.lang.Long">
+		SELECT
+		COUNT(g.mainID)
+		FROM
+
+		(
+		SELECT
+		o.mainID
+		FROM
+		kplus_salesorder o
+		LEFT JOIN kplus_salesorder_line l ON l.orderID =
+		o.mainID
+		LEFT JOIN kplus_customer c ON o.customerID = c.mainID
+		WHERE
+		l.supplierID = #{supplierID}
+		AND o.orderStatus > 4
+		AND o.paymentStatus =
+		1
+		GROUP BY
+		o.mainID
+		) AS g
+
+	</select>
+
+	<update id="updateSupplierItemIdByOrderID">
+		UPDATE kplus_zy_supplier_item_id SET serialiseNO =
+		NULL WHERE orderID = #{orderID}
+	</update>
+	<update id="supplierConfirmOrderCancel">
+		UPDATE kplus_salesorder_line
+		SET isReturned = 1
+		WHERE
+			supplierID = #{supplierID}
+		AND orderID = #{orderID}
+	</update>
+	<update id="uploadSalesOrderProofURL" parameterType="salesOrderDTO">
+		update kplus_salesorder
+		<set>
+			modifyTime=now()
+			<if test="customerID != null">
+				,customerID = #{customerID}
+			</if>
+			<if test="orderType != null">
+				,orderType = #{orderType}
+			</if>
+			<if test="changeOrderID != null">
+				,changeOrderID = #{changeOrderID}
+			</if>
+			<if test="paymentType != null">
+				,paymentType = #{paymentType}
+			</if>
+			<if test="interfaceConfigID != null">
+				,interfaceConfigID = #{interfaceConfigID}
+			</if>
+			<if test="productAmount != null">
+				,productAmount = #{productAmount}
+			</if>
+			<if test="expressFee != null">
+				,expressFee = #{expressFee}
+			</if>
+			<if test="totalAmount != null">
+				,totalAmount = #{totalAmount}
+			</if>
+			<if test="discountAmount != null">
+				,discountAmount = #{discountAmount}
+			</if>
+			<if test="payableAmount != null">
+				,payableAmount = #{payableAmount}
+			</if>
+			<if test="expressID != null">
+				,expressID = #{expressID}
+			</if>
+			<if test="expressNumber != null">
+				,expressNumber = #{expressNumber}
+			</if>
+			<if test="memo != null">
+				,memo = #{memo}
+			</if>
+			<if test="paymentStatus != null">
+				,paymentStatus = #{paymentStatus}
+			</if>
+			<if test="orderStatus != null">
+				,orderStatus = #{orderStatus}
+			</if>
+			<if test="printStatus != null">
+				,printStatus = #{printStatus}
+			</if>
+			<if test="invoiceStatus != null">
+				,invoiceStatus = #{invoiceStatus}
+			</if>
+			<if test="carriageStatus != null">
+				,carriageStatus = #{carriageStatus}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="invoiceType != null">
+				,invoiceType = #{invoiceType}
+			</if>
+			<if test="invoiceTitle != null">
+				,invoiceTitle = #{invoiceTitle}
+			</if>
+			<if test="description != null">
+				,description = #{description}
+			</if>
+			<if test="scoreTotal!=null">
+				,scoreTotal=#{scoreTotal}
+			</if>
+			<if test="weight!=null">
+				,weight=#{weight}
+			</if>
+			<if test="packageNum!=null">
+				,packageNum=#{packageNum}
+			</if>
+			<if test="shipmentsTime!=null">
+				,shipmentsTime=#{shipmentsTime}
+			</if>
+			<if test="proofURL">
+				,proofURL=#{proofURL}
+			</if>
+			<if test="sendOutURL">
+				,sendOutURL=#{sendOutURL}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<select id="findAllSalesOrder" parameterType="salesOrderDTO"
+		resultType="salesOrderVO">
+		SELECT
+		s.*, c.username AS customerUserName,
+		c.`name` AS realName,
+		pr.`name` AS dvProvinceName,
+		ci.`name` AS dvCityName,
+		dis.`name` AS dvDistrictName
+		FROM
+		kplus_salesorder s
+		LEFT JOIN kplus_customer c ON s.customerID = c.mainID
+		LEFT JOIN kplus_salesorder_deliveryaddress d ON
+		d.salesOrderID = s.mainID
+		LEFT JOIN
+		kplus_area pr ON pr.mainID = d.provinceID
+		LEFT JOIN kplus_area ci ON
+		ci.mainID = d.cityID
+		LEFT JOIN kplus_area dis ON dis.mainID =
+		d.disctrictID
+		WHERE
+		s.isDelete = 0
+		AND c.isDelete = 0
+		<if test="mainID != null">
+			and s.mainID like '%${mainID}%'
+		</if>
+		<if test="expressNumber != null">
+			and s.expressNumber like '%${expressNumber}%'
+		</if>
+		<if test="customerID != null">
+			and s.customerID = #{customerID}
+		</if>
+		<if test="customerUserName != null">
+			and c.username like '%${customerUserName}%'
+		</if>
+		<if test="paymentType !=null">
+			and s.paymentType = #{paymentType}
+		</if>
+		<if test="paymentStatus !=null">
+			and s.paymentStatus = #{paymentStatus}
+		</if>
+		<if test="orderStatus != null">
+			<if test="orderStatus==5">
+				and (s.orderStatus = 5 or s.orderStatus=6)
+			</if>
+			<if test="orderStatus==6">
+				and (s.orderStatus=6 or s.orderStatus=8 or
+				s.orderStatus=10)
+			</if>
+			<if test="orderStatus==7">
+				and s.orderStatus &gt;1
+			</if>
+			<if test="orderStatus&lt;5">
+				and s.orderStatus=#{orderStatus}
+			</if>
+		</if>
+		<if test="fromDate != null">
+			and s.createTime &gt; #{fromDate}
+		</if>
+		<if test="endDate != null">
+			and s.createTime &lt; #{endDate}
+		</if>
+		<if test="startTime!=null">
+			and s.createTime&gt;=#{startTime}
+		</if>
+		<if test="endTime!=null">
+			and s.createTime&lt;=#{endTime}
+		</if>
+		<if test="startModifyTime!=null">
+			and s.receivableTime&gt;=#{startModifyTime}
+		</if>
+		<if test="endModifyTime!=null">
+			and s.receivableTime&lt;=#{endModifyTime}
+		</if>
+		<if test="provinceID!=null">
+			AND pr.mainID = #{provinceID}
+		</if>
+		<if test="cityID!=null">
+			AND ci.mainID = #{cityID}
+		</if>
+		<if test="districtID!=null">
+			AND dis.mainID = #{districtID}
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+	</select>
+	
+	<select id="countSalesOrderAllAmount" parameterType="salesOrderDTO" resultType="statisticsInfoVO">
+	    select (
+	    select sum(sales.totalAmount) 
+	    from kplus_salesorder sales
+	    where 1=1 
+	     and sales.isDelete=0
+	    <if test="orderStatus != null">
+	     and sales.orderStatus=#{orderStatus}
+	    </if>
+	    <if test="fromDate != null">
+	     and sales.createTime &gt;= #{fromDate}
+	    </if>
+	    <if test="endDate != null">
+	     and sales.createTime &lt; #{endDate}
+	    </if>
+	     ) as orderTotal
+	
+	</select>
+	
+	<!--ADDed by lby-->
+	<select id="findSalesOrderByMainIDNew" parameterType="java.lang.String"
+		resultType="salesOrderVO">
+		SELECT s.* FROM kplus_salesorder s WHERE s.isDelete = 0 AND s.mainId = #{mainId}
+	</select>
+
+	<select id="countMonthSales" parameterType="salesOrderDTO" resultType="statisticsInfoVO">
+	    select (
+	    select COUNT(sales.mainID) 
+	    FROM kplus_salesorder sales
+	    LEFT JOIN
+	    kplus_salesorder_line sl
+	    ON sl.orderID=sales.mainID
+	    WHERE sales.isDelete=0
+	    AND sales.paymentStatus=1
+	    <if test="fromDate != null">
+	    AND sales.createTime &gt;= #{fromDate}
+	    </if>
+	    <if test="endDate != null">
+	    AND sales.createTime &lt; #{endDate}
+	    </if>
+	    <if test="itemID != null">
+	    AND sl.itemID=#{itemID}
+	    </if>
+	     ) as monthSaleCount
+	</select>
+
+	<select id="countTotalSales" parameterType="salesOrderDTO" resultType="statisticsInfoVO">
+	    select (
+	    select COUNT(sales.mainID) 
+	    FROM kplus_salesorder sales
+	    LEFT JOIN
+	    kplus_salesorder_line sl
+	    ON sl.orderID=sales.mainID
+	    WHERE sales.isDelete=0
+	    AND sales.paymentStatus=1
+	    <if test="endDate != null">
+	    AND sales.createTime &lt; #{endDate}
+	    </if>
+	    <if test="itemID != null">
+	    AND sl.itemID=#{itemID}
+	    </if>
+	     ) as totalSaleCount
+	</select>
+
+</mapper>

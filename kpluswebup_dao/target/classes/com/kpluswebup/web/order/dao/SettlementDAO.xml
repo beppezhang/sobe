@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.order.dao.SettlementDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID , settlementTime, settlementPeople, settlementAmount,
+		status
+	</sql>
+
+	<insert id="addSettlement" parameterType="settlementDTO">
+		insert into
+		kplus_zy_salesorder_settlement(
+		mainID,
+		settlementTime,
+		settlementPeople,
+		settlementAmount,
+		status
+		)
+		values(
+		#{mainID},
+		#{settlementTime},
+		#{settlementPeople},
+		#{settlementAmount},
+		#{status}
+		)
+	</insert>
+	
+	<select id="findSettlementCount" parameterType="settlementDTO"
+		resultType="java.lang.Long">
+		SELECT count(*) from kplus_zy_salesorder_settlement
+	</select>
+	
+	<select id="findSettlementByPagination" parameterType="settlementDTO"
+		resultType="settlementVO">
+		SELECT * from kplus_zy_salesorder_settlement
+		limit #{startRow} ,#{pageSize}
+	</select>
+	
+	<select id="findSettlement" parameterType="java.lang.String"
+		resultType="settlementVO">
+		SELECT * from kplus_zy_salesorder_settlement where mainID=#{mainId}
+	</select>
+	
+	<update id="updateSettlement" parameterType="settlementDTO">
+		update kplus_zy_salesorder_settlement
+		<set>
+			settlementTime =now()
+			<if test="mainID != null">
+				,mainID = #{mainID}
+			</if>
+			<if test="status != null">
+				,status = #{status}
+			</if>
+			<if test="settlementPeople != null">
+				,settlementPeople = #{settlementPeople}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+</mapper>

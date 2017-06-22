@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<title>查看商品列表</title>
+<meta http-equiv="Cache-Control" content="max-age=0"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="must-revalidate" />
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+#parse("wap/control/weixin_js.vm")
+</head>
+<body>
+<div class="sc_body">
+	#if("$!list" != "")
+		#foreach($!li in $!list)
+	    <div class="sc_unit">
+	        <div class="pd clearfix">
+	            <span class="u2"><a href="$!{domain}/weixin/productDetail.htm?productID=$!li.productID"><img src="$!imgurl/$!li.itemPicUrl" class="pimg"></a></span>
+	            <div class="u3">
+	            	<p><a href="$!{domain}/weixin/productDetail.htm?productID=$!li.productID">$!li.itemName</a></p>
+	            	<p class="mt5">
+	            	#if("$!li.type"=="1")
+	            		<em class="price">￥<i>$!NumberTool.format("#0.00",$!li.allamount)</i></em>
+	            	#elseif("$!li.type"=="2")
+	            		<em class="jf">$!li.allscore</em>
+	            	#else
+	            		<em class="price">￥<i>$!NumberTool.format("#0.00",$!li.allamount)</i></em> + <em class="jf">$!li.allscore</em>
+	            	#end
+	            	</p>
+	            </div>
+	        </div>
+	        <p class="txt_r">数量： x$!li.itemCount</p>
+	    </div>
+	    #end
+   #else
+   		<div class="sc_unit">
+	        <div class="pd clearfix">
+	            <span class="u2"><a href="$!{domain}/weixin/productDetail.htm?productID=$!item.productID"><img src="$!imgurl/$!item.picURL" class="pimg"></a></span>
+	            <div class="u3">
+	            	<p><a href="$!{domain}/weixin/productDetail.htm?productID=$!item.productID">$!item.name</a></p>
+	            	<p class="mt5">
+	            	#if("$!item.type"=="1")
+	            		<em class="price">￥<i>$!NumberTool.format("#0.00",$!item.salesPrice)</i></em>
+	            	#elseif("$!item.type"=="2")
+	            		<em class="jf">$!item.score</em>
+	            	#else
+	            		<em class="price">￥<i>$!NumberTool.format("#0.00",$!item.scorePrice)</i></em> + <em class="jf">$!item.salesScore</em>
+	            	#end
+	            	</p>
+	            </div>
+	        </div>
+	        <p class="txt_r">数量： x$!itemCount</p>
+	    </div>
+   #end 
+   
+</div>
+
+
+</body>
+</html>
+

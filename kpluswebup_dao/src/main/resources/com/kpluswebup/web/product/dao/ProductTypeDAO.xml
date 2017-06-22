@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.ProductTypeDAO">
+
+	<sql id="Base_Column_List">
+		mainID, name, description, isDelete, creator,
+		createTime, modifier,
+		modifyTime
+	</sql>
+
+	<update id="deleteProductTypeById" parameterType="java.lang.String">
+		update
+		kplus_producttype
+		set
+		isDelete = 1
+		where mainID
+		=#{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insertProductType" parameterType="productTypeDTO">
+		insert into
+		kplus_producttype (
+		mainID,
+		name,
+		description,
+		isDelete,
+		creator,
+		createTime
+		)
+		values (
+		#{mainID},
+		#{name},
+		#{description},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+
+	<update id="updatProductTypeByMainID" parameterType="productTypeDTO">
+		update kplus_producttype
+		<set>
+			modifyTime =now()
+			<if test="name != null">
+				,name = #{name}
+			</if>
+			<if test="description != null">
+				,description = #{description}
+			</if>
+			<if test="creator != null">
+				,creator = #{creator}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID = #{mainID,jdbcType=VARCHAR}
+	</update>
+
+
+	<select id="findProductTypeByMainID" parameterType="java.lang.String"
+		resultType="productTypeVO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_producttype
+		where mainID = #{mainID,jdbcType=VARCHAR}
+		and
+		isDelete=0
+	</select>
+
+
+	<select id="findProductTypeByPagination" resultType="productTypeVO"
+		parameterType="productTypeDTO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_producttype
+		where isDelete=0
+		<if test="name != null">
+			and name like '%${name}%'
+		</if>
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findProductTypeCount" resultType="java.lang.Long"
+		parameterType="productTypeDTO">
+		select
+		count(mainID)
+		from kplus_producttype
+		where isDelete=0
+		<if test="name != null">
+			and name like '%${name}%'
+		</if>
+	</select>
+</mapper>

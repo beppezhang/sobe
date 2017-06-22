@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>收入明细</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>财务中心 》收入明细</span>
+		</div>
+		<div class="tableListBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/account/paymentList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!accountDetailDTO.pageNo"> <input type="hidden"
+					id="pageSize" name="pageSize" value="$!accountDetailDTO.pageSize">
+				<div class="tableTool" style="height: 80px;">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">支付编号：</span><input type="text"
+									name="searchMainID" class="cText"
+									value="$!accountDetailDTO.mainID" /></td>
+								<td><span class="grayF">支付流水号：</span><input type="text"
+									name="searchSerialNumber" class="cText"
+									value="$!accountDetailDTO.serialNumber" /></td>
+								<td><span class="grayF">创建时间：</span> <input type="text"
+									name="searchStartTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!accountDetailDTO.startTime)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+									<input type="text" name="searchEndTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!accountDetailDTO.endTime)" /></td>
+							</tr>
+							<tr>
+								<td><span class="grayF">用户名：</span><input type="text"
+									name="searchCustomerName" class="cText"
+									value="$!accountDetailDTO.customerName" /></td>
+								<td><span class="grayF">支付方式：</span> <select class="select"
+									name="searchPaymentType">
+										<option value="">全部</option>
+										<option #if("$!accountDetailDTO.paymentType"==
+											"1")selected="selected" #end value="1">支付宝</option>
+										<option #if("$!accountDetailDTO.paymentType"==
+											"2")selected="selected" #end value="2">货到付款</option>
+								</select></td>
+								<td><span class="grayF">支付时间：</span> <input type="text"
+									name="searchStartModifyTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!accountDetailDTO.startModifyTime)" />&nbsp;&nbsp;-&nbsp;&nbsp;
+									<input type="text" name="searchEndModifyTime" class="cText"
+									placeholder="yyyy-MM-dd HH:mm:ss"
+									onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+									readonly="readonly"
+									value="$!date.format('yyyy-MM-dd HH:mm:ss',$!accountDetailDTO.endModifyTime)" /></td>
+								<td rowspan="3">
+									#if($!menuUtil.isExistMenu("/admin/account/paymentList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+									value="" id="all" /></label></td>
+						<td>订单编号</td>
+						<td>收款金额</td>
+						<td>创建时间</td>
+						<td>收款时间</td>
+						<td>状态</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!payment in $!paymentList)
+					<tr>
+						<td><label class="label"> <input type="checkbox"
+									value="" id="all" /></label></td>
+						<td>$!payment.mainID</td>
+						<td class="price"><p>￥$!NumberTool.format("#0.00",$!payment.amount)</p></td>
+						<td><span
+								title="$!date.format('yyyy-MM-dd HH:mm:ss',$!payment.createTime)"
+								class="dealtime">$!date.format('yyyy-MM-dd
+									HH:mm:ss',$!payment.createTime)</span></td>
+						<td><span
+								title="$!date.format('yyyy-MM-dd HH:mm:ss',$!payment.modifyTime)"
+								class="dealtime">$!date.format('yyyy-MM-dd
+									HH:mm:ss',$!payment.modifyTime)</span></td>
+						<td>#if($!payment.status==0) 未收款 #elseif($!payment.status==1)
+								已收款 #end</td>
+						<td>
+								#if($!menuUtil.isExistMenu("/admin/order/changePaymentStatus.do",$!menuAllList))
+								#if($!payment.status==0) <a href="javascript:;"
+								onclick="changePaymentStatus('$!payment.mainID');" class="icon iconRefund" title="收款"></a>&nbsp;
+								#end #end
+							</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!accountDetailDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

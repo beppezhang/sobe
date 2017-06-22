@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.GeneralDAO">
+
+	<select id="findGeneral" resultType="generalVO">
+		select * from kplus_general
+	</select>
+
+	<insert id="insertGeneral" parameterType="generalDTO">
+		insert into
+		kplus_general(
+		name,
+		picUrl,
+		domain,
+		pageFoot,
+		userAgreement,
+		serviceConfig,
+		title,
+		metaKeywords,
+		metaDescription,
+		createTime,
+		creator
+		)
+		values
+		(
+		#{name},
+		#{picUrl},
+		#{domain},
+		#{pageFoot},
+		#{userAgreement},
+		#{serviceConfig},
+		#{title},
+		#{metaKeywords},
+		#{metaDescription},
+		now(),
+		#{creator}
+		)
+	</insert>
+
+	<update id="updateGeneral" parameterType="generalDTO">
+		update kplus_general
+		<set>
+			modifyTime=now()
+			<if test="name!=null">
+				,name=#{name}
+			</if>
+			<if test="picUrl!=null">
+				,picUrl=#{picUrl}
+			</if>
+			<if test="domain!=null">
+				,domain=#{domain}
+			</if>
+			<if test="pageFoot!=null">
+				,pageFoot=#{pageFoot}
+			</if>
+			<if test="userAgreement!=null">
+				,userAgreement=#{userAgreement}
+			</if>
+			<if test="serviceConfig!=null">
+				,serviceConfig=#{serviceConfig}
+			</if>
+			<if test="title!=null">
+				,title=#{title}
+			</if>
+			<if test="metaKeywords!=null">
+				,metaKeywords=#{metaKeywords}
+			</if>
+			<if test="metaDescription!=null">
+				,metaDescription=#{metaDescription}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

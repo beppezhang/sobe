@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>注册</title> #parse("control/public_css_js.vm")
+</head>
+<body>
+
+	#parse("layout/head_top.vm")
+	<!-- 头部LOGO -->
+	#parse("layout/logo.vm")
+	<div class="layout clearfix">
+		<div class="content clearfix">
+			<form id="submitform" action="$!{domain}/mall/member/register.htm"
+				method="post">
+				<input type="hidden" name="mainID" value="$!{customerVO.mainID}">
+				<div class="content_left">
+					<h1 class="new_reg">新用户注册</h1>
+					<ul class="login_list">
+						<li class="clearfix"><span class="name"><b>*</b>手机号码：</span>
+							<input class="phone text" type="text" id="phone" name="phone"
+							placeholder="请填写手机号码"> <em class="prompt_1 col05"></em>
+						</li>
+						<!-- <li class="clearfix"><span class="name"><b>&nbsp;</b>&nbsp;</span>
+						    <input class="vcode" type="button" value="获取验证码" onclick="sendSms();">
+							 <em
+							class="prompt_1 col05"></em></li>
+						<li class="clearfix"><span class="name"><b>*</b>验证码：</span> <input
+							class="code text" type="tel" id="code" name="code"
+							placeholder="填写短信中的验证码" maxlength="6"> <em
+							class="prompt_1 col05"></em></li> -->
+						<li class="clearfix"><span class="name"><b>*</b>密码：</span> <input
+							class="password text" type="password" name="password"
+							placeholder="请确认密码"> <em class="prompt_1 col05"></em></li>
+						<li class="clearfix"><span class="name"><b>*</b>确认密码：</span>
+							<input class="repassword text" type="password"
+							placeholder="请确认输入密码"> <em class="prompt_1 col05"></em></li>
+						<li class="clearfix"><span class="name"><b>&nbsp;</b>&nbsp;</span>
+							<a class="page_submit_f" href="javascript:;">同意条款并注册</a></li>
+						<li class="clearfix"><span class="name"><b>&nbsp;</b>&nbsp;</span>
+							<a class="agreement" target="_blank" href="$!{domain}/mall/member/announcement.htm">《卡塔网络服务协议》</a></li>
+					</ul>
+				</div>
+			</form>
+			<div class="content_right clearfix">
+				<h6>已有卡塔网络帐号？</h6>
+				<p>马上登录，便能立刻享受便宜又放心的购物乐趣。</p>
+				<p class="other_control">
+					<a class="other_but" href="$!{domain}/mall/member/toLogin.htm">立即登录</a>
+				</p>
+				<a class="genuine" href="javascript:;"></a>
+			</div>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+	<script type="text/javascript">
+	jQuery(".phone").bind("blur",function(){
+		var phone = jQuery(this).val();
+		var filter=/^1[3|4|5|8][0-9]\d{8}$/;
+		if(phone == ""){
+			jQuery(this).parent().find(".prompt_1").removeClass("ok").addClass("error").html("用户名不能为空");
+		}else if(!filter.test(phone)){
+			jQuery(this).parent().find(".prompt_1").removeClass("ok").addClass("error").html("用户名格式不正确");
+		}else{
+			jQuery.ajax({url : "ajaxCheckUsername.do",
+						type : "POST",
+						data : {'phone' : phone}, 
+					dataType : "json",
+					 success : function(data) {
+						if (data.code == 0) {
+						    if(data.result){
+						    	jQuery(".phone").parent().find(".prompt_1").removeClass("ok").addClass("error").html("用户名存在");
+						    }else{
+						    	jQuery(".phone").parent().find(".prompt_1").removeClass("error").addClass("ok").html("");
+						    }
+						} else {
+							//alert("请求出错!");
+						}
+				     },
+					   error : function() {
+						//alert("请求出错!");
+					 }
+			});
+		}
+	});
+	
+	/* jQuery(".code").bind("blur",function(){
+		var code = jQuery(this).val();
+		if(code == ""){
+			jQuery(".code").parent().find(".prompt_1").removeClass("ok").addClass("error").html("验证码不能为空");
+		}else{
+			var phone=jQuery("#phone").val();
+			jQuery.ajax({
+	    		url : "checkSmsCode.do",
+	    		type : "POST",
+	    		data : {"code":code,"phone":phone},
+	    		dataType : "json",
+	    		success : function(data) {
+	    			if (data.code == 0) {
+	    				jQuery(".code").parent().find(".prompt_1").removeClass("error").addClass("ok").html("");
+	    			} else {
+	    				jQuery(".code").parent().find(".prompt_1").removeClass("ok").addClass("error").html("验证码错误");
+	    			}
+	    		},
+	    		error : function() {
+	    			jQuery(".code").parent().find(".prompt_1").removeClass("ok").addClass("error").html("验证码错误");
+	    		}
+	    	});
+		}
+	}); */
+	
+	jQuery(".password").bind("blur",function(){
+		var password = jQuery(this).val();
+		if(password == ""){
+			jQuery(".password").parent().find(".prompt_1").removeClass("ok").addClass("error").html("密码不能为空");
+		}else if(password.length<6||password.length>16){
+			jQuery(".password").parent().find(".prompt_1").removeClass("ok").addClass("error").html("密码长度必须在6~16之间");
+		}else{
+			jQuery(".password").parent().find(".prompt_1").removeClass("error").addClass("ok").html("");
+		}
+	});
+	
+	jQuery(".repassword").bind("blur",function(){
+		var password = jQuery(".password").val();
+		var repassword = jQuery(this).val();
+		if(repassword == ""){
+			jQuery(".repassword").parent().find(".prompt_1").removeClass("ok").addClass("error").html("重复密码不能为空");	
+		}else if(password != repassword ){
+			jQuery(".repassword").parent().find(".prompt_1").removeClass("ok").addClass("error").html("两次密码不一致");
+		}else{
+			jQuery(".repassword").parent().find(".prompt_1").removeClass("error").addClass("ok").html("");	
+		}
+	}); 
+	
+    jQuery(".page_submit_f").click(function(){
+        jQuery(".phone").blur();
+       /*  jQuery(".code").bind("blur",function(){
+    		var code = jQuery(this).val();
+    		if(code == ""){
+    			jQuery(".code").parent().find(".prompt_1").removeClass("ok").addClass("error").html("验证码不能为空");
+    		}
+        }); */
+    	jQuery(".password").blur();
+    	jQuery(".repassword").blur(); 
+    	var errorObj = $(".error");
+    	if(errorObj.length>0){
+			 return;    		
+    	}else{
+    		jQuery(".page_submit_f").css("font-size","14px").html("提交中,请稍后...");
+    		jQuery("#submitform").submit();
+    	}
+    });
+    
+    /** 发送验证码* */
+    function sendSms(){
+    	jQuery(".phone").blur();
+    	var errorObj = $(".error");
+    	if(errorObj.length>0){
+    		return;
+    	}
+    	var phone=jQuery("#phone").val();
+    	jQuery.ajax({
+    		url : "sendRegisterSms.do",
+    		type : "POST",
+    		data : {"phone":phone},
+    		dataType : "json",
+    		success : function(data) {
+    			var i=60;
+				var countdown = setInterval(cdTime, 1000);
+				function cdTime() {
+					jQuery(".vcode").attr("disabled",true).addClass("off").val( i + "秒后重新获取");
+					if (i == 0) {
+						jQuery(".vcode").removeAttr("disabled").removeClass("off").val("重新获取验证码");
+						clearInterval(countdown);
+					}
+					i--;
+				}
+    			if (data.code == 0) {
+    				jQuery(".vcode").parent().find(".prompt_1").removeClass("error").addClass("ok").html("");
+    				 
+    				 
+    			} else {
+    				jQuery(".vcode").parent().find(".prompt_1").removeClass("error").addClass("ok").html("发送失败");
+    			}
+    		},
+    		error : function() {
+    			jQuery(".vcode").parent().find(".prompt_1").removeClass("error").addClass("ok").html("发送失败");
+    		}
+    	});
+    }
+    
+</script>
+</body>
+</html>

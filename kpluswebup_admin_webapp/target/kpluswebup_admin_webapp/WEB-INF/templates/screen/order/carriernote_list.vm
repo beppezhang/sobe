@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>取货单列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+<link rel="stylesheet"
+	href="$!{adminStatic}/theme/default/jquery.rollbar.css" />
+<script src="$!{adminStatic}/script/jquery.mousewheel.js"
+	language="javascript"></script>
+<script src="$!{adminStatic}/script/jquery.rollbar.min.js"
+	language="javascript"></script>
+<style type="text/css">
+	#itemID{
+		width: 1000px;
+		margin-left: 107px;
+	}
+	#itemID thead{
+		font-weight: bold;
+	}
+	#itemID td{
+		height: 34px;
+	}
+</style>
+</head>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>取货单管理》取货单列表</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="get"
+				action="$!{domain}/admin/order/carrierNoteList.htm">
+			   <input type="hidden" id="pageNo" name="pageNo"
+					value="$!carrierNoteDTO.pageNO">
+			   <input type="hidden"	id="pageSize" name="pageSize" 
+			        value="$!carrierNoteDTO.pageSize">
+				<table class="searchTable">
+					<tbody>
+						<tr>
+							<td><span class="grayF">取货单编号：</span><input type="text"
+								name="noteMainID" class="cText"
+								value="$!carrierNoteDTO.mainID" /></td>
+							
+							<td><span class="grayF">商家名称：</span><input type="text"
+								name="supplierName" class="cText"
+								value="$!carrierNoteDTO.supplierName" /></td>
+							<td><span class="grayF">状态：</span>
+								 <select class="select"
+								name="storeStatus">
+									<option value="">全部</option>
+									<option #if("$!carrierNoteDTO.storeStatus"==
+										"0")selected="selected" #end value="0">未入库</option>
+									<option #if("$!carrierNoteDTO.storeStatus"==
+										"1")selected="selected" #end value="1">已入库</option>
+							</select>
+							</td>
+							<td rowspan="3">
+								#if($!menuUtil.isExistMenu("/admin/order/carrierNoteList.htm",$!menuAllList)
+								) <input class="searchBtn" type="button" value="搜索"
+								onclick="$('#serachform').submit()" /> #end
+							</td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<div class="tableListBar">
+			
+			<div class="tableHeader">
+				<div style="width: 5%">
+					<label class="label"></label>
+				</div>
+				<div style="width: 18%">取货单编号</div>
+				<div style="width: 10%">商家</div>
+				<div style="width: 23%">订单编号</div>
+				<div style="width: 14%">
+					<!-- <span class="elevators">生成时间
+					    <a href="javascript:;" class="top topOrderTime"></a>
+					    <a href="javascript:;" class="bot botOrderTime"></a>
+					</span> -->
+				</div>
+				<div style="width: 10%">
+					<span class="elevators">取货单金额
+					   <!--  <a href="javascript:;" class="top topOrderAmount"></a>
+					    <a href="javascript:;" class="bot botOrderAmount"></a> -->
+					</span>
+				</div>
+				<div style="width: 12%">入库状态</div>
+				<div style="width: 9%">操作</div>
+			</div>
+			<div id="tableBody">
+				<table class="tableList grid" id="list">
+					<tbody id="orderList">
+						#if("$!carrierNoteVOList"!="" && $carrierNoteVOList.size()>0) #foreach
+						($carrierNote in $carrierNoteVOList)
+						<tr>
+							<td width="5%"><label class="label"><input
+									type="checkbox" value="$!carrierNote.mainID"
+									id="check_box_$!carrierNote.mainID" /></label></td>
+							<td width="13%"><span class="orderId">$!carrierNote.mainID</span></td>
+							<td width="10%">$!carrierNote.supplierName</td>
+							<td width="15%">#foreach ($!carrierNoteLine in
+								$!carrierNote.carrierNoteLineList)
+								#if($!velocityCount<3)$!carrierNoteLine.salesOrderID<br>#end#end
+								#if($!carrierNote.carrierNoteLineList.size()>2)...#end
+							</td>
+							<td width="10%">
+								$!date.format('yyyy-MM-dd HH:mm:ss',$!carrierNote.createTime)</td>
+							<td width="10%">
+								   $!NumberTool.format("#0.00",$!carrierNote.totalAmount)
+							   </td>
+							<td width="5%" class="status">#if("$!carrierNote.storeStatus"=="0") 未入库
+								#elseif("$!carrierNote.storeStatus"=="1") 已入库
+								#end</td>
+						
+							<td width="9%" class="last">
+								#if($!menuUtil.isExistMenu("/admin/order/carrierNoteDetail.htm",$!menuAllList)
+								)
+								<a href="$!domain/admin/order/carrierNoteDetail.htm?carrierNoteID=$!carrierNote.mainID" 
+								class="icon iconEdit" title="查看"></a>&nbsp;
+								#end
+								#if($!menuUtil.isExistMenu("/admin/order/carrierNoteReceived.htm",$!menuAllList)
+								)
+								#if($!carrierNote.storeStatus == 0)
+								<a href="javascript:void(0);"  data-id="$!carrierNote.mainID"
+								class="icon iconAffirm" title="入库"></a>&nbsp;
+								#end
+								#end
+							</td>
+						</tr>
+						#end #end
+					</tbody>
+					#pagination($!carrierNoteDTO)
+				</table>
+			</div>
+		</div>
+	</div>
+	<input type="hidden" id="orderId" />
+	<div class="detailed_bottom_div"></div>
+	<script>
+		$(function(){
+			$(".iconAffirm").on('click', function(){
+				if (!confirm('确定要入库吗')) {
+					return;
+				}
+				var _this = this;
+				var carrierNoteID = $(_this).attr("data-id");
+				jQuery.ajax({
+					url: "carrierNoteReceived.htm",
+					type: "POST",
+					dataType: "text",
+					data: {
+						carrierNoteID: carrierNoteID
+					},
+					success: function(data){
+						if (data == 0) {
+							$(_this).parents("tr").find(".status").text('已入库');
+							$(_this).remove();
+						}
+					}
+				})
+
+			});
+		})
+		
+	</script>
+</body>
+</html>

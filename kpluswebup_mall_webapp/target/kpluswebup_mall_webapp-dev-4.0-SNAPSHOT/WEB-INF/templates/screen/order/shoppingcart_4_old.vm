@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>购物车</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/shopcart.css">
+</head>
+
+<body>
+<!-- top bar -->
+#parse("layout/head_top.vm")
+
+<div id="processBar">
+	<div class="layout clearfix">
+    	<div class="logo lt">
+        	<a href="index.htm"><img src="$!{domainImg}$!shopLogo"></a>
+        </div>
+        <div class="probar">
+        	<span id="p1"></span>
+            <span id="p2"></span>
+            <span id="p3"></span>
+            <span id="p4" class="on"></span>
+        </div>
+    </div>
+</div>
+<div class="layout mt25">
+	<div class="status">
+    	<h1 class="tt"><img src="$!{mallStatic}/images/ico-ok.png">订单已完成</h1>
+        <div class="ordbox mt15">
+          <ul>
+            <li>订单编号：<a href="#" class="col03">$!salesOrderVO.mainID</a></li>
+			<li>收货信息：$!salesOrderDeliveryAddressVO.provinceName$!salesOrderDeliveryAddressVO.cityName$!salesOrderDeliveryAddressVO.districtName$!salesOrderDeliveryAddressVO.address<span class="ml35">$!salesOrderDeliveryAddressVO.name</span>
+                <span class="ml35">
+                    #if($!salesOrderDeliveryAddressVO.mobile)
+                    $!salesOrderDeliveryAddressVO.mobile
+                    #else
+                    $!salesOrderDeliveryAddressVO.telephone
+                    #end
+                </span>
+            </li>                         
+			<li>配送方式：申通快递</li>
+          </ul>
+        </div>
+       <!--  <div class="ordbox notop">
+        	<dl class="clearfix">
+            	<dt><a href="#" target="_blank"><img src="pic/p3.jpg" class="pimg"></a></dt>
+                <dd class="name"><a href="#" target="_blank">三星 Galaxy Note Edge (N9150) 幻影白 移动联通</a></dd>
+                <dd>￥3000.00</dd>
+            </dl>
+        </div> -->
+    </div>
+    <p class="ct mt15 mb50">
+    	<a href="index.htm" class="skipLink">返回首页</a>
+        <a href="#" class="skipLink">继续购物</a>
+        <a href="#" class="skipLink">订单中心</a>
+    </p>
+</div>
+
+#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+</body>
+</html>

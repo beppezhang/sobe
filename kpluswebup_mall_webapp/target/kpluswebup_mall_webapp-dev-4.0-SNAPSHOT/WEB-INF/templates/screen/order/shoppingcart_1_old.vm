@@ -1,0 +1,248 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>购物车</title>
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{mallStatic}/css/shopcart.css">
+</head>
+
+<body>
+<!-- top bar -->
+#parse("layout/head_top.vm")
+<div id="processBar">
+	<div class="layout clearfix">
+    	<div class="logo lt">
+        	<a href="index.htm"><img src="$!{mallStatic}$!shopLogo" style="width:200px;height: 60px"></a>
+        </div>
+        <div class="probar">
+        	<span id="p1" class="on"></span>
+            <span id="p2"></span>
+            <span id="p3"></span>
+            <span id="p4"></span>
+        </div>
+    </div>
+</div>
+
+<div class="layout">
+	<h1 class="cp mt15">我的购物车</h1>
+    <p class="col02">查看购物车清单，增加减少商品数量，并选择需要的商品进行下一步操作。</p>
+    <div class="shopcartList mt15" id="productList">
+    	<table cellspacing="0" cellpadding="0">
+          <tr>
+            <th><label for="sel_all"><input name="allCk" id="sel_all" class="allCk" type="checkbox" value="">全选</label></th>
+            <th>商品</th>
+            <th>单价（元）</th>
+            <th>数量</th>
+            <th>小计（元）</th>
+            <th>操作</th>
+          </tr>
+          	#foreach($data in $shoppingCartList.entrySet())
+      			 <tr>
+		            <td colspan="6" class="origin">
+		            #foreach($a in $!{data.key.split("_")})
+		            	#if($!{velocityCount}==2)
+							店铺：$!a
+						#end
+					#end
+		            </td>
+		          </tr>
+		          <tr>
+		            <td colspan="6" class="advices">
+		            	<p class="txt_r clearfix">
+		                </p>
+		            </td>
+		          </tr>    
+      				#foreach($shoppingcart in ${data.value})
+		          <tr class="tdUnit">
+		            <td class="ckBox"><input class="ck" name="ck" type="checkbox" value="$!shoppingcart.id"></td>
+		            <td class="pInfo">
+		            	<a href="$!{domain}/mall/product/productDetail.htm?productID=$!shoppingcart.productID&itemID=$!shoppingcart.itemID" target="_blank">
+		                    <img src="$!{domianImg}$!shoppingcart.itemPicUrl" class="pimg">
+		                    $!shoppingcart.itemName
+		                </a>
+		            </td>
+		            <td align="center"><span class="unitPrice">
+		            	#if("$!shoppingcart.salesPrice"=="")
+		            		0.00 
+		            	#else
+							$!NumberTool.format("#0.00",$!shoppingcart.salesPrice) 
+						#end
+		            </span></td>
+		            <td align="center"><span class="countMan">
+		                		<a href="javascript:;" class="subbtn" title="减少"></a><em class="unitNum" data="$!shoppingcart.stock">$!shoppingcart.itemCount</em><!--data表示是库存或是最大购买数量--><a href="javascript:;" class="addbtn" title="增加"></a>
+		                	</span></td>
+		            <td align="center"><span class="subTotal">$!NumberTool.format("#0.00",$!shoppingcart.allamount)</span></td>
+		            <td align="center">
+						<p>
+							<a href="javascript:;"
+								onclick="addFavorite('$!shoppingcart.itemID','$!shoppingcart.productID');"
+								class="col02">收藏</a>
+						</p>
+						<p>
+							<a href="javascript:;"
+								onclick="delShoppingCart('$!shoppingcart.id');" class="col02">删除</a>
+						</p>
+					</td>
+		          </tr>
+		       #end
+          #end
+          <tr>
+            <td colspan="6" class="settleBar">
+            	商品总价（不含运费）：<span id="totalPrices">0.00</span>元
+            </td>
+          </tr>
+        </table>
+    </div>
+    #if($!shoppingCartList.size()>0)
+    <p class="txt_r mt15">
+    	<a href="javascript:void(0);" class="goEditLink" onclick="shoppingCart2();">下一步，填写核对购物信息</a>
+    </p>
+    #end
+    <div class="guessbox mt15">
+    	<div class="ttbar"><strong class="f14">猜您喜欢的宝贝</strong></div>
+        <div class="hotPic">
+        	<div class="slide-nav"><a class="prev" href="javascript:">&#8249;</a><a class="next" href="javascript:">&#8250;</a></div>
+            <div class="slide-wrap">
+                <ul class="img_list01 pos_ab slide-content clearfix">
+                	#foreach($!product in $!guessLikeProductList)
+                    <li>
+                      <p class="ct"><a href="$!{domain}/mall/product/productDetail.htm?productID=$!product.mainID&itemID=$!product.itemID" target="_blank">
+                      <img src="$!{domianImg}$!{product.picURL}" class="pimg imgMove"></a></p>
+                      <h4><a href="#" target="_blank">$!{product.name}</a></h4>
+                      <p><strong class="col03 f14">￥$!NumberTool.format("#0.00",$!product.minSalesPrice)</strong></p>
+                    </li>
+                	#end
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+#parse("layout/footer.vm")
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/shoppingcart.js"></script>
+	<script type="text/javascript" src="$!{mallStatic}/js/jquery.validate.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/public.js"></script>
+<script type="text/javascript" src="$!{mallStatic}/js/slide.js"></script>
+<script>
+$(function(){
+	$(".allCk").on('click', function(){
+		$("#productList").find(':checkbox').attr("checked",this.checked);
+		canculateAmount();
+	})
+	$('input[name="ck"]').click(function(){
+		$("input[name='ck']").each(function(){
+			  var ck = $(this).prop("checked");
+			  if(ck==true){
+				  $(".allCk").attr("checked",true);
+			  }else{
+				  $(".allCk").removeAttr("checked");
+				  return false;
+			  }
+		})
+		canculateAmount();
+	})
+	//选择数量
+	$(".countMan").find(".addbtn").click(function(){
+		var imtNum = $(this).prev(".unitNum").attr("data");//最大购买数量(库存)
+		var getNum = $(this).closest(".countMan").find(".unitNum").html(); //获取本商品数量
+		var addNum = parseInt(getNum) + 1;//数量增加
+		var getPrice = $(this).closest(".tdUnit").find(".unitPrice").html();//获取单价
+		var subTotal = getPrice*addNum; //计算单品小计价格
+		if(imtNum>=addNum){
+			$(this).closest(".tdUnit").find(".subTotal").text(parseFloat(subTotal).toFixed(2))
+			$(this).closest(".countMan").find(".unitNum").text(addNum);
+			if($(this).parents("tr").find(":checked").length > 0){
+				canculateAmount();
+			}
+		}
+		
+	})
+	$(".countMan").find(".subbtn").click(function(){
+		var getNum = $(this).closest(".countMan").find(".unitNum").html(); //获取本商品数量
+		var subNum = parseInt(getNum) - 1;//数量减少
+		var getPrice = $(this).closest(".tdUnit").find(".unitPrice").html();//获取单价
+		var subTotal = getPrice*subNum; //计算单品小计价格
+		if(subNum>0){
+			$(this).closest(".tdUnit").find(".subTotal").text(parseFloat(subTotal).toFixed(2))
+			$(this).closest(".countMan").find(".unitNum").text(subNum);
+			if($(this).parents("tr").find(":checked").length > 0){
+				canculateAmount();
+			}
+		}
+	})
+	$(".guessbox").Slide({
+		effect:"scroolLoop",
+		autoPlay:false,
+		speed:"normal",
+		timer:1000,
+		steps:1
+	});
+	$(".hotPic").hover(function(){
+		var liNum = $(this).find("li").length;
+		if(liNum>4){
+			$(this).find(".slide-nav").show();
+		}
+	},function(){
+		$(this).find(".slide-nav").hide();
+	})
+	
+	//默认全选
+	$("#productList").find(':checkbox').attr("checked", "checked");
+	canculateAmount();
+})
+//价格计算
+
+function canculateAmount(){
+	var checkedCartIds = null;
+	var checkedCartNums = null;
+	$('input[name="ck"]:checked').each(function(index, ele){
+		if(index == 0){
+			checkedCartIds = $(ele).val();
+			checkedCartNums = $(ele).parents("tr").find("em.unitNum").html();
+		}else{
+			checkedCartIds += ","+$(ele).val();
+			checkedCartNums += ","+$(ele).parents("tr").find("em.unitNum").html();
+		}
+	})
+	if($('input[name="ck"]:checked').length == 0){
+		$("#totalPrices").html(0.00)
+		return false;
+	}
+	jQuery.ajax({
+		url:"checkedShoppingCartAmount.do",
+		type:"GET",
+		data:{
+			checkedCartIds: checkedCartIds,
+			checkedCartNums: checkedCartNums
+		},
+		dataType:"text",
+		success: function(data){
+			//var jsonResult = JSON.parse(data);
+			var jsonResult =  eval('('+data+')');
+			//alert(jsonResult.info);
+			if(jsonResult.info == 1000){
+				alert("异常");
+				return false;
+			}
+			if(jsonResult.info == 2000){
+				var cartId = jsonResult.cartId;
+				$(":checkbox").each(function(){
+					if(this.value == cartId){
+						var skuName = $(this).parents(".tdUnit").find(".pInfo a").text();
+						alert("对不起，您选择的商品："+skuName+"  已下架");
+					}
+				})
+				return false;
+			}
+			$('input[name="ck"]:checked').each(function(index, ele){
+				$(ele).parents("tr").find(".subTotal").html(parseFloat(jsonResult.amountArr[index]).toFixed(2));
+			})
+			$("#totalPrices").html(parseFloat(jsonResult.totalAmount).toFixed(2));
+		}
+	});
+
+}
+</script>
+</body>
+</html>

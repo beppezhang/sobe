@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+<title>修改资料</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/indi.css">
+</head>
+<body>
+	<input type="hidden" name="mainID" id="customerID" value="$!member.mainID">
+	<div class="modify_data">
+    	<ul>
+        	<li>
+            	<a href="javascript:;" class="txt_r clearfix">
+                	<span class="lt">我的头像</span>
+                	<input type="hidden" value="$!{domain}$!member.avatar" name="picURL1" id="picURL1"> 
+                	<span class="pic"><img id="uploadImage1" #if("$!member.avatar"!="")src="$!{domain}$!member.avatar"#else src="$!{domain}/wap/img/header_inco.png"#end></span>
+					<input name="myfiles" type="file" id="myBlogImage1" accept="image/*" class="picFile" onchange="ajaxFileUploads(1);">
+                </a>
+            </li>
+            <li>
+            	<a href="javascript:;" class="clearfix">
+                	<span class="lt">账号</span>
+                   	<p class="rt">$!member.username</p>
+                </a>
+            </li>
+            <li>
+            	<a href="$!domain/weixin/modifyUserEmail.htm?mainID=$!member.mainID&&email=$!member.email" class="clearfix">
+                	<span class="lt">邮箱</span>
+                   	<p class="rt">$!member.email</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="modify_data">
+    	<ul>
+        	<li>
+            	<a name="name" href="$!domain/weixin/modifyUserName.htm?mainID=$!member.mainID&&name=$!member.name" class="clearfix">
+                	<span class="lt">姓名</span>
+                	<p class="rt">$!member.name</p>
+                </a>
+            </li>
+            <li>
+            	<a href="$!domain/weixin/modifyUserSex.htm?mainID=$!member.mainID&&sex=$!member.sex" class="clearfix">
+                	<span class="lt">性别</span>
+                   	<p class="rt">
+<!--                    		$!member.sex <em class="sex on">男</em> -->
+                        <em >#if("$!member.sex"=="1"||"$!member.sex"=="")男#end#if("$!member.sex"=="2")女#end</em>
+                        
+                    </p>
+                </a>
+            </li>
+            <li>
+            	<a href="$!domain/weixin/modifyUserMobile.htm?mainID=$!member.mainID&&mobile=$!member.mobile" class="clearfix">
+                	<span class="lt">手机号</span>
+                   	<p class="rt">$!member.mobile</p>
+                </a>
+            </li>
+            <li>
+            	<a href="$!domain/weixin/userAddress.htm" class="clearfix">
+                	<span class="lt">收货地址</span>
+                   	<p class="rt">$!address.provinceName $!address.cityName $!address.districtName $!address.address</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+     <div class="modify_data">
+    	<ul>
+        	<li>
+            	<a href="javascript:;" class="txt_r clearfix">
+                	<span class="lt">税务登记证</span>
+                	<input type="hidden" value="$!{domain}$!member.picURL2" name="picURL2" id="picURL2"> 
+                	<span class="pic"><img id="uploadImage2" #if("$!member.picURL2"!="")src="$!{domain}$!member.picURL2"#else src="$!{domain}/wap/img/header_inco.png"#end></span>
+					<input name="myfiles" type="file" id="myBlogImage2" accept="image/*" class="picFile" onchange="ajaxFileUploads(2);">
+                </a>
+            </li>
+            <li>
+            	<a href="javascript:;" class="txt_r clearfix">
+                	<span class="lt">组织机构代码</span>
+                	<input type="hidden" value="$!{domain}$!member.picURL3" name="picURL3" id="picURL3"> 
+                	<span class="pic"><img id="uploadImage3" #if("$!member.picURL3"!="")src="$!{domain}$!member.picURL3"#else src="$!{domain}/wap/img/header_inco.png"#end></span>
+                    <input name="myfiles" type="file" id="myBlogImage3" accept="image/*" class="picFile" onchange="ajaxFileUploads(3);">
+                </a>
+            </li>
+       </ul>
+    </div>      
+    <!-- <a href="#" class="refer">提交</a> -->
+    <script type="text/javascript" src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="$!{domain}/wap/js/ajaxfileupload.js"></script>
+    <script type="text/javascript">
+		$(function(){
+			$(".modify_data li").find("em").click(function(){
+				$(this).addClass("on").siblings().removeClass("on");	
+			})	
+			$(".modify_data li").find(".picFile").change(function(){
+				var a = $(this).val();
+				$(this).prev(".pic").find("img").attr("src",a);
+			})
+		})
+		function saveUserInfo() {
+			$("#userForm").submit();
+		}
+		function ajaxFileUploads(type) {
+			jQuery.ajaxFileUpload({
+				url : '/file/fileUpload.do',
+				secureuri : false,// 是否启用安全提交,默认为false
+				fileElementId : 'myBlogImage' + type,// 文件选择框的id属性
+				dataType : 'text',// 服务器返回的格式,可以是json或xml等
+				success : function(data, status) {
+					data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+					data = data.replace("</PRE>", '');
+					data = data.replace("<pre>", '');
+					data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+					if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+						$("img[id='uploadImage" + type + "']").attr("src", data.substring(2));
+						$("#picURL" + type).val(data.substring(2));
+						$('#result').html("图片上传成功<br/>");
+						var picUrl1,picUrl2,picUrl3;
+						if(type==1){
+							picUrl1=data.substring(2);
+						}
+						if(type==2){
+							picUrl2=data.substring(2);
+						}
+						if(type==3){
+							picUrl3=data.substring(2);
+						}
+						var customerID=jQuery("#customerID").val();
+						jQuery.ajax({
+							url : "modifyCustomerPicUrl.do",
+							data : {
+								mainID : customerID,
+								picUrl1 : picUrl1,
+								picUrl2 : picUrl2,
+								picUrl3 : picUrl3
+							},
+							type : "POST",
+							dataType : "json",
+							success : function(data) {
+							},
+							error : function() {
+								alert("系统出错！");
+							}
+						});
+					} else {
+						$('#result').html('图片上传失败，请重试！！');
+					}
+				},
+				error : function(data, status, e) { // 服务器响应失败时的处理函数
+					$('#result').html('图片上传失败，请重试！！');
+				}
+			});
+		}
+    </script>
+</body>
+</html>
+

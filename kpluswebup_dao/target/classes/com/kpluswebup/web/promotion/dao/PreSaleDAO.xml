@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.promotion.dao.PreSaleDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID, productID, itemID, salesPrice, maxmumQty,
+		limitCount,
+		description, fromDate,
+		endDate, isDelete, creator,
+		createTime, modifier,
+		modifyTime,score,scorePrice,salesScore,picUrl,peopleBuy
+	</sql>
+
+	<select id="findPreSaleByMainID" resultType="preSaleVO"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_preSale
+		where mainID = #{mainID} and isDelete=0
+	</select>
+
+	<select id="findPreSaleByPagination" resultType="preSaleVO"
+		parameterType="preSaleDTO">
+		SELECT
+		p.`name` as productName,
+		i.`name` as itemName,
+		ps.mainID,ps.itemID,ps.salesPrice,ps.maxmumQty,ps.fromDate,ps.endDate,ps.createTime,
+		i.standrardPrice,
+		i.picURL,
+		o.username as createName
+		FROM
+		kplus_preSale ps
+		LEFT JOIN kplus_product p ON
+		ps.productID = p.mainID
+		LEFT JOIN
+		kplus_item i ON ps.itemID = i.mainID
+		left join kplus_operator
+		o on
+		ps.creator=o.mainID
+		WHERE
+		ps.isDelete = 0
+		AND
+		p.isDelete = 0
+		AND
+		i.isDelete
+		= 0
+		<if test="serachDate != null">
+			and DATE_FORMAT(#{serachDate}, '%Y-%m-%d %H:%i:%s')
+			>=ps.fromDate and DATE_FORMAT(#{serachDate}, '%Y-%m-%d %H:%i:%s')
+			&lt;=ps.endDate
+		</if>
+		<if test="itemID!=null">
+			and ps.itemID like '%${itemID}%'
+		</if>
+		<if test="itemName!=null">
+			and i.name like '%${itemName}%'
+		</if>
+		<if test="fromDate!=null">
+			and ps.fromDate &gt;=#{fromDate}
+		</if>
+		<if test="endDate!=null">
+			and ps.endDate &gt;=#{endDate}
+		</if>
+		<if test="orderByClause != null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findPreSaleCount" resultType="java.lang.Long"
+		parameterType="preSaleDTO">
+		SELECT
+		count(ps.id)
+		FROM
+		kplus_preSale ps
+		LEFT JOIN
+		kplus_product p ON
+		ps.productID = p.mainID
+		LEFT JOIN
+		kplus_item i ON
+		ps.itemID = i.mainID
+		left join kplus_operator o on ps.creator=o.mainID
+		WHERE
+		ps.isDelete = 0
+		AND p.isDelete = 0
+		AND
+		i.isDelete = 0
+		<if test="serachDate != null">
+			and DATE_FORMAT(#{serachDate}, '%Y-%m-%d %H:%i:%s')
+			>=ps.fromDate and DATE_FORMAT(#{serachDate}, '%Y-%m-%d %H:%i:%s')
+			&lt;=ps.endDate
+		</if>
+		<if test="itemID!=null">
+			and ps.itemID like '%${itemID}%'
+		</if>
+		<if test="itemName!=null">
+			and i.name like '%${itemName}%'
+		</if>
+		<if test="fromDate!=null">
+			and ps.fromDate &gt;=#{fromDate}
+		</if>
+		<if test="endDate!=null">
+			and ps.endDate &lt;=#{endDate}
+		</if>
+	</select>
+
+	<insert id="addPreSaleSelective" parameterType="preSaleDTO">
+		insert into kplus_preSale
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="mainID != null">
+				mainID,
+			</if>
+			<if test="productID != null">
+				productID,
+			</if>
+			<if test="itemID != null">
+				itemID,
+			</if>
+			<if test="salesPrice != null">
+				salesPrice,
+			</if>
+			<if test="maxmumQty != null">
+				maxmumQty,
+			</if>
+			<if test="limitCount != null">
+				limitCount,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="fromDate != null">
+				fromDate,
+			</if>
+			<if test="endDate != null">
+				endDate,
+			</if>
+			<if test="isDelete != null">
+				isDelete,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				createTime,
+			</if>
+			<if test="score!=null">
+				score,
+			</if>
+			<if test="scorePrice!=null">
+				scorePrice,
+			</if>
+			<if test="salesScore!=null">
+				salesScore,
+			</if>
+			<if test="picUrl!=null">
+				picUrl,
+			</if>
+			peopleBuy
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="mainID != null">
+				#{mainID},
+			</if>
+			<if test="productID != null">
+				#{productID},
+			</if>
+			<if test="itemID != null">
+				#{itemID},
+			</if>
+			<if test="salesPrice != null">
+				#{salesPrice},
+			</if>
+			<if test="maxmumQty != null">
+				#{maxmumQty},
+			</if>
+			<if test="limitCount != null">
+				#{limitCount},
+			</if>
+			<if test="description != null">
+				#{description},
+			</if>
+			<if test="fromDate != null">
+				#{fromDate},
+			</if>
+			<if test="endDate != null">
+				#{endDate},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete},
+			</if>
+			<if test="creator != null">
+				#{creator},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="score != null">
+				#{score},
+			</if>
+			<if test="scorePrice != null">
+				#{scorePrice},
+			</if>
+			<if test="salesScore != null">
+				#{salesScore},
+			</if>
+			<if test="picUrl!=null">
+				#{picUrl},
+			</if>
+			0
+		</trim>
+	</insert>
+
+	<update id="deletePreSaleByMainID" parameterType="preSaleDTO">
+		update
+		kplus_preSale set isDelete=1 where mainID = #{mainID}
+	</update>
+
+	<update id="updatePreSaleByMainID" parameterType="preSaleDTO">
+		update kplus_preSale
+		<set>
+			modifyTime=now()
+			<if test="productID != null">
+				,productID = #{productID}
+			</if>
+			<if test="itemID != null">
+				,itemID = #{itemID}
+			</if>
+			<if test="salesPrice != null">
+				,salesPrice = #{salesPrice}
+			</if>
+			<if test="maxmumQty != null">
+				,maxmumQty = #{maxmumQty}
+			</if>
+			<if test="limitCount != null">
+				,limitCount = #{limitCount}
+			</if>
+			<if test="description != null">
+				,description = #{description}
+			</if>
+			<if test="fromDate != null">
+				,fromDate = #{fromDate}
+			</if>
+			<if test="endDate != null">
+				,endDate = #{endDate}
+			</if>
+			<if test="isDelete != null">
+				,isDelete = #{isDelete}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+			<if test="score != null">
+				,score=#{score}
+			</if>
+			<if test="scorePrice != null">
+				,scorePrice=#{scorePrice}
+			</if>
+			<if test="salesScore != null">
+				,salesScore=#{salesScore}
+			</if>
+			<if test="picUrl!=null">
+				,picUrl=#{picUrl}
+			</if>
+			<if test="peopleBuy!=null">
+				,peopleBuy=#{peopleBuy}
+			</if>
+		</set>
+		where mainID = #{mainID}
+	</update>
+
+	<select id="findItemProps" resultType="ItemVO" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_preSale
+		where mainID = #{mainID} and isDelete=0
+	</select>
+
+</mapper>

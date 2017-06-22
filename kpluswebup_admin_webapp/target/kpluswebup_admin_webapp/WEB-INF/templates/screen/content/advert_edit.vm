@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑广告</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>内容管理》广告管理》编辑广告</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="javascript:;" class="hover">编辑广告</a></li>
+				</ul>
+			</div>
+
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/content/editAdvert.htm"
+						method="post">
+						<input type="hidden" value="$cmsAdvertVO.mainID" name="mainID"
+							class="cText cTextLen">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+								<dd class="clearfix">
+									<div class="formTt">标题：</div>
+									<div class="formRow">
+										<input type="text" value="$!cmsAdvertVO.name" name="name"
+											class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">分类：</div>
+									<div class="formRow">
+										<select name="categoryID" class="select">
+											#foreach($!cmsCategory in $!cmsCategoryList)
+											<option #if("$!cmsAdvertVO.categoryID"==
+												"$!cmsCategory.mainID")selected="selected" #end
+												value="$!cmsCategory.mainID">$!cmsCategory.name</option>
+											#end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">位置：</div>
+									<div class="formRow">
+										<select name="posionID" class="select"
+											onchange="changePosition(this.value);">
+											#foreach($!SystemAdvertPosionVO in $!advertPosionList)
+											<option #if("$!cmsAdvertVO.posionID"==
+												"$!SystemAdvertPosionVO.mainID")selected="selected" #end
+												value="$!SystemAdvertPosionVO.mainID">$!SystemAdvertPosionVO.name</option>
+											#end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix pParent" style="display: none;">
+									<div class="formTt">轮播广告：</div>
+									<div class="formRow">
+										<select name="advertParentID" class="select">
+											#foreach($!parent in $!parentList)
+											<option #if("$!cmsAdvertVO.parentID"==
+												"$!parent.mainID")selected="selected" #end value="$!parent.mainID">$!parent.name</option> #end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix pCat" style="display: none;">
+									<div class="formTt">频道：</div>
+									<div class="formRow">
+										<select name="productCategoryID" class="select">
+											<option #if("$!cmsAdvertVO.productCategoryID"==
+												"0")selected="selected" #end value="0">首页</option>
+											#foreach($!cat in $!pList)
+											<option #if("$!cmsAdvertVO.productCategoryID"==
+												"$!cat.mainID")selected="selected" #end value="$!cat.mainID">$!cat.name</option>
+											#end
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">配图：</div>
+									<div class="formRow">
+										<input type="hidden" value="$!cmsAdvertVO.picUrl"
+											class="cText cTextLen" name="picUrl" id="picURL1"> <img
+											id="uploadImage1" #if("$!cmsAdvertVO.picURL"!=""
+											)src="$!{imgurl}$!cmsAdvertVO.picURL" #else src="" #end>
+										  <input type="file" id="myBlogImage1" name="myfiles"
+											onchange="ajaxFileUpload1s(1)" />
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">启用时间：</div>
+									<div class="formRow">
+										<input type="text"
+											onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+											readonly="readonly" name="activeTime"
+											value="$!date.format('yyyy-MM-dd HH:mm:ss',$!cmsAdvertVO.activeTime)"
+											class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">结束时间：</div>
+									<div class="formRow">
+										<input type="text"
+											onclick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+											readonly="readonly" name="endTime"
+											value="$!date.format('yyyy-MM-dd HH:mm:ss',$!cmsAdvertVO.endTime)"
+											class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">广告对象类型：</div>
+									<div class="formRow">
+										<select name="linkType" id="linkType" class="select"
+											onchange="changeLinkType();">
+											<option #if("$!cmsAdvertVO.linkType"==
+												"1")selected="selected" #end value="1">URL</option>
+											<option #if("$!cmsAdvertVO.linkType"==
+												"2")selected="selected" #end value="2">产品类型</option>
+											<option #if("$!cmsAdvertVO.linkType"==
+												"3")selected="selected" #end value="3">产品品牌</option>
+											<option #if("$!cmsAdvertVO.linkType"==
+												"4")selected="selected" #end value="4">产品</option>
+											<option #if("$!cmsAdvertVO.linkType"==
+												"5")selected="selected" #end value="5">商品</option>
+										</select>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">广告对象：</div>
+									<div class="formRow" id="linkRow">
+										<input id="linkMainID" name="linkMainID"
+											value="$!cmsAdvertVO.advertLink" type="hidden">
+										#if("$!cmsAdvertVO.linkType"=="1") <input type="text"
+											id="linkName" class="cText cTextLen"
+											value="$!cmsAdvertVO.advertLink" name="advertLink">
+										#else <input type="text" id="linkName" class="cText cTextLen"
+											value="$!cmsAdvertVO.linkName" name="advertLink">
+										#end
+										<div id="results_id" style="display: none"></div>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">描述：</div>
+									<div class="formRow">
+										<textarea rows="5" cols="80" name="description">$!cmsAdvertVO.description</textarea>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">排序：</div>
+									<div class="formRow">
+										<input type="text" class="cText cTextLen"
+											value="$!cmsAdvertVO.sortOrder" name="sortOrder">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										<input type="submit" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+									</div>
+								</dd>
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+	<script type="text/javascript">
+		jQuery(document).ready(function() {
+			var value = "$!cmsAdvertVO.posionID";
+			if (value != "" && (value == "index_category"||value == "weixin_index_category")) {
+				jQuery(".pCat").show();
+			} else if (value != "" && value == "index_right") {
+				jQuery(".pParent").show();
+			} else {
+				jQuery(".pCat").hide();
+				jQuery(".pParent").hide();
+			}
+
+		})
+
+		function changePosition(value) {
+			if (value == "index_category"||value == "weixin_index_category") {
+				jQuery(".pCat").show();
+			} else if (value == "index_right") {
+				jQuery(".pParent").show();
+			} else {
+				jQuery(".pCat").hide();
+				jQuery(".pParent").hide();
+			}
+		}
+		
+		function ajaxFileUpload1s(type) {
+			jQuery.ajaxFileUpload({
+				url : "$!domain"+'/file/fileUpload.do',
+				secureuri : false,// 是否启用安全提交,默认为false
+				fileElementId : 'myBlogImage' + type,// 文件选择框的id属性
+				dataType : 'text',// 服务器返回的格式,可以是json或xml等
+				success : function(data, status) {
+					data = data.replace("<PRE>", '');// ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+					data = data.replace("</PRE>", '');
+					data = data.replace("<pre>", '');
+					data = data.replace("</pre>", ''); // 本例中设定上传文件完毕后,服务端会返回给前台[0`filepath] 
+					if (data.substring(0, 1) == 0) {// 0表示上传成功(后跟上传后的文件路径),1表示失败(后跟失败描述)
+						$("img[id='uploadImage" + type + "']").attr("src",
+								"$!domain"+data.substring(2));
+						$("#picURL" + type).val(data.substring(2));
+						$('#result').html("图片上传成功<br/>");
+					} else {
+						$('#result').html('图片上传失败，请重试！！');
+					}
+				},
+				error : function(data, status, e) { // 服务器响应失败时的处理函数
+					$('#result').html('图片上传失败，请重试！！');
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>

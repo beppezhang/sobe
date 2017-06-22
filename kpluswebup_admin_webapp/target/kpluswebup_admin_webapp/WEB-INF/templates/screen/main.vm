@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+     
+	<!--header E-->
+	<div class="main clearfix index_main">
+		<div class="index">
+			<a href="javascript:;" class="right_hide_btn"></a>
+			<div class="map clearBoth">
+				<div class="box">
+					<h2>近七日成交量</h2>
+					<div id="container1" style="width: 100%; height: 340px"></div>
+				</div>
+				<div class="box">
+					<h2>近七日会员注册量</h2>
+					<div id="container2" style="width: 100%; height: 340px"></div>
+				</div>
+				<div class="box">
+					<h2>统计数据</h2>
+					<div class="statistics">
+						<ul>
+							<li><span>$!statisticsInfoVO.customerCount</span>会员总数</li>
+							<li><span>$!statisticsInfoVO.productTotal</span>商品总数</li>
+							<li><span>$!statisticsInfoVO.productSaleTotal</span>在售商品</li>
+							<li><span>$!statisticsInfoVO.productUnSaleTotal</span>仓库中商品</li>
+							<li><span>$!statisticsInfoVO.orderTotal</span>订单总数</li>
+							<li><span>￥$!statisticsInfoVO.orderTotalAmount</span>订单总额</li>
+							<li><span>$!statisticsInfoVO.orderReturnTotal</span>退换货总数</li>
+							<li><span>￥$!statisticsInfoVO.orderReturnTotalAmount</span>退款总额</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="list clearBoth">
+				<div class="box shopList">
+					<!-- <h2>近7日产品销售排行</h2>
+					<table>
+						<thead>
+							<tr>
+								<th width="10%">&nbsp;</th>
+								<th>产品信息</th>
+								<th width="15%">销售数量</th>
+								<th width="15%">销售金额</th>
+							</tr>
+						</thead>
+						<tbody>
+							#foreach($!productStatistics in $!adminMainVO.productStatistics)
+							<tr>
+								<td>$velocityCount</td>
+								<td><a target="_blank"
+									href="$!{domain}/admin/product/productDetail.htm?mainID=$!productStatistics.mainID"><img src="$!productStatistics.picURL" alt="" width="59"
+									height="59" /><p>$!productStatistics.name</p></a></td>
+								<td>$!productStatistics.salesCount</td>
+								<td><span>￥$!productStatistics.orderAmount</span></td>
+							</tr>
+							#end
+
+						</tbody>
+					</table> -->
+				</div>
+				<div class="box memberList">
+					<h2>近7日会员购买排行</h2>
+					<table>
+						<thead>
+							<tr>
+								<th width="20%"></th>
+								<th width="40%">会员信息</th>
+								<th width="40%">总金额</th>
+							</tr>
+						</thead>
+						<tbody>
+							#foreach($!customerStatistics in
+							$!adminMainVO.customerStatistics)
+							<tr>
+								<td>$velocityCount</td>
+								<td><a target="_blank"
+									href="$!{domain}/admin/member/detailMember.htm?mainId=$!customerStatistics.mainID">$!customerStatistics.username</a></td>
+								<td><span>￥$!customerStatistics.orderAmount</span></td>
+							</tr>
+							#end
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="index_rigth">
+			<div class="bd">
+				<div class="box">
+					<h2>待办事项</h2>
+					<ul>
+						<li><em class="yellow"></em><a
+							href="$!{domain}/admin/order/orderList.htm?orderStatus=1">待确认订单<span>($!statisticsOrderStstusVO.orderConfirmCount)</span></a></li>
+						<li><em class="orange"></em><a
+							href="$!{domain}/admin/order/orderList.htm?orderStatus=2">待出库订单<span>($!statisticsOrderStstusVO.orderLeavesCount)</span></a></li>
+						<li><em class="red"></em><a
+							href="$!{domain}/admin/order/orderList.htm?orderStatus=3">待发货订单<span>($!statisticsOrderStstusVO.orderConsignmentCount)</span></a></li>
+						<li><em class="purple"></em><a
+							href="$!{domain}/admin/order/returnApplyList.htm?status=0">待确认退换货<span>($!statisticsOrderStstusVO.returnapplyConfirmCount)</span></a></li>
+						<li><em class="blue"></em><a
+							href="$!{domain}/admin/order/orderList.htm?orderStatus=4">待收货<span>($!statisticsOrderStstusVO.returnapplyReceivesCount)</span></a></li>
+						<!-- <li><em class="blue"></em><a
+							href="$!{domain}/admin/order/returnApplyList.htm?status=4&returnType=1">待退款<span>($!statisticsOrderStstusVO.returnReceivesCount)</span></a></li>
+						<li><em class="yellow"></em><a
+							href="$!{domain}/admin/order/returnApplyList.htm?status=4&returnType=2">待换货<span>($!statisticsOrderStstusVO.accountReturnCount)</span></a></li>
+						<li><em class="orange"></em><a
+							href="$!{domain}/admin/account/refundList.htm?accountDetailDTO.status=0">待确认退款<span>($!statisticsOrderStstusVO.accountConfirmCount)</span></a></li> -->
+					    <li><em class="yellow"></em><a
+							href="$!{domain}/admin/order/salesApplyList.htm">售后记录<span>($!statisticsOrderStstusVO.salesOrderSalesApplyCount)</span></a></li>
+					    <li><em class="yellow"></em><a
+							href="$!{domain}/admin/order/salesApplyList.htm?searchSalesType=1">退货<span>($!statisticsOrderStstusVO.salesApplyType1Count)</span></a></li>
+					    <li><em class="yellow"></em><a
+							href="$!{domain}/admin/order/salesApplyList.htm?searchSalesType=2">换货<span>($!statisticsOrderStstusVO.salesApplyType2Count)</span></a></li>
+					</ul>
+				</div>
+				<!-- <div class="btn">
+    				<a href="$!{domain}/admin/order/orderList.htm">查看更多</a>
+    			</div> -->
+
+			</div>
+		</div>
+	</div>
+	<script>
+    	$(function(){
+    		$(".right_hide_btn").bind("click",function(){
+    			$(this).toggleClass("right_hide_btn_show");
+    			$(".index_rigth").fadeToggle();
+    			if($(this).hasClass("right_hide_btn_show")){
+    				$(".index").css("width","100%")
+    			}else{
+    				$(".index").css("width","80%")
+    			}
+                createMap()
+    		})
+            createMap()
+            function createMap(){
+                //map1
+                $('#container1').highcharts({
+                    chart: {type: 'column',margin: [ 30, 40, 100, 50]},
+                    title: {text: ''},
+                    xAxis: {categories: [ $!adminMainVO.dateTime],
+                    labels: {rotation: 0,align: 'right',style: {fontSize: '13px',fontFamily: 'Verdana, sans-serif'}}},
+                    yAxis: { min: 0,title: {text: ''}},
+                    legend: {enabled: false},
+                    tooltip: {pointFormat: '{point.y:.1f}'},
+                    series: [{name: '近七日成交量',data: [$!adminMainVO.orderVolumes],
+                        dataLabels: {
+                           
+                            rotation: -90,
+                            color: '#FFFFFF',
+                            align: 'center',
+                            x: 4,
+                            y: 10,
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif',
+                                textShadow: '0 0 3px black'
+                            }
+                        }
+                    }]
+                });
+            //map2
+                $('#container2').highcharts({
+                    chart: {type: 'line',margin: [ 30, 40, 100, 50]},
+                    title: {text: ''},
+                    subtitle: {text: ''},
+                    xAxis: {categories: [$!adminMainVO.dateTime]},
+                    yAxis: {min:0,title: {text: ''}},
+                    tooltip: {enabled: false},
+                    plotOptions: {line: {dataLabels: {enabled: true},enableMouseTracking: false }},
+                    series: [{name: '近七日会员注册量',data: [$!adminMainVO.memberCounts]}]
+                });
+            }
+    	})
+
+</script>
+	#parse("layout/footer.vm")
+</body>
+
+</html>

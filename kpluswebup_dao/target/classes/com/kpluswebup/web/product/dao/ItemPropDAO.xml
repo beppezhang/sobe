@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.product.dao.ItemPropDAO">
+
+	<sql id="Base_Column_List">
+		id, mainID, name, description, isDelete, creator,
+		createTime, modifier,
+		modifyTime
+	</sql>
+
+	<sql id="Base_Column_List_ItemPropValue">
+		id, mainID, itemPropID, name, picURL, isDelete, creator,
+		createTime,
+		modifier, modifyTime
+	</sql>
+
+	<update id="deleteItemPropByMainID" parameterType="java.lang.String">
+		update
+		kplus_itemprop
+		set
+		isDelete = 1
+		where mainID=#{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insertItemProp" parameterType="itemPropDTO">
+		insert into
+		kplus_itemprop (
+		mainID,
+		name,
+		description,
+		isDelete,
+		creator,
+		createTime,
+		modifier,
+		modifyTime
+		)
+		values (
+		#{mainID},
+		#{name},
+		#{description},
+		0,
+		#{creator},
+		now(),
+		#{modifier},
+		now()
+		)
+	</insert>
+
+	<update id="updateItemProp" parameterType="itemPropDTO">
+		update kplus_itemprop
+		<set>
+			modifyTime =now()
+			<if test="name != null">
+				,name = #{name}
+			</if>
+			<if test="description != null">
+				,description = #{description}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID = #{mainID,jdbcType=VARCHAR}
+	</update>
+
+
+	<select id="findItemPropByPagination" resultType="itemPropVO"
+		parameterType="itemPropDTO">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_itemprop
+		where isDelete=0
+		<if test="orderByClause !=  null">
+			${orderByClause}
+		</if>
+		limit #{startRow} ,#{pageSize}
+	</select>
+
+
+	<select id="findItemPropCount" resultType="java.lang.Long"
+		parameterType="itemPropDTO">
+		select
+		count(*)
+		from kplus_itemprop
+		where isDelete=0
+	</select>
+
+
+	<select id="findAllItemPropValueByItemPropMianID" resultType="itemPropValueVO"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List_ItemPropValue" />
+		from kplus_itemprop_value
+		where itemPropID =
+		#{itemPropID,jdbcType=VARCHAR} and isDelete=0
+	</select>
+
+	<insert id="insertItemPropValue" parameterType="itemPropValueDTO">
+		INSERT INTO
+		kplus_itemprop_value(
+		mainID,
+		itemPropID,
+		NAME,
+		picURL,
+		isDelete,
+		creator,
+		createTime
+		)
+		VALUES
+		(
+		#{mainID},
+		#{itemPropID},
+		#{name},
+		#{picURL},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<update id="deleteItemtPropValeByMainID" parameterType="java.lang.String">
+		update
+		kplus_itemprop_value
+		set
+		isDelete = 1
+		where
+		mainID =
+		#{mainID,jdbcType=VARCHAR}
+	</update>
+
+	<update id="deleteItemtPropValeByItemPropMainID" parameterType="java.lang.String">
+		update
+		kplus_itemprop_value
+		set
+		isDelete = 1
+		where
+		itemPropID =
+		#{itemPropID,jdbcType=VARCHAR}
+	</update>
+
+</mapper>

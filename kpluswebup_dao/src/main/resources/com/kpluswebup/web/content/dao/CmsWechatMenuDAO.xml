@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.content.dao.CmsWechatMenuDAO">
+
+	<select id="findWechatMenuByPagination" parameterType="cmsWechatMenuDTO"
+		resultType="cmsWechatMenuVO">
+		select
+		w.mainID,i.name as wechatName,
+		w.name,
+		w.menuType,
+		w.sortOrder
+		from
+		kplus_cms_wechatmenu
+		w
+		left join kplus_interfaceconfig i
+		on
+		w.interfaceConfigID=i.mainID where w.isDelete=0 and
+		w.parentID is null
+		<if test="interfaceConfigID!=null">
+			and w.interfaceConfigID=#{interfaceConfigID}
+		</if>
+		order
+		by w.id desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findWechatMenuCount" parameterType="cmsWechatMenuDTO"
+		resultType="java.lang.Long">
+		select count(w.mainID) from kplus_cms_wechatmenu w left join
+		kplus_interfaceconfig i
+		on
+		w.interfaceConfigID=i.mainID where w.isDelete=0
+		<if test="interfaceConfigID!=null">
+			and w.interfaceConfigID=#{interfaceConfigID}
+		</if>
+	</select>
+
+	<update id="deleteWechatMenuByMainID" parameterType="java.lang.String">
+		update
+		kplus_cms_wechatmenu set isDelete=1 where
+		mainID=#{mainID}
+	</update>
+
+	<insert id="insertWechatMenu" parameterType="cmsWechatMenuDTO">
+		insert into
+		kplus_cms_wechatmenu(
+		mainID,
+		parentID,
+		name,
+		interfaceConfigID,
+		menuType,
+		title,
+		content,
+		picURL,
+		linkType,
+		menuLink,
+		sortOrder,
+		isDelete,
+		creator,
+		createTime
+		)
+		values(
+		#{mainID},
+		#{parentID},
+		#{name},
+		#{interfaceConfigID},
+		#{menuType},
+		#{title},
+		#{content},
+		#{picURL},
+		#{linkType},
+		#{menuLink},
+		#{sortOrder},
+		0,
+		#{creator},
+		now()
+		)
+	</insert>
+
+	<select id="findWechatMenuByMainID" parameterType="java.lang.String"
+		resultType="cmsWechatMenuVO">
+		select * from kplus_cms_wechatmenu where
+		mainID=#{mainID}
+	</select>
+
+	<update id="updateWechatMenuByMainID" parameterType="cmsWechatMenuDTO">
+		update kplus_cms_wechatmenu
+		<set>
+			modifyTime=now()
+			<if test="interfaceConfigID != null">
+				, interfaceConfigID = #{interfaceConfigID}
+			</if>
+			<if test="menuType != null">
+				, menuType = #{menuType}
+			</if>
+			<if test="title != null">
+				, title = #{title}
+			</if>
+			<if test="parentID!=null">
+				,parentID=#{parentID}
+			</if>
+			<if test="content != null">
+				, content = #{content}
+			</if>
+			<if test="picURL != null">
+				, picURL = #{picURL}
+			</if>
+			<if test="linkType != null">
+				, linkType = #{linkType}
+			</if>
+			<if test="menuLink != null">
+				, menuLink = #{menuLink}
+			</if>
+			<if test="sortOrder != null">
+				,sortOrder = #{sortOrder}
+			</if>
+			<if test="modifier != null">
+				,modifier = #{modifier}
+			</if>
+		</set>
+		where mainID =#{mainID}
+	</update>
+
+	<select id="findCmsWechatMenuParent" resultType="cmsWechatMenuVO">
+		select *
+		from
+		kplus_cms_wechatmenu where isDelete=0 and
+		parentID is null
+	</select>
+
+	<select id="findCmsWechatMenuChildByParentID" parameterType="java.lang.String"
+		resultType="cmsWechatMenuVO">
+		select
+		w.mainID,i.name as wechatName,
+		w.name,
+		w.menuType,
+		w.sortOrder,
+		w.menuType,
+		w.linkType,
+		w.menuLink
+		from
+		kplus_cms_wechatmenu
+		w
+		left join kplus_interfaceconfig i
+		on
+		w.interfaceConfigID=i.mainID where
+		i.isDelete=0 and w.isDelete=0 and
+		w.parentID =#{parentID}
+	</select>
+
+</mapper>

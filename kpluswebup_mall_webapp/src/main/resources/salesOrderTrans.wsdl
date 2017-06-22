@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://localhost/services/salesOrderTrans" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://localhost/services/salesOrderTrans" xmlns:intf="http://localhost/services/salesOrderTrans" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+
+   <wsdl:message name="salesOrderTransSaveResponse">
+
+      <wsdl:part name="salesOrderTransSaveReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="salesOrderTransSaveRequest">
+
+      <wsdl:part name="xmlStr1" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="TransWS">
+
+      <wsdl:operation name="salesOrderTransSave" parameterOrder="xmlStr1">
+
+         <wsdl:input message="impl:salesOrderTransSaveRequest" name="salesOrderTransSaveRequest"/>
+
+         <wsdl:output message="impl:salesOrderTransSaveResponse" name="salesOrderTransSaveResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="salesOrderTransSoapBinding" type="impl:TransWS">
+
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="salesOrderTransSave">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="salesOrderTransSaveRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://control.order.web.wap.kpluswebup.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="salesOrderTransSaveResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/services/salesOrderTrans" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="TransWSService">
+
+      <wsdl:port binding="impl:salesOrderTransSoapBinding" name="salesOrderTrans">
+
+         <wsdlsoap:address location="http://localhost/services/salesOrderTrans"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

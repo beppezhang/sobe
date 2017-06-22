@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>编辑产品类型</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		 <div class="conTit">
+			<span>产品管理  》产品类型》编辑产品类型</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+		
+		<div class="tabBar clearfix">
+		#parse("layout/productType_menu.vm")
+			
+			<div class="contentRt">
+				<div class="contRt">
+				<form action="$!{domain}/admin/product/editProductType.htm" method="post">
+					<!--form  S------->
+					<div class="systemBar">
+						<dl class="formSet">
+							<input type="hidden" value="$!{productTypeVO.mainID}" class="cText cTextLen"  name="mainID" >
+							<dd class="clearfix">
+								<div class="formTt">产品类型编号：</div>
+								<div class="formRow">
+									<input type="text" value="$!{productTypeVO.mainID}" class="cText cTextLen"   disabled="disabled">
+								</div>
+							</dd>
+							<dd class="clearfix">
+								<div class="formTt">产品类型名称：</div>
+								<div class="formRow">
+									<input type="text"  class="cText cTextLen" value="$!{productTypeVO.name}" name="name">
+								</div>
+							</dd>
+							<dd class="clearfix">
+								<div class="formTt">产品类型描述：</div>
+								<div class="formRow">
+									<textarea rows="5" cols="80" name="description"> $!{productTypeVO.description}</textarea>
+								</div>
+							</dd>
+						
+
+							<dd class="clearfix">
+								<div class="formTt">&nbsp;</div>
+								<div style="margin-top: 15px;" class="formRow">
+								#if($!menuUtil.isExistMenu("/admin/product/editProductType.htm",$!menuAllList) ) 
+									<input type="submit" class="save" value="提交"> 
+									<input type="reset" name="cencle" class="cencle" value="重置">
+								#end	
+								</div>
+							</dd>
+						</dl>
+					</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+</body>
+<script type="text/javascript">
+$(function() {
+	$(".producttype_menu_1").append("<em class='icon arrowLfWeight'></em>")
+			.find("a").addClass("hover");
+})
+
+//菜单
+	$(".navLi").bind("mouseenter",function(){
+		$(this).closest(".navLi").find(".navUiSe").show();	
+	})
+	$(".navLi").bind("mouseleave",function(){
+		$(this).closest(".navLi").find(".navUiSe").hide();	
+	});
+	
+	//店面名称
+	$(".setInfoBar").bind("mouseenter",function(){
+		$(this).find(".setInfoList").show();
+	})
+	$(".setInfoBar").bind("mouseleave",function(){
+		$(this).find(".setInfoList").hide();
+	})
+	//显示头部消息
+	$("#sysInfo").bind("click",function(){
+		$("#headerInfo").show();
+	})
+	$("#headerInfo").bind("mouseleave",function(){
+		$("#headerInfo").hide();
+	})	
+	//搜索商店
+	$("#searchShop").inputFocus();	
+</script>
+</html>

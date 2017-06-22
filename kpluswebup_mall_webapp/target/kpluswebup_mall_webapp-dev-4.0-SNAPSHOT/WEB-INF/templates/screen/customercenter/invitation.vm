@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>会员邀请</title>
+</head>
+<body>
+<!-- sider tool bar  -->
+#parse("layout/head_top.vm")
+#parse("layout/customercenter/header.vm")
+<!-- crumb -->
+<div id="crumb">
+	<div class="layout clearfix">
+    	<a href="${domain}/index.htm">首页</a> &gt; <a href="${domain}/mall/buyer/userCenter.htm">用户中心</a>
+    </div>
+</div>
+<div class="layout mt10 clearfix">
+#parse("layout/customercenter/leftmenu.vm")	
+    <div class="mainbody bg">
+    	<div class="titbar_m mt10">
+        	<strong>会员邀请</strong>
+        </div>
+        <div class="invit_form">
+        	<h4>1、使用邮箱地址邀请</h4>
+            <dl class="clearfix mt20">
+            	<dt>Email:</dt>
+                <dd><input name="" type="text" class="ipt iptEmail" placeholder="请输入Email地址"><em class="prompt_1 col05"></em> </dd>
+                
+                <dd><input name="" type="button" class="sbtn sbtnEmail" value="确认邀请"></dd>
+            </dl>
+            <!-- <h4>2、使用手机号码邀请</h4>
+            <dl class="clearfix mt20">
+            	<dt>手机号码:</dt>
+                <dd><input name="" type="text" class="ipt" placeholder="请输入手机号码"> </dd>
+                <dd><input name="" type="button" class="sbtn sbtnSMS" value="确认邀请"></dd>
+            </dl> -->
+            <h4>2、使用链接地址邀请</h4>
+            <h5>您可以编辑并复制以下信息，到您的邮件或QQ群等渠道，实现快速邀请</h5>
+            <div class="copy_mes mt20">
+            	<p>这是卡塔网络购物平台，这是卡塔网络购物平台，这是卡塔网络购物平台，这是卡塔网络购物平台，
+				这是卡塔网络购物平台，这是卡塔网络购物平台</p>
+                <p class="mt10 col04"><a href="$!{domain}/mall/member/registerPage.htm?mainID=$!customerVO.mainID">请点击复制一下链接</a></p>
+                <p id="cpMes">$!{domain}/mall/member/registerPage.htm?mainID=$!customerVO.mainID</p>
+            </div>
+            <p class="mt20" style="padding-left:45px;"><input name="" type="button" class="sbtn" onClick="CopyUrl()" value="复制内容"></p>
+        </div>
+    </div>	
+</div>
+<!-- footer -->
+#parse("layout/footer.vm")
+<script type="text/javascript">
+jQuery(document).ready(function(){
+  jQuery("#user_invitation_list_cur").addClass("active cur").siblings(".level0").removeClass("cur");
+});
+</script>
+<script>
+function CopyUrl(){
+    var htm = document.getElementById("cpMes").innerHTML;
+	if ((navigator.userAgent.indexOf('MSIE') >= 0)  && (navigator.userAgent.indexOf('Opera') < 0)){
+		window.clipboardData.setData('text', htm);
+		alert('复制成功！')
+	}else{
+    	alert('您的浏览器不支持一键复制，请手动复制！')
+	}
+}
+jQuery(".sbtnEmail").click(function(){
+	var content = jQuery(".copy_mes").html();
+	var email = jQuery(".iptEmail").val();
+	var reEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	if(email == ""){
+		jQuery(".iptEmail").parent().find(".prompt_1").removeClass("ok").addClass("error").html("请输入Email地址!");	
+	}else if(!reEmail.test(email)){
+		jQuery(".iptEmail").parent().find(".prompt_1").removeClass("ok").addClass("error").html("请输入正确的Email地址!");	
+	}else{
+		jQuery(".sbtnEmail").css("font-size","12px").val("发送中,请稍后...");
+		jQuery(".iptEmail").parent().find(".prompt_1").removeClass("error").addClass("ok").html("");
+		jQuery.ajax({url : "ajaxSendEmail.do",
+					type : "POST",
+					data : {'email' : email,'content':content}, 
+				dataType : "json",
+				 success : function(data) {
+					if (data.code == 0) {
+					    if(data.result){
+					    	alert("发送成功");
+					    	jQuery(".sbtnEmail").css("font-size","12px").val("确认邀请");
+					    	jQuery(".iptEmail").val("");
+					    	//jQuery(".iptEmail").parent().find(".prompt_1").removeClass("error").addClass("ok").html("发送成功！");
+					    }else{
+					    	jQuery(".iptEmail").parent().find(".prompt_1").removeClass("ok").addClass("error").html("发送失败!");	
+					    }
+					} else {}
+			     },
+				  error : function() {}
+		 });
+	}
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>菜单权限</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》角色列表》菜单权限</span>
+		</div>
+		<div class="clear"></div>
+		<!--TAB S-->
+
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><a
+						href="$!{domain}/admin/system/editRolePage.htm?mainId=$!roleVO.mainID">基本信息</a>
+					</li>
+					<li><em class="icon arrowLfWeight"></em><a class="hover"
+						href="$!{domain}/admin/system/systemFunctionList.htm?mainID=$!roleVO.mainID">菜单权限</a>
+					</li>
+
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/system/addRoleFunction.htm"
+						method="post">
+						<input type="hidden" name="roleID" value="$!roleVO.mainID">
+						<input type="hidden" id="checkIdArr" name="functionIDs">
+						<!--form  S------->
+						<div class="tableListBar systemBar">
+							<div class="tableTool toolBar">
+								<a title="全选" href="javascript:;"><em
+									class="icon iconAllSel"></em></a> <a title="反选" href="javascript:;"><em
+									class="icon iconInverse"></em></a>
+							</div>
+							<dl class="formSet">
+								#foreach($!systemfunction in$!systemfunctionList)
+								<dd class="clearfix">
+									<fieldset class="fieldset">
+										<legend class="legend">
+											<span class="checkboxBar one-level"> <span
+												id="$!systemfunction.mainID"
+												class="checkboxSpan #if($!systemfunction.isCheck==true)hover#end"><input
+													class="checkbox" type="checkbox" name="checkName"
+													value="$!systemfunction.mainID"
+													id="check_box_$!systemfunction.mainID" /> </span><label
+												class="checkboxCont blueF" for="checkName">$!systemfunction.name</label>
+											</span>
+										</legend>
+										<table class="checkTable">
+											<tbody>
+												#foreach($!childSystemFunction in
+												$!systemfunction.childList)
+												<tr>
+													<td><span class="checkboxBar two-level"> <span
+															id="$!childSystemFunction.mainID"
+															class="checkboxSpan #if($!childSystemFunction.isCheck==true)hover#end"><input
+																class="checkbox" type="checkbox" name="checkName"
+																value="$!childSystemFunction.mainID"
+																id="check_box_$!childSystemFunction.mainID" /> </span><label
+															class="checkboxCont " for="checkName">$!childSystemFunction.name</label>
+													</span></td>
+													<td>#foreach($!threeChildSystemFunction in
+														$!childSystemFunction.childList) <span
+														class="checkboxBar three-level"><span
+															id="$!threeChildSystemFunction.mainID"
+															class="checkboxSpan #if($!threeChildSystemFunction.isCheck==true)hover#end"><input
+																class="checkbox" type="checkbox" name="checkName"
+																value="$!threeChildSystemFunction.mainID"
+																id="check_box_$!threeChildSystemFunction.mainID" /> </span><label
+															class="checkboxCont" for="checkName">$!threeChildSystemFunction.name</label>
+													</span> #end
+													</td>
+												</tr>
+												#end
+											</tbody>
+										</table>
+									</fieldset>
+								</dd>
+								#end
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div class="formRow" style="margin-top: 15px;">
+										<input type="submit" value="提交" class="save" name="save">
+										<input type="reset" value="取消" class="cencle" name="cencle">
+									</div>
+								</dd>
+							</dl>
+						</div>
+						<!--form  E------->
+					</form>
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".tableTool a").bind("click", function() {
+				if ($(this).attr("title") == "全选") {
+					$(".formSet .checkboxSpan").addClass("hover");
+				} else {
+					$(".formSet .checkboxSpan").removeClass("hover");
+				}
+			})
+			$(".checkboxBar").bind(
+					"click",
+					function() {
+						if ($(this).find(".checkboxSpan").hasClass("hover")) {
+							if ($(this).hasClass("one-level")) {
+								$(this).parents("dd").find(".checkboxSpan")
+										.addClass("hover");
+							} else if ($(this).hasClass("two-level")) {
+								$(this).parents("tr").find(".checkboxSpan")
+										.addClass("hover");
+								$(this).parents("dd").find(".one-level").find(
+										".checkboxSpan").addClass("hover");
+							} else {
+								$(this).parents("tr").find(".two-level").find(
+										".checkboxSpan").addClass("hover");
+								$(this).parents("dd").find(".one-level").find(
+										".checkboxSpan").addClass("hover");
+							}
+						} else {
+							if ($(this).hasClass("one-level")) {
+								$(this).parents("dd").find(".checkboxSpan")
+										.removeClass("hover");
+							} else if ($(this).hasClass("two-level")) {
+								$(this).parents("tr").find(".checkboxSpan")
+										.removeClass("hover");
+								$(this).parents("dd").find(".one-level").find(
+										".checkboxSpan").removeClass("hover");
+								$(this).parents("dd").find(".two-level").find(
+										".checkboxSpan").each(
+										function() {
+											if ($(this).hasClass("hover")) {
+												$(this).parents("dd").find(
+														".one-level").find(
+														".checkboxSpan")
+														.addClass("hover");
+											}
+										})
+							} else {
+							}
+						}
+					})
+			$(".save").bind("click", function() {
+				var _str = "";
+				$(".checkboxSpan").each(function() {
+					if ($(this).hasClass("hover")) {
+						_str += $(this).attr("id") + ",";
+					}
+				})
+				$("#checkIdArr").val("");
+				$("#checkIdArr").val(_str);
+			})
+		})
+	</script>
+	<script type="text/javascript">
+		$(function() {
+			$(".operator_menu_3")
+					.append("<em class='icon arrowLfWeight'></em>").find("a")
+					.addClass("hover");
+		})
+	</script>
+</body>
+</html>

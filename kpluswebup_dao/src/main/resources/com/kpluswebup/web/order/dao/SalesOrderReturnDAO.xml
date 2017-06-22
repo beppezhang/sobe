@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.order.dao.SalesOrderReturnDAO">
+
+	<sql id="Base_Column_List">
+		id,mainID, retrunApplyID, customerID, salesOrderID,
+		productID, itemID,
+		returnType, count,
+		returnAmount, returnScore,memo,
+		paymentStatus,
+		status, expressID, expressNumber, isDelete,
+		creator,
+		createTime,
+		modifier, modifyTime
+	</sql>
+
+	<select id="selectByPrimaryKey" resultType="salesOrderReturnVO"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_salesorder_return
+		where id = #{id}
+	</select>
+
+	<select id="findSalesOrderReturnByRetrunApplyID" resultType="salesOrderReturnVO"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from kplus_salesorder_return
+		where retrunApplyID = #{retrunApplyID}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		kplus_salesorder_return
+		where id = #{id}
+	</delete>
+
+	<insert id="addSalesOrderReturnSelective" parameterType="salesOrderReturnDTO">
+		insert into kplus_salesorder_return
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="mainID != null">
+				mainID,
+			</if>
+			<if test="retrunApplyID != null">
+				retrunApplyID,
+			</if>
+			<if test="customerID != null">
+				customerID,
+			</if>
+			<if test="salesOrderID != null">
+				salesOrderID,
+			</if>
+			<if test="productID != null">
+				productID,
+			</if>
+			<if test="itemID != null">
+				itemID,
+			</if>
+			<if test="returnType != null">
+				returnType,
+			</if>
+			<if test="count != null">
+				count,
+			</if>
+			<if test="returnAmount != null">
+				returnAmount,
+			</if>
+			<if test="returnScore != null">
+				returnScore,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="paymentStatus != null">
+				paymentStatus,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="expressID != null">
+				expressID,
+			</if>
+			<if test="expressNumber != null">
+				expressNumber,
+			</if>
+			<if test="isDelete != null">
+				isDelete,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				createTime
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="mainID != null">
+				#{mainID},
+			</if>
+			<if test="retrunApplyID != null">
+				#{retrunApplyID},
+			</if>
+			<if test="customerID != null">
+				#{customerID},
+			</if>
+			<if test="salesOrderID != null">
+				#{salesOrderID},
+			</if>
+			<if test="productID != null">
+				#{productID},
+			</if>
+			<if test="itemID != null">
+				#{itemID},
+			</if>
+			<if test="returnType != null">
+				#{returnType},
+			</if>
+			<if test="count != null">
+				#{count},
+			</if>
+			<if test="returnAmount != null">
+				#{returnAmount},
+			</if>
+			<if test="returnScore != null">
+				#{returnScore},
+			</if>
+			<if test="memo != null">
+				#{memo},
+			</if>
+			<if test="paymentStatus != null">
+				#{paymentStatus},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="expressID != null">
+				#{expressID},
+			</if>
+			<if test="expressNumber != null">
+				#{expressNumber},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete},
+			</if>
+			<if test="creator != null">
+				#{creator},
+			</if>
+			<if test="createTime != null">
+				#{createTime}
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="addSalesOrderReturnApply" parameterType="salesOrderReturnApplyDTO">
+		insert into
+		kplus_salesorder_returnapply(
+		mainID,
+		customerID,
+		salesOrderID,
+		returnType,
+		status,
+		isDelete,
+		createTime
+		)
+		values(
+		#{mainID},
+		#{customerID},
+		#{salesOrderID},
+		#{returnType},
+		#{status},
+		0,
+		now()
+		)
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="salesOrderReturnDTO">
+		update kplus_salesorder_return
+		<set>
+			<if test="mainID != null">
+				mainID = #{mainID},
+			</if>
+			<if test="retrunApplyID != null">
+				retrunApplyID = #{retrunApplyID},
+			</if>
+			<if test="customerID != null">
+				customerID = #{customerID},
+			</if>
+			<if test="salesOrderID != null">
+				salesOrderID = #{salesOrderID},
+			</if>
+			<if test="productID != null">
+				productID = #{productID},
+			</if>
+			<if test="itemID != null">
+				itemID = #{itemID},
+			</if>
+			<if test="returnType != null">
+				returnType = #{returnType},
+			</if>
+			<if test="count != null">
+				count = #{count},
+			</if>
+			<if test="returnAmount != null">
+				returnAmount = #{returnAmount},
+			</if>
+			<if test="returnScore != null">
+				returnScore = #{returnScore},
+			</if>
+			<if test="memo != null">
+				memo = #{memo},
+			</if>
+			<if test="paymentStatus != null">
+				paymentStatus = #{paymentStatus},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="expressID != null">
+				expressID = #{expressID},
+			</if>
+			<if test="expressNumber != null">
+				expressNumber = #{expressNumber},
+			</if>
+			<if test="isDelete != null">
+				isDelete = #{isDelete},
+			</if>
+			<if test="creator != null">
+				creator = #{creator},
+			</if>
+			<if test="createTime != null">
+				createTime = #{createTime},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime = #{modifyTime}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="updateByRetrunApplyIDSelective" parameterType="salesOrderReturnDTO">
+		update kplus_salesorder_return
+		<set>
+			<if test="mainID != null">
+				mainID = #{mainID},
+			</if>
+			<if test="retrunApplyID != null">
+				retrunApplyID = #{retrunApplyID},
+			</if>
+			<if test="customerID != null">
+				customerID = #{customerID},
+			</if>
+			<if test="salesOrderID != null">
+				salesOrderID = #{salesOrderID},
+			</if>
+			<if test="productID != null">
+				productID = #{productID},
+			</if>
+			<if test="itemID != null">
+				itemID = #{itemID},
+			</if>
+			<if test="returnType != null">
+				returnType = #{returnType},
+			</if>
+			<if test="count != null">
+				count = #{count},
+			</if>
+			<if test="returnAmount != null">
+				returnAmount = #{returnAmount},
+			</if>
+			<if test="returnScore != null">
+				returnScore = #{returnScore},
+			</if>
+			<if test="memo != null">
+				memo = #{memo},
+			</if>
+			<if test="paymentStatus != null">
+				paymentStatus = #{paymentStatus},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="expressID != null">
+				expressID = #{expressID},
+			</if>
+			<if test="expressNumber != null">
+				expressNumber = #{expressNumber},
+			</if>
+			<if test="isDelete != null">
+				isDelete = #{isDelete},
+			</if>
+			<if test="creator != null">
+				creator = #{creator},
+			</if>
+			<if test="createTime != null">
+				createTime = #{createTime},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier},
+			</if>
+			<if test="modifyTime != null">
+				modifyTime = #{modifyTime}
+			</if>
+		</set>
+		where retrunApplyID = #{retrunApplyID}
+	</update>
+
+
+	<select id="findSalesOrderReturnByMainID" parameterType="java.lang.String"
+		resultType="salesOrderReturnVO">
+		select r.*,p.name as productName,i.name as
+		itemName,i.salesPrice,sr.createTime as applyTime from
+		kplus_salesorder_return r
+		left join kplus_product p on
+		r.productID=p.mainID
+		left join kplus_item i on r.itemID=i.mainID
+		left
+		join kplus_salesorder_returnapply sr on r.retrunApplyID=sr.mainID
+		where r.isDelete=0 and
+		r.mainID=#{mainID}
+	</select>
+
+</mapper>

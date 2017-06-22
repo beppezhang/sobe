@@ -1,0 +1,227 @@
+<div id="header">
+	<div class="layout clearfix">
+    	<div class="logo lt">
+        	<a href="/index.htm">
+                    	#if("$!shopLogo"!="")
+	            <img style="  width: 200px;  height: 70px;" src="$!{mallStatic}$!shopLogo">
+                    	 #else
+				<img style="  width: 200px;  height: 70px;" src="$!{mallStatic}/img/logo/soubei_logo.png">
+                     	#end
+        		
+        	</a>
+        	
+        </div>
+        <div class="searchBox" id="searchBox">
+         <ul>
+         		<!-- Original
+                <li class="cur" data="输入产品名称" data1="sear">宝贝</li>
+                <li data="输入店铺名称" data1="sear1">店铺</li>
+                -->
+                #if("$!searchModel"=="product" || "$!searchModel"=="")
+					<li class="cur" data="请输入产品名称" searchModel='product'><a href="javascript:product_normal()">关键字$!shopLogo</a></li>
+	                <li data="请输入VIN" searchModel='vin'><a href="javascript:vin()">VIN</a></li>
+	                <li data="请输入OEM" searchModel='oem'><a href="javascript:oem()">OEM</a></li>                
+                #end
+                #if("$!searchModel"=="vin")
+					<li data="请输入产品名称" searchModel='product'><a href="javascript:product_normal()">关键字</a></li>
+	                <li class="cur" data="请输入VIN" searchModel='vin' ><a href="javascript:vin()">VIN</a></li>
+	                <li data="请输入OEM" searchModel='oem'><a href="javascript:oem()">OEM</a></li>                
+                #end
+                #if("$!searchModel"=="oem")
+					<li data="请输入产品名称" searchModel='product'><a href="javascript:product_normal()">关键字</a></li>
+	                <li data="请输入VIN" searchModel='vin'><a href="javascript:vin()">VIN</a></li>
+	                <li class="cur" data="请输入OEM" searchModel='oem' ><a href="javascript:oem()">OEM</a></li>                
+                #end                                
+                
+                
+            </ul>
+        	<div class="searchBar clearfix">
+            	<input name="" id="ppname" type="text" class="ipt" value="$!pname" 
+            	placeholder="#if("$!searchModel"=="product" || "$!searchModel"=="")请输入产品名称 #end  #if("$!searchModel"=="vin")请输入VIN #end  #if("$!searchModel"=="oem")请输入OEM #end " 
+            	onkeydown="return disableEnter(event);"><input name="" type="button" id="sear" class="btn" value="搜索">
+            </div>
+            <p class="hotLinks"><a></a><!-- <a href="#" class="hot">三星手机</a><a href="#">华为手机</a><a href="#">联想手机</a><a href="#">Nokia</a><a href="#">iPhone</a>--></p> 
+        </div>
+        <!--
+        <div class="shopCart">
+        	<span class="icon"></span><a href="/shoppingCart1.htm">购物车(<em class="col03">#if("$!{user.shoppingcartCount}"=="")0#else$!{user.shoppingcartCount}#end</em>)</a>
+        </div>
+        -->
+    </div>
+</div>
+<input type="hidden" value="$!searchModel" name="searchModel" id="searchModel">
+<script type="text/javascript" src="$!{mallStatic}/js/jquery-1.11.0.min.js"></script>
+<script>
+//产品名称
+function product_normal()
+{
+	$("#searchModel").val("product");
+}
+function vin()
+{
+	$("#searchModel").val("vin");
+}
+function oem()
+{
+	$("#searchModel").val("oem");
+}
+function disableEnter(event){
+	var keyCode = event.keyCode?event.keyCode:event.which?event.which:event.charCode;
+	if (keyCode ==13){
+	// 此处处理回车动作
+		searchBar();
+	}
+}
+
+//宝贝店铺切换
+$(".searchBox ul li").click(function(){
+    $(this).addClass("cur").siblings().removeClass("cur");
+    var data = $(this).attr("data");
+    $(".searchBox .searchBar .ipt").attr("placeholder",data);
+    $(".searchBox .searchBar .btn").attr("id",$(this).attr("data1"));
+})	
+
+function searchBar()
+{
+	//_searchModel = $("#searchModel").val();
+				var _searchModelObj = $("#searchBox").find(".cur").each(function(){
+				    var _this = $(this);
+				    //判断data
+				    if(_this.attr("searchModel")){
+				   		console.debug(_this.attr("searchModel")); 
+				   		_searchModel = _this.attr("searchModel");  
+				    }
+				});
+				//_searchModel = _searchModelObj.attr("searchModel");
+				
+				var productType = $("#productType").val();
+				if(undefined==productType){
+					productType='';
+				};
+				if(typeof(productType) == "undefined"){
+					productType='';
+				};
+				var vehicleTypeId = $("#vehicleTypeId").val();
+				if(undefined==vehicleTypeId){
+					vehicleTypeId='';
+				};
+				if(typeof(vehicleTypeId) == "undefined"){
+					vehicleTypeId='';
+				};				
+				var brandID = $("#brandID").val();
+				if(typeof(brandID) == "undefined"){
+					brandID='';
+				};					
+
+				var partsCategoryId = $("#partsCategoryId").val();
+				if(typeof(partsCategoryId) == "undefined"){
+					partsCategoryId='';
+				};	
+				var partsCategoryFLevel = $("#partsCategoryFLevel").val();
+				if(typeof(partsCategoryFLevel) == "undefined"){
+					partsCategoryFLevel='';
+				};									
+				
+				if('vin'==_searchModel)
+				{
+					brandID='';
+					partsCategoryId='';
+					partsCategoryFLevel='';
+				}
+				
+				//关键字搜索
+				if('product' == _searchModel)
+				{
+					location.href="${domain}/mall/product/productForKeySearch.htm?keyword="+$("#ppname").val();
+					return;
+				}
+				if('vin' == _searchModel)
+				{
+					location.href="${domain}/mall/product/searchProductListByVIN.htm?vin="+$("#ppname").val();
+					return;
+				}
+				if('oem' == _searchModel)
+				{
+					location.href="${domain}/mall/product/searchProductListByOEM.htm?oem="+$("#ppname").val();
+					return;
+				}				 	
+				
+			//	location.href="${domain}/mall/product/searchProductList.htm?productType="+productType+"&name="+$("#ppname").val();
+				location.href="${domain}/mall/product/searchProductList.htm?productType="+productType+"&name="+$("#ppname").val()+"&searchModel="+_searchModel+"&vehicleTypeId="+vehicleTypeId
+				+"&brandID="+brandID+"&partsCategoryId="+partsCategoryId+"&partsCategoryFLevel="+partsCategoryFLevel;	
+}
+  
+	$(".searchBox .searchBar .btn").click(
+		function(){
+			var idV = $(this).attr("id");
+			if(idV=="sear"){
+				
+				searchBar();
+			
+			}else if(idV=="sear1"){
+				location.href="${domain}/mall/product/searchShopList.htm?name="+$("#ppname").val();
+			}
+		}		
+	);
+	/* jQuery("#sear1").click(
+		function(){
+			alert('店铺')
+			location.href="/mall/product/searchShopList.htm?name="+$("#ppname").val();
+		}		
+	) */
+/* 以下代码实现placeholder的兼容问题
+ * jQuery placeholder, fix for IE6,7,8,9
+ * @author JENA
+ * @since 20131115.1504
+ * @website ishere.cn
+ */
+var hasFix = new Array();
+var JPlaceHolder = {
+    //检测
+    _check : function(){
+        return 'placeholder' in document.createElement('input');
+    },
+    //初始化
+    init : function(){
+        if(!this._check()){
+           this.fix();
+        }
+    },
+    //修复
+    fix : function(){
+ 
+	        jQuery(':input[placeholder]').each(function(index, element) {
+	        	var self = $(this), txt = self.attr('placeholder');
+	         	if(!hasFix[index]){
+		            self.wrap($('<div></div>').css({position:'relative', zoom:'1', border:'none', background:'none', padding:'none', margin:'none'}));
+		            var pos = self.position(), h = self.outerHeight(), paddingleft = self.css('padding-left');
+		            var holder = $('<span></span>').text(txt).css({position:'absolute', left:pos.left, top:pos.top, height:h, paddingLeft:paddingleft, color:'#aaa',lineHeight:''+h+'px'}).appendTo(self.parent());
+
+		            self.focusin(function(e) {
+		                holder.hide();
+		            }).focusout(function(e) {
+		                if(!self.val()){
+		                    holder.show();
+		                }
+		            });
+		            holder.click(function(e) {
+		                holder.hide();
+		                self.focus();
+		            });
+		            hasFix[index] = 1;
+		            }else{
+		            	self.next().text(txt)
+		            };
+	        });
+	      	
+ 
+    }
+};
+//执行
+jQuery(function(){
+    JPlaceHolder.init();
+});
+$("#searchBox li").click(function(){
+	JPlaceHolder.init();
+})
+</script>

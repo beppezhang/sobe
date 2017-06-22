@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增供应商</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+label.error {
+height: 16px;
+  line-height: 16px;
+  padding-left: 18px;
+  margin-left: 10px;
+  display: inline-block;
+	  background: url(${mallStatic}/images/icons_9.png) no-repeat left center;
+	  color: #f67649;
+  }
+label.ok {
+  height: 16px;
+  line-height: 16px;
+  padding-left: 18px;
+  margin-left: 10px;
+  display: inline-block;
+  background: url(${mallStatic}/images/icons_8.png) no-repeat left center;
+  color: #196c18;
+  }
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>供应商管理 》供应商列表 》新增供应商</span>
+		</div>
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					<li><em class="icon arrowLfWeight"></em> <a
+						href="javascript:;" class="hover">新增供应商</a></li>
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<form action="$!{domain}/admin/supplier/addSupplier.htm" method="post" id="submitForm">
+						<input type="hidden" value="$!{supplierDTO.mainID}" name="mainId"
+							id="mainId">
+						<!--form  S------->
+						<div class="systemBar">
+							<dl class="formSet">
+							   <dd class="clearfix">
+									<div class="formTt">用户名：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierDTO.userName}" id="userName"
+											name="userName2" class="cText cTextLen">
+											<label id="userName-error2"></label>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">密码：</div>
+									<div class="formRow">
+										<input type="passWord" value="$!{supplierDTO.passWord}" id="passWord"
+											name="passWord" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">手机号码：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierDTO.mobile}" id="mobile"
+											name="mobile" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">公司名称：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierDTO.companyName}" id="companyName"
+											name="companyName2" class="cText cTextLen">
+											<label id="companyName-error2"></label>
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">联系人姓名：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierDTO.linkMan}" id="linkMan"
+											name="linkMan" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">保证金：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierDTO.cashDep}" id="cashDep"
+											name="cashDep" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">开户行：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierDTO.openingBank}" id="openingBank" 
+											name="openingBank" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">银行账号：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierDTO.bankAccount}" id="bankAccount"
+											name="bankAccount" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">取件地址：</div>
+									<div class="formRow">
+										<input type="text" value="$!{supplierDTO.address}" id="address"
+											name="address" class="cText cTextLen">
+									</div>
+								</dd>
+								<dd class="clearfix">
+									<div class="formTt">&nbsp;</div>
+									<div style="margin-top: 15px;" class="formRow">
+										#if($!menuUtil.isExistMenu("/admin/supplier/addSupplier.htm",$!menuAllList)
+										) <input type="button" class="save" value="提交"> <input
+											type="reset" name="cencle" class="cencle" value="重置">
+										#end
+									</div>
+								</dd>
+								
+							</dl>
+						</div>
+					</form>
+					<!--form  E------->
+				</div>
+			</div>
+		</div>
+		<!--TAB e-->
+	</div>
+	#parse("layout/footer.vm")
+	<script type="text/javascript">
+		//如果 username 的后面存在“必填字段”提示则不显示“用户名已存在”的提示
+		// $("#userName").change(function(){
+			// if ($("#userName-error").css("display") != "none"){
+				// $("#userName-error2").removeClass().text("");
+			// }
+		// });
+
+		//如果 companyName 的后面存在“必填字段”提示则不显示“用户名已存在”的提示
+		// $("#companyName").change(function(){
+			// if ($("#companyName-error").css("display") != "none"){
+				// $("#companyName-error2").removeClass().text("");
+			// }
+		// });
+		
+		jQuery(".save").click(function(){
+			jQuery("#userName").blur();
+			jQuery("#companyName").blur();
+			
+	    	//页面中只要有一个输入框验证出现问题就会动态添加一个class为error的标签，
+	    	//如果进行下面的判断那么我即使改正过来也没法提交
+			//var errorObj = jQuery(".error");
+	    	// if(errorObj.length>0){
+				 // return;    		
+	    	// }else{
+	    		// jQuery("#submitForm").submit();
+	    	// }
+	    	
+		     //取所有class为error的标签，并遍历
+		     var $errorObj = jQuery(".error");
+		     for (var i=0;i<$errorObj.length;i++){
+		     	if($errorObj.eq(i).css("display")!="none"){
+		     		alert("您当前提交的信息不合规范，请审查修改后提交！");
+		     		return;
+		     	}
+		     }
+		     jQuery("#submitForm").submit();
+		});
+	    jQuery("#userName").blur(function(){
+	    	var userName = jQuery(this).val();
+	    	if( userName != ""){
+		    	jQuery.ajax({
+					url : "/admin/supplier/ajaxCheckUserName.do",
+					type : "POST",
+					data : {
+						userName : userName
+					},
+					dataType : "json",
+					success : function(data) {
+						if(data.code != 0){
+							jQuery(this).addClass("valid");
+							$("#userName-error2").text("此用户名已存在！！");
+							jQuery("#userName-error2").addClass("error").removeClass("ok");
+						}else{
+							$("#userName-error2").text("");
+							jQuery("#userName-error2").addClass("ok").removeClass("error");
+						}
+					}
+				});
+	    	}else{
+				$("#userName-error2").text("必填字段");
+				jQuery("#userName-error2").removeClass().addClass("error");
+	    	}
+	    });
+	    jQuery("#companyName").blur(function(){
+	    	var companyName = jQuery(this).val();
+	    	if(companyName != ""){
+		    	jQuery.ajax({
+					url : "/admin/supplier/ajaxCheckCompanyName.do",
+					type : "POST",
+					data : {
+						companyName : companyName
+					},
+					dataType : "json",
+					success : function(data) {
+						if(data.code != 0){
+							jQuery(this).addClass("valid");
+							$("#companyName-error2").text("此公司名称已存在！请换一个！");
+							jQuery("#companyName-error2").addClass("error").removeClass("ok");
+							
+						}else{
+							$("#companyName-error2").text("");
+							jQuery("#companyName-error2").addClass("ok").removeClass("error");
+						}
+					}
+				});
+	    	}else{
+				$("#companyName-error2").text("必填字段");
+				jQuery("#companyName-error2").removeClass().addClass("error");
+	    	}
+	    });
+	</script>
+</body>
+</html>

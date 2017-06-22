@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OrderRequest>
+	<Partners>JK00010</Partners>
+	<Md5Key>7549b12432a772f54b739eb6353a8bdb</Md5Key>
+	<Orders>
+		<order>
+			<DoIds>33333</DoIds>
+			<BillNo>83000138482</BillNo>
+			<ChildsNo></ChildsNo>
+			<Product>null</Product>
+			<Count>4</Count>
+			<Weight>0</Weight>
+			<Value>3179.0</Value>
+			<CodAmt>3179.0</CodAmt>
+			<TopaymentAmt>3179.0</TopaymentAmt>
+			<ReceiptNo></ReceiptNo>
+			<Remark></Remark>
+			<PaymentType>0</PaymentType>
+			<Sender>
+				<Name>null</Name>
+				<Tel>null</Tel>
+				<Company />
+				<Addr>null</Addr>
+			</Sender>
+			<Receiver>
+				<Name>杰克si</Name>
+				<Tel>15656291061</Tel>
+				<Company></Company>
+				<Addr>文一西路776号</Addr>
+			</Receiver>
+			<ExtendField1 />
+			<ExtendField2 />
+			<ExtendField3 />
+		</order>
+	</Orders>
+</OrderRequest>

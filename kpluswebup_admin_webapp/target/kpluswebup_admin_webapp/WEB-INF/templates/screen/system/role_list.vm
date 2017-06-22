@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>角色列表</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<span>系统配置 》角色列表</span>
+		</div>
+		<div class="tabBar clearfix">
+			#parse("layout/operator_menu.vm")
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="tableListBar">
+						<div class="tableTool">
+							#if($!menuUtil.isExistMenu("/admin/system/addRolePage.htm",$!menuAllList)
+							) <a href="$!{domain}/admin/system/addRolePage.htm" class="TableAddBtn"  title="新增角色">+新增角色</a>#end
+						</div>
+						<form id="serachform" name="serachform" method="post"
+							action="$!{domain}/admin/system/roleList.htm">
+							<input type="hidden" id="pageNo" name="pageNo"
+								value="$!roleDTO.pageNo"> <input type="hidden"
+								id="pageSize" name="pageSize" value="$!roleDTO.pageSize">
+						</form>
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td>名称</td>
+									<td>描述</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!role in $!roleList)
+								<tr>
+									<td>$!role.name</td>
+									<td>$!role.description</td>
+									<td class="last">
+										#if($!menuUtil.isExistMenu("/admin/system/editRolePage.htm",$!menuAllList)
+										) <a class="icon iconEdit"
+										href="$!{domain}/admin/system/editRolePage.htm?mainID=$!role.mainID"
+										title="编辑"></a> #end &nbsp;
+										#if($!menuUtil.isExistMenu("/admin/system/systemFunctionList.htm",$!menuAllList)
+										) <a
+										href="$!{domain}/admin/system/systemFunctionList.htm?mainID=$!role.mainID">菜单权限</a> #end &nbsp;
+										#if($!menuUtil.isExistMenu("/admin/system/deleteRole.do",$!menuAllList)
+										) <a href="javascript:;" class="icon iconDel"
+										onclick="deleteRole('$!{role.mainID}')" title="删除"></a> #end
+									</td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!roleDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function() {
+			$(".operator_menu_3")
+					.append("<em class='icon arrowLfWeight'></em>").find("a")
+					.addClass("hover");
+		})
+	</script>
+</body>
+</html>

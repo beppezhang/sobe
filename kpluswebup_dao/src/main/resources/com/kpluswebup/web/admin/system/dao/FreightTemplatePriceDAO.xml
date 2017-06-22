@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.FreightTemplatePriceDAO">
+
+	<select id="findFreightTemplatePriceByFTID" parameterType="java.lang.String"
+		resultType="freightTemplatePriceVO">
+		select * from kplus_freighttemplate_price where isDelete=0
+		and
+		freightTemplateID=#{freightTemplateID}
+	</select>
+
+	<insert id="insertFreightTemplatePrice" parameterType="freightTemplatePriceDTO">
+		insert
+		into
+		kplus_freighttemplate_price(
+		mainID,
+		freightTemplateID,
+		firstCondition,
+		firstPrice,
+		addUnit,
+		addPrice,
+		isDelete,
+		createTime,
+		creator
+		)values(
+		#{mainID},
+		#{freightTemplateID},
+		#{firstCondition},
+		#{firstPrice},
+		#{addUnit},
+		#{addPrice},
+		0,
+		now(),
+		#{creator}
+		)
+	</insert>
+
+	<update id="deleteFreightTemplatePriceByFTID" parameterType="java.lang.String">
+		update
+		kplus_freighttemplate_price set isDelete=1 where
+		freightTemplateID=#{freightTemplateID}
+	</update>
+
+	<insert id="insertFreightTemplatePriceAreaSet" parameterType="freightTemplatePriceAreaSetDTO">
+		insert into kplus_freighttemplate_priceareaset(
+		fTPriceID,
+		areaDepth,
+		areaID
+		)values(
+		#{fTPriceID},
+		#{areaDepth},
+		#{areaID}
+		)
+	</insert>
+	<delete id="deleteFreightTemplatePriceAreaSet" parameterType="java.lang.String">
+		delete from kplus_freighttemplate_priceareaset where
+		fTPriceID=#{fTPriceID}
+	</delete>
+	<insert id="insertFreightTemplatePriceArea" parameterType="freightTemplatePriceAreaDTO">
+		insert into kplus_freighttemplate_pricearea(
+		fTPriceID,
+		countryID,
+		provinceID,
+		cityID,
+		districtID,
+		creator,
+		createTime
+		)values(
+		#{fTPriceID},
+		#{countryID},
+		#{provinceID},
+		#{cityID},
+		#{districtID},
+		#{creator},
+		now()
+		)
+	</insert>
+	<delete id="deleteFreightTemplatePriceArea" parameterType="java.lang.String">
+		delete from kplus_freighttemplate_pricearea where
+		fTPriceID=#{fTPriceID}
+	</delete>
+
+	<select id="findFreightTemplatePriceAreaSetByFTPID"
+		parameterType="freightTemplatePriceAreaSetDTO" resultType="freightTemplatePriceAreaSetVO">
+		select p.*,a.name as areaName from
+		kplus_freighttemplate_priceareaset p
+		left join kplus_area a on
+		p.areaID=a.mainID
+		where
+		fTPriceID=#{fTPriceID}
+		<if test="areaDepth!=null">
+			and p.areaDepth=#{areaDepth}
+		</if>
+	</select>
+
+	<select id="findFreightTemplatePriceAreaByCityID" parameterType="java.lang.String"
+		resultType="freightTemplatePriceAreaVO">
+		select * from kplus_freighttemplate_pricearea where
+		cityID=#{cityID}
+	</select>
+
+	<select id="findFreightTempatePriceByMainID" parameterType="java.lang.String"
+		resultType="freightTemplatePriceVO">
+		select * from kplus_freighttemplate_price where mainID=#{mainID}
+	</select>
+	<select id="findFreightTemplatePriceByUserAndProduct" parameterType="Map"
+		resultType="freightTemplatePriceVO">
+		select r.* from kplus_product p INNER JOIN kplus_freighttemplate f on p.freightTemplateID=f.mainID 
+		INNER JOIN kplus_freighttemplate_price r on f.mainID=r.freightTemplateID 
+		INNER JOIN kplus_freighttemplate_pricearea a on r.mainID=a.fTPriceID
+		where p.mainID=#{mainID} and a.cityID=#{cityID}
+	</select>
+
+	<select id="findFreightTemplatePriceByUserAndItem" parameterType="Map"
+		resultType="freightTemplatePriceVO">
+		select r.* from kplus_item i INNER JOIN kplus_freighttemplate f on i.freightTemplateID=f.mainID 
+		INNER JOIN kplus_freighttemplate_price r on f.mainID=r.freightTemplateID 
+		INNER JOIN kplus_freighttemplate_pricearea a on r.mainID=a.fTPriceID
+		where i.mainID=#{mainID} and a.cityID=#{cityID}
+	</select>
+
+</mapper>

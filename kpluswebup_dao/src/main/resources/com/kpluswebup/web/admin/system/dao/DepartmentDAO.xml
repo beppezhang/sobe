@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kpluswebup.web.admin.system.dao.DepartmentDAO">
+
+	<select id="findDepartmentByPagination" parameterType="departmentDTO"
+		resultType="departmentVO">
+		select * from
+		kplus_department where isDelete=0 order by id
+		desc limit #{startRow} ,#{pageSize}
+	</select>
+
+	<select id="findDepartmentCount" parameterType="departmentDTO"
+		resultType="java.lang.Long">
+		select count(mainID) from kplus_department where isDelete=0
+	</select>
+
+	<insert id="insertDepartment" parameterType="departmentDTO">
+		insert into
+		kplus_department(
+		mainID,
+		name,
+		description,
+		isDelete,
+		createTime,
+		creator
+		)values(
+		#{mainID},
+		#{name},
+		#{description},
+		0,
+		now(),
+		#{creator}
+		)
+	</insert>
+
+	<select id="findDepartmentByMainID" parameterType="java.lang.String"
+		resultType="departmentVO">
+		select * from kplus_department where isDelete=0 and
+		mainID=#{mainID}
+	</select>
+
+	<update id="updateDepartment" parameterType="departmentDTO">
+		update kplus_department
+		<set>
+			modifyTime=now()
+			<if test="name!=null">
+				,name=#{name}
+			</if>
+			<if test="description!=null">
+				,description=#{description}
+			</if>
+			<if test="modifier!=null">
+				,modifier=#{modifier}
+			</if>
+		</set>
+		where mainID=#{mainID}
+	</update>
+
+	<update id="deleteDepartmentByMainID" parameterType="java.lang.String">
+		update
+		kplus_department set isDelete=1 where mainID=#{mainID}
+	</update>
+
+	<select id="findDepartmentAll" resultType="departmentVO">
+		select * from
+		kplus_department where isDelete=0
+	</select>
+</mapper>

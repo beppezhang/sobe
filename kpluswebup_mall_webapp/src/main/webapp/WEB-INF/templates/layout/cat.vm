@@ -1,0 +1,8 @@
+<div id="subnav">
+	<div class="layout clearfix">
+		<ul class="subnavbar">
+			#foreach($!productCategoryVO in $!productCategoryList)
+			<li><a href="$!{domain}/mall/product/productCat.htm?catID=$!productCategoryVO.mainID">$!productCategoryVO.name</a></li> #end
+		</ul>
+	</div>
+</div>

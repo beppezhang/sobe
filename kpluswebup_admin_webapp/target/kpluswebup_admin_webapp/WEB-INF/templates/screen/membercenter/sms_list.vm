@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>短信</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm")
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<em class="icon iconMenu1 "></em><a href="memberList.htm">会员中心</a>
+			&gt; <span>短信</span>
+		</div>
+		<div class="searchBar">
+			<form id="serachform" name="serachform" method="post"
+				action="$!{domain}/admin/member/smsList.htm">
+				<input type="hidden" id="pageNo" name="pageNo"
+					value="$!smsDTO.pageNo"> <input type="hidden" id="pageSize"
+					name="pageSize" value="$!smsDTO.pageSize">
+				<div class="tableTool">
+					<table class="searchTable">
+						<tbody>
+							<tr>
+								<td><span class="grayF">用户名：</span><input type="text"
+									name="searchUserName" class="cText"
+									value="$!smsDTO.searchUserName" /></td>
+								<td><span class="grayF">手机号：</span><input type="text"
+									name="searchMobile" class="cText" value="$!smsDTO.mobile" /></td>
+								<td><span class="grayF">姓名：</span><input type="text"
+									name="searchCustomerName" class="cText"
+									value="$!smsDTO.searchCustomerName" /></td>
+								<td><span class="grayF">状态：</span> <select class="select"
+									name="searchStatus">
+										<option value="">全部</option>
+										<option #if("$!smsDTO.status"== "1")selected="selected" #end
+											value="1">成功</option>
+										<option #if("$!smsDTO.status"== "2")selected="selected" #end
+											value="2">失败</option>
+								</select></td>
+								<td rowspan="3">
+									#if($!menuUtil.isExistMenu("/admin/member/smsList.htm",$!menuAllList)
+									) <input class="searchBtn" type="submit" value="搜索" />#end
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+		<div class="tableListBar">
+			<div class="tableTool">
+				#if($!menuUtil.isExistMenu("/admin/member/smsSendPage.htm",$!menuAllList)
+				) <a href="$!{domain}/admin/member/smsSendPage.htm"
+					class="TableAddBtn" title="发送短信">发送短信</a> #end
+			</div>
+			<table class="tableList grid">
+				<thead>
+					<tr>
+						<td>用户名</td>
+						<td>姓名</td>
+						<td>手机号</td>
+						<td>内容</td>
+						<td>发送时间</td>
+						<td>状态</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody id="list">
+					#foreach($!sms in $!smsList)
+					<tr>
+						<td>$!sms.customerUserName</td>
+						<td>$!sms.customerName</td>
+						<td>$!sms.mobile</td>
+						<td>$!sms.content</td>
+						<td>$!date.format('yyyy-MM-dd HH:mm:ss',$!sms.createTime)</td>
+						<td>#if("$!sms.status"=="1")成功 #elseif("$!sms.status"=="2")失败
+							#end</td>
+						<td class="last">#if("$!sms.status"=="2")
+							#if($!menuUtil.isExistMenu("/admin/member/sendSms.htm",$!menuAllList)
+							) <a class="icon iconSendAg" href="javascript:;"
+							onclick="sendSms('$!sms.mainID')" title="再次发送"></a> #end #end
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#pagination($!smsDTO)
+			</table>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

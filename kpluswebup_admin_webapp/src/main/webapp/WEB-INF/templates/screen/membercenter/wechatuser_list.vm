@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>微信粉丝</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+#parse("control/public_css_js.vm")
+</head>
+<style>
+html {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	/* 		overflow: hidden; */
+	background: #efefef;
+	min-width: 1020px;
+}
+</style>
+<body>
+	<!--header S-->
+	#parse("layout/head.vm") 
+	<!--header E-->
+	<div class="main clearfix">
+		<div class="conTit">
+			<em class="icon iconMenu1 "></em><a href="memberList.htm">会员中心</a> &gt; <span>微信粉丝</span>
+		</div>
+		<div class="tabBar clearfix">
+			<div class="contentLf tabList">
+				<ul>
+					#if($!menuUtil.isExistMenu("/admin/member/memberList.htm",$!menuAllList)
+					)
+					<li><a href="$!{domain}/admin/member/memberList.htm">会员列表</a></li>
+					#end
+					#if($!menuUtil.isExistMenu("/admin/member/wechatUserList.htm",$!menuAllList)
+					)
+					<li><em class='icon arrowLfWeight'></em><a class="hover"
+						href="$!{domain}/admin/member/wechatUserList.htm.htm">微信粉丝</a></li>
+					#end
+				</ul>
+			</div>
+			<div class="contentRt">
+				<div class="contRt">
+					<div class="searchBar">
+						<form id="serachform" name="serachform" method="post"
+							action="$!{domain}/admin/member/wechatUserList.htm">
+							<input type="hidden" id="pageNo" name="pageNo"
+								value="$!wechatUserDTO.pageNo"> <input type="hidden"
+								id="pageSize" name="pageSize" value="$!wechatUserDTO.pageSize">
+							<div class="tableTool">
+								<table class="searchTable">
+									<tbody>
+										<tr>
+											<td><span class="grayF">微信昵称：</span><input type="text"
+												name="searchWechatNick" class="cText"
+												value="$!wechatUserDTO.wechatNick" /></td>
+											<td><span class="grayF">微信名称：</span> <select
+												class="select" name="searchInterfaceConfigID">
+													<option value="">全部</option> #foreach($!interfaceconfig in
+													$!interfaceConfigList)
+													<option #if("$!wechatUserDTO.interfaceConfigID"==
+														"$!interfaceconfig.mainID")selected="selected" #end
+														value="$!interfaceconfig.mainID">$!interfaceconfig.name</option>
+													#end
+											</select></td>
+											<td rowspan="3">
+												#if($!menuUtil.isExistMenu("/admin/member/wechatUserList.htm",$!menuAllList)
+												) <input class="searchBtn" type="submit" value="搜索" />#end
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</form>
+					</div>
+					<div>
+						<table class="tableList grid">
+							<thead>
+								<tr>
+									<td>openID</td>
+									<td>微信昵称</td>
+									<td>微信名称</td>
+									<td>用户名</td>
+									<td>关注时间</td>
+									<!-- <td>操作</td> -->
+								</tr>
+							</thead>
+							<tbody id="list">
+								#foreach($!wechatuser in $!wechatUserList)
+								<tr>
+
+									<td>$!wechatuser.openID</td>
+									<td>$!wechatuser.wechatNick</td>
+									<td>$!wechatuser.wechatName</td>
+									<td>$!wechatuser.customerName</td>
+									<td><span
+										title="$!date.format('yyyy-MM-dd HH:mm:ss',$!wechatuser.createTime)"
+										class="dealtime">$!date.format('yyyy-MM-dd
+											HH:mm:ss',$!wechatuser.createTime)</span></td>
+								</tr>
+								#end
+							</tbody>
+							#pagination($!wechatUserDTO)
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	#parse("layout/footer.vm")
+</body>
+</html>

@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="$!{adminStatic}/theme/default/artdialog.css?112" />
+<link rel="stylesheet" href="$!{adminStatic}/theme/default/style.css?112" />
+<link rel="stylesheet" href="$!{adminStatic}/theme/default/seldate.css?112" />
+<link rel="stylesheet" href="$!{adminStatic}/theme/default/base.css?112" />
+<script src="$!{adminStatic}/script/jquery-1.9.1.js" language="javascript"></script>
+<script src="$!{adminStatic}/script/ajaxfileupload.js?11" language="javascript"></script>
+<script src="$!{adminStatic}/script/artdialog.min.js" language="javascript"></script>
+<script src="$!{adminStatic}/script/kt.js?111" language="javascript"></script>
+<script src="$!{adminStatic}/script/admin.js" language="javascript"></script>
+<script src="$!{adminStatic}/script/seldate.js" language="javascript"></script>
+<script src="$!{adminStatic}/script/divWin/divWin.js" language="javascript"></script>
+<script src="$!{adminStatic}/script/jquery.validate.js" language="javascript"></script>
+<script src="$!{adminStatic}/script/validate.js" language="javascript"></script>
+<script src="$!{adminStatic}/script/map/highcharts.js" type="text/javascript"	language="javascript"></script>
+<script src="$!{adminStatic}/script/WdatePicker.js" type="text/javascript"	language="javascript"></script>
+<script src="$!{adminStatic}/script/jquery.PrintArea.js" type="text/javascript" language="javascript"></script>
+<script type="text/javascript"
+	src="$!{adminStatic}/kindeditor/kindeditor-min.js"></script>
+<style>
+/***错误提示样式***/
+form.cmxform label.error,label.error {
+	color: red;
+}
+</style>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery(".contentLf").height(jQuery(".contentRt").height());
+	})
+</script>

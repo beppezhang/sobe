@@ -1,0 +1,11 @@
+.matter{background: #f9f9f9;padding:67px 0 140px 0;}
+.ct{width:776px;margin:0 auto; text-align:left}
+.ct .step{height:76px;background:url(../pic/pwd4.jpg) no-repeat 0 0;text-indent: -9999px;margin:0 0 18px 0;}
+.ct .detail{padding:20px;border:1px solid #e3e3e3;border: 1px solid #e3e3e3;padding-bottom:87px;background:#fff;}
+.ct .detail .tl{height:40px;background:url(../pic/pro.jpg) no-repeat 0 0;text-indent:-9999px;border-bottom: 1px solid #e3e3e3;}
+.ct .detail .tc{margin:40px auto 0 auto; padding-left:140px;}
+.ct .detail .tc .sj{height:30px;line-height:30px;}
+.ct .detail .tc .sj .d1{display:inline-block;width:150px;height:30px;margin-right:20px;color:#4d4d4d;font-size:14px;text-align:right;}
+.ct .detail .tc .sj input{width:210px;height:28px;padding-left:6px;border:none;border:1px solid #ccc;}
+.ct .detail .tc .sj .sure{display:inline-block;width:70px;background:#0396f5;color:#fff; text-align:center; vertical-align:top}
+

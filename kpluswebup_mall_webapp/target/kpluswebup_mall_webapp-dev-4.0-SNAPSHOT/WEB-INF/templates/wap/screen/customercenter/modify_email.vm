@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<title>修改邮箱</title>
+<meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" CONTENT="-1">           
+<meta http-equiv="Cache-Control" CONTENT="no-cache">           
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/global.css">
+<link rel="stylesheet" type="text/css" href="$!{domain}/wap/css/indi.css">
+</head>
+<body>
+	<form action="$!domain/weixin/saveUserEmail.htm" method="post" id="userEmailForm">
+				<input type="hidden" name="mainID" value="$!mainID">
+	<div class="modify">
+    	<ul>
+        	<li>
+            	<span>邮箱</span>
+                <input name="email" type="email" class="tp" value="$!email" id="email" />
+            </li>
+        </ul>
+    </div>
+    <a href="javascript:;" onclick="saveUserEmailInfo();" class="confirm_pwd">确认修改</a>
+	
+	</form>
+</body>
+
+<script type="text/javascript" src="$!{domain}/wap/js/jquery-1.8.3.min.js"></script>
+ <script>
+		function saveUserEmailInfo() {
+			var temp = document.getElementById("email");
+            //对电子邮件的验证
+            var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+            if(!myreg.test(temp.value))
+            {
+                 alert('请输入有效的E_mail!');
+                 myreg.focus();
+                return false;
+           }
+			$("#userEmailForm").submit();
+		}
+ </script>
+</html>
+
+
